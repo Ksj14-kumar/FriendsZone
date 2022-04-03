@@ -18,10 +18,11 @@ function ImageShow(props) {
                     size="sm"
                     rounded={false}
                     block={false}
-                    iconOnly={false}
+                    iconOnly={true}
                     ripple="light"
                     onClick={(e) => {
                         dispatch({ type: "UNSELECT_PROFILE_IMAGE", payload: "" })
+                        dispatch({ type: "UNSELECT_BACKGROUND_IMAGE", payload: "" })
                     }}
 
                 >

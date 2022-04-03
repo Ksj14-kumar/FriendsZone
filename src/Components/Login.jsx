@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Card from "@material-tailwind/react/Card";
 import CardHeader from "@material-tailwind/react/CardHeader";
 import CardBody from "@material-tailwind/react/CardBody";
@@ -11,6 +11,7 @@ import Icon from "@material-tailwind/react/Icon";
 import { AiFillTwitterCircle } from 'react-icons/ai';
 import { GoMarkGithub } from 'react-icons/go';
 import { ImGooglePlus3 } from 'react-icons/im';
+import { ImSpinner9 } from 'react-icons/im';
 import { FaFacebook } from 'react-icons/fa';
 import { FiHome } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
@@ -19,6 +20,8 @@ import { useCookies } from 'react-cookie';
 
 // import Header from './'
 import { Context } from '../App';
+import LoginLoader from "../Loader/LoginLoader";
+import { useSelector } from "react-redux";
 
 
 
@@ -26,10 +29,18 @@ export default function Login(props) {
   const [cookies, setCookie] = useCookies(['tokenId']);
   let [user, setUser] = React.useState(null)
   const { users, dispatch } = useContext(Context)
+  const [loader, setLoader] = useState(false)
 
   // console.log("cookie", cookies)
 
 
+
+  // const ShowImage = useSelector((state) => { return state.showImage.value })
+  const ShowImageBackground = useSelector((state) => {
+    console.log("state for the Show Image load", state)
+    return state.ShowImageBackground.value
+  })
+  const UserInformationLoad = useSelector((state) => { return state.UserInformationLoad })
 
 
 
@@ -55,21 +66,21 @@ export default function Login(props) {
   }
 
   async function google() {
-    window.open("http://localhost:5000/google", "_self")
+    window.open("http://localhost:5000/all/google", "_self")
   }
 
   function twitter() {
-    window.open("http://localhost:5000/twitter", "_self")
+    window.open("http://localhost:5000/all/twitter", "_self")
   }
 
 
   function github() {
-    window.open("http://localhost:5000/github", "_self")
+    window.open("http://localhost:5000/all/github", "_self")
   }
 
 
   function facebook() {
-    window.open("http://localhost:5000/facebook", "_self")
+    window.open("http://localhost:5000/all/facebook", "_self")
 
 
   }
@@ -78,36 +89,46 @@ export default function Login(props) {
 
 
   async function submit() {
+
     const { email, password } = data
     if (!email || !password) {
       error({ message: "Please fill all the fields" })
 
     }
     else {
+      setLoader(true)
       const response = await fetch("/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({ email, password }),
-        redirect: "follow"
+        // redirect: "follow"
       })
 
 
       const status = response.status
 
       const serverData = await response.json()
-      console.log("servcer data", serverData)
+      console.log("servcer data from server local strtegy", serverData)
 
       if (status === 200) {
+        console.log("usercookie is", serverData)
 
-        await success({ message: serverData.message })
+
+        localStorage.setItem("user_login", JSON.stringify(serverData.user))
         console.log(serverData)
-        localStorage.setItem("token", serverData.cookie.tokenId)
+        console.log("user data from pi", JSON.stringify(serverData.user))
+        success({ message: serverData.message })
 
         setTimeout(() => {
-          dispatch({ type: 'USER', payload: {message:serverData.message, user:serverData.user} })
-        }, 2000)
+
+          dispatch({ type: "SET_USER", payload: { user: serverData.user } })
+
+          // dispatch({ type: 'USER', payload: { message: serverData.message, user: serverData.user } })
+        }, 1000)
+
+        setLoader(false)
 
 
 
@@ -117,10 +138,36 @@ export default function Login(props) {
 
       else {
         error({ message: serverData.message })
+        setLoader(false)
+
         return
       }
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   return (
     <div className=" mx-auto  h-screen w-full flex flex-wrap">
@@ -159,6 +206,7 @@ export default function Login(props) {
                 value={data.password}
                 onChange={handle}
                 defaultValue=""
+                outline={false}
               />
             </div>
 
@@ -176,7 +224,12 @@ export default function Login(props) {
 
                 onClick={submit}
               >
-                Get started
+
+
+                {loader ? <Icon name={<LoginLoader />} size="sm" /> : "Get started"}
+
+
+
               </Button>
             </div>
             <div className="button-group  flex justify-evenly my-2">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Card from "@material-tailwind/react/Card";
 import CardHeader from "@material-tailwind/react/CardHeader";
 import CardBody from "@material-tailwind/react/CardBody";
@@ -9,13 +9,17 @@ import H5 from "@material-tailwind/react/Heading5";
 import ClosingAlert from "@material-tailwind/react/ClosingAlert";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import LoginLoader from '../Loader/LoginLoader';
 
 
 
 
 import { NavLink } from 'react-router-dom'
+import Icon from "@material-tailwind/react/Icon";
 export default function Register() {
     const [info, setinfo] = React.useState({ name: "", email: "", password: "", confirmPassword: "" })
+
+    const [loader, setLoader] = useState(false)
 
 
     let name, value
@@ -61,6 +65,7 @@ export default function Register() {
                 return
             }
             else {
+                setLoader(true)
                 const response = await fetch("/api/register", {
                     method: "POST",
                     headers: {
@@ -75,12 +80,16 @@ export default function Register() {
 
 
                 if (status == 200) {
+                    setLoader(false)
+
                     success({ message: data.message })
                     setinfo({ name: "", email: "", password: "", confirmPassword: "" })
                     return
                 }
                 else {
                     error({ message: data.message })
+                    setLoader(false)
+
                     return
                 }
             }
@@ -162,8 +171,13 @@ export default function Register() {
                                     size="lg"
                                     ripple="dark"
                                     onClick={submit}
+
                                 >
-                                    Register
+                                    {
+                                        loader ?
+                                            <Icon name={<LoginLoader />}  size="sm" /> :
+                                            "Register"
+                                    }
                                 </Button>
                             </div>
                             <div className="footer-section flex justify-between ">

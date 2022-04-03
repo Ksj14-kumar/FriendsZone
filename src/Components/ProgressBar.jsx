@@ -10,7 +10,7 @@ export default function ProgressBar(props) {
             marginBottom: ".5rem",
              backgroundColor:props.bgColor,
               borderRadius: "15px",
-               padding: "1rem 0rem",
+               padding: ".7rem 0rem",
                 fontFamily: "sans-serif", 
                 letterSpacing: "1px",
                  fontStretch: "condensed" ,
