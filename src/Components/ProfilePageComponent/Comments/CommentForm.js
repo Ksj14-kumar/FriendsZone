@@ -65,6 +65,7 @@ const CommentForm = ({
                     rows="1"
                     cols="1"
                     onChange={(e) => {
+                        console.log("someone is typing.....")
                         e.preventDefault()
                         setText(e.target.value)
                     }}

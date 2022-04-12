@@ -6,13 +6,13 @@
 
 
 
-const LikeRedux = (state = 0, action = {}) => {
-    console.log("action is ", action)
+const LikeRedux = (state = "", action = {}) => {
+    console.log("like redux", action)
+
     switch (action.type) {
         case 'LIKE':
-            return state + 1;
-        case 'DISLIKE':
-            return state-1;
+            return action.payload
+
         default:
             return state;
     }

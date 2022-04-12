@@ -66,7 +66,7 @@ export default function SettingsForm() {
                 headers: {
                     "Content-Type": "application/json",
 
-                    "Authorization": "Bearer " + localStorage.getItem("uuid"),
+                    "Authorization": "Bearer " + localStorage.getItem("user_login"),
 
                 },
 

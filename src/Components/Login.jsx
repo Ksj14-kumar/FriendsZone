@@ -22,6 +22,7 @@ import { useCookies } from 'react-cookie';
 import { Context } from '../App';
 import LoginLoader from "../Loader/LoginLoader";
 import { useSelector } from "react-redux";
+import { Error } from "./Toastify";
 
 
 
@@ -105,42 +106,29 @@ export default function Login(props) {
         body: JSON.stringify({ email, password }),
         // redirect: "follow"
       })
-
-
+      console.log("server response after failed", response)
       const status = response.status
-
-      const serverData = await response.json()
-      console.log("servcer data from server local strtegy", serverData)
-
+      // console.log("servcer data from server local strtegy", serverData)
       if (status === 200) {
-        console.log("usercookie is", serverData)
-
-
+        const serverData = await response.json()
+        // console.log("usercookie is", serverData)
         localStorage.setItem("user_login", JSON.stringify(serverData.user))
         console.log(serverData)
         console.log("user data from pi", JSON.stringify(serverData.user))
         success({ message: serverData.message })
-
         setTimeout(() => {
-
           dispatch({ type: "SET_USER", payload: { user: serverData.user } })
 
           // dispatch({ type: 'USER', payload: { message: serverData.message, user: serverData.user } })
-        }, 1000)
-
+        }, 4000)
         setLoader(false)
-
-
-
-
-
       }
-
-      else {
-        error({ message: serverData.message })
+      else if (response.status === 500) {
         setLoader(false)
-
-        return
+        return Error({ message: "please, Check your internet connection!!!" })
+      }
+      else {
+        return Error({ message: "Opps,Something error Occured" })
       }
     }
   }

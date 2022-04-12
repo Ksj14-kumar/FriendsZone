@@ -1,5 +1,4 @@
 import React, { useRef, useEffect } from 'react'
-
 import Card from "@material-tailwind/react/Card";
 import CardImage from "@material-tailwind/react/CardImage";
 import CardBody from "@material-tailwind/react/CardBody";
@@ -12,7 +11,6 @@ import H5 from "@material-tailwind/react/Heading5";
 import Image from "@material-tailwind/react/Image";
 import { useDispatch, useSelector } from 'react-redux';
 import Input from "@material-tailwind/react/Input";
-
 import Modal from "@material-tailwind/react/Modal";
 import ModalHeader from "@material-tailwind/react/ModalHeader";
 import ModalBody from "@material-tailwind/react/ModalBody";
@@ -33,18 +31,13 @@ import { error, success } from "../../toastifyMessage/Toast"
 import Tooltips from "@material-tailwind/react/Tooltips";
 import TooltipsContent from "@material-tailwind/react/TooltipsContent";
 import ReactModal from 'react-modal';
-
-
-
 import { ToastContainer, toast } from 'react-toastify';
 import ModalForPostVideoImages from '../Notification/ModalForPostVideoImages';
 import { BrowserRouter } from 'react-router-dom';
 import { IoVideocam } from 'react-icons/io5';
-
-
-
-
-
+import Pusher from 'pusher-js';
+import axios from 'axios';
+import { Error } from '../Toastify';
 function useOutsideAlerter(ref, setTextAreaValue, dispatch, setUrlOfImageUpload) {
     useEffect(() => {
         /**
@@ -56,7 +49,6 @@ function useOutsideAlerter(ref, setTextAreaValue, dispatch, setUrlOfImageUpload)
                 // console.log("click outside the woindow")
                 // setTextAreaValue("")
                 // setUrlOfImageUpload("")
-
                 // dispatch({ type: "UNSELECT_POST_IMAGE", payload: "" })
             }
         }
@@ -68,21 +60,7 @@ function useOutsideAlerter(ref, setTextAreaValue, dispatch, setUrlOfImageUpload)
         };
     }, [ref]);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 function AddPost() {
-
     //all state start
     const wrapperref = React.useRef()
     const buttonRef = React.useRef()
@@ -106,13 +84,7 @@ function AddPost() {
     const rssRef = React.useRef()
     const textRef = React.useRef()
     const inputFileRef = React.useRef()
-
-
-
-
-
-
-
+    const VideoModelRef = React.useRef()
     //all reducer start from here
     const dispatch = useDispatch()
     const ShowImageBackground = useSelector((state) => {
@@ -131,61 +103,26 @@ function AddPost() {
     const UserStillLogin = useSelector((state) => {
         return state.UserStillLogin.user
     })
-
     // const {_id}= UserStillLogin
     const { _id } = JSON.parse(localStorage.getItem("user_login"))
-
     const { fname, lname, college, city, country, position, stream, aboutMe } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "" }
-
-
     const name = `What is your in mind Today ? ${fname ? fname.toLowerCase() : "NA"}`
     const name1 = `Say Something About your post if.  👀   ${fname ? fname.toLowerCase() : "NA"}`
     const name2 = `Say Something About your video if.   ${fname ? fname.toLowerCase() : "NA"}`
-
-
-
-    const customStyles = {
-        content: {
-            top: '50%',
-            left: '50%',
-            right: 'auto',
-            bottom: 'auto',
-            marginRight: '-50%',
-            transform: 'translate(-50%, -50%)',
-        },
-    };
     let subtitle;
-
-
-
-
-
-
-
-
-
-
     //Hndle funtion start from here
-
-
     // ====================================================selected mixed post=======================
-
     function SelectImage(e) {
         const file = e.target.files[0]
-        console.log("user selected post", file)
-
+        // console.log("user selected post", file)
         if (file.size < 16777216) {
             // set the size limit to 16MB
-
             if (file.type === "image/jpeg" || file.type === "image/png" || file.type === "image/jpg" || file.type === "image/*" || file.type === "video/*" || file.type === "video/mp4") {
-
                 if (file.type === "video/mp4") {
                     dispatch({ type: "SELECT_POST_VIDEO", payload: "video" })
                     setFileType("video")
-
-
                     const createImageURL = URL.createObjectURL(file)
-                    console.log("createImageURL", createImageURL)
+                    // console.log("createImageURL", createImageURL)
                     setImageAsUrl(createImageURL)
                     setUrlOfImageUpload(createImageURL)
                     dispatch({ type: "SELECTED_POST_IMAGE", payload: createImageURL })
@@ -194,16 +131,12 @@ function AddPost() {
                     reader.onloadend = function () {
                         setPost(reader.result)
                     }
-
-
                 }
-
                 else {
                     dispatch({ type: "SELECT_POST_VIDEO", payload: "image" })
                     setFileType("image")
-
                     const createImageURL = URL.createObjectURL(file)
-                    console.log("createImageURL", createImageURL)
+                    // console.log("createImageURL", createImageURL)
                     setImageAsUrl(createImageURL)
                     setUrlOfImageUpload(createImageURL)
                     dispatch({ type: "SELECTED_POST_IMAGE", payload: createImageURL })
@@ -212,16 +145,11 @@ function AddPost() {
                     reader.onloadend = function () {
                         setPost(reader.result)
                     }
-
                     return
-
-
                 }
             }
             else {
-
                 setFile(inputFileRef.current.value)
-
                 error({ message: "please select only video or Image" })
                 inputFileRef.current.value = ""
                 setTextAreaValue("")
@@ -230,7 +158,6 @@ function AddPost() {
                 return
             }
         }
-
         else {
             setFile(inputFileRef.current.value)
             error({ message: "file size is too large" })
@@ -240,25 +167,17 @@ function AddPost() {
             return
         }
     }
-
-
     //==========================================select video==========================
-
     function SelectVideo(e) {
-
         const file = e.target.files[0]
-
         if (file.size < 16777216) {
             // set the size limit to 16MB
-
             if (file.type === "video/*" || file.type === "video/mp4") {
                 dispatch({ type: "SELECT_POST_VIDEO", payload: "video" })
                 setFileType("video")
                 setFile(videoRef.current.value)
-
-
                 const createImageURL = URL.createObjectURL(file)
-                console.log("createImageURL", createImageURL)
+                // console.log("createImageURL", createImageURL)
                 setImageAsUrl(createImageURL)
                 setUrlOfImageUpload(createImageURL)
                 dispatch({ type: "SELECTED_POST_IMAGE", payload: createImageURL })
@@ -270,10 +189,7 @@ function AddPost() {
                 return
             }
             else {
-
-
                 // console.log("video", videoRef.current.value)
-
                 setTextAreaValue("")
                 videoRef.current.value = ""
                 error({ message: "please select only video" })
@@ -291,27 +207,19 @@ function AddPost() {
             // console.log("video2", videoRef.current.value)
             setFile(videoRef.current.value)
         }
-
     }
-
-
-
-
-
     // ======================================SELECTE THE PHOTOS POST===============================
-
     function SelectPhotos(e) {
         const file = e.target.files[0]
-        console.log("user selected post", file)
+        // console.log("user selected post", file)
         if (file.size < 16777216) {
             // set the size limit to 16MB
             if (file.type === "image/jpeg" || file.type === "image/png" || file.type === "image/jpg" || file.type === "image/*") {
                 dispatch({ type: "SELECT_POST_VIDEO", payload: "image" })
                 setFileType("image")
                 setFile(photosRef.current.value)
-
                 const createImageURL = URL.createObjectURL(file)
-                console.log("createImageURL", createImageURL)
+                // console.log("createImageURL", createImageURL)
                 setImageAsUrl(createImageURL)
                 setUrlOfImageUpload(createImageURL)
                 dispatch({ type: "SELECTED_POST_IMAGE", payload: createImageURL })
@@ -332,78 +240,36 @@ function AddPost() {
             }
         }
         else {
-
             // console.log("video", videoRef.current.value)
             error({ message: "file size is too large" })
             photosRef.current.value = ""
             setTextAreaValue("")
             // console.log("video2", videoRef.current.value)
             setFile(photosRef.current.value)
-
         }
-
     }
-
-
-
-
     // ============================================SELECT THE TEXT FOR POST======================
-
-    function SelectTextHandle(e){
-
+    function SelectTextHandle(e) {
         setTextAreaValue(e.target.value)
-
     }
-
-
-
-
     //tempary files
     const uploadLoaderBackground = false
     const progressMessageBackground = ""
-
     const onEmojiClick = (event, emojiObject) => {
         setTextAreaValue((pre) => pre + emojiObject.emoji)
-
         setChosenEmoji(emojiObject);
     };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //Upload the post
-
+    //Upload the post---------------------------------------To the server-------------
     async function SubmitPost(e) {
-
+        console.log(textareaValue, UnselectPostImage)
         if (!textareaValue && !UnselectPostImage) {
-            // alert("please add some post")
+            alert("please add some post")
             return
         }
         else {
-
-
-            console.log("user image url is", userPost)
+            // console.log("user image url is", userPost)
             // ImageAsUrl
-            console.log({
-                text: textareaValue,
-                image: ImageAsUrl,
-                privacy: PrivateOrPublic,
-                post_id: _id + uuidv4(),
-                fileType: fileType,
-                time: new Date(Date.now()).toDateString().split(" ")[2] + " " + new Date(Date.now()).toDateString().split(" ")[1] + " " + new Date(Date.now()).toDateString().split(" ")[3]
-
-            })
-
+            // 
             const SaveUserPostIntoDb = await fetch(`/blob/local/url/${_id}`, {
                 method: "POST",
                 body: JSON.stringify({
@@ -412,53 +278,66 @@ function AddPost() {
                     privacy: PrivateOrPublic,
                     post_id: _id + uuidv4(),
                     fileType: fileType,
+                    // likes_count: 100,
+                    
                     time: new Date(Date.now()).toDateString().split(" ")[2] + " " + new Date(Date.now()).toDateString().split(" ")[1] + " " + new Date(Date.now()).toDateString().split(" ")[3]
-
                 }),
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "application/json"
                 }
             })
-
+            // const { status, data } = SaveUserPostIntoDb
             const SaveUserPostIntoDbJson = await SaveUserPostIntoDb.json()
-            console.log({ SaveUserPostIntoDbJson })
             // setTextAreaValue("")
-
+            // const SaveUserPostIntoDbJson = await SaveUserPostIntoDb.json()
             if (SaveUserPostIntoDb.status === 200) {
-
-
-
-
-
-
+                // Pusher.logToConsole = true
+                var pusher = new Pusher('55296f450b8497fbd4f6', {
+                    cluster: 'ap2',
+                    // encrypted: true,
+                });
+                var socketId;
+                // retrieve the socket ID on successful connection
+                pusher.connection.bind('connected', function () {
+                    // console.log("connected/.....")
+                    socketId = pusher.connection.socket_id;
+                });
+                var channel = pusher.subscribe('AddPost');
+                channel.bind('AddPostMessage', function (PusherData) {
+                    // console.log("pusher message is.. for add p[ poost", PusherData.GetAllUserPost)
+                    dispatch({
+                        type: "LOAD_POSTS",
+                        payload: PusherData.GetAllUserPost
+                    })
+                    dispatch({ type: "UNSELECT_POST_IMAGE", payload: "" })
+                    // setTextAreaValue("")
+                    setFileType("")
+                    setTextAreaValue("")
+                })
+                // console.log({SaveUserPostIntoDbJson})
+                // dispatch({
+                //     type: "LOAD_POSTS",
+                //     payload: SaveUserPostIntoDbJson.data
+                // })
+                
+                dispatch({ type: "UNSELECT_POST_IMAGE", payload: "" })
+                setTextAreaValue("")
+                setFileType("")
+                setTextAreaValue("")
                 dispatch({
                     type: "LOAD_POSTS",
                     payload: SaveUserPostIntoDbJson.data
                 })
-                dispatch({ type: "UNSELECT_POST_IMAGE", payload: "" })
-                setTextAreaValue("")
-                setFileType("")
-                inputFileRef.current.value = ""
-                videoRef.current.value = ""
-                textRef.current.value = ""
-                photosRef.current.value = ""
-                setTextAreaValue("")
-                setFile(inputFileRef.current.value)
-                setFile(photosRef.current.value)
-                setFile(videoRef.current.value)
-                setFile(textRef.current.value)
-
-
                 setTimeout(() => {
                     // dispatch({ type: "POST_WHICH_USER_SELECTED_TEXT", payload: textArray })
                     // dispatch({ type: "POST_WHICH_USER_SELECTED_IMAGE", payload: mergeArrayData })
-
                 }, 2000)
             }
             else {
-
+                Error({ message: "This Post is Already exit.." })
                 setTextAreaValue("")
                 setFileType("")
+                console.log("show error from client", SaveUserPostIntoDbJson)
                 inputFileRef.current.value = ""
                 videoRef.current.value = ""
                 textRef.current.value = ""
@@ -468,63 +347,38 @@ function AddPost() {
                 setFile(photosRef.current.value)
                 setFile(videoRef.current.value)
                 setFile(textRef.current.value)
-
             }
         }
     }
-
     function GetPrivatORPublic(e) {
         setPrivateOrPublic(e.target.value)
     }
-
-
-
+    //clear the content of each model when user click outside of the model
+    useEffect(() => {
+        if (VideoModelRef.current.contains(document.activeElement) === false) {
+            // alert("click")
+            // profileInput.current.value = null
+            dispatch({ type: "SELECTED_POST_IMAGE", payload:""})
+            setTextAreaValue("")
+           
+        }
+    }, [showModalPhoto,showModalVideo, showModalText])
     //============================================MODAL FOR Photos===================
-
-
-
-
-
-
-    function afterOpenModal() {
-        // references are now sync'd and can be accessed.
-        subtitle.style.color = '#f00';
-    }
-
-    function closeModal() {
-        setShowModalCodePhoto(false);
-    }
-
-
-
-    console.log("end", { textareaValue });
-    console.log("end", { SelectedFile });
-
-
     return (
         <>
-
-
             <div className="post-card flex justify-around md:pl-48 md:mt-[18rem] relative sm-[25rem]  shadow-lg  lg:mt-[11rem] ">
-
-
                 {/* ===================POST CARD PAGE ========================*/}
-
                 <Card className="inner-post-card lg:-mt-[170px] md:-mt-[280px] -mt-[300px] 
         md:ml-[8rem] md:mr-[6rem]  md-w-[71rem] mx-[2rem]  shadow-lg h-[12rem] pt-[0rem] ">
                     {/* <CardHeader color="lightBlue" size="lg">
                 <H5 color="white">Login</H5>
             </CardHeader> */}
-
                     <CardBody>
                         <div className="flex justify-center ">
-
                             <H6 color="gray" >Create Post</H6>
                         </div>
-
                         <div className="inner-body  flex mds-editor7:-ml-[.5rem] ">
                             <div className="card-post-image bg-green-900 w-[4rem] h-[4rem] rounded-full flex-shrink-0 mds-editor7:w-[3rem] mds-editor7:h-[3rem]">
-
                                 {
                                     DispatchProfileImage ? <Image
                                         src={DispatchProfileImage}
@@ -534,17 +388,12 @@ function AddPost() {
                                         className="w-full h-full"
                                     /> : ""
                                 }
-
-
                             </div>
-
                             <div className="post-text-container  ml-[1rem]    mr-[3rem] relative flex w-full flex-wrap items-stretch mb-3 mds-editor7:mb-2">
-
-
                                 <button type="button"
                                     className=" py-4  
                                  Gray-600     border shadow 
-                                outline-none focus:outline-none focus:ring w-full pl-10
+                                outline-none   w-full pl-10
                                 indent-5 rounded-[15px]
                                 px-[10rem]
                                 indent-none
@@ -555,32 +404,25 @@ function AddPost() {
                                 flex-shrink-0
                                 mds-editor7:px-[5rem]
                                 mds-editor7:py-3
+                                focus:outline-none
                                 
                                 "
                                     onClick={(e) => {
-
                                         if (UserInformationLoad) {
-
                                             setShowModalCode(true)
                                         }
                                         else {
                                             error({ message: "Kindly, Create Profile" })
                                             // alert("please create profile")
                                         }
-
                                     }
                                     }
-
                                 >Today?</button>
                             </div>
-
                         </div>
-
                     </CardBody>
-
                     <CardFooter className="   flex justify-around -mt-[2rem]   pb-[2rem] " role="group">
                         <div className="photos ">
-
                             <Button color="#ECECEC" size="regular" className="px-[2.5rem] md:px-[3.5rem] border-none   bg-[#151D3B] text-2xl
                             mds-editor7:px-[2rem]
                             mds-editor7:py-2                            mds-editor7:text-xl
@@ -590,12 +432,14 @@ function AddPost() {
                                 ripple="light"
                                 ref={photosRef}
                             >
-
                                 <MdAddToPhotos />
                             </Button>
                         </div>
+                        <Tooltips placement="top" ref={photosRef}>
+                            <TooltipsContent>Upload Photos
+                            </TooltipsContent>
+                        </Tooltips>
                         <div className="video">
-
                             <Button color="" size="regular" className="px-[2.5rem] md:px-[3.5rem]   text-2xl bg-[#151D3B]
                             mds-editor7:px-[2rem]
                             mds-editor7:py-2                            mds-editor7:text-xl
@@ -604,15 +448,15 @@ function AddPost() {
                                 ripple="light"
                                 onClick={(e) => setShowModalCodeVideo(true)}
                                 ref={videoRef}
-
                             >
                                 {/* <Icon name={} ripple={true} /> */}
                                 <RiVideoAddFill />
                             </Button>
                         </div>
-
+                        <Tooltips placement="top" ref={videoRef}>
+                            <TooltipsContent>Upload Video</TooltipsContent>
+                        </Tooltips>
                         <div className="feeling">
-
                             <Button color="" size="regular" className="px-[2.5rem] md:px-[3.5rem] bg-[#151D3B]   text-2xl
                             mds-editor7:px-[2rem]
                             mds-editor7:py-2                            mds-editor7:text-xl
@@ -622,46 +466,31 @@ function AddPost() {
                                 onClick={(e) => setShowModalCodeText(true)}
                                 ref={rssRef}
                             >
-
                                 {/* <Icon name={<MdRssFeed />} ripple={true} /> */}
                                 <MdRssFeed />
                             </Button>
                         </div>
-
-
+                        <Tooltips placement="top" ref={rssRef}>
+                            <TooltipsContent>Post Somethink</TooltipsContent>
+                        </Tooltips>
                     </CardFooter>
                 </Card>
             </div>
-
-
-
-            {/* ================MODAL FOR POST================== */}
-
-
-
+            {/* ================MODAL FOR POST PHotos and Video ================== */}
             <div className="con"
             >
-
                 <Modal size="sm" active={showModal} toggler={(e) => {
-
                     setShowModalCode(false)
                 }
-
                 }
-
-
                 >
                     <div className="contain divide-y-2 divide-[#ccc] w-full " ref={wrapperref} >
-
                         <div className="modal-header ">
                             <ModalHeader toggler={(e) => {
                                 setShowModalCode(false)
                             }} >
-
-
                                 New Post
                             </ModalHeader>
-
                         </div>
                         <div className="modal-body w-[21rem] ">
                             <ModalBody >
@@ -673,7 +502,6 @@ function AddPost() {
                                             <article className='
                                     card-post-image-modal w-[3rem]  h-[3rem] rounded-full flex-shrink-0
                                     
-
                                     '>
                                                 <Image
                                                     src={DispatchProfileImage}
@@ -682,42 +510,25 @@ function AddPost() {
                                                     alt="Rounded Image"
                                                     className="w-full h-full"
                                                 />
-
-
                                             </article>
-
-
-
                                             <article className=' public-name-article ml-[.5rem] -mt-[.4rem]'>
                                                 <article className='text-black text-xl'>
                                                     <p> {(fname && lname) ? fname + " " + lname : "NA"}</p>
                                                 </article>
                                                 <select name="private-public" id="private-public" className='border bg-[#ccc] text-[#0F0E0E] px-[.8rem] border-none rounded-[5px]'
                                                     onChange={GetPrivatORPublic}
-
                                                 >
                                                     <option value="public"
                                                         className=''
                                                     // onChange={GetPrivatORPublic}
-
-
                                                     >Public</option>
                                                     <option value="private"
                                                     //    onChange={GetPrivatORPublic}
                                                     >Private</option>
                                                 </select>
-
-
-
                                             </article>
-
-
                                         </main>
-
-
-
                                     </section>
-
                                     <section className='input-field-section mt-[1rem]
                                     relative 
                                 
@@ -747,7 +558,6 @@ function AddPost() {
                                             id="mytextarea"
                                             rows="3"
                                             cols='2'
-
                                             value={textareaValue}
                                             onChange={(e) => {
                                                 setTextAreaValue(e.target.value)
@@ -756,7 +566,6 @@ function AddPost() {
                                             placeholder={name}
                                         >
                                         </textarea>
-
                                         <Button
                                             color=""
                                             buttonType="filled"
@@ -769,25 +578,16 @@ function AddPost() {
                                             onClick={(e) => {
                                                 setEmojiModal(true)
                                             }}
-
                                         >
                                             <Icon name={<BsFillEmojiSmileFill
                                                 className="text-[#E45826] text-[1.5rem]"
                                             />} size="sm" />
                                         </Button>
-
-
-
-
                                     </section>
-
-
                                     {/* UnselectPostImage */}
                                     <section className='image-section mt-[1rem] overflow-auto mb-[1rem] pr-[.5rem] '>
                                         <article className=' h-[10rem] border border-gray-300 rounded-lg flex '>
                                             {uploadLoaderBackground ? <ProfileLoader /> : progressMessageBackground === "Uploaded Successfully" ? <ProgressBar text={progressMessageBackground} bgColor="green" /> : UnselectPostImage ? <SelectedImageShowWithURL text={UnselectPostImage} /> :
-
-
                                                 <div className="flex w-full  items-center justify-center bg-grey-lighter hover:bg-grey-lighter " >
                                                     <label className="  flex-col items-center  bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-white h-full w-full flex justify-center"
                                                     // style={{ backgroundColor: "red" }}
@@ -799,6 +599,7 @@ function AddPost() {
                                                         </svg>
                                                         <span className="mt-2 text-base leading-normal" style={{ color: "green" }}>Select Photo/Video</span>
                                                         <input type='file' className="hidden" name="file"
+                                                            accept='image/*,video/*'
                                                             ref={inputFileRef}
                                                             onChange={(e) => {
                                                                 // setInputValue(e.target.value)
@@ -812,12 +613,10 @@ function AddPost() {
                                     </section>
                                 </p>
                             </ModalBody>
-
                         </div>
                         <div className="modal-footer">
                             <ModalFooter >
                                 <div className="btn-group mt-2 flex justify-center">
-
                                     {/* <Button
                                         color="red"
                                         buttonType="link"
@@ -826,7 +625,6 @@ function AddPost() {
                                     >
                                         Close
                                     </Button> */}
-
                                     <Button
                                         color="green"
                                         onClick={(e) => {
@@ -835,36 +633,26 @@ function AddPost() {
                                         }}
                                         ripple="light"
                                         block={true}
-
                                     >
                                         Post
                                     </Button>
                                 </div>
                             </ModalFooter>
-
                         </div>
-
                     </div>
                 </Modal>
             </div>
-
-
-
-
             {/* =======================MODAL FOR THE VIDEO=========================== */}
             <Modal size="lg" className="" active={showModalVideo
             } toggler={() => {
-
                 setShowModalCodeVideo(false)
             }}>
-                <div className="modalHeader -mb-[1rem] -mt-[1rem]">
-
+                <div className="modalHeader -mb-[1rem] -mt-[1rem]" ref={VideoModelRef}>
                     <ModalHeader className="" toggler={() => setShowModalCodeVideo(false)}>
                         Video
                     </ModalHeader>
                 </div>
                 <hr />
-
                 <div className="modal-body w-[21rem] ">
                     <ModalBody >
                         <p className="text-base leading-relaxed text-gray-600 font-normal
@@ -875,7 +663,6 @@ function AddPost() {
                                     <article className='
                                     card-post-image-modal w-[3rem]  h-[3rem] rounded-full flex-shrink-0
                                     
-
                                     '>
                                         <Image
                                             src={DispatchProfileImage}
@@ -884,42 +671,25 @@ function AddPost() {
                                             alt="Rounded Image"
                                             className="w-full h-full"
                                         />
-
-
                                     </article>
-
-
-
                                     <article className=' public-name-article ml-[.5rem] -mt-[.4rem]'>
                                         <article className='text-black text-xl'>
                                             <p> {(fname && lname) ? fname + " " + lname : "NA"}</p>
                                         </article>
                                         <select name="private-public" id="private-public" className='border bg-[#ccc] text-[#0F0E0E] px-[.8rem] border-none rounded-[5px]'
                                             onChange={GetPrivatORPublic}
-
                                         >
                                             <option value="public"
                                                 className=''
                                             // onChange={GetPrivatORPublic}
-
-
                                             >Public</option>
                                             <option value="private"
                                             //    onChange={GetPrivatORPublic}
                                             >Private</option>
                                         </select>
-
-
-
                                     </article>
-
-
                                 </main>
-
-
-
                             </section>
-
                             <section className='input-field-section mt-[1rem]
                                     relative 
                                 
@@ -949,7 +719,6 @@ function AddPost() {
                                     id="mytextarea"
                                     rows="3"
                                     cols='2'
-
                                     value={textareaValue}
                                     onChange={(e) => {
                                         setTextAreaValue(e.target.value)
@@ -958,7 +727,6 @@ function AddPost() {
                                     placeholder={name2}
                                 >
                                 </textarea>
-
                                 <Button
                                     color=""
                                     buttonType="filled"
@@ -971,30 +739,20 @@ function AddPost() {
                                     onClick={(e) => {
                                         setEmojiModal(true)
                                     }}
-
                                 >
                                     <Icon name={<BsFillEmojiSmileFill
                                         className="text-[#E45826] text-[1.5rem]"
                                     />} size="sm" />
                                 </Button>
-
-
-
-
                             </section>
-
-
                             {/* UnselectPostImage */}
                             <section className='image-section mt-[1rem] overflow-auto mb-[1rem] pr-[.5rem] '>
                                 <article className=' h-[10rem] border border-gray-300 rounded-lg flex '>
                                     {uploadLoaderBackground ? <ProfileLoader /> : progressMessageBackground === "Uploaded Successfully" ? <ProgressBar text={progressMessageBackground} bgColor="green" /> : UnselectPostImage ? <SelectedImageShowWithURL text={UnselectPostImage} /> :
-
-
                                         <div className="flex w-full  items-center justify-center bg-grey-lighter hover:bg-grey-lighter " >
                                             <label className="  flex-col items-center  bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-white h-full w-full flex justify-center"
                                             // style={{ backgroundColor: "red" }}
                                             >
-
                                                 <IoVideocam className='text-[3.5rem] font-semibold text-[#1f680b]' />
                                                 <span className="mt-2 text-base leading-normal" style={{ color: "green" }}>Video</span>
                                                 <input type='file' className="hidden" name="file"
@@ -1008,31 +766,19 @@ function AddPost() {
                                             </label>
                                         </div>
                                     }
-
-
                                 </article>
                             </section>
                         </p>
                     </ModalBody>
-
                 </div>
-
-
-
-
                 <footer className="">
-
                     <ModalFooter >
                         <div className="btn-group flex justify-center  w-full">
-
-
-
                             <Button
                                 color="green"
                                 onClick={(e) => {
                                     e.preventDefault()
                                     SubmitPost()
-
                                     // setShowModalCodeVideo(false)
                                 }}
                                 ripple="light"
@@ -1044,23 +790,11 @@ function AddPost() {
                     </ModalFooter>
                 </footer>
             </Modal>
-
-
-
-
-
-
             {/* ================================MODAL FOR PHOTOS======================= */}
-
-
-
             <Modal size="lg" className="" active={showModalPhoto} toggler={() => {
-
-
                 setShowModalCodePhoto(false)
             }}>
                 <div className="modalHeader -mb-[1rem] -mt-[1rem]">
-
                     <ModalHeader className="" toggler={() => setShowModalCodePhoto(false)}>
                         Photos
                     </ModalHeader>
@@ -1076,7 +810,6 @@ function AddPost() {
                                     <article className='
                                     card-post-image-modal w-[3rem]  h-[3rem] rounded-full flex-shrink-0
                                     
-
                                     '>
                                         <Image
                                             src={DispatchProfileImage}
@@ -1085,42 +818,25 @@ function AddPost() {
                                             alt="Rounded Image"
                                             className="w-full h-full"
                                         />
-
-
                                     </article>
-
-
-
                                     <article className=' public-name-article ml-[.5rem] -mt-[.4rem]'>
                                         <article className='text-black text-xl'>
                                             <p> {(fname && lname) ? fname + " " + lname : "NA"}</p>
                                         </article>
                                         <select name="private-public" id="private-public" className='border bg-[#ccc] text-[#0F0E0E] px-[.8rem] border-none rounded-[5px]'
                                             onChange={GetPrivatORPublic}
-
                                         >
                                             <option value="public"
                                                 className=''
                                             // onChange={GetPrivatORPublic}
-
-
                                             >Public</option>
                                             <option value="private"
                                             //    onChange={GetPrivatORPublic}
                                             >Private</option>
                                         </select>
-
-
-
                                     </article>
-
-
                                 </main>
-
-
-
                             </section>
-
                             <section className='input-field-section mt-[1rem]
                                     relative 
                                 
@@ -1150,7 +866,6 @@ function AddPost() {
                                     id="mytextarea"
                                     rows="3"
                                     cols='2'
-
                                     value={textareaValue}
                                     onChange={(e) => {
                                         setTextAreaValue(e.target.value)
@@ -1159,7 +874,6 @@ function AddPost() {
                                     placeholder={name1}
                                 >
                                 </textarea>
-
                                 <Button
                                     color=""
                                     buttonType="filled"
@@ -1172,25 +886,16 @@ function AddPost() {
                                     onClick={(e) => {
                                         setEmojiModal(true)
                                     }}
-
                                 >
                                     <Icon name={<BsFillEmojiSmileFill
                                         className="text-[#E45826] text-[1.5rem]"
                                     />} size="sm" />
                                 </Button>
-
-
-
-
                             </section>
-
-
                             {/* UnselectPostImage */}
                             <section className='image-section mt-[1rem] overflow-auto mb-[1rem] pr-[.5rem] '>
                                 <article className=' h-[10rem] border border-gray-300 rounded-lg flex '>
                                     {uploadLoaderBackground ? <ProfileLoader /> : progressMessageBackground === "Uploaded Successfully" ? <ProgressBar text={progressMessageBackground} bgColor="green" /> : UnselectPostImage ? <SelectedImageShowWithURL text={UnselectPostImage} /> :
-
-
                                         <div className="flex w-full  items-center justify-center bg-grey-lighter hover:bg-grey-lighter " >
                                             <label className="  flex-col items-center  bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-white h-full w-full flex justify-center"
                                             // style={{ backgroundColor: "red" }}
@@ -1202,6 +907,7 @@ function AddPost() {
                                                 </svg>
                                                 <span className="mt-2 text-base leading-normal" style={{ color: "green" }}>Select Post Photo</span>
                                                 <input type='file' className="hidden" name="file"
+                                                    accept='image/*'
                                                     ref={photosRef}
                                                     onChange={(e) => {
                                                         // setInputValue(e.target.value)
@@ -1215,22 +921,16 @@ function AddPost() {
                             </section>
                         </p>
                     </ModalBody>
-
                 </div>
                 <footer className="">
-
                     <ModalFooter >
                         <div className="btn-group flex justify-center  w-full">
-
-
-
                             <Button
                                 color="green"
-                                onClick={(e) => {
+                                ondbclick={(e) => {
                                     e.preventDefault()
                                     // setShowModalCodePhoto(false)
                                     SubmitPost()
-
                                 }}
                                 ripple="light"
                                 block={true}
@@ -1241,22 +941,11 @@ function AddPost() {
                     </ModalFooter>
                 </footer>
             </Modal>
-
-
-
-
-
-
-
             {/* =========================ADD SOME TEXT================== */}
-
-
             <Modal size="lg" className="" active={showModalText} toggler={() => {
-
                 setShowModalCodeText(false)
             }}>
                 <div className="modalHeader -mb-[1rem] -mt-[1rem]">
-
                     <ModalHeader className="" toggler={() => setShowModalCodeText(false)}>
                         Text
                     </ModalHeader>
@@ -1272,7 +961,6 @@ function AddPost() {
                                     <article className='
                                     card-post-image-modal w-[3rem]  h-[3rem] rounded-full flex-shrink-0
                                     
-
                                     '>
                                         <Image
                                             src={DispatchProfileImage}
@@ -1281,42 +969,25 @@ function AddPost() {
                                             alt="Rounded Image"
                                             className="w-full h-full"
                                         />
-
-
                                     </article>
-
-
-
                                     <article className=' public-name-article ml-[.5rem] -mt-[.4rem]'>
                                         <article className='text-black text-xl'>
                                             <p> {(fname && lname) ? fname + " " + lname : "NA"}</p>
                                         </article>
                                         <select name="private-public" id="private-public" className='border bg-[#ccc] text-[#0F0E0E] px-[.8rem] border-none rounded-[5px]'
                                             onChange={GetPrivatORPublic}
-
                                         >
                                             <option value="public"
                                                 className=''
                                             // onChange={GetPrivatORPublic}
-
-
                                             >Public</option>
                                             <option value="private"
                                             //    onChange={GetPrivatORPublic}
                                             >Private</option>
                                         </select>
-
-
-
                                     </article>
-
-
                                 </main>
-
-
-
                             </section>
-
                             <section className='input-field-section mt-[1rem]
                                     relative 
                                 
@@ -1346,7 +1017,6 @@ function AddPost() {
                                     id="mytextarea"
                                     rows="3"
                                     cols='2'
-
                                     value={textareaValue}
                                     onChange={(e) => {
                                         SelectTextHandle(e)
@@ -1355,7 +1025,6 @@ function AddPost() {
                                     placeholder={name}
                                 >
                                 </textarea>
-
                                 <Button
                                     color=""
                                     buttonType="filled"
@@ -1368,25 +1037,18 @@ function AddPost() {
                                     onClick={(e) => {
                                         setEmojiModal(true)
                                     }}
-
                                 >
                                     <Icon name={<BsFillEmojiSmileFill
                                         className="text-[#E45826] text-[1.5rem]"
                                     />} size="sm" />
                                 </Button>
-
                             </section>
                         </p>
                     </ModalBody>
-
                 </div>
                 <footer className="">
-
                     <ModalFooter >
                         <div className="btn-group flex justify-center  w-full">
-
-
-
                             <Button
                                 color="green"
                                 onClick={(e) => {
@@ -1404,62 +1066,21 @@ function AddPost() {
                     </ModalFooter>
                 </footer>
             </Modal>
-
-
-
-
-
-
-
-
             {/* <ToastContainer /> */}
-
-
             <Modal size="regular" active={emojiModal} toggler={() => setEmojiModal(false)} className="z-[1000] mt-[22rem]">
                 <div className="con" ref={wrapperref}>
-
-
-
                     <ModalHeader toggler={() => setEmojiModal(false)}>
                         {/* Modal Title */}
                     </ModalHeader>
                     <ModalBody>
-
-
                         <Picker onEmojiClick={onEmojiClick} skinTone={SKIN_TONE_MEDIUM_DARK} />
                     </ModalBody>
                     <ModalFooter>
-
                     </ModalFooter>
                 </div>
             </Modal>
-
-
             {/* =============================================All Button tooltips============================ */}
-
-            <Tooltips placement="top" ref={photosRef}>
-                <TooltipsContent>Upload Photos
-
-
-                </TooltipsContent>
-
-            </Tooltips>
-
-            <Tooltips placement="top" ref={videoRef}>
-                <TooltipsContent>Upload Video</TooltipsContent>
-            </Tooltips>
-
-            <Tooltips placement="top" ref={rssRef}>
-                <TooltipsContent>Post Somethink</TooltipsContent>
-            </Tooltips>
-
         </>
     )
 }
-
 export default AddPost
-
-
-
-
-

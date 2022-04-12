@@ -1,7 +1,7 @@
 import { ToastContainer, toast } from 'react-toastify';
 
 export async function success(props) {
-    window.alert("select files")
+    // window.alert("select files")
     const notify = () => toast.success(props.message, {
         position: "top-center",
         zIndex: 9999,
@@ -38,7 +38,9 @@ export function error(props) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "colored"
+        theme: "colored",
+        className: "toast-container",
+     
     });
 
     notify()

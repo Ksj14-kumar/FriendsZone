@@ -1,14 +1,12 @@
 import { combineReducers, createStore } from 'redux';
-
 import { ImageReducer } from './Redux/imageReducer/ImageReducer';
 import LikeRedux from './Redux/likeCounter/LikeRedux';
 import BackgroundImage from './Redux/ProfielReducer/BackgroundImage';
 import EmojiHandle from './Redux/ProfielReducer/EmojiHandle';
 import LoaderRedux from './Redux/ProfielReducer/LoaderRedux';
 import { PostWhichUserSelectedText, PostWhichUserSelectedImageORVideo } from './Redux/ProfielReducer/PostWhichUserSelected';
-
 import ShowImage, { ShowImageBackground } from './Redux/ProfielReducer/ShowImage';
-import UnselectProfileImage, { UnselectBackgroundImage, UnselectPostImage } from './Redux/ProfielReducer/UnselectProfileImage';
+import UnselectProfileImage, { UnselectBackgroundImage, UnselectPostImage, checkUrlExitsBg, checkUrlExitsProfile } from './Redux/ProfielReducer/UnselectProfileImage';
 import uploadImageDataFrom, { uploadImageDataFromBackground } from './Redux/ProfielReducer/uploadImageDataFrom';
 import UserStillLogin from './Redux/ProfielReducer/UserExistence';
 import UserInformationLoad from './Redux/ProfielReducer/UserInformationLoad';
@@ -16,10 +14,7 @@ import ModalOpen from './Redux/OpenModalForChangePicture/Modal'
 import FileType from './Redux/OpenModalForChangePicture/FileType'
 import GetAllComments, { TotalComment } from './Redux/AllComments/GetAllComments'
 import GetAllPosts from "./Redux/AllPostLoad/LoadPost";
-
-
-
-
+import Notification from './Redux/Notification/Notification'
 const rootReducer = combineReducers({
     imageReducer: ImageReducer,
     UnselectProfileImage: UnselectProfileImage,
@@ -41,11 +36,9 @@ const rootReducer = combineReducers({
     GetAllComments: GetAllComments,
     GetAllPosts: GetAllPosts,
     FileType: FileType,
-    TotalComment: TotalComment
-
-
-
+    TotalComment: TotalComment,
+    Notification,
+    checkUrlExitsBg,
+    checkUrlExitsProfile
 })
 export const store = createStore(rootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
-
-

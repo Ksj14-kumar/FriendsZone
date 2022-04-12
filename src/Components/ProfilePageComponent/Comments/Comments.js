@@ -49,6 +49,7 @@ const Comments = ({ commentsUrl, currentUserId, ImageUrl, currentUserName, UserI
     const SaveUserCommentJson = await SaveUserComment.json()
     console.log({ SaveUserCommentJson })
     if (SaveUserComment.status === 200) {
+      console.log("comment saved", SaveUserCommentJson.data )
       setBackendComments([...backendComments, SaveUserCommentJson.data]);
       setActiveComment(null);
     }
@@ -88,7 +89,7 @@ const Comments = ({ commentsUrl, currentUserId, ImageUrl, currentUserName, UserI
 
       }
     }
-  };
+  }
 
   useEffect(() => {
 
@@ -111,6 +112,8 @@ const Comments = ({ commentsUrl, currentUserId, ImageUrl, currentUserName, UserI
 
 
 
+
+  console.log({backendComments})
   //load all total comment of user
   useEffect(() => {
     async function totalComment() {

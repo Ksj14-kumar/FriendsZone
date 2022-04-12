@@ -19,7 +19,7 @@ export default function Sidebar(props) {
 
     const dispatch = useDispatch()
     const user = useSelector((state) => {
-        console.log("sidebar ", state)
+        // console.log("sidebar ", state)
         return state.UserStillLogin.user
     })
 
@@ -56,15 +56,15 @@ export default function Sidebar(props) {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("uuid")}`
+                    "Authorization": `Bearer ${localStorage.getItem("user_login")}`
 
                 }
             })
             const responseFromServer = await res.json()
-            console.log("delete response from server for the web app", responseFromServer)
+            // console.log("delete response from server for the web app", responseFromServer)
 
             const { message } = responseFromServer
-            console.log(res.status)
+            // console.log(res.status)
 
             if (res.status === 200) {
                 localStorage.clear()
@@ -94,7 +94,7 @@ export default function Sidebar(props) {
             />
             <div
                 // w-64 sidebar width
-                className={`h-screen fixed top-0 md:left-0 ${showSidebar} overflow-y-auto flex-row flex-nowrap overflow-hidden shadow-xl bg-white w-64 z-10 py-4 px-6 transition-all duration-300 mr-36`}
+                className={`h-screen fixed top-0 md:left-0 ${showSidebar} overflow-y-auto flex-row flex-nowrap overflow-hidden shadow-xl bg-white w-64 z-10 py-4 px-6 transition-all duration-300 mr-36  `}
             >
                 <div className="flex-col items-stretch min-h-full flex-nowrap px-0 relative" >
                     <NavLink

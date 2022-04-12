@@ -15,6 +15,7 @@ module.exports = {
         "post-screen": { "max": "680px" },
         "mds-editor6": { "max": "370px" },
         "mds-editor7": { "max": "327px" },
+        "mds-editor8": { "max": "415px" },
       }
     },
   },

@@ -78,6 +78,43 @@ function UnselectPostImage(state = { value: "" }, action = {}) {
 
 }
 
-export { UnselectBackgroundImage,UnselectPostImage }
+
+function checkUrlExitsProfile(state = { value: "" }, action = {}) {
+    // console.log("backghround actions is", action)
+
+    switch (action.type) {
+        case "SetValueOfPreviewImageProfile":
+            return {
+             
+                value: action.payload
+            }
+        default:
+            return state
+    }
+
+}
+
+
+
+function checkUrlExitsBg(state = { value: "" }, action = {}) {
+    console.log("backghround actions is for select and unselect", action)
+
+    switch (action.type) {
+        case "SetValueOfPreviewImageBg":
+            return {
+              
+                value: action.payload
+            }
+        default:
+            return state
+    }
+
+}
+
+
+
+
+
+export { UnselectBackgroundImage, UnselectPostImage, checkUrlExitsProfile, checkUrlExitsBg }
 
 export default UnselectProfileImage;

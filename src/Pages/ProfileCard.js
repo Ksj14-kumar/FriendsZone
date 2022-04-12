@@ -114,11 +114,11 @@ export default function ProfileCard(props) {
 
                 <Card className=" lg:-mt-[170px] md:-mt-[280px] -mt-[300px] 
                         md:ml-[8rem] md:mr-[6rem]  md-w-[71rem] mx-[2rem]  shadow-lg " >
-                    <div className="flex flex-wrap justify-center ">
-                        <div className="w-48  px-4 -mt-24 relative">
+                    <div className="flex flex-wrap justify-center relative">
+                        <div className="w-48 mds-editor2:w-40 px-4 -mt-24 relative outline-1 outline-red-600 rounded-full">
 
                             {DispatchProfileImage.value ?
-                                <Image src={DispatchProfileImage.value} rounded={true} raised={true} className="object-cover" />
+                                <Image src={DispatchProfileImage.value} rounded={true} raised={true} className="object-cover  outline-3 rounded-full outline-double outline-offset-1 outline-neutral-500 " />
 
                                 :
                                 <>
