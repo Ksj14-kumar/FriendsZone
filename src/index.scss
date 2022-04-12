@@ -1,0 +1,25 @@
+.searchArea.absolute.w-full.rounded-lg.bg-red-600.h-\[15rem\].z-10.overflow-auto ::-webkit-scrollbar {
+
+
+    // display: none;
+    width: 5px;
+
+    // visibility: hidden;
+
+
+
+
+}
+
+.searchArea.absolute.w-full.rounded-lg.bg-red-600.h-\[15rem\].z-10.overflow-auto ::-webkit-scrollbar-track {
+
+    width: 5px;
+    background-color: gray;
+
+
+}
+
+.searchArea.absolute.w-full.rounded-lg.bg-red-600.h-\[15rem\].z-10.overflow-auto ::-webkit-scrollbar-thumb{
+    width: inherit;
+    background-color: red;
+}
