@@ -108,18 +108,15 @@ export default function Login(props) {
       })
       console.log("server response after failed", response)
       const status = response.status
-      // console.log("servcer data from server local strtegy", serverData)
+      const serverData = await response.json()
       if (status === 200) {
-        const serverData = await response.json()
-        // console.log("usercookie is", serverData)
-        localStorage.setItem("user_login", JSON.stringify(serverData.user))
-        console.log(serverData)
-        console.log("user data from pi", JSON.stringify(serverData.user))
+        console.log("usercookie is", serverData)
+        localStorage.setItem("uuid", serverData.cookie)
+       
         success({ message: serverData.message })
         setTimeout(() => {
           dispatch({ type: "SET_USER", payload: { user: serverData.user } })
 
-          // dispatch({ type: 'USER', payload: { message: serverData.message, user: serverData.user } })
         }, 4000)
         setLoader(false)
       }

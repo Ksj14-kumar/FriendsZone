@@ -104,7 +104,7 @@ function AddPost() {
         return state.UserStillLogin.user
     })
     // const {_id}= UserStillLogin
-    const { _id } = JSON.parse(localStorage.getItem("user_login"))
+    const _id  = JSON.stringify(localStorage.getItem("uuid"))
     const { fname, lname, college, city, country, position, stream, aboutMe } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "" }
     const name = `What is your in mind Today ? ${fname ? fname.toLowerCase() : "NA"}`
     const name1 = `Say Something About your post if.  👀   ${fname ? fname.toLowerCase() : "NA"}`

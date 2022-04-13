@@ -7,7 +7,7 @@ import { RiLogoutBoxLine } from 'react-icons/ri'
 import { useContext } from 'react'
 import { CgProfile } from 'react-icons/cg'
 import { MdDeleteForever } from 'react-icons/md'
-import { IoMdPhotos,IoMdSettings } from 'react-icons/io'
+import { IoMdPhotos, IoMdSettings } from 'react-icons/io'
 import { BsViewList } from 'react-icons/bs'
 
 import { Context } from '../App';
@@ -30,9 +30,10 @@ export default function Sidebar(props) {
         return state.UserInformationLoad.value
     })
 
-    console.log("user info for sidebar", user, JSON.parse(localStorage.getItem("user_login")))
+    // console.log("user info for sidebar", user, JSON.parse(localStorage.getItem("uuid")))
 
-    const { name, _id } = JSON.parse(localStorage.getItem("user_login"))
+    const _id = localStorage.getItem("uuid")
+    const name = "sanju"
 
 
 
@@ -142,7 +143,7 @@ export default function Sidebar(props) {
                                     className="flex items-center gap-4 text-sm text-gray-700 font-medium px-4 py-3 rounded-lg hover:text-white"
                                     activeClassName="bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white shadow-md"
                                 >
-                                    <Icon name={<IoMdSettings/>} size="2xl" />
+                                    <Icon name={<IoMdSettings />} size="2xl" />
                                     {UserInformationLoad ? "Update Profile" : "Create Profile"}
 
                                 </NavLink>
@@ -159,7 +160,7 @@ export default function Sidebar(props) {
                                     className="flex items-center gap-4 text-sm text-gray-700 font-medium px-4 py-3 rounded-lg hover:text-white"
                                     activeClassName="bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white shadow-md "
                                 >
-                                    <Icon name={<BsViewList/>} size="2xl" />
+                                    <Icon name={<BsViewList />} size="2xl" />
                                     Posts
                                 </NavLink>
                             </li>
@@ -176,7 +177,7 @@ export default function Sidebar(props) {
                                     className="flex items-center gap-4 text-sm text-gray-700 font-medium px-4 py-3 rounded-lg hover:text-white"
                                     activeClassName="bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white shadow-md "
                                 >
-                                    <Icon name={<IoMdPhotos/>} size="2xl" />
+                                    <Icon name={<IoMdPhotos />} size="2xl" />
                                     Photos
                                 </NavLink>
                             </li>

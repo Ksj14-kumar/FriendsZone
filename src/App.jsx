@@ -30,14 +30,18 @@ function App() {
     const [userData, setUserData] = React.useState(null)
     const history = useHistory()
     // const [users, dispatch] = React.useReducer(Reducer, Init)
-    const [cookie, setCookie] = useCookies(['uuid'])
+    const [cookie, setCookie] = useCookies()
     const dispatch = useDispatch()
     const users = useSelector((state) => {
         return state.UserStillLogin
     })
-    const { _id } = JSON.parse(localStorage.getItem("user_login")) ? JSON.parse(localStorage.getItem("user_login")) : { _id: "" }
+
+    console.log(typeof localStorage.getItem("uuid"))
+    console.log(localStorage.getItem("uuid"))
+
+    const _id = JSON.stringify(localStorage.getItem("uuid"))
     // const { _id } = users.user ? users.user : { _id: "" }
-    const getUserData = JSON.parse(localStorage.getItem("user_login"))
+    const getUserData = localStorage.getItem("uuid")
     // const {_id}
     useEffect(() => {
         async function loadData() {
@@ -60,7 +64,7 @@ function App() {
             // console.log(data)
             if (status === 200) {
                 // success({ message: data.message })
-                localStorage.setItem("user_login", JSON.stringify(data.user))
+                localStorage.setItem("uuid", JSON.stringify(data.user))
                 // console.log("user login data from google", JSON.stringify(data.user))
                 // dispatch({ type: "SET_USER", payload: { user: data.user } })
                 setUserData(data.user)
@@ -87,7 +91,7 @@ function App() {
                     Accept: "application/json",
                     "Content-Type": "application/json",
                     "Access-Control-Allow-Credentials": true,
-                    "Authorization": "Bearer " + localStorage.getItem("user_login")
+                    "Authorization": "Bearer " + localStorage.getItem("uuid")
                 }
             })
             const data = await res.json()
@@ -127,7 +131,7 @@ function App() {
                     Accept: "application/json",
                     "Content-Type": "application/json",
                     "Access-Control-Allow-Credentials": true,
-                    "Authorization": "Bearer " + localStorage.getItem("user_login")
+                    "Authorization": "Bearer " + localStorage.getItem("uuid")
                 }
             })
             const data1 = await res1.json()
@@ -157,7 +161,7 @@ function App() {
                     Accept: "application/json",
                     "Content-Type": "application/json",
                     "Access-Control-Allow-Credentials": true,
-                    "Authorization": "Bearer " + localStorage.getItem("user_login")
+                    "Authorization": "Bearer " + localStorage.getItem("uuid")
                 }
             })
             const res = await userInfo.json()
@@ -204,7 +208,7 @@ function App() {
         }
         totalComment()
     }, [])
-  
+
     return (
         // w-screen h-screen
         <Context.Provider value={{ users, dispatch }}>
@@ -270,42 +274,3 @@ function App() {
     )
 }
 export default App
-//toastify message
-async function success(props) {
-    // console.log("success", props)
-    const notify = () => toast.success(props.message, {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored"
-    });
-    notify()
-    return (
-        <div>
-            <ToastContainer />
-        </div>
-    );
-}
-function error(props) {
-    // console.log("0fsdfsd", props)
-    const notify = () => toast.error(props.message, {
-        position: "top-center",
-        autoClose: 7000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored"
-    });
-    notify()
-    return (
-        <div>
-            <ToastContainer />
-        </div>
-    );
-}

@@ -19,7 +19,7 @@ function Dashboard(props) {
 
 
 
-    const { _id } = JSON.parse(localStorage.getItem("user_login"))
+    const _id  = JSON.parse(localStorage.getItem("user_login"))
 
     // const { _id } = users ? users : { _id: "" }
 
