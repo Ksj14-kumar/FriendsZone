@@ -4,6 +4,7 @@ import Register from './Components/Register'
 import Login from './Components/Login';
 import Email from './Components/Email';
 import Header from './Components/Header'
+import RightSidebar from './Components/RightSidebar';
 // import HomePage from './components/HomePage.jsx';
 import Header1 from './Header1'
 // import Header1 from './components/Header1';
@@ -39,9 +40,10 @@ function App() {
     console.log(typeof localStorage.getItem("uuid"))
     console.log(localStorage.getItem("uuid"))
 
-    const _id = JSON.stringify(localStorage.getItem("uuid"))
+    const _id = localStorage.getItem("uuid")
     // const { _id } = users.user ? users.user : { _id: "" }
     const getUserData = localStorage.getItem("uuid")
+    const user = localStorage.getItem("user")
     // const {_id}
     useEffect(() => {
         async function loadData() {
@@ -64,7 +66,7 @@ function App() {
             // console.log(data)
             if (status === 200) {
                 // success({ message: data.message })
-                localStorage.setItem("uuid", JSON.stringify(data.user))
+                // localStorage.setItem("uuid", JSON.stringify(data.user))
                 // console.log("user login data from google", JSON.stringify(data.user))
                 // dispatch({ type: "SET_USER", payload: { user: data.user } })
                 setUserData(data.user)
@@ -209,66 +211,94 @@ function App() {
         totalComment()
     }, [])
 
+
+    //load the all notification 
+    useEffect(() => {
+        async function loadNotification() {
+            const loadNotificationResponse = await fetch(`/blob/load/all/notification/${_id}`)
+            const loadNotificationData = await loadNotificationResponse.json()
+            console.log("load notification data", loadNotificationData.data)
+            if (loadNotificationResponse.status === 200) {
+                dispatch({ type: "Send_Notification", payload: loadNotificationData.data })
+            }
+        }
+        loadNotification()
+    }, [])
+
     return (
         // w-screen h-screen
         <Context.Provider value={{ users, dispatch }}>
-            <>
+            <div className="left_section">
+
                 {
                     getUserData && <Channel />
                 }
                 {
-                    (getUserData || userData) && <Sidebar />
+                    // \\userData
+                    // (getUserData) && <Sidebar />
+                    (getUserData && user) ? <Sidebar /> : <Login />
                 }
+            </div>
+            <>
                 {/* 000B49 */}
                 <div className=' bg-cover app_class'>
                     <Switch Switch >
                         <Route exact path="/" >
                             {
-                                (getUserData) ? <Redirect to="/dashboard" /> : <Header />
+                                (getUserData && user) ? <Redirect to="/dashboard" /> : <Header />
                             }
                             {/* <Dashboard /> */}
                         </Route>
                         <Route exact path="/register">
                             {
-                                (getUserData) ? <Redirect to="/dashboard" /> : <Register />
+                                (getUserData && user) ? <Redirect to="/dashboard" /> : <Register />
                             }
                             {/* <Register /> */}
                         </Route>
                         <Route exact path="/login">
-                            {(getUserData) ? <Redirect to="/dashboard" /> : <Login />}
+                            {(getUserData && user) ? <Redirect to="/dashboard" /> : <Login />}
                             {/* <Login /> */}
                         </Route>
                         <Route exact path="/forget" component={Email} />
                         <Route exact path="/dashboard">
                             {
-                                (getUserData) ? <Dashboard users={getUserData} /> : <Redirect to="/login" />
+                                (getUserData && user) ? <Dashboard users={getUserData} /> : <Redirect to="/login" />
                             }
                             {/* <Dashboard /> */}
                         </Route>
                         <Route exact path="/profile">
                             {
-                                (getUserData) ? <ProfileCard getUserData={getUserData} /> : <Redirect to="/login" />
+                                (getUserData && user) ? <ProfileCard getUserData={getUserData} /> : <Redirect to="/login" />
                             }
                             {/* <ProfileCard/> */}
                         </Route>
                         <Route exact path="/update_profile">
                             {
-                                (getUserData) ? <UpdateProfile getUserData={getUserData} /> : <Redirect to="/login" />
+                                (getUserData && user) ? <UpdateProfile getUserData={getUserData} /> : <Redirect to="/login" />
                             }
                             {/* <UpdateProfile/> */}
                         </Route>
                         <Route exact path="/user/posts">
                             {
-                                (getUserData) ? <UserPosts user={getUserData} /> : <Redirect to="/login" />
+                                (getUserData && user) ? <UserPosts user={getUserData} /> : <Redirect to="/login" />
                             }
                         </Route>
                         <Route exact path="/user/photos">
                             {
-                                (getUserData) ? <UserPhotos user={getUserData} /> : <Redirect to="/login" />
+                                (getUserData && user) ? <UserPhotos user={getUserData} /> : <Redirect to="/login" />
                             }
                         </Route>
                     </Switch>
                 </div >
+
+                {
+                    (getUserData && user) &&
+                    <div className="right_section  fixed top-[93%] right-[.5rem]">
+
+                        <RightSidebar />
+
+                    </div>
+                }
             </>
         </Context.Provider>
     )

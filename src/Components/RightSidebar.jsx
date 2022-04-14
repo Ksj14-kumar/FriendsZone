@@ -35,7 +35,7 @@ function RightSidebar() {
     return (
 
         <>
-            <div className="flex flex-wrap bg-[#03A9F4] rounded-t-lg live_user ">
+            <div className="flex flex-wrap bg-[#03A9F4] rounded-t-lg live_user  ">
                 <div className="w-full sm:w-6/12 md:w-4/12 px-4">
                     <div className="relative inline-flex align-middle w-full">
                         <button
@@ -58,7 +58,7 @@ function RightSidebar() {
                             className={
                                 (dropdownPopoverShow ? "block " : "hidden ") +
                                 (color === "red" ? "bg-white " : "") +
-                                "text-base  float-left py-2 list-none text-left rounded shadow-lg mb-1 bg-white md:w-[12rem]"
+                                "text-base  float-left py-2 list-none text-left rounded mb-1 bg-white mds-editor3:ml-4  md:w-[18rem]"
                             }
                             // style={{ minWidth: "1rem" }}
                         >

@@ -33,7 +33,8 @@ import { RiTreasureMapLine } from 'react-icons/ri';
 import Pusher from 'pusher-js';
 import { Error, Success } from './Toastify';
 import { success, error } from '../toastifyMessage/Toast';
-const { _id } = JSON.parse(localStorage.getItem("user_login")) ? JSON.parse(localStorage.getItem("user_login")) : { _id: "" }
+
+const _id = localStorage.getItem("uuid")
 function useOnClickOutside(ref, handler, setImageValue, setImageValueBackground, dispatch, setProgressMessage, setDeleteMessage) {
     console.log("use handler is 0", ref)
     useEffect(
@@ -92,6 +93,8 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
     const [url, setUrl] = useState("")
     const [BgUrl, setBackgroundImageUrl] = useState("")
     const [showSearch, setShowSearch] = useState(false)
+
+
     const dispatch = useDispatch()
     // useOnClickOutside(wrapperRef, setImageValue, setImageValueBackground, dispatch, setProgressMessage, setDeleteMessage)
     const location = useLocation().pathname;
@@ -208,7 +211,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
                     "Content-Type": "application/json",
                     // "Content-Type": "multipart/form-data",
                     // "Content-Type": "x-www-form-urlencoded",
-                    "Authorization": `Bearer ${localStorage.getItem("user_login")}`
+                    "Authorization": `Bearer ${localStorage.getItem("uuid")}`
                 }
             })
             const ResponseData = await serverResponse.json()
@@ -226,18 +229,25 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
                 setProgressMessage(message)
                 setUploadLoader(false)
                 setProgressMessage("")
+                setDisabledButton(false)
             }
             else if (status === 403) {
                 error({ message: message })
                 setUploadLoader(false)
+                setDisabledButton(false)
+
             }
             else if (status === 499) {
                 error({ message: "not Upload please, Try again" })
                 setUploadLoader(false)
+                setDisabledButton(false)
+
             }
             else if (status === 400) {
                 error({ message: "please select photo" })
                 setUploadLoader(false)
+                setDisabledButton(false)
+
             }
             else {
             }
@@ -285,18 +295,32 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
                 setProgressMessage(message)
                 setUploadLoaderBackground(false)
                 setProgressMessage("")
+                setDisabledButtonBg(false)
             }
             else if (status === 403) {
                 error({ message: message })
                 setUploadLoaderBackground(false)
+                setDisabledButtonBg(false)
+
             }
             else if (status === 499) {
                 error({ message: "not Upload please, Try again" })
                 setUploadLoaderBackground(false)
+                setDisabledButtonBg(false)
+
             }
             else if (status === 400) {
                 error({ message: "please select photo" })
                 setUploadLoaderBackground(false)
+                setDisabledButtonBg(false)
+
+            }
+            else if (status === 401) {
+                setUploadLoaderBackground(false)
+
+                error({ message: "not upload please, Try again" })
+                setDisabledButtonBg(false)
+                return
             }
             else {
                 console.log("helo")
@@ -332,6 +356,11 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
             else if (res.status === 500) {
                 error({ message: res.data.message })
                 setDeleteLoader(false)
+                return
+            }
+
+            else if (res.status === 401) {
+                error({ message: "not upload please, Try again" })
                 return
             }
             // window.alert(res.data.message)
@@ -528,7 +557,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
                             >
                                 <MdNotifications className='text-[2rem] self-center text-[#270082]' />
                                 <article className=' bg-red-500 absolute right-2 -top-2 mds-editor8:-top-3'>
-                                    <Badge badgeContent={likedUserDatails.length > 0 ? likedUserDatails.length-1 : 0} showZero color="success" max={20}>
+                                    <Badge badgeContent={likedUserDatails.length > 0 ? likedUserDatails.length  : 0} showZero color="success" max={20}>
                                         {/* <MailIcon color="action" /> */}
                                         {/* 4 */}
                                     </Badge>
@@ -712,6 +741,8 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
                                     e.preventDefault()
                                     fileInputSubmit(e)
                                     setShowModalCode(true)
+                                    setDisabledButton(true)
+
                                 }
                                 }
                                 ripple="light"
@@ -825,6 +856,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
                             onClick={(e) => {
                                 e.preventDefault()
                                 fileInputSubmitBackground(e)
+                                setDisabledButtonBg(true)
                                 setShowModalCodeBackground(true)
                             }
                             }

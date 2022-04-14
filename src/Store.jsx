@@ -14,6 +14,7 @@ import ModalOpen from './Redux/OpenModalForChangePicture/Modal'
 import FileType from './Redux/OpenModalForChangePicture/FileType'
 import GetAllComments, { TotalComment } from './Redux/AllComments/GetAllComments'
 import GetAllPosts from "./Redux/AllPostLoad/LoadPost";
+import Name from './Redux/UserInfo/Name';
 import Notification from './Redux/Notification/Notification'
 const rootReducer = combineReducers({
     imageReducer: ImageReducer,
@@ -39,6 +40,8 @@ const rootReducer = combineReducers({
     TotalComment: TotalComment,
     Notification,
     checkUrlExitsBg,
-    checkUrlExitsProfile
+    checkUrlExitsProfile,
+    Name
+
 })
 export const store = createStore(rootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())

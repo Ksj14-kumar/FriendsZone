@@ -112,10 +112,12 @@ export default function Login(props) {
       if (status === 200) {
         console.log("usercookie is", serverData)
         localStorage.setItem("uuid", serverData.cookie)
-       
+       const {user}= serverData
         success({ message: serverData.message })
+        dispatch({ type: "NAME", payload: user })
+        localStorage.setItem("user", JSON.stringify(user))
         setTimeout(() => {
-          dispatch({ type: "SET_USER", payload: { user: serverData.user } })
+          dispatch({ type: "SET_USER", payload:{ user:serverData.user} })
 
         }, 4000)
         setLoader(false)

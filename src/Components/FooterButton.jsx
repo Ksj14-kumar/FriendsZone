@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { MdMedicalServices } from 'react-icons/md';
 import Icon from "@material-tailwind/react/Icon";
 import Button from "@material-tailwind/react/Button";
@@ -9,8 +9,12 @@ import img3 from '../assets/img/team-3-800x800.jpg';
 import Tooltips from "@material-tailwind/react/Tooltips";
 import TooltipsContent from "@material-tailwind/react/TooltipsContent";
 import { MdLocationOn, MdSearch } from 'react-icons/md';
+import { stepButtonClasses } from '@mui/material';
 function FooterButton({ bool }) {
     const buttonRef = useRef()
+    const targetDiv = useRef()
+    const siblingDiv = useRef()
+    const [cssClass, setClass] = useState(false)
 
 
 
@@ -23,33 +27,73 @@ function FooterButton({ bool }) {
 
     }
 
+    useEffect(() => {
+        if (cssClass === true) {
+            targetDiv.current.style.width = "15rem"
+            siblingDiv.current.style.display = "none"
+
+        }
+        else {
+            targetDiv.current.style.width = "0rem"
+            targetDiv.current.style.marginRight = "3.9rem"
+            siblingDiv.current.style.display = "block"
+
+        }
+
+
+
+    }, [cssClass])
+
+
 
 
     //HOW TO HANDLE USER NAME WHEN IT IS LARGE CHARACTER
 
     return (
         <>
-            <main className="main">
-                <header className="_top_chat_header  flex justify-around items-center   cursor-pointer bg-green-500">
-                    <section className="_left">
+            <main className="main border-2 border-solid border-gray-200">
+                <header className="_top_chat_header  flex   items-center     py-1 justify-between ">
+                    <section className="_left  "
+                        ref={siblingDiv}
+                    >
 
-                        <p className='text-lg text-black '>Active</p>
+                        <p className='text-lg text-black ml-4 mds-editor7:text-sm'>Active</p>
                     </section>
 
-                    <section className="_right relative"
+                    <section className="_right relative  -px-4 mr-10 "
                         onFocus={() => {
                             // alert("hello world")
                         }}
                     >
-                        {/* <div className="container_search">
-                            <input placeholder='Search...' className='js-search bg-red-500' type="text" id="search_friend_live" />
-                            <MdSearch className='text-lg text-black cursor-pointer absolute ml-1' />
 
-                        </div> */}
 
-                        <div className="container_search">
-                            <input type="text" placeholder="Search..." id="search_friend_live" />
-                            <div className="search_input_icon"></div>
+                        <div className="container_search flex  items-center relative  w-0"
+
+                            // onBlur={() => {
+                            //     setClass(false)
+                            // }}
+                            ref={targetDiv}
+                        >
+                            <input type="text" placeholder="Search..." id="search_friend_live" className='h-[2rem] focus:outline-none rounded-full indent-2 caret-[#F10086] focus:border-1  w-full pr-[3.4rem] text-center focus:border-2 focus:border-solid focus:border-[#F10086] '
+                            // onFocus={
+                            //     setClass(true)
+                            // }
+                            />
+
+                            <Button
+                                color=""
+                                rounded={true}
+                                size="sm"
+                                className="fixed right-0  text-black   mr-[3rem] bg-[#F10086]"
+                                onClick={() => {
+                                    setClass(!cssClass)
+                                }}
+
+                            >
+                                <Icon name={<MdSearch className='text-[1.3rem] text-black' />} />
+
+
+                            </Button>
                         </div>
 
 
@@ -57,6 +101,7 @@ function FooterButton({ bool }) {
 
                 </header>
                 <hr />
+                
                 <section className="_live_user mt-4">
 
                     <div className="outer relative mb-1  z-[2700] flex hover:bg-[#7b787843] rounded-lg px-1" ref={buttonRef}>
@@ -85,18 +130,22 @@ function FooterButton({ bool }) {
                     </div>
 
 
-                    <Tooltips placement="left" ref={buttonRef}>
+                    <Tooltips placement="auto" ref={buttonRef} className="bg-white">
                         <TooltipsContent>
-                            <div className="user_info_container  flex">
-                                <section className='bg-red-500 w-[8rem] h-[8rem] mr-1'>
+                            <div className="user_info_container  flex text-black bg-white mds-editor3:text-sm">
+                                <section className='
+                                 mds-editor3:w-[8rem] mds-editor7:items-center mds-editor7:flex
+                                mds-editor7:content-center  mds-editor3:h-[8rem]  w-[8rem] h-[8rem] mr-1'>
                                     <Image src={img1}
+                                    className="mds-editor7:mt-[5rem]"
 
                                     />
 
                                 </section>
-                                <section className="info  w-[12rem] text-center">
+                                <section className="info mds-editor3:w-[8rem]
+                                w-[12rem] text-center  mds-editor3:text-[.8rem]">
                                     <p className='text-xl font-bold'>Tony Sama</p>
-                                    <article className='info_about flex gap-2  indent-2 mt-2'>
+                                    <article className='info_about flex gap-2  indent-2 mt-2 mds-editor7:flex-col'>
                                         <section className='post'>
                                             <p className='text-lg font-semibold'>posts</p>
                                             <p>44</p>

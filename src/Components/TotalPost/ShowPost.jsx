@@ -59,14 +59,21 @@ function ShowPost({ item }) {
 
     }
 
-
     return (
-        <div className="each-post bg-red-600 mt-2 ">
-            <Card>
+    <div className="each-post  mt-0    mds-editor6:w-full flex justify-center gap-y-2 md:ml-2 post-screen:mt-2   md:content-between
+    md:mt-[5rem]
+    
+    ">
+            <Card className=" w-[22rem] mds-editor3:w-[15rem] px-0 pb-0 cursor-pointer mds-editor6:w-full h-full md:mt-2 "
+            onClick={()=>{
+                console.log(window.location.href, window.location.href=`/post/${item.post_id}`)
+                window.location.href=`/post/${item.post_id}`
+            }}
+            >
 
 
                 <header className="flex justify-between -mt-2 relative">
-                    <Paragraph className="text-white text-sm">{item.createdAt}</Paragraph>
+                    <Paragraph className="text-white text-sm ml-[]1rem">{item.createdAt}</Paragraph>
 
                     <Button color="white" size="sm" ripple="light"
                         iconOnly={true}
@@ -95,30 +102,16 @@ function ShowPost({ item }) {
                             item.text
                         }
                     </Paragraph>
-                </CardBody>
+                </CardBody >
                 {
                     item.image &&
                     <Image src={item.image}
-                        className="flex-shrink-0 p-0"
+                        className="flex-shrink-0 p-0 rounded-none h-full "
 
                     />
                 }
 
-                <CardFooter>
-                    <Button
-                        className="lowercase h-[2rem] py-4"
-                        size="sm"
-                        block={true}
-                        onClick={() => {
-                            deletePost(item.post_id, item.userId)
-                        }}
-                    >
-                        <Spinner name="ball-clip-rotate" color="steelblue"
-                            className="text-[.3rem] mt-1"
-                        />
-
-                    </Button>
-                </CardFooter>
+          
             </Card>
             <Popover placement="left" ref={buttonRef} className="lowercase bg-white">
                 <PopoverContainer className="bg-white">

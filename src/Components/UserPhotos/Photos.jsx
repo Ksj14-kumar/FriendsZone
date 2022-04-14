@@ -101,7 +101,7 @@ function Photos() {
                 <CardHeader color=""
 
 
-                    size="lg"
+                    size="sm"
                     className="cursor-pointer header bg-[#118989] text-white py-4"
                 >
                     <H5 color="white">Photos</H5>

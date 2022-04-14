@@ -29,8 +29,13 @@ import OverlayLoader from '../../Loader/BackgrooundImageLoader';
 import Pusher from 'pusher-js';
 import ReadMore from './ReadMore';
 import { Error, Success } from '../Toastify';
+import { error } from '../../toastifyMessage/Toast';
 import { success } from '../../toastifyMessage/Toast';
 import Model from './Model';
+Pusher.logToConsole = true;
+
+
+
 function PostCard({ item, index, filterPost }) {
     // console.log("user detail with likes", item)
     const [emojiURL, setEmojiURL] = useState("")
@@ -80,6 +85,25 @@ function PostCard({ item, index, filterPost }) {
             },
             body: JSON.stringify({ public_id })
         })
+        if (DeletePostResponse.status === 200) {
+
+            //intialize the pusher connection
+            var pusher = new Pusher(process.env.REACT_APP_API_KEY, {
+                cluster: process.env.REACT_APP_API_CLUSTER,
+                // encrypted: true,
+            });
+            const LikedPost = pusher.subscribe("DeleteNotiByPost");
+            //this is used for subscribe the channel
+            LikedPost.bind('pusher:subscription_succeeded', function (members) {
+                // alert('successfully subscribed!');
+            });
+            //get the instance response from server
+            LikedPost.bind("DeleteNotiMessage", (data) => {
+                console.log("Delete post data.......", data)
+                dispatch({ type: "Send_Notification", payload: data.allNotiAfterDelete })
+            })
+
+        }
     }
 
     //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Change the visibility^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -96,11 +120,12 @@ function PostCard({ item, index, filterPost }) {
         const data = await response.json()
         console.log("data is ", data)
         if (response.status === 200) {
+            success({ message: "Visibility Changed Successfully" })
+            dispatch({ type: "LOAD_POSTS", payload: data.data })
+        } else if (response.status === 500) {
+            error({ message: "Something went wrong" })
 
 
-            success({ message: "Visibility Changed, now it is private" })
-        } else {
-            Error(data.message)
         }
 
 
@@ -118,10 +143,9 @@ function PostCard({ item, index, filterPost }) {
         try {
             const result = axios.put(`/blob/user/like/${userId}/${post_id}`)
             console.log({ result })
-            Pusher.logToConsole = true;
             //intialize the pusher connection
-            var pusher = new Pusher('55296f450b8497fbd4f6', {
-                cluster: 'ap2',
+            var pusher = new Pusher(process.env.REACT_APP_API_KEY, {
+                cluster: process.env.REACT_APP_API_CLUSTER,
                 // encrypted: true,
             });
             const LikedPost = pusher.subscribe("LikePost");
@@ -132,7 +156,7 @@ function PostCard({ item, index, filterPost }) {
             //get the instance response from server
             LikedPost.bind("LikePostMessage", (data) => {
                 console.log("liked poost data.......", data)
-                dispatch({ type: "Send_Notification", payload: { url: data.url, name: data.name } })
+                dispatch({ type: "Send_Notification", payload: data.allNoti })
             })
             like ? setLikeCount(likeCount - 1) : setLikeCount(likeCount + 1)
         } catch (err) {
@@ -144,11 +168,11 @@ function PostCard({ item, index, filterPost }) {
 
 
     //visiblity handler
-    async function visibleHandler(con){
+    async function visibleHandler(con) {
         setVisibilityModal(false)
     }
 
-    console.log({VisibilityModal})
+    console.log({ VisibilityModal })
 
     return (
         <>
@@ -292,6 +316,9 @@ function PostCard({ item, index, filterPost }) {
                                 iconOnly={false}
                                 ripple="none"
                                 className="hover:bg-gray-100 text-gray-500  text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem]"
+                                onClick={() => {
+                                    console.log(item.post_url)
+                                }}
                             >
                                 <RiShareFill />
                             </Button>
@@ -369,7 +396,7 @@ function PostCard({ item, index, filterPost }) {
 
 
             {
-                VisibilityModal && <Model visible={VisibilityModal} visibilityHandle={visibleHandler}/>
+                VisibilityModal && <Model visible={VisibilityModal} visibilityHandle={visibleHandler} setPrivacyToServer={VisibilityChange} privacy={item.privacy} post_id={item.post_id} />
             }
 
 

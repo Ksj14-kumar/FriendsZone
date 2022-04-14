@@ -6,12 +6,15 @@
 
 
 
-const LikeRedux = (state = "", action = {}) => {
+const LikeRedux = (state = [], action = {}) => {
     console.log("like redux", action)
 
     switch (action.type) {
         case 'LIKE':
-            return action.payload
+            return [
+                ...state,
+                ...action.payload
+            ]
 
         default:
             return state;

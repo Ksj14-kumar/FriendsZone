@@ -18,9 +18,9 @@ export default function Sidebar(props) {
     const history = useHistory()
 
     const dispatch = useDispatch()
-    const user = useSelector((state) => {
+    const Name = useSelector((state) => {
         // console.log("sidebar ", state)
-        return state.UserStillLogin.user
+        return state.Name
     })
 
 
@@ -33,7 +33,8 @@ export default function Sidebar(props) {
     // console.log("user info for sidebar", user, JSON.parse(localStorage.getItem("uuid")))
 
     const _id = localStorage.getItem("uuid")
-    const name = "sanju"
+    const Name1 = JSON.parse(localStorage.getItem("user"))
+
 
 
 
@@ -91,7 +92,7 @@ export default function Sidebar(props) {
             <AdminNavbar
                 showSidebar={showSidebar}
                 setShowSidebar={setShowSidebar}
-                name={name}
+                name={Name ? Name : Name1}
             />
             <div
                 // w-64 sidebar width
@@ -106,7 +107,7 @@ export default function Sidebar(props) {
                     >
 
                         {/* props.name */}
-                        <H6 color="gray">{name ? name : "NA"}</H6>
+                        <H6 color="gray">{Name ? Name : Name1}</H6>
                     </NavLink>
                     <div className="flex flex-col">
                         <hr className="my-4 min-w-full" />

@@ -104,7 +104,7 @@ function AddPost() {
         return state.UserStillLogin.user
     })
     // const {_id}= UserStillLogin
-    const _id  = JSON.stringify(localStorage.getItem("uuid"))
+    const _id  = localStorage.getItem("uuid")
     const { fname, lname, college, city, country, position, stream, aboutMe } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "" }
     const name = `What is your in mind Today ? ${fname ? fname.toLowerCase() : "NA"}`
     const name1 = `Say Something About your post if.  👀   ${fname ? fname.toLowerCase() : "NA"}`
@@ -270,13 +270,15 @@ function AddPost() {
             // console.log("user image url is", userPost)
             // ImageAsUrl
             // 
+            console.log({_id})
+            // _id + 
             const SaveUserPostIntoDb = await fetch(`/blob/local/url/${_id}`, {
                 method: "POST",
                 body: JSON.stringify({
                     text: textareaValue,
                     image: ImageAsUrl,
                     privacy: PrivateOrPublic,
-                    post_id: _id + uuidv4(),
+                    post_id: uuidv4(),
                     fileType: fileType,
                     // likes_count: 100,
                     
@@ -288,12 +290,13 @@ function AddPost() {
             })
             // const { status, data } = SaveUserPostIntoDb
             const SaveUserPostIntoDbJson = await SaveUserPostIntoDb.json()
+            console.log("SaveUserPostIntoDbJson", SaveUserPostIntoDbJson)
             // setTextAreaValue("")
             // const SaveUserPostIntoDbJson = await SaveUserPostIntoDb.json()
             if (SaveUserPostIntoDb.status === 200) {
                 // Pusher.logToConsole = true
-                var pusher = new Pusher('55296f450b8497fbd4f6', {
-                    cluster: 'ap2',
+                var pusher = new Pusher(process.env.REACT_APP_API_KEY, {
+                    cluster:  process.env.REACT_APP_API_CLUSTER,
                     // encrypted: true,
                 });
                 var socketId;
@@ -334,7 +337,7 @@ function AddPost() {
                 }, 2000)
             }
             else {
-                Error({ message: "This Post is Already exit.." })
+                // Error({ message: "This Post is Already exit.." })
                 setTextAreaValue("")
                 setFileType("")
                 console.log("show error from client", SaveUserPostIntoDbJson)

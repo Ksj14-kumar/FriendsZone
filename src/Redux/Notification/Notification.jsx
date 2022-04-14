@@ -5,7 +5,7 @@ function Notification(state = [{}], action = {}) {
         case "Send_Notification":
             if (action.payload) {
                 return [
-                    ...state,
+                   
                     ...action.payload
                 ]
             }

@@ -157,6 +157,15 @@ export default function ProfileCard(props) {
                             </Button>
                         </div>
                         <div className="w-full flex justify-center py-4 lg:pt-4 pt-8">
+
+                            <div className="p-4 text-center">
+                                <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
+                                    22
+                                </span>
+                                <span className="text-sm text-gray-700">Status</span>
+                            </div>
+
+
                             <div className="p-4 text-center">
                                 <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
                                     22
