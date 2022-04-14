@@ -140,9 +140,19 @@ function PostCard({ item, index, filterPost }) {
         setLike(item.liked.includes(googleId))
     }, [item.liked, _id])
     //function which excute when current user liked it any post
-    function callLikeHnadler(userId, post_id) {
+    async function callLikeHnadler(userId, post_id) {
         try {
-            const result = axios.put(`/blob/user/like/${userId}/${post_id}`)
+            console.log("userId", userId)
+            console.log("post_id", post_id)
+            console.log("goodle id", googleId)
+            const result = await axios.put(`/blob/user/like/${post_id}`, {
+                likedBy: googleId,
+                likeTo: userId,
+                headers: {
+                    "Content-Type": "application/json",
+
+                }
+            })
             console.log({ result })
             //intialize the pusher connection
             var pusher = new Pusher(process.env.REACT_APP_API_KEY, {
@@ -344,7 +354,8 @@ function PostCard({ item, index, filterPost }) {
                             (commentToggle ? (UserInformationLoad ?
                                 <Comments
                                     commentsUrl="http://localhost:3004/comments"
-                                    currentUserId={item.userId ? item.userId : null}
+                                    // currentUserId={item.userId ? item.userId : null}
+                                    currentUserId={googleId ? googleId : null}
                                     post_id={item.post_id ? item.post_id : null}
                                     UserIdForPostComments={item.userId ? item.userId : null}
                                     currentUserName={fname + " " + lname}
