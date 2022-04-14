@@ -449,6 +449,8 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
             setUploadLoader(false)
             setDisabledButton(false)
             setDeleteLoader(false)
+            setDisabledButtonBg(false)
+            setDisabledButton(false)
             setUploadLoaderBackground(false)
         }
     }, [showModal, showModalBackground])
@@ -557,7 +559,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
                             >
                                 <MdNotifications className='text-[2rem] self-center text-[#270082]' />
                                 <article className=' bg-red-500 absolute right-2 -top-2 mds-editor8:-top-3'>
-                                    <Badge badgeContent={likedUserDatails.length > 0 ? likedUserDatails.length  : 0} showZero color="success" max={20}>
+                                    <Badge badgeContent={likedUserDatails.length > 0 ? likedUserDatails.length : 0} showZero color="success" max={20}>
                                         {/* <MailIcon color="action" /> */}
                                         {/* 4 */}
                                     </Badge>

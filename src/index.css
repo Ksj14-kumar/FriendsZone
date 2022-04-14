@@ -641,7 +641,21 @@ transition: all 2s ease-in-out;
 background: white;
 }
 
+/*.active{
 
+border-bottom: 2px solid #E91E63;
+}
+
+.inactive{
+border-bottom: 2px solid #ffffff;
+}*/
+
+
+.combine{
+    -webkit-box-shadow: 1px 3px 13px -2px rgba(0,0,0,0.43);
+-moz-box-shadow: 1px 3px 13px -2px rgba(0,0,0,0.43);
+box-shadow: 1px 3px 13px -2px rgba(0,0,0,0.43);
+}
 
 
 

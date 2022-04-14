@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react'
-import { Switch, Route, Redirect, useHistory } from 'react-router-dom'
+import { Switch, Route, Redirect, useHistory, NavLink } from 'react-router-dom'
 import Register from './Components/Register'
 import Login from './Components/Login';
 import Email from './Components/Email';
@@ -24,6 +24,7 @@ import UserPosts from './Pages/UserPosts';
 import UserPhotos from './Pages/UserPhotos';
 import axios from 'axios';
 import Channel from './SubscribeChannels/Channel';
+import SinglePost from './Components/SinglePost';
 export const Context = createContext()
 console.log("api key from React", process.env.REACT_APP_API_KEY)
 console.log("api key from React", process.env.REACT_APP_API_CLUSTER)
@@ -228,6 +229,7 @@ function App() {
     return (
         // w-screen h-screen
         <Context.Provider value={{ users, dispatch }}>
+            
             <div className="left_section">
 
                 {
@@ -236,7 +238,7 @@ function App() {
                 {
                     // \\userData
                     // (getUserData) && <Sidebar />
-                    (getUserData && user) ? <Sidebar /> : <Login />
+                    (getUserData && user) && <Sidebar /> 
                 }
             </div>
             <>
@@ -288,6 +290,10 @@ function App() {
                                 (getUserData && user) ? <UserPhotos user={getUserData} /> : <Redirect to="/login" />
                             }
                         </Route>
+
+
+                        
+
                     </Switch>
                 </div >
 

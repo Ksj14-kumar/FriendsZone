@@ -17,6 +17,9 @@ import ProfileCreateLoader from '../Loader/ProfileCreateLoader';
 export default function SettingsForm() {
     const [loader, setLoader] = React.useState(false)
 
+
+    const _id = localStorage.getItem("uuid")
+
     const [UserProfileInformationm, setUserProfileInformationm] = React.useState({
         username: "",
         fname: "",
@@ -60,7 +63,7 @@ export default function SettingsForm() {
 
         else {
             setLoader(true)
-            const res = await fetch("/blob/user/i/b/y9y5y0q3eztm3ibcd8z0/bum6ozd9m1sw4w9fbxea/amqvdkbe49sn4u3cvsvt/e5ce6ba3miamapdl7wyv", {
+            const res = await fetch(`/blob/user/i/b/y9y5y0q3eztm3ibcd8z0/bum6ozd9m1sw4w9fbxea/amqvdkbe49sn4u3cvsvt/e5ce6ba3miamapdl7wyv/${_id}`, {
                 method: "POST",
                 body: JSON.stringify(UserProfileInformationm),
                 headers: {
@@ -172,7 +175,7 @@ export default function SettingsForm() {
                                 color="purple"
                                 outline={true}
                                 value={UserProfileInformationm.fname}
-                            
+
                                 name="fname"
 
 
@@ -293,7 +296,7 @@ export default function SettingsForm() {
                                     UserProfileInformationm.college
 
                                 }
-                            
+
                                 name="college"
 
 
@@ -314,7 +317,7 @@ export default function SettingsForm() {
                                 }
                                 name="stream"
 
-                            
+
 
                                 onChange={InputHandleValue}
 
@@ -331,7 +334,7 @@ export default function SettingsForm() {
                                     UserProfileInformationm.degree
 
                                 }
-                            
+
                                 name="degree"
 
 
@@ -358,7 +361,7 @@ export default function SettingsForm() {
                                 UserProfileInformationm.position
 
                             }
-                        
+
                             name="position"
 
 
@@ -382,7 +385,7 @@ export default function SettingsForm() {
 
                             }
                             name="aboutMe"
-                        
+
 
 
                             outline={true} />

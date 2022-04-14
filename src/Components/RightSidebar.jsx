@@ -58,7 +58,7 @@ function RightSidebar() {
                             className={
                                 (dropdownPopoverShow ? "block " : "hidden ") +
                                 (color === "red" ? "bg-white " : "") +
-                                "text-base  float-left py-2 list-none text-left rounded mb-1 bg-white mds-editor3:ml-4  md:w-[18rem]"
+                                "text-base  float-left py-2 list-none text-left rounded mb-1 bg-white mds-editor3:ml-6  md:w-[18rem]"
                             }
                             // style={{ minWidth: "1rem" }}
                         >

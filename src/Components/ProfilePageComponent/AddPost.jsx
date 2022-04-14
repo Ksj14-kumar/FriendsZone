@@ -78,6 +78,10 @@ function AddPost() {
     const [chosenEmoji, setChosenEmoji] = React.useState(null);
     const [fileType, setFileType] = React.useState(null);
     const [SelectedFile, setFile] = React.useState(null);
+    const [groupDisable, setDisabledGroup] = React.useState(false);
+    const [videoDisable, setDisabledVideo] = React.useState(false);
+    const [photosDisable, setDisabledPhotos] = React.useState(false);
+    const [textDisable, setDisabledText] = React.useState(false);
     const inputRef = React.useRef()
     const photosRef = React.useRef()
     const videoRef = React.useRef()
@@ -104,7 +108,7 @@ function AddPost() {
         return state.UserStillLogin.user
     })
     // const {_id}= UserStillLogin
-    const _id  = localStorage.getItem("uuid")
+    const _id = localStorage.getItem("uuid")
     const { fname, lname, college, city, country, position, stream, aboutMe } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "" }
     const name = `What is your in mind Today ? ${fname ? fname.toLowerCase() : "NA"}`
     const name1 = `Say Something About your post if.  👀   ${fname ? fname.toLowerCase() : "NA"}`
@@ -270,7 +274,13 @@ function AddPost() {
             // console.log("user image url is", userPost)
             // ImageAsUrl
             // 
-            console.log({_id})
+            console.log({ _id })
+            console.log("image urrl", ImageAsUrl)
+            setDisabledGroup(true)
+            setDisabledPhotos(true)
+
+            setDisabledText(true)
+            setDisabledVideo(true)
             // _id + 
             const SaveUserPostIntoDb = await fetch(`/blob/local/url/${_id}`, {
                 method: "POST",
@@ -280,8 +290,10 @@ function AddPost() {
                     privacy: PrivateOrPublic,
                     post_id: uuidv4(),
                     fileType: fileType,
+                    name: fname + " " + lname,
+                    userProfileImageUrl: DispatchProfileImage,
                     // likes_count: 100,
-                    
+
                     time: new Date(Date.now()).toDateString().split(" ")[2] + " " + new Date(Date.now()).toDateString().split(" ")[1] + " " + new Date(Date.now()).toDateString().split(" ")[3]
                 }),
                 headers: {
@@ -295,8 +307,13 @@ function AddPost() {
             // const SaveUserPostIntoDbJson = await SaveUserPostIntoDb.json()
             if (SaveUserPostIntoDb.status === 200) {
                 // Pusher.logToConsole = true
+                setDisabledGroup(false)
+                setDisabledPhotos(false)
+
+                setDisabledText(false)
+                setDisabledVideo(false)
                 var pusher = new Pusher(process.env.REACT_APP_API_KEY, {
-                    cluster:  process.env.REACT_APP_API_CLUSTER,
+                    cluster: process.env.REACT_APP_API_CLUSTER,
                     // encrypted: true,
                 });
                 var socketId;
@@ -322,7 +339,7 @@ function AddPost() {
                 //     type: "LOAD_POSTS",
                 //     payload: SaveUserPostIntoDbJson.data
                 // })
-                
+
                 dispatch({ type: "UNSELECT_POST_IMAGE", payload: "" })
                 setTextAreaValue("")
                 setFileType("")
@@ -338,6 +355,11 @@ function AddPost() {
             }
             else {
                 // Error({ message: "This Post is Already exit.." })
+                setDisabledGroup(false)
+                setDisabledPhotos(false)
+
+                setDisabledText(false)
+                setDisabledVideo(false)
                 setTextAreaValue("")
                 setFileType("")
                 console.log("show error from client", SaveUserPostIntoDbJson)
@@ -358,14 +380,22 @@ function AddPost() {
     }
     //clear the content of each model when user click outside of the model
     useEffect(() => {
-        if (VideoModelRef.current.contains(document.activeElement) === false) {
+        if ((VideoModelRef.current.contains(document.activeElement) === false) || (photosRef.current.contains(document.activeElement) === false)
+            || (textRef.current.contains(document.activeElement) === false) || (wrapperref.current.contains(document.activeElement) === false)
+        ) {
+
+            setDisabledGroup(false)
+            setDisabledPhotos(false)
+            setDisabledText(false)
+            setDisabledVideo(false)
             // alert("click")
             // profileInput.current.value = null
-            dispatch({ type: "SELECTED_POST_IMAGE", payload:""})
+            dispatch({ type: "SELECTED_POST_IMAGE", payload: "" })
+            dispatch({ type: "UNSELECT_POST_IMAGE", payload: "" })
             setTextAreaValue("")
-           
+
         }
-    }, [showModalPhoto,showModalVideo, showModalText])
+    }, [showModalPhoto, showModal, showModalVideo, showModalText])
     //============================================MODAL FOR Photos===================
     return (
         <>
@@ -439,7 +469,7 @@ function AddPost() {
                             </Button>
                         </div>
                         <Tooltips placement="top" ref={photosRef}>
-                            <TooltipsContent>Upload Photos
+                            <TooltipsContent className="text-black">Upload Photos
                             </TooltipsContent>
                         </Tooltips>
                         <div className="video">
@@ -457,7 +487,7 @@ function AddPost() {
                             </Button>
                         </div>
                         <Tooltips placement="top" ref={videoRef}>
-                            <TooltipsContent>Upload Video</TooltipsContent>
+                            <TooltipsContent className="text-black">Upload Video</TooltipsContent>
                         </Tooltips>
                         <div className="feeling">
                             <Button color="" size="regular" className="px-[2.5rem] md:px-[3.5rem] bg-[#151D3B]   text-2xl
@@ -474,7 +504,7 @@ function AddPost() {
                             </Button>
                         </div>
                         <Tooltips placement="top" ref={rssRef}>
-                            <TooltipsContent>Post Somethink</TooltipsContent>
+                            <TooltipsContent className="text-black">Post Somethink</TooltipsContent>
                         </Tooltips>
                     </CardFooter>
                 </Card>
@@ -630,8 +660,11 @@ function AddPost() {
                                     </Button> */}
                                     <Button
                                         color="green"
+
+                                        disabled={groupDisable ? true : false}
                                         onClick={(e) => {
                                             SubmitPost()
+                                            setDisabledGroup(true)
                                             // setShowModalCode(false)
                                         }}
                                         ripple="light"

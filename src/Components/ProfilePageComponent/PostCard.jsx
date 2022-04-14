@@ -32,6 +32,7 @@ import { Error, Success } from '../Toastify';
 import { error } from '../../toastifyMessage/Toast';
 import { success } from '../../toastifyMessage/Toast';
 import Model from './Model';
+import profile from '../../assets/img/download.png'
 Pusher.logToConsole = true;
 
 
@@ -63,7 +64,7 @@ function PostCard({ item, index, filterPost }) {
     function emojiHandle() {
         dispatch({ type: "ADD_EMOJI_URL", paylaod: emojiURL })
     }
-    // console.log("url", emojiURL)
+
     function SetCommentSection(e, id) {
         // console.log(commentToggle, "commnet value")
         if (id) {
@@ -71,7 +72,7 @@ function PostCard({ item, index, filterPost }) {
         }
     }
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^DELETE THE by specific id POST ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    async function DeletePostById(id, public_id) {
+    async function DeletePostById(id, userId) {
         //display post after filter data
         const { filterData, filterComments } = filterPost(id)
         // console.log("filter data is ", filterData)
@@ -83,7 +84,7 @@ function PostCard({ item, index, filterPost }) {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ public_id })
+            body: JSON.stringify({ userId })
         })
         if (DeletePostResponse.status === 200) {
 
@@ -190,18 +191,26 @@ function PostCard({ item, index, filterPost }) {
                                 <article className='
                               card-post-image-modal w-[3rem]  h-[3rem] rounded-full flex-shrink-0 pos
                               '>
-                                    {/* ShowImage ? ShowImage : "" */}
-                                    <Image
-                                        src={ShowImage}
-                                        rounded={true}
-                                        raised={false}
-                                        alt="Rounded Image"
-                                        className="w-full h-full"
-                                    />
+                                    {
+                                        item.profileImage ?
+                                            <Image
+                                                src={item.profileImage}
+                                                rounded={true}
+                                                raised={false}
+                                                alt="Rounded Image"
+                                                className="w-full h-full"
+                                            /> : <Image
+                                                src={profile}
+                                                rounded={true}
+                                                raised={false}
+                                                alt="Rounded Image"
+                                                className="w-full h-full"
+                                            />
+                                    }
                                 </article>
                                 <article className=' public-name-article ml-[.5rem] -mt-[.4rem] post'>
                                     <article className='text-black text-xl'>
-                                        {fname ? fname[0].toUpperCase() + fname.slice(1, fname.length).toLowerCase() : "NA"}
+                                        {item.username ? item.username : "NA"}
                                         {/* <p> Dunga Ram</p> */}
                                     </article>
                                     <article className='flex'>
@@ -214,11 +223,14 @@ function PostCard({ item, index, filterPost }) {
                                     </article>
                                 </article>
                             </main>
-                            <section className=" flex justify-center align-middle" ref={deletePost}>
-                                <button className=' focus:border-0 border-0 focus:outline-0 outline-none -mt-2 '>
-                                    <BsThreeDotsVertical className='text-[1.5rem]' />
-                                </button>
-                            </section>
+                            {
+                                item.userId === googleId &&
+                                <section className=" flex justify-center align-middle" ref={deletePost}>
+                                    <button className=' focus:border-0 border-0 focus:outline-0 outline-none -mt-2 '>
+                                        <BsThreeDotsVertical className='text-[1.5rem]' />
+                                    </button>
+                                </section>
+                            }
                         </section>
                         {/* <main className='  w-full mt-[2rem]'> */}
                         <section className='text-caption ml-2  mt-[2rem]   px-[1rem] text-[1.3rem] md:text-lg '>
@@ -354,7 +366,7 @@ function PostCard({ item, index, filterPost }) {
                                 onClick={(e) => {
                                     e.preventDefault();
 
-                                    DeletePostById(item.post_id, item.public_id);
+                                    DeletePostById(item.post_id, item.userId);
                                     setPostIdForDelete(item.post_id);
                                     // console.log(e.target.id)
                                     // alert("hello")
