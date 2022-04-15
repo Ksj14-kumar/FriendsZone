@@ -66,7 +66,7 @@ export default function ProfileCard(props) {
     const PostWhichUserSelectedImageORVideo = useSelector((state) => {
         return state.PostWhichUserSelectedImageORVideo
     })
-    console.log("[profile card from redux", PostWhichUserSelectedImageORVideo)
+    // console.log("[profile card from redux", PostWhichUserSelectedImageORVideo)
 
     const { fname, lname, college, city, country, position, stream, aboutMe } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "" }
 
@@ -273,7 +273,7 @@ export default function ProfileCard(props) {
 
                                         <Route exact path="/update_profile"  >
 
-                                         <UpdateProfile/>
+                                            <UpdateProfile />
                                         </Route>
                                     </div>
 

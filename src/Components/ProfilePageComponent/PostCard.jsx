@@ -33,11 +33,12 @@ import { error } from '../../toastifyMessage/Toast';
 import { success } from '../../toastifyMessage/Toast';
 import Model from './Model';
 import profile from '../../assets/img/download.png'
+
 Pusher.logToConsole = true;
 
 
 
-function PostCard({ item, index, filterPost }) {
+function PostCard({ item, index, filterPost, socket }) {
     // console.log("user detail with likes", item)
     const [emojiURL, setEmojiURL] = useState("")
     const [commentToggle, setCommentToggle] = useState(false)
@@ -49,6 +50,7 @@ function PostCard({ item, index, filterPost }) {
     const [PostIdForDelete, setPostIdForDelete] = useState()
     const [VisibilityModal, setVisibilityModal] = useState()
     const [like, setLike] = useState(false)
+
     const [likeCount, setLikeCount] = useState(item.liked === null ? 0 : item.liked.length)
     const [userIds, setUserId] = useState([])
     const [readMore, setReadMore] = useState(false);
@@ -134,13 +136,20 @@ function PostCard({ item, index, filterPost }) {
     }
 
 
+
+
+
+
+
+
+
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^>>>> SEND THE REACTION TO Specific I  ID<<<<<<<<<<^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     useEffect(() => {
         //load the like when user refresh the page and show user which post already liked
         setLike(item.liked.includes(googleId))
     }, [item.liked, _id])
     //function which excute when current user liked it any post
-    async function callLikeHnadler(userId, post_id) {
+    async function callLikeHnadler(userId, post_id, type) {
         try {
             console.log("userId", userId)
             console.log("post_id", post_id)
@@ -154,6 +163,19 @@ function PostCard({ item, index, filterPost }) {
                 }
             })
             console.log({ result })
+
+            // //connect to socket
+            // socket.emit("like", {
+            //     likedBy: googleId,
+            //     likeTo: userId,
+            //     post_id,
+            //     type: type
+
+            // })
+
+
+
+
             //intialize the pusher connection
             var pusher = new Pusher(process.env.REACT_APP_API_KEY, {
                 cluster: process.env.REACT_APP_API_CLUSTER,
@@ -292,7 +314,7 @@ function PostCard({ item, index, filterPost }) {
                                 className="hover:bg-gray-100 text-gray-500  text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem]"
                                 // ref={buttonRef}
                                 onClick={() => {
-                                    callLikeHnadler(item.userId, item.post_id)
+                                    callLikeHnadler(item.userId, item.post_id, "like")
                                     setUserId([item.userId, item.post_id]);
                                     setLike(!like)
                                 }}
@@ -339,6 +361,7 @@ function PostCard({ item, index, filterPost }) {
                                 ripple="none"
                                 className="hover:bg-gray-100 text-gray-500  text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem]"
                                 onClick={() => {
+                                    callLikeHnadler(item.userId, item.post_id, "share")
                                     console.log(item.post_url)
                                 }}
                             >

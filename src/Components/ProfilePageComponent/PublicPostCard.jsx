@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react'
 import PostCard from './PostCard';
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios';
+import io from "socket.io-client"
 // MATERIAL UI
 function PublicPostCard({ data }) {
   const [filterPost, setFilterPost] = useState([])
+
   const { _id } = JSON.parse(localStorage.getItem("user_login")) ? JSON.parse(localStorage.getItem("user_login")) : { _id: "" }
   const dispatch = useDispatch()
   const GetAllPosts = useSelector((state) => {
@@ -45,17 +47,21 @@ function PublicPostCard({ data }) {
   //now load all the notification
   useEffect(async () => {
     const allNoti = await axios.get(`/blob/load/notification/${_id}`)
-    console.log("all notification", allNoti)
+    // console.log("all notification", allNoti)
     const { data } = allNoti.data
     dispatch({ type: "Send_Notification", payload: data })
   }, [])
+
+
+
+
   return (
     <React.StrictMode>
       {
         (GetAllPosts.length > 0) && (GetAllPosts).map((item, index) => {
           // console.log("item", item)
           return (
-            <PostCard key={index} item={item} index={index} filterPost={PostFilter} />
+            <PostCard key={index} item={item} index={index} filterPost={PostFilter}  />
           )
         })
       }

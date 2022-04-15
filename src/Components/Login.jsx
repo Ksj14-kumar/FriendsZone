@@ -112,17 +112,17 @@ export default function Login(props) {
       if (status === 200) {
         console.log("usercookie is", serverData)
         localStorage.setItem("uuid", serverData.cookie)
-       const {user}= serverData
+        const { user } = serverData
         success({ message: serverData.message })
         dispatch({ type: "NAME", payload: user })
         localStorage.setItem("user", JSON.stringify(user))
         setTimeout(() => {
-          dispatch({ type: "SET_USER", payload:{ user:serverData.user} })
+          dispatch({ type: "SET_USER", payload: { user: serverData.user } })
 
-        }, 4000)
+        }, 2000)
         setLoader(false)
       }
-      else if (response.status === 500) {
+      else if (status === 500) {
         setLoader(false)
         return Error({ message: "please, Check your internet connection!!!" })
       }
@@ -340,7 +340,7 @@ async function success(props) {
   console.log("success", props)
   const notify = () => toast.success(props.message, {
     position: "top-center",
-    autoClose: 2000,
+    autoClose: 1000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,

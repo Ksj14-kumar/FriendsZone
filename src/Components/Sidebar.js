@@ -14,6 +14,7 @@ import { Context } from '../App';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function Sidebar(props) {
+    console.log("props data", { props })
     const [showSidebar, setShowSidebar] = useState('-left-64');
     const history = useHistory()
 
@@ -51,7 +52,7 @@ export default function Sidebar(props) {
         // window.open("http://localhost:5000/logout", "_self")
         const _shouldWantTodelete = window.confirm("Are you sure you want to delete?")
         if (_shouldWantTodelete) {
-            console.log("ok, want delete")
+            // console.log("ok, want delete")
 
             const res = await fetch(`http://localhost:5000/delete/account/${_id}`, {
 
@@ -79,11 +80,11 @@ export default function Sidebar(props) {
             else {
 
 
-                console.log("failed delete")
+                // console.log("failed delete")
             }
         }
         else {
-            console.log("canceled delete")
+            // console.log("canceled delete")
         }
     }
     return (
@@ -93,6 +94,7 @@ export default function Sidebar(props) {
                 showSidebar={showSidebar}
                 setShowSidebar={setShowSidebar}
                 name={Name ? Name : Name1}
+                socket={props.socket}
             />
             <div
                 // w-64 sidebar width

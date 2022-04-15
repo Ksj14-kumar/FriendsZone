@@ -58,7 +58,11 @@ function useOnClickOutside(ref, handler, setImageValue, setImageValueBackground,
         [ref, handler]
     );
 }
-export default function AdminNavbar({ showSidebar, setShowSidebar }) {
+export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
+    // , socket 
+    // console.log("admin nvabr", { socket })
+
+
     //ALLS  HOOKS
     const wrapperRef = useRef()
     const history = useHistory()
@@ -93,6 +97,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
     const [url, setUrl] = useState("")
     const [BgUrl, setBackgroundImageUrl] = useState("")
     const [showSearch, setShowSearch] = useState(false)
+    const [Noti, setNotification] = useState([])
 
 
     const dispatch = useDispatch()
@@ -129,7 +134,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
         return state.likeRedux
     })
     const likedUserDatails = useSelector((state) => {
-        console.log("notification state is", state)
+        // console.log("notification state is", state)
         return state.Notification
     })
     const checkUrlExitsBg = useSelector((state) => {
@@ -142,7 +147,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
     //profile image uploader
     function imageUploadHandler(e) {
         const file = e.target.files[0]
-        console.log(file)
+        // console.log(file)
         // if (file.type !== "image/jpeg" || file.type !== "image/png" || file.type !== "image/jpg") {
         //     error("Please upload a valid image")
         //     return
@@ -179,7 +184,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
             const URL = window.URL.createObjectURL(file)
             //set the url into state
             setBackgroundImageUrl(URL)
-            console.log(BgUrl)
+            // console.log(BgUrl)
             const reader = new FileReader();
             reader.readAsDataURL(file)
             reader.onloadend = function () {
@@ -198,7 +203,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
         }
         else {
             // setShowImage(previewImage)
-            console.log("base 64 url for the image is", checkUrlExitsProfile.value)
+            // console.log("base 64 url for the image is", checkUrlExitsProfile.value)
             setUploadLoader(true)
             const serverResponse = await fetch(`blob/user/blob/image/9fHtqOJumtxOzmTfLMFT/ETXsG3rHrnx2irUZmefU/njVzxxrEx84ZrUiERB0t/fxXRdJLMKIkzxucTbovy/sO9rLr3E0EuDpjYcawQD/${_id}`, {
                 method: "POST",
@@ -263,7 +268,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
         }
         else {
             // setShowImage(previewImage)
-            console.log("base 64 url for the image is", checkUrlExitsBg.value)
+            // console.log("base 64 url for the image is", checkUrlExitsBg.value)
             setUploadLoaderBackground(true)
             const serverResponse = await fetch(`blob/user/blob/image/bg/S6MjFqeb8HdJRGjkUs9W/QUCzIb1mKtMevddN24yB/YWYhtXwEEtUlHu0Nkhmq/eAQCSzpYo28SJxXCMV4d/yR3VTmMynJw6N3xlS530/WpsJsZKo4hGf18jaWmZL/${_id}`, {
                 method: "POST",
@@ -279,7 +284,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
                     "Authorization": `Bearer ${localStorage.getItem("user_login")}`
                 }
             })
-            console.log({ serverResponse })
+            // console.log({ serverResponse })
             const ResponseData = await serverResponse.json()
             const { status } = serverResponse
             const { message, data } = ResponseData
@@ -323,7 +328,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
                 return
             }
             else {
-                console.log("helo")
+                // console.log("helo")
             }
         }
     }
@@ -340,8 +345,8 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
                     "Authorization": "Bearer " + localStorage.getItem("user_login"),
                 }
             })
-            console.log("delete image response from server", res)
-            console.log({ res })
+            // console.log("delete image response from server", res)
+            // console.log({ res })
             if (res.status === 200) {
                 //show the delete message send by server
                 //show the toastify message after successfull delete
@@ -381,9 +386,9 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
                     "Authorization": "Bearer " + localStorage.getItem("user_login"),
                 }
             })
-            console.log({ res })
+            // console.log({ res })
             const resData = await res.json()
-            console.log({ resData })
+            // console.log({ resData })
             const { message, data } = resData
             if (res.status === 200) {
                 setDeleteLoader(false)
@@ -456,12 +461,12 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
     }, [showModal, showModalBackground])
     //now setup the serach bar when user search the query
     useEffect(() => {
-        console.log(window.innerWidth)
+        // console.log(window.innerWidth)
         if (window.innerWidth <= 482) {
             SearchFilter.current.children[0].classList.add("search-bar-mobile")
             notification.current.classList.add("search-msg")
             messenger.current.classList.add("search-noti")
-            console.log(SearchFilter.current.children[0])
+            // console.log(SearchFilter.current.children[0])
             if (showSearch === true) {
                 notification.current.style.display = "none"
                 messenger.current.style.display = "none"
@@ -477,6 +482,29 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
             }
         }
     }, [showSearch])
+
+
+
+
+    useEffect(() => {
+
+        socket?.on("getNoti", (data) => {
+            console.log("getNoti", data)
+            setNotification(pre => [...pre, data])
+        })
+    }, [socket])
+
+
+    console.log({ Noti })
+
+
+
+    socket?.on("he", (data) => {
+        console.log("get notification", data)
+        // dispatch({ type: "Get_Notification", payload: data })
+    })
+
+
     return (
         <>
             <nav className="bg-light-blue-500 md:ml-64 py-2 px-3">

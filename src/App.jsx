@@ -25,11 +25,19 @@ import UserPhotos from './Pages/UserPhotos';
 import axios from 'axios';
 import Channel from './SubscribeChannels/Channel';
 import SinglePost from './Components/SinglePost';
+import io from "socket.io-client"
+
+
+
 export const Context = createContext()
-console.log("api key from React", process.env.REACT_APP_API_KEY)
-console.log("api key from React", process.env.REACT_APP_API_CLUSTER)
+
+
+
+
+
 function App() {
     const [userData, setUserData] = React.useState(null)
+    const [socket, setSocket] = useState()
     const history = useHistory()
     // const [users, dispatch] = React.useReducer(Reducer, Init)
     const [cookie, setCookie] = useCookies()
@@ -38,8 +46,8 @@ function App() {
         return state.UserStillLogin
     })
 
-    console.log(typeof localStorage.getItem("uuid"))
-    console.log(localStorage.getItem("uuid"))
+    // console.log(typeof localStorage.getItem("uuid"))
+    // console.log(localStorage.getItem("uuid"))
 
     const _id = localStorage.getItem("uuid")
     // const { _id } = users.user ? users.user : { _id: "" }
@@ -98,7 +106,7 @@ function App() {
                 }
             })
             const data = await res.json()
-            console.log({ data })
+            // console.log({ data })
             // const parseValue = data.parseData
             if (res.status === 200) {
                 // setuploadImageDataFromServer(parseValue.resources)
@@ -123,7 +131,7 @@ function App() {
     //=====================LOAD THE BACKGROUND IMAGES=============
     useEffect(() => {
         // const id = setInterval(() => {
-        console.log("id is ", _id)
+        // console.log("id is ", _id)
         async function BackgroundImage() {
             dispatch({ type: "LOADER", payload: true })
             // setLoader(true)
@@ -184,7 +192,7 @@ function App() {
         async function loadPosts() {
             const loadPostResponse = await fetch(`/blob/load/all/post/${_id}`)
             const loadPostData = await loadPostResponse.json()
-            console.log("load post data", loadPostData.data, loadPostResponse)
+            // console.log("load post data", loadPostData.data, loadPostResponse)
             if (loadPostResponse.status === 200) {
                 dispatch({
                     type: "LOAD_POSTS",
@@ -202,9 +210,9 @@ function App() {
         async function totalComment() {
             const totalCommentResponse = await fetch(`/blob/all/comment/user/${_id}`)
             const totalCommentData = await totalCommentResponse.json()
-            console.log("total comment data", totalCommentData.data)
+            // console.log("total comment data", totalCommentData.data)
             if (totalCommentResponse.status === 200) {
-                console.log({ totalCommentData })
+                // console.log({ totalCommentData })
                 dispatch({ type: "SET_TOTAL_COMMENT", payload: totalCommentData.data })
                 dispatch({ type: "Get_All_Comments", payload: totalCommentData.data })
             }
@@ -218,7 +226,7 @@ function App() {
         async function loadNotification() {
             const loadNotificationResponse = await fetch(`/blob/load/all/notification/${_id}`)
             const loadNotificationData = await loadNotificationResponse.json()
-            console.log("load notification data", loadNotificationData.data)
+            // console.log("load notification data", loadNotificationData.data)
             if (loadNotificationResponse.status === 200) {
                 dispatch({ type: "Send_Notification", payload: loadNotificationData.data })
             }
@@ -226,10 +234,33 @@ function App() {
         loadNotification()
     }, [])
 
+
+
+    // //trigger when user login your account
+    // useEffect(() => {
+    //     setSocket(io(process.env.REACT_APP_API_BACKENDURL))
+
+    // }, [])
+
+    // //add  new user info to the server by socket when user login
+    // useEffect(() => {
+    //     socket?.emit("newUser", getUserData)
+    // }, [socket, getUserData])
+
+
+
+    // // socket?.on("newUser", (data) => {
+    // //     console.log("new user", data)
+    // // })
+
+    // console.log({ socket })
+
+
+   
     return (
         // w-screen h-screen
         <Context.Provider value={{ users, dispatch }}>
-            
+
             <div className="left_section">
 
                 {
@@ -238,7 +269,7 @@ function App() {
                 {
                     // \\userData
                     // (getUserData) && <Sidebar />
-                    (getUserData && user) && <Sidebar /> 
+                    (getUserData && user) && <Sidebar socket={socket} />
                 }
             </div>
             <>
@@ -264,35 +295,35 @@ function App() {
                         <Route exact path="/forget" component={Email} />
                         <Route exact path="/dashboard">
                             {
-                                (getUserData && user) ? <Dashboard users={getUserData} /> : <Redirect to="/login" />
+                                (getUserData && user) ? <Dashboard users={getUserData} socket={socket} /> : <Redirect to="/login" />
                             }
                             {/* <Dashboard /> */}
                         </Route>
                         <Route exact path="/profile">
                             {
-                                (getUserData && user) ? <ProfileCard getUserData={getUserData} /> : <Redirect to="/login" />
+                                (getUserData && user) ? <ProfileCard getUserData={getUserData} socket={socket} /> : <Redirect to="/login" />
                             }
                             {/* <ProfileCard/> */}
                         </Route>
                         <Route exact path="/update_profile">
                             {
-                                (getUserData && user) ? <UpdateProfile getUserData={getUserData} /> : <Redirect to="/login" />
+                                (getUserData && user) ? <UpdateProfile getUserData={getUserData} socket={socket} /> : <Redirect to="/login" />
                             }
                             {/* <UpdateProfile/> */}
                         </Route>
                         <Route exact path="/user/posts">
                             {
-                                (getUserData && user) ? <UserPosts user={getUserData} /> : <Redirect to="/login" />
+                                (getUserData && user) ? <UserPosts user={getUserData} socket={socket} /> : <Redirect to="/login" />
                             }
                         </Route>
                         <Route exact path="/user/photos">
                             {
-                                (getUserData && user) ? <UserPhotos user={getUserData} /> : <Redirect to="/login" />
+                                (getUserData && user) ? <UserPhotos user={getUserData} socket={socket} /> : <Redirect to="/login" />
                             }
                         </Route>
 
 
-                        
+
 
                     </Switch>
                 </div >
@@ -301,7 +332,7 @@ function App() {
                     (getUserData && user) &&
                     <div className="right_section  fixed top-[93%] right-[.5rem]">
 
-                        <RightSidebar />
+                        <RightSidebar socket={socket} />
 
                     </div>
                 }
