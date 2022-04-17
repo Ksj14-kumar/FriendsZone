@@ -318,8 +318,8 @@ function PostCard({ item, index, filterPost, socket }) {
                     <CardFooter className="like and dislike section flex justify-start py-0  mb-[.8rem] ">
                     </CardFooter>
                     <hr className='mb-[.2rem]' />
-                    <CardFooter className=" flex justify-between -mt-[1rem] mx-[1rem]  ">
-                        <section>
+                    <CardFooter className=" flex justify-between -mt-[1rem] mx-[0rem]mds-editor10:justify-center ">
+                        <section className='mds-editor10:text-[.6rem]'>
                             <Button
                                 color="lightBlue"
                                 buttonType="link"
@@ -328,7 +328,7 @@ function PostCard({ item, index, filterPost, socket }) {
                                 block={false}
                                 iconOnly={false}
                                 ripple="none"
-                                className="hover:bg-gray-100 text-gray-500  text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem]"
+                                className="hover:bg-gray-100 text-gray-500  text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem] "
                                 // ref={buttonRef}
                                 onClick={() => {
                                     callLikeHnadler(item.userId, item.post_id, item.image, item.profileImage)

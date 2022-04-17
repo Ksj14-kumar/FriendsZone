@@ -64,20 +64,14 @@ const CommentForm = ({
 
 
 
-                <textarea
-                className="border-2 border-solid border-gray"
-                />
 
 
 
 
-
-
-                {/* 
                 <Textarea
                     color="lightBlue"
                     size="sm"
-                    outline={true}
+                    outline={false}
                     ref={CommentArea}
                     value={text}
                     rows="1"
@@ -86,11 +80,10 @@ const CommentForm = ({
                         setText(e.target.value)
                         console.log("someone is typing.....")
                         e.preventDefault()
-                        CommentArea.current.style.height = "auto";
-                        CommentArea.current.style.height = CommentArea.current.scrollHeight + "px";
+                      
                     }}
                     className="focus:border-none indent-[1rem] pl-5
-                    border-none
+                    border-none overflow-hidden
         font-normal
         text-gray-700
         bg-white bg-clip-padding
@@ -99,16 +92,17 @@ const CommentForm = ({
         transition
         ease-in-out
         text-lg
-        m-0 h-[1rem]
+        m-0 
         focus:text-gray-700 focus:bg-white focus:border-gray-300 focus:outline-none
         resize-none
+        min-h-[1rem]
                     
                     "
 
                     onClick={(e) => {
                         e.preventDefault()
                     }}
-                /> */}
+                />
 
                 <section className="bg-red-600  flex justify-end relative ">
 
