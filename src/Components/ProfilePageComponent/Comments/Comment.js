@@ -18,8 +18,9 @@ const Comment = ({
     currentUserName,
 }) => {
 
+    console.log({ commentUserId: currentUserId, comment: comment.userId })
 
-  
+
     const isEditing =
         activeComment &&
         activeComment.uuid === comment.uuid &&
@@ -45,17 +46,18 @@ const Comment = ({
                 {
                     ImageUrl &&
                     <Image
-                    src={ImageUrl}
-                    rounded={true}
-                    raised={false}
-                    alt="Rounded Image"
-                />
-                    
+                        // src={ImageUrl}
+                        src={comment.ImageUrl}
+                        rounded={true}
+                        raised={false}
+                        alt="Rounded Image"
+                    />
+
                 }
             </div>
             <div className="comment-right-part  w-full mr-2 mds-editor6:text-[.9rem]">
                 <div className="comment-content  flex ml-2 -mt-1 ">
-                    <div className="comment-author  font-medium text-[1.1rem] mds-editor6:text-[.9rem]">{currentUserName}</div>
+                    <div className="comment-author  font-medium text-[1.1rem] mds-editor6:text-[.9rem]">{comment.username}</div>
                     <div className="ml-2">{comment.createdAt}</div>
                 </div>
                 {!isEditing && <div className="comment-text ml-2  font-sans  ">{comment.body}</div>}
@@ -158,7 +160,7 @@ const Comment = ({
                                 replies={[]}
                                 currentUserId={currentUserId}
                                 ImageUrl={ImageUrl}
-                                currentUserName={ currentUserName}
+                                currentUserName={currentUserName}
                             />
                         ))}
                     </div>

@@ -1,9 +1,9 @@
 
 
+const UserStillLogin = (state = "", action = {}) => {
 
 
-const UserStillLogin= (state="",action={})=>{
-    switch(action.type){
+    switch (action.type) {
         case "SET_USER":
             return action.payload;
         default:

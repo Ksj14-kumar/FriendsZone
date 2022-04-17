@@ -16,7 +16,7 @@ function Friends() {
 
       </header> */}
 
-      <div className="section md:px-2 md:py-3   relative flex flex-wrap justify-center gap-3 ">
+      <div className="section md:px-2 md:py-3   relative flex flex-wrap justify-center gap-3">
 
 
         {/* CHILD ELEMENTS START FROM HERE */}

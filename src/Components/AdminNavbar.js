@@ -152,7 +152,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         //     error("Please upload a valid image")
         //     return
         // }
-        if (e.target.files[0].size > 415964) {
+        if (e.target.files[0].size > 36700160) {
             error({ message: "file size is too large ,less than 16MB" })
             return
         }
@@ -205,17 +205,19 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             // setShowImage(previewImage)
             // console.log("base 64 url for the image is", checkUrlExitsProfile.value)
             setUploadLoader(true)
-            const serverResponse = await fetch(`blob/user/blob/image/9fHtqOJumtxOzmTfLMFT/ETXsG3rHrnx2irUZmefU/njVzxxrEx84ZrUiERB0t/fxXRdJLMKIkzxucTbovy/sO9rLr3E0EuDpjYcawQD/${_id}`, {
+            const serverResponse = await fetch(`blob/user/blob/image/9fHtqOJumtxOzmTfLMFT/ETXsG3rHrnx2irUZmefU/njVzxxrEx84ZrUiERB0t/fxXRdJLMKIkzxucTbovy/sO9rLr3E0EuDpjYcawQD/`, {
                 method: "POST",
                 body: JSON.stringify({
                     data:
                         checkUrlExitsProfile.value,
-                    url: url
+                    url: url,
+                    uuid: _id
                 }),
                 headers: {
                     "Content-Type": "application/json",
                     // "Content-Type": "multipart/form-data",
                     // "Content-Type": "x-www-form-urlencoded",
+
                     "Authorization": `Bearer ${localStorage.getItem("uuid")}`
                 }
             })
@@ -270,18 +272,19 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             // setShowImage(previewImage)
             // console.log("base 64 url for the image is", checkUrlExitsBg.value)
             setUploadLoaderBackground(true)
-            const serverResponse = await fetch(`blob/user/blob/image/bg/S6MjFqeb8HdJRGjkUs9W/QUCzIb1mKtMevddN24yB/YWYhtXwEEtUlHu0Nkhmq/eAQCSzpYo28SJxXCMV4d/yR3VTmMynJw6N3xlS530/WpsJsZKo4hGf18jaWmZL/${_id}`, {
+            const serverResponse = await fetch(`blob/user/blob/image/bg/S6MjFqeb8HdJRGjkUs9W/QUCzIb1mKtMevddN24yB/YWYhtXwEEtUlHu0Nkhmq/eAQCSzpYo28SJxXCMV4d/yR3VTmMynJw6N3xlS530/WpsJsZKo4hGf18jaWmZL/`, {
                 method: "POST",
                 body: JSON.stringify({
                     data:
                         checkUrlExitsBg.value,
-                    url: BgUrl
+                    url: BgUrl,
+                    uuid: _id
                 }),
                 headers: {
                     "Content-Type": "application/json",
                     // "Content-Type": "multipart/form-data",
                     // "Content-Type": "x-www-form-urlencoded",
-                    "Authorization": `Bearer ${localStorage.getItem("user_login")}`
+                    "Authorization": `Bearer ${localStorage.getItem("uuid")}`
                 }
             })
             // console.log({ serverResponse })
@@ -336,18 +339,20 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     async function RemoveProfilePhoto() {
         try {
             setDeleteLoader(true)
+            setDisabledButton(true)
             const res = await axios({
-                url: `blob/delete/assest/${_id}`,
-                data: JSON.stringify(uploadImageDataFromServer),
+                url: `blob/delete/assest/`,
+                data: JSON.stringify({ uploadImageDataFromServer, uuid: _id }),
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("user_login"),
+                    "Authorization": "Bearer " + localStorage.getItem("uuid"),
                 }
             })
-            // console.log("delete image response from server", res)
+            console.log("delete image response from server", res)
             // console.log({ res })
             if (res.status === 200) {
+                setDisabledButton(false)
                 //show the delete message send by server
                 //show the toastify message after successfull delete
                 success({ message: "Profile photo removed successfully" })
@@ -359,6 +364,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 return
             }
             else if (res.status === 500) {
+                setDisabledButton(false)
                 error({ message: res.data.message })
                 setDeleteLoader(false)
                 return
@@ -366,7 +372,16 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
 
             else if (res.status === 401) {
                 error({ message: "not upload please, Try again" })
+                setDeleteLoader(false)
+                setDisabledButton(false)
+
                 return
+            }
+            else if (res.status !== 200) {
+                error({ message: res.data.message })
+                setDeleteLoader(false)
+                setDisabledButton(false)
+
             }
             // window.alert(res.data.message)
         }
@@ -377,13 +392,15 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     //remove the backgrounf Photos
     async function RemoveBackgroundPhoto() {
         try {
+            setDisabledButtonBg(true)
             setDeleteLoader(true)
-            const res = await fetch(`blob/delete/assest/bg/${_id}`, {
-                body: JSON.stringify({ uploadImageDataFromBackground }),
+            const res = await fetch(`blob/delete/assest/bg/`, {
+                body: JSON.stringify({ uploadImageDataFromBackground, uuid: _id }),
                 method: "DELETE",
+
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("user_login"),
+                    "Authorization": "Bearer " + localStorage.getItem("uuid"),
                 }
             })
             // console.log({ res })
@@ -392,6 +409,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             const { message, data } = resData
             if (res.status === 200) {
                 setDeleteLoader(false)
+                setDisabledButtonBg(false)
                 // setDeleteMessage(res.data.message)
                 //show the toastify message after successfull delete
                 success({ message: message })
@@ -403,11 +421,13 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             }
             else if (res.status === 401) {
                 error({ message: message })
+                setDisabledButtonBg(false)
                 // window.alert(resData.message)
                 setDeleteLoader(false)
                 return
             }
             else if (res.status === 500) {
+                setDisabledButtonBg(false)
                 error({ message: message })
                 // window.alert(resData.message)
                 setDeleteLoader(false)
@@ -435,7 +455,11 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     //search the query from the server
     useEffect(() => {
         const search = async () => {
-            const res = await axios.get(`/blob/search?q=${query}`)
+            const res = await axios.get(`/blob/search?q=${query}`, {
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("uuid")
+                }
+            })
             // console.log("user filer data from server", res.data)
             setUserData(res.data)  //notice that we can not use await keyword inside here
         }
@@ -488,9 +512,10 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
 
     useEffect(() => {
 
-        socket?.on("getNoti", (data) => {
+        socket?.on("getNotification", (data) => {
             console.log("getNoti", data)
             setNotification(pre => [...pre, data])
+            dispatch({ type: "Send_Notification", payload: Noti })
         })
     }, [socket])
 
@@ -904,7 +929,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 <PopoverContainer>
                     <PopoverHeader>Notifications</PopoverHeader>
                     <PopoverBody>
-                        <Notification userLiked={likedUserDatails} />
+                        <Notification userLiked={likedUserDatails} socket={socket} />
                     </PopoverBody>
                 </PopoverContainer>
             </Popover>

@@ -11,11 +11,14 @@ import H5 from "@material-tailwind/react/Heading5";
 import { ToastContainer, toast } from 'react-toastify';
 import Icon from '@material-tailwind/react/Icon';
 import ProfileCreateLoader from '../Loader/ProfileCreateLoader';
+import { useDispatch } from 'react-redux';
 
 
 
 export default function SettingsForm() {
     const [loader, setLoader] = React.useState(false)
+
+    const dispatch = useDispatch()
 
 
     const _id = localStorage.getItem("uuid")
@@ -63,13 +66,12 @@ export default function SettingsForm() {
 
         else {
             setLoader(true)
-            const res = await fetch(`/blob/user/i/b/y9y5y0q3eztm3ibcd8z0/bum6ozd9m1sw4w9fbxea/amqvdkbe49sn4u3cvsvt/e5ce6ba3miamapdl7wyv/${_id}`, {
-                method: "POST",
-                body: JSON.stringify(UserProfileInformationm),
+            const res = await fetch(`/blob/user/i/b/y9y5y0q3eztm3ibcd8z0/bum6ozd9m1sw4w9fbxea/amqvdkbe49sn4u3cvsvt/e5ce6ba3miamapdl7wyv/`, {
+                method: "PUT",
+                body: JSON.stringify({ UserProfileInformationm, uuid: _id }),
                 headers: {
                     "Content-Type": "application/json",
-
-                    "Authorization": "Bearer " + localStorage.getItem("user_login"),
+                    "Authorization": "Bearer " + localStorage.getItem("uuid"),
 
                 },
 
@@ -78,8 +80,8 @@ export default function SettingsForm() {
 
             const resData = await res.json()
             console.log("userinformation daat0", resData)
-
             if (res.status === 200) {
+                dispatch({ type: "USERINFO_LOAD", payload: resData.data })
                 success({ message: resData.message })
                 setLoader(false)
                 setUserProfileInformationm({

@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Button from "@material-tailwind/react/Button";
 import Textarea from "@material-tailwind/react/Textarea";
 import Input from "@material-tailwind/react/Input";
@@ -14,11 +14,13 @@ const CommentForm = ({
     hasCancelButton = false,
     handleCancel,
     initialText = "",
+    commentToggle
 }) => {
     const [text, setText] = useState(initialText);
     const buttonRef = useRef()
     const [emojiModal, setEmojiModal] = useState(false);
     const [chosenEmoji, setChosenEmoji] = useState(null);
+    const CommentArea = useRef(null)
     const isTextareaDisabled = text.length === 0;  // if text is empty, disable textarea
 
 
@@ -44,6 +46,8 @@ const CommentForm = ({
 
 
 
+
+
     return (
 
         <>
@@ -57,17 +61,33 @@ const CommentForm = ({
                 {submitLabel}
             </button> */}
 
+
+
+
+                <textarea
+                className="border-2 border-solid border-gray"
+                />
+
+
+
+
+
+
+                {/* 
                 <Textarea
                     color="lightBlue"
                     size="sm"
-                    outline={false}
+                    outline={true}
+                    ref={CommentArea}
                     value={text}
                     rows="1"
                     cols="1"
                     onChange={(e) => {
+                        setText(e.target.value)
                         console.log("someone is typing.....")
                         e.preventDefault()
-                        setText(e.target.value)
+                        CommentArea.current.style.height = "auto";
+                        CommentArea.current.style.height = CommentArea.current.scrollHeight + "px";
                     }}
                     className="focus:border-none indent-[1rem] pl-5
                     border-none
@@ -79,7 +99,7 @@ const CommentForm = ({
         transition
         ease-in-out
         text-lg
-        m-0
+        m-0 h-[1rem]
         focus:text-gray-700 focus:bg-white focus:border-gray-300 focus:outline-none
         resize-none
                     
@@ -88,7 +108,7 @@ const CommentForm = ({
                     onClick={(e) => {
                         e.preventDefault()
                     }}
-                />
+                /> */}
 
                 <section className="bg-red-600  flex justify-end relative ">
 
@@ -122,8 +142,10 @@ const CommentForm = ({
 
                         ripple="none"
                         disabled={isTextareaDisabled}
+
                         className="lowercase"
                         onClick={(e) => {
+
                             e.preventDefault()
                             onSubmitHandler(e)
                         }}

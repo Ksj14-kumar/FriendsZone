@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react'
-import { Switch, Route, Redirect, useHistory, NavLink } from 'react-router-dom'
+import { Switch, Route, Redirect, useHistory, NavLink, useLocation } from 'react-router-dom'
 import Register from './Components/Register'
 import Login from './Components/Login';
 import Email from './Components/Email';
@@ -46,6 +46,9 @@ function App() {
         return state.UserStillLogin
     })
 
+
+
+
     // console.log(typeof localStorage.getItem("uuid"))
     // console.log(localStorage.getItem("uuid"))
 
@@ -89,13 +92,14 @@ function App() {
         }
         loadData()
     }, [])
+
     //====================LOAD PROFILE IMAGES=============
     useEffect(() => {
         // const id = setInterval(() => {
         async function ProfileImages() {
             dispatch({ type: "LOADER", payload: true })
             // setLoader(true)
-            const res = await fetch(`/blob/profile/image/e9thhvkKqJpnTlYo1sQl/QVbghZqhoSr2Rt5qvNYJ/iKj3RoJojFWmcDo4wTlm/9Olk5vTenhdkjHrdYEWl/${_id}`, {
+            const res = await fetch(`/blob/profile/image/e9thhvkKqJpnTlYo1sQl/QVbghZqhoSr2Rt5qvNYJ/iKj3RoJojFWmcDo4wTlm/9Olk5vTenhdkjHrdYEWl/`, {
                 method: "GET",
                 credentials: 'same-origin',
                 headers: {
@@ -128,6 +132,7 @@ function App() {
         // }, 2000);
         // return () => clearInterval(id)
     }, [])
+
     //=====================LOAD THE BACKGROUND IMAGES=============
     useEffect(() => {
         // const id = setInterval(() => {
@@ -135,7 +140,7 @@ function App() {
         async function BackgroundImage() {
             dispatch({ type: "LOADER", payload: true })
             // setLoader(true)
-            const res1 = await fetch(`/blob/bg/image/mwQgga2z5KfChXjuF1s0/r6dg0LqqWmCG4W5UQOTa/ftFhzft7YNwT6jb9EVoX/ogvnbpOcPnjgMatu3mtb/JSC2PQZQVlK19QXDbSl1/${_id}`, {
+            const res1 = await fetch(`/blob/bg/image/mwQgga2z5KfChXjuF1s0/r6dg0LqqWmCG4W5UQOTa/ftFhzft7YNwT6jb9EVoX/ogvnbpOcPnjgMatu3mtb/JSC2PQZQVlK19QXDbSl1/`, {
                 method: "GET",
                 credentials: 'same-origin',
                 headers: {
@@ -146,6 +151,7 @@ function App() {
                 }
             })
             const data1 = await res1.json()
+            console.log({ data1 })
             if (res1.status === 200) {
                 // setuploadImageDataFromServer(parseValue.resources)
                 dispatch({ type: "LOADER", payload: false })
@@ -163,34 +169,37 @@ function App() {
     }, [])
     //===================LOAD THE USER INFORMATION FROM THE SERVER============
     useEffect(() => {
-        // const id = setInterval(() => {
+
         async function userInfoLoad() {
-            const userInfo = await fetch(`/blob/user/083525p7ljhwmxifts31/l66cbrsuytmj1wujuauz/nqoye5ozdqj89b4s4qoq/ua1iztaxjo4bbmzvd391/3mzqeygnoszlknp90h51/t28uf00khscofxgjwj20/${_id}`, {
+            const userInfo = await fetch(`/blob/user/083525p7ljhwmxifts31/l66cbrsuytmj1wujuauz/nqoye5ozdqj89b4s4qoq/ua1iztaxjo4bbmzvd391/3mzqeygnoszlknp90h51/t28uf00khscofxgjwj20/`, {
                 method: "GET",
-                credentials: 'same-origin',
                 headers: {
-                    Accept: "application/json",
                     "Content-Type": "application/json",
-                    "Access-Control-Allow-Credentials": true,
                     "Authorization": "Bearer " + localStorage.getItem("uuid")
                 }
             })
             const res = await userInfo.json()
-            // console.log("userinformation load", res.message)
+            // console.log("userinformation load", res)
             if (userInfo.status === 200) {
                 dispatch({ type: "USERINFO_LOAD", payload: res.message })
             }
         }
         userInfoLoad()
-        // }, 1000);
-        // return (()=>clearInterval(id))
+
     }, [])
     //LOAD ALL THE posts for users
     useEffect(() => {
         // const id = setInterval(() => {
         // /blob/users/public/posts/${_id}
         async function loadPosts() {
-            const loadPostResponse = await fetch(`/blob/load/all/post/${_id}`)
+            const loadPostResponse = await fetch(`/blob/load/all/post/`, {
+                method: "GET",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("uuid")
+                }
+            })
             const loadPostData = await loadPostResponse.json()
             // console.log("load post data", loadPostData.data, loadPostResponse)
             if (loadPostResponse.status === 200) {
@@ -224,9 +233,15 @@ function App() {
     //load the all notification 
     useEffect(() => {
         async function loadNotification() {
-            const loadNotificationResponse = await fetch(`/blob/load/all/notification/${_id}`)
+            const loadNotificationResponse = await fetch(`/blob/load/all/notification/${_id}`,{
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("uuid")
+                }
+            })
             const loadNotificationData = await loadNotificationResponse.json()
-            // console.log("load notification data", loadNotificationData.data)
+            console.log("load notification data", loadNotificationData.data)
             if (loadNotificationResponse.status === 200) {
                 dispatch({ type: "Send_Notification", payload: loadNotificationData.data })
             }
@@ -236,27 +251,28 @@ function App() {
 
 
 
-    // //trigger when user login your account
-    // useEffect(() => {
-    //     setSocket(io(process.env.REACT_APP_API_BACKENDURL))
+    //trigger when user login your account
+    useEffect(() => {
+        // process.env.REACT_APP_API_BACKENDURL
+        setSocket(io(process.env.REACT_APP_API_BACKENDURL))
 
-    // }, [])
+    }, [])
 
-    // //add  new user info to the server by socket when user login
-    // useEffect(() => {
-    //     socket?.emit("newUser", getUserData)
-    // }, [socket, getUserData])
+    //add  new user info to the server by socket when user login
+    useEffect(() => {
+        socket?.emit("newUser", getUserData)
+    }, [socket, getUserData])
 
 
 
-    // // socket?.on("newUser", (data) => {
-    // //     console.log("new user", data)
-    // // })
+    // socket?.on("newUser", (data) => {
+    //     console.log("new user", data)
+    // })
 
     // console.log({ socket })
 
 
-   
+
     return (
         // w-screen h-screen
         <Context.Provider value={{ users, dispatch }}>
@@ -278,18 +294,18 @@ function App() {
                     <Switch Switch >
                         <Route exact path="/" >
                             {
-                                (getUserData && user) ? <Redirect to="/dashboard" /> : <Header />
+                                (getUserData && user) ? <Redirect to="/profile" /> : <Header />
                             }
                             {/* <Dashboard /> */}
                         </Route>
                         <Route exact path="/register">
                             {
-                                (getUserData && user) ? <Redirect to="/dashboard" /> : <Register />
+                                (getUserData && user) ? <Redirect to="/profile" /> : <Register />
                             }
                             {/* <Register /> */}
                         </Route>
                         <Route exact path="/login">
-                            {(getUserData && user) ? <Redirect to="/dashboard" /> : <Login />}
+                            {(getUserData && user) ? <Redirect to="/profile" /> : <Login />}
                             {/* <Login /> */}
                         </Route>
                         <Route exact path="/forget" component={Email} />
@@ -299,12 +315,22 @@ function App() {
                             }
                             {/* <Dashboard /> */}
                         </Route>
-                        <Route exact path="/profile">
+
+
+                        <Route exact path={'/profile'}>
                             {
                                 (getUserData && user) ? <ProfileCard getUserData={getUserData} socket={socket} /> : <Redirect to="/login" />
                             }
                             {/* <ProfileCard/> */}
                         </Route>
+
+                         <Route exact path='/pr'>
+                            {
+                                (getUserData && user) ? <ProfileCard getUserData={getUserData} socket={socket} /> : <Redirect to="/login" />
+                            }
+                            {/* <ProfileCard/> */}
+                        </Route>  
+
                         <Route exact path="/update_profile">
                             {
                                 (getUserData && user) ? <UpdateProfile getUserData={getUserData} socket={socket} /> : <Redirect to="/login" />

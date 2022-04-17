@@ -34,7 +34,7 @@ import { success } from '../../toastifyMessage/Toast';
 import Model from './Model';
 import profile from '../../assets/img/download.png'
 
-Pusher.logToConsole = true;
+// Pusher.logToConsole = true;
 
 
 
@@ -74,40 +74,52 @@ function PostCard({ item, index, filterPost, socket }) {
         }
     }
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^DELETE THE by specific id POST ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    async function DeletePostById(id, userId) {
+    async function DeletePostById(post_id, adminId) {
         //display post after filter data
-        const { filterData, filterComments } = filterPost(id)
+        const { filterData, filterComments } = filterPost(post_id)
         // console.log("filter data is ", filterData)
         dispatch({ type: "LOAD_POSTS", payload: filterData })
         dispatch({ type: "SET_TOTAL_COMMENT", payload: filterComments })
         // send request to the serve for delete the post by id
-        const DeletePostResponse = await fetch(`/blob/delete/user/post/local/${id}`, {
+        const DeletePostResponse = await fetch(`/blob/delete/user/post/local/delete/`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("uuid")
             },
-            body: JSON.stringify({ userId })
+            body: JSON.stringify({ post_id, userId: adminId })
         })
+
+        const { message, data } = await DeletePostResponse.json()
+
+
+
         if (DeletePostResponse.status === 200) {
+            success({ message: message })
 
             //intialize the pusher connection
-            var pusher = new Pusher(process.env.REACT_APP_API_KEY, {
-                cluster: process.env.REACT_APP_API_CLUSTER,
-                // encrypted: true,
-            });
-            const LikedPost = pusher.subscribe("DeleteNotiByPost");
-            //this is used for subscribe the channel
-            LikedPost.bind('pusher:subscription_succeeded', function (members) {
-                // alert('successfully subscribed!');
-            });
-            //get the instance response from server
-            LikedPost.bind("DeleteNotiMessage", (data) => {
-                console.log("Delete post data.......", data)
-                dispatch({ type: "Send_Notification", payload: data.allNotiAfterDelete })
-            })
+            // var pusher = new Pusher(process.env.REACT_APP_API_KEY, {
+            //     cluster: process.env.REACT_APP_API_CLUSTER,
+            //     // encrypted: true,
+            // });
+            // const LikedPost = pusher.subscribe("DeleteNotiByPost");
+            // //this is used for subscribe the channel
+            // LikedPost.bind('pusher:subscription_succeeded', function (members) {
+            //     // alert('successfully subscribed!');
+            // });
+            // //get the instance response from server
+            // LikedPost.bind("DeleteNotiMessage", (data) => {
+            //     console.log("Delete post data.......", data)
+            //     dispatch({ type: "Send_Notification", payload: data.allNotiAfterDelete })
+            // })
 
         }
+        else if (DeletePostResponse.status !== 200) {
+            error("not delete")
+        }
     }
+
+
 
     //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Change the visibility^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     async function VisibilityChange(post_id, visibility) {
@@ -117,8 +129,9 @@ function PostCard({ item, index, filterPost, socket }) {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("uuid")
             },
-            body: JSON.stringify({ visibility })
+            body: JSON.stringify({ visibility, uuid: _id })
         })
         const data = await response.json()
         console.log("data is ", data)
@@ -149,47 +162,49 @@ function PostCard({ item, index, filterPost, socket }) {
         setLike(item.liked.includes(googleId))
     }, [item.liked, _id])
     //function which excute when current user liked it any post
-    async function callLikeHnadler(userId, post_id, type) {
+    async function callLikeHnadler(userId, post_id, bgImageUrl, profileImage) {
         try {
             console.log("userId", userId)
             console.log("post_id", post_id)
             console.log("goodle id", googleId)
+
+
             const result = await axios.put(`/blob/user/like/${post_id}`, {
                 likedBy: googleId,
                 likeTo: userId,
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("uuid")
 
                 }
             })
-            console.log({ result })
+            // console.log({ result })
 
-            // //connect to socket
-            // socket.emit("like", {
-            //     likedBy: googleId,
-            //     likeTo: userId,
-            //     post_id,
-            //     type: type
-
+            //connect to socket
+            // //intialize the pusher connection
+            // var pusher = new Pusher(process.env.REACT_APP_API_KEY, {
+            //     cluster: process.env.REACT_APP_API_CLUSTER,
+            //     // encrypted: true,
+            // });
+            // const LikedPost = pusher.subscribe("LikePost");
+            // //this is used for subscribe the channel
+            // LikedPost.bind('pusher:subscription_succeeded', function (members) {
+            //     // alert('successfully subscribed!');
+            // });
+            // //get the instance response from server
+            // LikedPost.bind("LikePostMessage", (data) => {
+            //     console.log("liked poost data.......", data)
+            //     dispatch({ type: "Send_Notification", payload: data.allNoti })
             // })
 
+            socket.emit("like", {
+                likedBy: googleId,
+                likeTo: userId,
+                post_id,
+                bg: bgImageUrl,
+                profile: profileImage,
+                type: like
 
-
-
-            //intialize the pusher connection
-            var pusher = new Pusher(process.env.REACT_APP_API_KEY, {
-                cluster: process.env.REACT_APP_API_CLUSTER,
-                // encrypted: true,
-            });
-            const LikedPost = pusher.subscribe("LikePost");
-            //this is used for subscribe the channel
-            LikedPost.bind('pusher:subscription_succeeded', function (members) {
-                // alert('successfully subscribed!');
-            });
-            //get the instance response from server
-            LikedPost.bind("LikePostMessage", (data) => {
-                console.log("liked poost data.......", data)
-                dispatch({ type: "Send_Notification", payload: data.allNoti })
             })
             like ? setLikeCount(likeCount - 1) : setLikeCount(likeCount + 1)
         } catch (err) {
@@ -257,7 +272,9 @@ function PostCard({ item, index, filterPost, socket }) {
                             </main>
                             {
                                 item.userId === googleId &&
-                                <section className=" flex justify-center align-middle" ref={deletePost}>
+                                <section className=" flex justify-center align-middle" ref={deletePost}
+
+                                >
                                     <button className=' focus:border-0 border-0 focus:outline-0 outline-none -mt-2 '>
                                         <BsThreeDotsVertical className='text-[1.5rem]' />
                                     </button>
@@ -314,7 +331,7 @@ function PostCard({ item, index, filterPost, socket }) {
                                 className="hover:bg-gray-100 text-gray-500  text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem]"
                                 // ref={buttonRef}
                                 onClick={() => {
-                                    callLikeHnadler(item.userId, item.post_id, "like")
+                                    callLikeHnadler(item.userId, item.post_id, item.image, item.profileImage)
                                     setUserId([item.userId, item.post_id]);
                                     setLike(!like)
                                 }}
@@ -378,6 +395,7 @@ function PostCard({ item, index, filterPost, socket }) {
                                 <Comments
                                     commentsUrl="http://localhost:3004/comments"
                                     // currentUserId={item.userId ? item.userId : null}
+                                    commentToggle={commentToggle}
                                     currentUserId={googleId ? googleId : null}
                                     post_id={item.post_id ? item.post_id : null}
                                     UserIdForPostComments={item.userId ? item.userId : null}
@@ -388,6 +406,8 @@ function PostCard({ item, index, filterPost, socket }) {
                     </section>
                 </Card>
             </div>
+
+
             <Popover placement="auto" ref={deletePost}>
                 <PopoverContainer>
                     <PopoverHeader>

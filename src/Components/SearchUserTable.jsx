@@ -2,7 +2,7 @@ import React from 'react'
 import FilterUser from './FilterUser'
 
 function SearchUserTable({ data }) {
-    console.log("user filter data", data)
+    // console.log("user filter data", data)
     return (
         <>
             <header className="_search_filter  h-full

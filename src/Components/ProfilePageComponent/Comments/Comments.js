@@ -11,9 +11,9 @@ import {
   deleteComment as deleteCommentApi,
 } from "./api";
 
-const Comments = ({ commentsUrl, currentUserId, ImageUrl, currentUserName, UserIdForPostComments, post_id }) => {
+const Comments = ({ commentsUrl,commentToggle, currentUserId, ImageUrl, currentUserName, UserIdForPostComments, post_id }) => {
 
-  
+
 
   const dispatch = useDispatch()
 
@@ -36,7 +36,7 @@ const Comments = ({ commentsUrl, currentUserId, ImageUrl, currentUserName, UserI
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       );
   const addComment = async (text, parentId) => {
-    const comment = await createCommentApi(text, parentId, UserIdForPostComments, currentUserName, ImageUrl, post_id)
+    const comment = await createCommentApi(text, parentId, UserIdForPostComments, currentUserId, currentUserName, ImageUrl, post_id)
     console.log({ comment })
     const SaveUserComment = await fetch(`/blob/post/comment/save`, {
       method: "POST",
@@ -49,7 +49,7 @@ const Comments = ({ commentsUrl, currentUserId, ImageUrl, currentUserName, UserI
     const SaveUserCommentJson = await SaveUserComment.json()
     console.log({ SaveUserCommentJson })
     if (SaveUserComment.status === 200) {
-      console.log("comment saved", SaveUserCommentJson.data )
+      console.log("comment saved", SaveUserCommentJson.data)
       setBackendComments([...backendComments, SaveUserCommentJson.data]);
       setActiveComment(null);
     }
@@ -61,9 +61,10 @@ const Comments = ({ commentsUrl, currentUserId, ImageUrl, currentUserName, UserI
 
     const updateResponse = await fetch(`/blob/update/comment/${commentId}`, {
       method: "PUT",
-      body: JSON.stringify({ text, commentId }),
+      body: JSON.stringify({ text, commentId, post_id }),
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("uuid")}`
 
       }
     })
@@ -77,12 +78,17 @@ const Comments = ({ commentsUrl, currentUserId, ImageUrl, currentUserName, UserI
   const deleteComment = async (commentId) => {
     if (window.confirm("Are you sure you want to remove comment?")) {
       const deleteResponse = await fetch(`/blob/post/comment/delete/${commentId}`, {
+        body: JSON.stringify({
+          post_id: post_id,
+        }),
         method: "DELETE",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("uuid")}`,
         }
       })
       const DeleteResponseData = await deleteResponse.json()
+      console.log("delte response comments", DeleteResponseData)
       if (deleteResponse.status === 200) {
 
         setBackendComments(DeleteResponseData.data);
@@ -95,7 +101,14 @@ const Comments = ({ commentsUrl, currentUserId, ImageUrl, currentUserName, UserI
 
     //load the all comments from backend
     async function loadComment() {
-      const commentResponse = await fetch(`/blob/root/load/all/comments/${post_id}/${UserIdForPostComments}`)
+      const commentResponse = await fetch(`/blob/root/load/all/comments/${post_id}/${UserIdForPostComments}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("uuid")}`
+
+        }
+      })
       const commentData = await commentResponse.json()
       if (commentResponse.status === 200) {
         setBackendComments(commentData.data)
@@ -113,11 +126,19 @@ const Comments = ({ commentsUrl, currentUserId, ImageUrl, currentUserName, UserI
 
 
 
-  console.log({backendComments})
+  console.log({ backendComments })
   //load all total comment of user
   useEffect(() => {
     async function totalComment() {
-      const totalCommentResponse = await fetch(`/blob/all/comment/user/${UserIdForPostComments}`)
+      const totalCommentResponse = await fetch(`/blob/all/comment/user/`, {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("uuid")}`
+
+        }
+      })
       const totalCommentData = await totalCommentResponse.json()
       if (totalCommentResponse.status === 200) {
         console.log({ totalCommentData })
@@ -128,7 +149,7 @@ const Comments = ({ commentsUrl, currentUserId, ImageUrl, currentUserName, UserI
 
 
 
-  }, [post_id] )
+  }, [post_id])
 
 
 
@@ -139,7 +160,7 @@ const Comments = ({ commentsUrl, currentUserId, ImageUrl, currentUserName, UserI
     <div className="comments">
       {/* <h3 className="comments-title">Comments</h3> */}
       {/* <div className="comment-form-title">Write comment</div> */}
-      <CommentForm submitLabel="Write" handleSubmit={addComment} />
+      <CommentForm submitLabel="Write" handleSubmit={addComment} commentToggle={commentToggle} />
       <div className="comments-container">
         {rootComments.map((rootComment) => (
           <Comment
@@ -153,6 +174,7 @@ const Comments = ({ commentsUrl, currentUserId, ImageUrl, currentUserName, UserI
             updateComment={updateComment}
             currentUserId={currentUserId}
             ImageUrl={rootComment.ImageUrl}
+            // ImageUrl={ImageUrl}
             currentUserName={currentUserName}
           />
         ))}

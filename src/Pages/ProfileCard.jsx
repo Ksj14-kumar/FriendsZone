@@ -14,9 +14,9 @@ import AddPost from '../Components/ProfilePageComponent/AddPost';
 import PublicPostCard from '../Components/ProfilePageComponent/PublicPostCard';
 import Tooltips from "@material-tailwind/react/Tooltips";
 import TooltipsContent from "@material-tailwind/react/TooltipsContent";
-import { BrowserRouter, NavLink, Redirect, useHistory, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, NavLink, Redirect, useHistory, Route, Switch, useLocation, useParams } from 'react-router-dom';
 import profile from '../assets/img/download.png'
-import { MdMessage } from 'react-icons/md'
+import { MdAirlineSeatIndividualSuite, MdMessage } from 'react-icons/md'
 import { FaUserPlus, FaFacebookMessenger } from 'react-icons/fa'
 
 import Friends from '../Components/ProfileCardComponents/Friends'
@@ -33,13 +33,28 @@ import UpdateProfile from './UpdateProfile';
 
 export default function ProfileCard(props) {
     // console.log(props.users)
-    // const { name, email, } = props.users.user
+    const [value, setValue] = useState(null)
     const buttonRef = useRef()
-    const history = useHistory()
     const dispatch = useDispatch()
-
-
+    const [query, setSearchQueary] = useState(null)
+    const { search } = useLocation();
+    console.log(search)
+    const params = new URLSearchParams(search);
+    console.log(params.get("id"))
     const [profileImage, setProfileImage] = useState("")
+
+
+
+
+
+
+
+
+    const Query = useSelector((state) => {
+        console.log("state is ", state)
+        return state.Query
+
+    })
 
     const DispatchProfileImage = useSelector((state) => {
         return state.ShowImage
@@ -78,7 +93,12 @@ export default function ProfileCard(props) {
 
 
 
+    useEffect(() => {
+        console.log(params.get("search"))
+        params.set("id", Query)
+        console.log(params.get("id"))
 
+    }, [Query])
 
 
 
@@ -95,8 +115,9 @@ export default function ProfileCard(props) {
 
 
 
-            <section class="relative block h-[500px]   md:ml-[16rem]">
-                <div class="bg-profile-background bg-cover bg-center absolute top-0 w-full h-full flex flex-shrink-0  ">
+
+            <section className="relative block h-[500px]   md:ml-[16rem]">
+                <div className="bg-profile-background bg-cover bg-center absolute top-0 w-full h-full flex flex-shrink-0  ">
 
                     {
                         ShowImageBackground ? <Image
@@ -190,7 +211,7 @@ export default function ProfileCard(props) {
                         </div> */}
 
                         <BrowserRouter>
-                            <div className="bottom flex-col relative flex-wrap md:w-[37rem]">
+                            <div className="bottom flex-col relative flex-wrap md:w-[37rem] ">
 
                                 <div className="containe1 flex justify-around  ">
 
@@ -201,7 +222,7 @@ export default function ProfileCard(props) {
                                         <div className="p-4 text-center  rounded-lg rounded-b-none   pb-1">
                                             <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Status</span>
                                             <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
-                                                22
+                                                🎭
                                             </span>
                                         </div>
 
@@ -242,7 +263,9 @@ export default function ProfileCard(props) {
                                         <div className="p-4 text-center  rounded-lg rounded-b-none  pb-1 ">
                                             <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Posts</span>
                                             <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
-                                                44
+                                                {
+                                                    GetAllPosts?.length
+                                                }
                                             </span>
                                         </div>
 
@@ -252,7 +275,7 @@ export default function ProfileCard(props) {
 
                                 <Switch>
 
-                                    <div className="section  mt-4  flex-auto ">
+                                    <div className="section  mt-4  flex-auto  mds-editor8:w-full ">
 
                                         <Route exact path="/user/status" >
                                             <Status fname={fname} lname={lname} country={country} city={city} stream={stream} position={position} aboutMe={aboutMe} college={college} />
@@ -290,7 +313,7 @@ export default function ProfileCard(props) {
 
             {/*========================== PUBLIC POST============== */}
 
-            <PublicPostCard data={PostWhichUserSelectedImageORVideo} />
+            <PublicPostCard data={PostWhichUserSelectedImageORVideo} socket={props.socket} />
 
 
             <Tooltips placement="top" ref={buttonRef}>

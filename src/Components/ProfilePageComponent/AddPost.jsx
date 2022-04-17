@@ -38,6 +38,8 @@ import { IoVideocam } from 'react-icons/io5';
 import Pusher from 'pusher-js';
 import axios from 'axios';
 import { Error } from '../Toastify';
+import io from "socket.io-client";
+const socket = io.connect("http://localhost:5000");
 function useOutsideAlerter(ref, setTextAreaValue, dispatch, setUrlOfImageUpload) {
     useEffect(() => {
         /**
@@ -281,8 +283,19 @@ function AddPost() {
 
             setDisabledText(true)
             setDisabledVideo(true)
+
+
+
+            
+
+
+
+
+
+
+
             // _id + 
-            const SaveUserPostIntoDb = await fetch(`/blob/local/url/${_id}`, {
+            const SaveUserPostIntoDb = await fetch(`/blob/local/url/`, {
                 method: "POST",
                 body: JSON.stringify({
                     text: textareaValue,
@@ -294,10 +307,12 @@ function AddPost() {
                     userProfileImageUrl: DispatchProfileImage,
                     // likes_count: 100,
 
-                    time: new Date(Date.now()).toDateString().split(" ")[2] + " " + new Date(Date.now()).toDateString().split(" ")[1] + " " + new Date(Date.now()).toDateString().split(" ")[3]
+                    time: new Date(Date.now()).toDateString().split(" ")[2] + " " + new Date(Date.now()).toDateString().split(" ")[1] + " " + new Date(Date.now()).toDateString().split(" ")[3],
+                    uuid:_id
                 }),
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("uuid")}`
                 }
             })
             // const { status, data } = SaveUserPostIntoDb
@@ -306,24 +321,38 @@ function AddPost() {
             // setTextAreaValue("")
             // const SaveUserPostIntoDbJson = await SaveUserPostIntoDb.json()
             if (SaveUserPostIntoDb.status === 200) {
+                success({message:"posted successfully"})
                 // Pusher.logToConsole = true
                 setDisabledGroup(false)
                 setDisabledPhotos(false)
 
                 setDisabledText(false)
                 setDisabledVideo(false)
+                var socketId;
+
+               
+
+
+
+
+
+
+
                 var pusher = new Pusher(process.env.REACT_APP_API_KEY, {
                     cluster: process.env.REACT_APP_API_CLUSTER,
+                    // authEndpoint:`/blob/local/url/${_id}`
                     // encrypted: true,
                 });
-                var socketId;
                 // retrieve the socket ID on successful connection
                 pusher.connection.bind('connected', function () {
                     // console.log("connected/.....")
                     socketId = pusher.connection.socket_id;
+                    console.log( {socketId})
                 });
                 var channel = pusher.subscribe('AddPost');
                 channel.bind('AddPostMessage', function (PusherData) {
+                    socketId = pusher.connection.socket_id;
+                    console.log( {socketId})
                     // console.log("pusher message is.. for add p[ poost", PusherData.GetAllUserPost)
                     dispatch({
                         type: "LOAD_POSTS",
@@ -355,13 +384,7 @@ function AddPost() {
             }
             else {
                 // Error({ message: "This Post is Already exit.." })
-                setDisabledGroup(false)
-                setDisabledPhotos(false)
-
-                setDisabledText(false)
-                setDisabledVideo(false)
-                setTextAreaValue("")
-                setFileType("")
+               
                 console.log("show error from client", SaveUserPostIntoDbJson)
                 inputFileRef.current.value = ""
                 videoRef.current.value = ""
@@ -372,6 +395,13 @@ function AddPost() {
                 setFile(photosRef.current.value)
                 setFile(videoRef.current.value)
                 setFile(textRef.current.value)
+                setDisabledGroup(false)
+                setDisabledPhotos(false)
+
+                setDisabledText(false)
+                setDisabledVideo(false)
+                setTextAreaValue("")
+                setFileType("")
             }
         }
     }

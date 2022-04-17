@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react'
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import Sidebar from '../Components/Sidebar';
 
 import { Context } from '../App';
@@ -8,6 +8,7 @@ import AdminNavbar from '../Components/AdminNavbar';
 import { useSelector, useDispatch } from 'react-redux';
 
 function Dashboard(props) {
+    console.log(props)
 
 
     const dispatch = useDispatch()
@@ -16,6 +17,12 @@ function Dashboard(props) {
         // console.log("dashobard user login data0", state)
         return state.UserStillLogin.user
     })
+
+    const history = useHistory()
+    history.push('/dashboard?id=' + props.users)
+    console.log("path")
+    console.log(window.location.href)
+
 
 
 

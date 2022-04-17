@@ -3,10 +3,14 @@ import img1 from '../../assets/img/team-1-800x800.jpg';
 import img2 from '../../assets/img/team-2-800x800.jpg'
 import img3 from '../../assets/img/team-2-800x800.jpg'
 import img4 from '../../assets/img/team-2-800x800.jpg'
-import Image from "@material-tailwind/react/Image";
+import Image from "@material-tailwind/react/Image"
+import image from "../../assets/img/download.png"
 import { useDispatch, useSelector, useStore } from 'react-redux';
-function Notification({ userLiked }) {
-    const [userDetailsfromServer, setUserDetail] = useState([])
+
+
+
+function Notification({ userLiked, socket }) {
+    const [notification, setNotification] = useState([])
     console.log("use details fetch from server", userLiked
     )
 
@@ -14,19 +18,36 @@ function Notification({ userLiked }) {
         return state.UserInformationLoad.value
     })
     const { _id, fname, lname, googleId, college, city, country, position, stream, aboutMe } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "" }
+
+
+    useEffect(() => {
+        socket.on("getNotification", (data) => {
+            console.log({ data })
+            setNotification(pre => [...pre, data])
+
+        })
+    }, [socket])
+
+    useEffect(() => {
+        console.log("notification", notification)
+        setNotification(userLiked)
+    },[userLiked])
+
+
+    console.log("notification", notification)
     return (
         <>
             {
-                userLiked.length > 0 ? userLiked.map((item) => {
+                notification.length > 0 ? notification.map((item, index) => {
                     return (
                         <>
                             {
-                                (item.url && item.name) &&
-                                <ul className="notifications">
+                                (item.postImageURL && item.name) &&
+                                <ul className="notifications" key={index}>
                                     <li className="links1 flex align-middle justify-between cursor-pointer mt-2">
                                         <div className="left-side flex rounded-full w-[2.5rem] h-[2.5rem]">
                                             <Image
-                                                src={item.url}
+                                                src={item.url ? item.url : image}
                                                 rounded={true}
                                                 raised={false}
                                                 alt="Rounded Image"
