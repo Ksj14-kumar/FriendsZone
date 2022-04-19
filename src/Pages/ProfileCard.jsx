@@ -112,133 +112,141 @@ export default function ProfileCard(props) {
 
             {/* <AdminNavbar /> */}
 
+            <div className="make_two_section md:flex md:justify-between relative">
+
+
+                {/* md:ml-[.5rem] */}
+                <div className="profile_card-container    md:mr-[22rem] md:w-[65rem] md:ml-[8rem] ">
 
 
 
 
-            <section className="relative block h-[500px]   md:ml-[16rem]">
-                <div className="bg-profile-background bg-cover bg-center absolute top-0 w-full h-full flex flex-shrink-0  ">
-
-                    {
-                        ShowImageBackground ? <Image
-                            src={ShowImageBackground}
-                            className="w-full h-full rounded-t-none"
-                            rounded={false}
-                            raised={false}
-                            alt="Image"
 
 
-                        /> : ""
-                    }
+                    <section className="relative block h-[300px] md:h-[400px]  md:ml-[16rem]">
+                        <div className="bg-profile-background bg-cover bg-center absolute top-[3.7rem] w-full h-full flex flex-shrink-0  ">
+
+                            {
+                                ShowImageBackground ? <Image
+                                    src={ShowImageBackground}
+                                    className="w-full h-full rounded-t-none "
+                                    rounded={false}
+                                    raised={false}
+                                    alt="Image"
 
 
-                </div>
-            </section>
-
-
-            <div className=' card-container flex justify-around md:pl-48 relative   shadow-lg '>
-
-
-                <Card className=" lg:-mt-[170px] md:-mt-[280px] -mt-[300px] 
-                        md:ml-[8rem] md:mr-[6rem]  md-w-[71rem] mx-[2rem]  shadow-lg " >
-                    <div className="flex flex-wrap justify-center relative">
-                        <div className="w-48 mds-editor2:w-40 px-4 -mt-24 relative outline-1 outline-red-600 rounded-full">
-
-                            {DispatchProfileImage.value ?
-                                <Image src={DispatchProfileImage.value} rounded={true} raised={true} className="object-cover  outline-3 rounded-full outline-double outline-offset-1 outline-neutral-500 " />
-
-
-                                :
-                                <>
-                                    <Image src={profile} rounded={true} raised={true} className="object-cover" />
-                                </>
+                                /> : ""
                             }
 
-                            {/* THISIS PROFILE CHANGE CAMERA */}
 
-                            {/* <div className='
+                        </div>
+                    </section>
+
+
+                    <div className=' card-container flex justify-around md:pl-48 relative     md:w-[58rem] md:ml-[4.5rem] md:mt-[6rem] mt-[17rem] '>
+
+
+                        <Card className=" lg:-mt-[170px] md:-mt-[280px] -mt-[300px] 
+                        md:ml-[8rem] md:mr-[6rem]  md-w-[71rem] mx-[2rem]    " >
+                            <div className="flex flex-wrap justify-center relative md:flex-col">
+                                <div className="w-48 mds-editor2:w-40 px-4 -mt-24 relative outline-1 outline-red-600 rounded-full md:justify-center md:mx-auto">
+
+                                    {DispatchProfileImage.value ?
+                                        <Image src={DispatchProfileImage.value} rounded={true} raised={true} className="object-cover  outline-3 rounded-full outline-double outline-offset-1 outline-neutral-500 " />
+
+
+                                        :
+                                        <>
+                                            <Image src={profile} rounded={true} raised={true} className="object-cover" />
+                                        </>
+                                    }
+
+                                    {/* THISIS PROFILE CHANGE CAMERA */}
+
+                                    <div className='
                             absolute 
-                            top-[112px]
+                            top-[95px]
                             right-[21px]
                             cursor-pointer
                             '
-                                onClick={() => {
-                                    dispatch({ type: "Model_Open", payload: true })
-                                }}
-                            >
-                                <BsFillCameraFill className='text-[#0E3EDA] text-3xl md:text-4xl' />
-                            </div> */}
-
-                        </div>
-
-                        <main className="buttons  flex justify-center pl-0">
-
-                            {/* ml-[7rem] */}
-                            <div className='mt-3   '>
-                                <Button
-                                    color="purple"
-                                    buttonType="filled"
-                                    size="regular"
-                                    rounded={false}
-                                    block={false}
-                                    iconOnly={false}
-                                    ripple="light"
-                                >
-                                    <Icon name={<FaUserPlus />} className="mr-2" />
-                                    Connect
-                                </Button>
-
-                            </div>
-                            <div className='mt-3  ml-[.3rem] '>
-                                <Button
-                                    color="lightBlue"
-                                    buttonType="filled"
-                                    size="regular"
-                                    rounded={false}
-                                    block={false}
-                                    iconOnly={false}
-                                    ripple="light"
-                                >
-                                    <Icon name={<FaFacebookMessenger />} className="mr-2" />
-                                    Message
-                                </Button>
-
-                            </div>
-                        </main>
-
-                        {/* <div className="w-full flex justify-center py-4 lg:pt-4 pt-8">
-
-                        </div> */}
-
-                        <BrowserRouter>
-                            <div className="bottom flex-col relative flex-wrap md:w-[37rem] ">
-
-                                <div className="containe1 flex justify-around  ">
-
-                                    <NavLink to="/user/status"
-                                        activeStyle={{ borderBottom: "2px solid #E91E63" }}
-                                    //   className={(isActive)=>isActive?"active":"inactive"}
+                                        onClick={() => {
+                                            dispatch({ type: "Model_Open", payload: true })
+                                        }}
                                     >
-                                        <div className="p-4 text-center  rounded-lg rounded-b-none   pb-1">
-                                            <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Status</span>
-                                            <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
-                                                🎭
-                                            </span>
-                                        </div>
+                                        <BsFillCameraFill className='text-[#000000] text-3xl md:text-4xl' />
+                                    </div>
 
-                                    </NavLink>
-                                    <NavLink to="/user/friends"
-                                        activeStyle={{ borderBottom: "2px solid #E91E63" }}
-                                    >
-                                        <div className="p-4 text-center  rounded-lg rounded-b-none  pb-1 ">
-                                            <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Friends</span>
-                                            <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
-                                                22
-                                            </span>
-                                        </div>
+                                </div>
 
-                                    </NavLink>
-                                    {/* <NavLink to="/user/comments">
+                                <main className="buttons  flex  justify-center pl-0 ">
+
+                                    {/* ml-[7rem] */}
+                                    <div className='mt-3   '>
+                                        <Button
+                                            color="purple"
+                                            buttonType="filled"
+                                            size="regular"
+                                            rounded={false}
+                                            block={false}
+                                            iconOnly={false}
+                                            ripple="light"
+                                        >
+                                            <Icon name={<FaUserPlus />} className="mr-2" />
+                                            Connect
+                                        </Button>
+
+                                    </div>
+                                    <div className='mt-3  ml-[.3rem] md:ml-[1rem]'>
+                                        <Button
+                                            color="lightBlue"
+                                            buttonType="filled"
+                                            size="regular"
+                                            rounded={false}
+                                            block={false}
+                                            iconOnly={false}
+                                            ripple="light"
+                                        >
+                                            <Icon name={<FaFacebookMessenger />} className="mr-2" />
+                                            Message
+                                        </Button>
+
+                                    </div>
+                                </main>
+
+                                <div className="w-full flex justify-center py-2 lg:pt-4 pt-8 ">
+
+                                </div>
+
+
+                                <BrowserRouter>
+                                    <div className="bottom flex-col relative flex-wrap md:w-[42rem] md:mx-auto w-full ">
+
+                                        <div className="containe1 flex justify-around  w-full">
+
+                                            <NavLink to="/user/status"
+                                                activeStyle={{ borderBottom: "2px solid #E91E63" }}
+                                            //   className={(isActive)=>isActive?"active":"inactive"}
+                                            >
+                                                <div className="p-4 text-center  rounded-lg rounded-b-none   pb-1">
+                                                    <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Status</span>
+                                                    <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
+                                                        🎭
+                                                    </span>
+                                                </div>
+
+                                            </NavLink>
+                                            <NavLink to="/user/friends"
+                                                activeStyle={{ borderBottom: "2px solid #E91E63" }}
+                                            >
+                                                <div className="p-4 text-center  rounded-lg rounded-b-none  pb-1 ">
+                                                    <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Friends</span>
+                                                    <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
+                                                        22
+                                                    </span>
+                                                </div>
+
+                                            </NavLink>
+                                            {/* <NavLink to="/user/comments">
                                         <div className="p-4 text-center">
                                             <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
                                                 {TotalComment}
@@ -247,78 +255,95 @@ export default function ProfileCard(props) {
                                         </div>
 
                                     </NavLink> */}
-                                    <NavLink to="/user/photos"
-                                        activeStyle={{ borderBottom: "2px solid #E91E63" }}
-                                    >
-                                        <div className="p-4 text-center  rounded-lg rounded-b-none  pb-1 ">
-                                            <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Photos</span>
-                                            <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
-                                                22
-                                            </span>
+                                            <NavLink to="/user/photos"
+                                                activeStyle={{ borderBottom: "2px solid #E91E63" }}
+                                            >
+                                                <div className="p-4 text-center  rounded-lg rounded-b-none  pb-1 ">
+                                                    <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Photos</span>
+                                                    <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
+                                                        22
+                                                    </span>
+                                                </div>
+                                            </NavLink>
+                                            <NavLink to="/user/posts"
+                                                activeStyle={{ borderBottom: "2px solid #E91E63" }}
+                                            >
+                                                <div className="p-4 text-center  rounded-lg rounded-b-none  pb-1 ">
+                                                    <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Posts</span>
+                                                    <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
+                                                        {
+                                                            GetAllPosts?.length
+                                                        }
+                                                    </span>
+                                                </div>
+
+
+                                            </NavLink>
                                         </div>
-                                    </NavLink>
-                                    <NavLink to="/user/posts"
-                                        activeStyle={{ borderBottom: "2px solid #E91E63" }}
-                                    >
-                                        <div className="p-4 text-center  rounded-lg rounded-b-none  pb-1 ">
-                                            <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Posts</span>
-                                            <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
-                                                {
-                                                    GetAllPosts?.length
-                                                }
-                                            </span>
-                                        </div>
 
+                                        <Switch>
 
-                                    </NavLink>
-                                </div>
+                                            <div className="section  mt-4  flex-auto  mds-editor8:w-full ">
 
-                                <Switch>
+                                                <Route exact path="/user/status" >
+                                                    <Status fname={fname} lname={lname} country={country} city={city} stream={stream} position={position} aboutMe={aboutMe} college={college} />
+                                                </Route>
+                                                <Route exact path="/user/friends">
+                                                    <Friends />
+                                                </Route>
+                                                <Route exact path="/user/comments">
+                                                    <Comments />
+                                                </Route>
+                                                <Route exact path="/user/photos">
+                                                    <Photos1 />
+                                                </Route>
+                                                <Route exact path="/user/posts"  >
 
-                                    <div className="section  mt-4  flex-auto  mds-editor8:w-full ">
+                                                    <Posts />
+                                                </Route>
 
-                                        <Route exact path="/user/status" >
-                                            <Status fname={fname} lname={lname} country={country} city={city} stream={stream} position={position} aboutMe={aboutMe} college={college} />
-                                        </Route>
-                                        <Route exact path="/user/friends">
-                                            <Friends />
-                                        </Route>
-                                        <Route exact path="/user/comments">
-                                            <Comments />
-                                        </Route>
-                                        <Route exact path="/user/photos">
-                                            <Photos1 />
-                                        </Route>
-                                        <Route exact path="/user/posts"  >
+                                                <Route exact path="/update_profile"  >
 
-                                            <Posts />
-                                        </Route>
+                                                    <UpdateProfile />
+                                                </Route>
+                                            </div>
 
-                                        <Route exact path="/update_profile"  >
-
-                                            <UpdateProfile />
-                                        </Route>
+                                        </Switch>
                                     </div>
 
-                                </Switch>
+                                </BrowserRouter>
                             </div>
 
-                        </BrowserRouter>
+                        </Card>
+
+                    </div>
+                    <div className="add_post_card bg-black">
+
+                        <AddPost />
                     </div>
 
-                </Card>
+                    {/* <div className="friends_groups bg-emerald-500 text-center ">
+                        hello
+                    </div> */}
 
+                    {/*========================== PUBLIC POST============== */}
+                    <div className="public_post_card  -mt-[2rem]">
+
+                        <PublicPostCard data={PostWhichUserSelectedImageORVideo} socket={props.socket} />
+                    </div>
+
+
+
+                    <Tooltips placement="top" ref={buttonRef}>
+                        <TooltipsContent>Create Profile</TooltipsContent>
+                    </Tooltips>
+
+                </div>
+                <div className="right_section bg-[#fffefe00] md:w-[18.5rem] md:fixed md:right-0 top-[3.7rem] md:block hidden">
+                    
+                </div>
             </div>
-            <AddPost />
 
-            {/*========================== PUBLIC POST============== */}
-
-            <PublicPostCard data={PostWhichUserSelectedImageORVideo} socket={props.socket} />
-
-
-            <Tooltips placement="top" ref={buttonRef}>
-                <TooltipsContent>Create Profile</TooltipsContent>
-            </Tooltips>
         </>
 
 

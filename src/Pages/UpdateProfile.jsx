@@ -9,7 +9,7 @@ function UpdateProfile() {
         <>
 
             {/* <AdminNavbar /> */}
-            <div className="container` md:ml-[20rem] mt-[3rem]  md:mr-[5rem] mx-[2rem]">
+            <div className="container` md:ml-[20rem] mt-[7rem]  md:mr-[5rem] mx-[2rem]">
                 <SettingsForm />
 
             </div>

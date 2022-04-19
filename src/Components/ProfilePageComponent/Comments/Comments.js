@@ -11,7 +11,7 @@ import {
   deleteComment as deleteCommentApi,
 } from "./api";
 
-const Comments = ({ commentsUrl,commentToggle, currentUserId, ImageUrl, currentUserName, UserIdForPostComments, post_id }) => {
+const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, currentUserName, UserIdForPostComments, post_id }) => {
 
 
 
@@ -38,11 +38,12 @@ const Comments = ({ commentsUrl,commentToggle, currentUserId, ImageUrl, currentU
   const addComment = async (text, parentId) => {
     const comment = await createCommentApi(text, parentId, UserIdForPostComments, currentUserId, currentUserName, ImageUrl, post_id)
     console.log({ comment })
-    const SaveUserComment = await fetch(`/blob/post/comment/save`, {
+    const SaveUserComment = await fetch(`/blob/post/comment/save/`, {
       method: "POST",
-      body: JSON.stringify(comment),
+      body: JSON.stringify({ comment, uuid: localStorage.getItem('uuid') }),
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("uuid")}`,
 
       }
     })
@@ -50,7 +51,7 @@ const Comments = ({ commentsUrl,commentToggle, currentUserId, ImageUrl, currentU
     console.log({ SaveUserCommentJson })
     if (SaveUserComment.status === 200) {
       console.log("comment saved", SaveUserCommentJson.data)
-      setBackendComments([...backendComments, SaveUserCommentJson.data]);
+      setBackendComments([...backendComments, SaveUserCommentJson.data.comment]);
       setActiveComment(null);
     }
   };
@@ -110,6 +111,7 @@ const Comments = ({ commentsUrl,commentToggle, currentUserId, ImageUrl, currentU
         }
       })
       const commentData = await commentResponse.json()
+      console.log("comment data", commentData)
       if (commentResponse.status === 200) {
         setBackendComments(commentData.data)
       }

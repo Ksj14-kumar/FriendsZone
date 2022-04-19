@@ -58,11 +58,12 @@ function RightSidebar() {
                             className={
                                 (dropdownPopoverShow ? "block " : "hidden ") +
                                 (color === "red" ? "bg-white " : "") +
-                                "text-base  float-left py-2 list-none text-left rounded mb-1 bg-white mds-editor3:ml-6  md:w-[18rem]"
+                                "text-base  float-left py-2 list-none text-left rounded mb-1 bg-white mds-editor3:ml-6 md:mr-0 mds-editor11:w-[18rem] mds-editor11:w-[20rem] mds-editor12:w-[22rem]"
                             }
                             // style={{ minWidth: "1rem" }}
                         >
                             <FooterButton bool={dropdownPopoverShow} />
+                            
 
 
                         </div>

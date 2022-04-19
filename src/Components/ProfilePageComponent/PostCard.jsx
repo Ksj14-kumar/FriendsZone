@@ -131,7 +131,7 @@ function PostCard({ item, index, filterPost, socket }) {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + localStorage.getItem("uuid")
             },
-            body: JSON.stringify({ visibility, uuid: _id })
+            body: JSON.stringify({ visibility, uuid: localStorage.getItem("uuid") })
         })
         const data = await response.json()
         console.log("data is ", data)
@@ -224,8 +224,9 @@ function PostCard({ item, index, filterPost, socket }) {
 
     return (
         <>
-            <div className="post-card flex justify-around post-screen:mt-[32rem] mt-[26rem] md:pl-48 md:mt-[18rem] relative sm-[25rem]  shadow-lg  lg:mt-[11rem] post">
-                <Card className="post mx-[5.8rem] ml-[8rem] -mt-[9rem]">
+            {/* post-screen:mt-[32rem] mt-[26rem] md:pl-48 md:mt-[18rem] relative sm-[25rem] */}
+            <div className="post-card flex justify-around md:pl-80 md:pr-[5.4rem] md:mb-[5rem] -mb-[3rem]    lg:mt-[11rem] post  w-full ">
+                <Card className="post   -mt-[9rem] p-0">
                     {/* <CardHeader color="lightBlue" size="lg">
       <H5 color="white">Login</H5>
         </CardHeader> */}
@@ -282,7 +283,7 @@ function PostCard({ item, index, filterPost, socket }) {
                             }
                         </section>
                         {/* <main className='  w-full mt-[2rem]'> */}
-                        <section className='text-caption ml-2  mt-[2rem]   px-[1rem] text-[1.3rem] md:text-lg '>
+                        <section className='text-caption ml-2  mt-[2rem]   px-[1rem]  text-[1.3rem] md:text-lg '>
                             {/* {
                                 item.text
                             } */}
@@ -298,7 +299,7 @@ function PostCard({ item, index, filterPost, socket }) {
                             /> */}
                         </section>
                     </CardBody>
-                    <section className='image section mt-[.8rem]   relative w-full bg-red-600  '>
+                    <section className='image section mt-[.8rem]   relative w-full bg-red-600    '>
                         {
                             item.fileType === "video" ?
                                 (item.image ?

@@ -532,7 +532,8 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
 
     return (
         <>
-            <nav className="bg-light-blue-500 md:ml-64 py-2 px-3">
+        {/* md:ml-64 */}
+            <nav className="bg-light-blue-500  py-2 px-3 fixed w-full z-[10000]">
                 <div className="container max-w-full mx-auto flex items-center justify-between md:pr-8 md:pl-10">
                     <div className="md:hidden">
                         <Button
@@ -556,7 +557,8 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                 size="lg"
                                 iconOnly
                                 rounded
-                                ripple="light"
+                                ripple="light" 
+                                className="mt-[2rem]"
                                 onClick={() =>
                                     setShowSidebar('-left-64')}
                             >

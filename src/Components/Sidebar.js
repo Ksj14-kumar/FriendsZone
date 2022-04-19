@@ -98,23 +98,29 @@ export default function Sidebar(props) {
             />
             <div
                 // w-64 sidebar width
-                className={`h-screen fixed top-0 md:left-0 ${showSidebar} overflow-y-auto flex-row flex-nowrap overflow-hidden shadow-xl bg-white w-64 z-10 py-4 px-6 transition-all duration-300 mr-36  `}
+                className={`h-screen fixed top-0 md:left-0 ${showSidebar} overflow-y-auto flex-row flex-nowrap overflow-hidden shadow-xl bg-[#fff] w-64 z-10 py-4 px-6 transition-all duration-300 mr-36  mt-[3.7rem] text-black`}
             >
-                <div className="flex-col items-stretch min-h-full flex-nowrap px-0 relative" >
+                <div className="flex-col items-stretch min-h-full flex-nowrap px-0 relative text-black" >
                     <NavLink
 
                         to=""
                         rel="noreferrer"
-                        className="mt-2 text-center w-full inline-block active"
+                        className="mt-2 text-center w-full inline-block active text-black"
                     >
 
                         {/* props.name */}
-                        <H6 color="gray">{Name ? Name : Name1}</H6>
+                        {/* <H6 className="text-white"></H6> */}
+                        <p
+                            className='text-black text-xl font-serif font-bold leading-normal mt-0 mb-2'
+                        >
+                            {Name ? Name : Name1}
+
+                        </p>
                     </NavLink>
                     <div className="flex flex-col">
                         <hr className="my-4 min-w-full" />
 
-                        <ul className="flex-col min-w-full flex list-none">
+                        <ul className="flex-col min-w-full flex list-none text-white">
                             <li className="rounded-lg mb-4 hover:bg-[#2a97bb] transition duration-2000
                             hover:shadow-lg
                             hover:transparent
@@ -125,7 +131,7 @@ export default function Sidebar(props) {
                                 <NavLink
                                     to="/profile"
                                     exact
-                                    className="flex items-center gap-4 text-sm text-gray-700 font-medium px-4 py-3 rounded-lg hover:text-white"
+                                    className="flex items-center gap-4 text-sm text-black font-medium px-4 py-3 rounded-lg hover:text-white"
                                     activeClassName="bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white shadow-md "
                                 >
                                     <Icon name={<CgProfile />} size="2xl" />
@@ -143,7 +149,7 @@ export default function Sidebar(props) {
                             >
                                 <NavLink
                                     to="/update_profile"
-                                    className="flex items-center gap-4 text-sm text-gray-700 font-medium px-4 py-3 rounded-lg hover:text-white"
+                                    className="flex items-center gap-4 text-sm text-black font-medium px-4 py-3 rounded-lg hover:text-white"
                                     activeClassName="bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white shadow-md"
                                 >
                                     <Icon name={<IoMdSettings />} size="2xl" />
@@ -160,14 +166,14 @@ export default function Sidebar(props) {
                             hover:ease-in-out ">
                                 <NavLink
                                     to="/user/posts"
-                                    className="flex items-center gap-4 text-sm text-gray-700 font-medium px-4 py-3 rounded-lg hover:text-white"
+                                    className="flex items-center gap-4 text-sm text-black font-medium px-4 py-3 rounded-lg hover:text-white"
                                     activeClassName="bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white shadow-md "
                                 >
                                     <Icon name={<BsViewList />} size="2xl" />
                                     Posts
                                 </NavLink>
                             </li>
-                            <li className="rounded-lg mb-2 text-gray-700 hover:bg-[#2a97bb] transition duration-2000
+                            <li className="rounded-lg mb-2 text-white hover:bg-[#2a97bb] transition duration-2000
                             hover:shadow-lg
                             hover:transparent
                             hover:transition-all
@@ -177,14 +183,14 @@ export default function Sidebar(props) {
                             hover:ease-in-out">
                                 <NavLink
                                     to="/user/photos"
-                                    className="flex items-center gap-4 text-sm text-gray-700 font-medium px-4 py-3 rounded-lg hover:text-white"
+                                    className="flex items-center gap-4 text-sm text-black font-medium px-4 py-3 rounded-lg hover:text-white"
                                     activeClassName="bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white shadow-md "
                                 >
                                     <Icon name={<IoMdPhotos />} size="2xl" />
                                     Photos
                                 </NavLink>
                             </li>
-                            <li className="px-4 rounded-lg mb-2 text-gray-700 hover:bg-[#2a97bb] transition duration-2000
+                            <li className="px-4 rounded-lg mb-2 text-black hover:bg-[#2a97bb] transition duration-2000
                             hover:shadow-lg
                             hover:transparent
                             hover:transition-all
@@ -201,7 +207,7 @@ export default function Sidebar(props) {
                                     Login
                                 </a>
                             </li>
-                            <li className="px-4 rounded-lg mb-2 text-gray-700 hover:bg-[#2a97bb] transition duration-2000
+                            <li className="px-4 rounded-lg mb-2 text-black hover:bg-[#2a97bb] transition duration-2000
                             hover:shadow-lg
                             hover:transparent
                             hover:transition-all
@@ -218,7 +224,7 @@ export default function Sidebar(props) {
                                     Register
                                 </a>
                             </li>
-                            <li className="px-4 rounded-lg mb-2 text-gray-700 hover:bg-[#2a97bb] transition duration-2000
+                            <li className="px-4 rounded-lg mb-2 text-black selection:hover:bg-[#2a97bb] transition duration-2000
                             hover:shadow-lg
                             hover:transparent
                             hover:transition-all

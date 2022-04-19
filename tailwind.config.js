@@ -18,6 +18,8 @@ module.exports = {
         "mds-editor8": { "max": "415px" },
         "mds-editor9": { "min": "681px" },
         "mds-editor10": { "max": "300px" },
+        "mds-editor12": { "min": "300px" },
+        "mds-editor11": { "min": "250px" },
       }
     },
   },
