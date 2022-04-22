@@ -898,6 +898,23 @@ padding:1rem 0rem;
   }
 
 
+
+
+
+
+  img.rounded-xl.max-w-full.h-auto.align-middle.border-none.w-full.rounded-none {
+    border-radius: 0;
+
+  }
+
+
+
+
+
+
+
+
+
 }
 
 

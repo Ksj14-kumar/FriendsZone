@@ -246,11 +246,9 @@ function AddPost() {
             }
         }
         else {
-            // console.log("video", videoRef.current.value)
             error({ message: "file size is too large" })
             photosRef.current.value = ""
             setTextAreaValue("")
-            // console.log("video2", videoRef.current.value)
             setFile(photosRef.current.value)
         }
     }
@@ -267,7 +265,6 @@ function AddPost() {
     };
     //Upload the post---------------------------------------To the server-------------
     async function SubmitPost(e) {
-        console.log(textareaValue, UnselectPostImage)
         if (!textareaValue && !UnselectPostImage) {
             alert("please add some post")
             return
@@ -277,7 +274,6 @@ function AddPost() {
             // ImageAsUrl
             // 
             console.log({ _id })
-            console.log("image urrl", ImageAsUrl)
             setDisabledGroup(true)
             setDisabledPhotos(true)
 
@@ -317,7 +313,6 @@ function AddPost() {
             })
             // const { status, data } = SaveUserPostIntoDb
             const SaveUserPostIntoDbJson = await SaveUserPostIntoDb.json()
-            console.log("SaveUserPostIntoDbJson", SaveUserPostIntoDbJson)
             // setTextAreaValue("")
             // const SaveUserPostIntoDbJson = await SaveUserPostIntoDb.json()
             if (SaveUserPostIntoDb.status === 200) {
@@ -347,12 +342,10 @@ function AddPost() {
                 pusher.connection.bind('connected', function () {
                     // console.log("connected/.....")
                     socketId = pusher.connection.socket_id;
-                    console.log( {socketId})
                 });
                 var channel = pusher.subscribe('AddPost');
                 channel.bind('AddPostMessage', function (PusherData) {
                     socketId = pusher.connection.socket_id;
-                    console.log( {socketId})
                     // console.log("pusher message is.. for add p[ poost", PusherData.GetAllUserPost)
                     dispatch({
                         type: "LOAD_POSTS",
@@ -385,7 +378,6 @@ function AddPost() {
             else {
                 // Error({ message: "This Post is Already exit.." })
                
-                console.log("show error from client", SaveUserPostIntoDbJson)
                 inputFileRef.current.value = ""
                 videoRef.current.value = ""
                 textRef.current.value = ""

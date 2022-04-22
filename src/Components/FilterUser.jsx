@@ -24,7 +24,6 @@ function FilterUser({ item }) {
                                     onClick={
                                         () => {
                                             alert("helo")
-                                            console.log("google id", item.googleId)
                                             dispatch({ type: "query", payload: item.googleId })
                                             // setSearchQueary(item.googleId)
                                         }

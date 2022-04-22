@@ -134,7 +134,6 @@ function PostCard({ item, index, filterPost, socket }) {
             body: JSON.stringify({ visibility, uuid: localStorage.getItem("uuid") })
         })
         const data = await response.json()
-        console.log("data is ", data)
         if (response.status === 200) {
             success({ message: "Visibility Changed Successfully" })
             dispatch({ type: "LOAD_POSTS", payload: data.data })
@@ -164,9 +163,7 @@ function PostCard({ item, index, filterPost, socket }) {
     //function which excute when current user liked it any post
     async function callLikeHnadler(userId, post_id, bgImageUrl, profileImage) {
         try {
-            console.log("userId", userId)
-            console.log("post_id", post_id)
-            console.log("goodle id", googleId)
+            
 
 
             const result = await axios.put(`/blob/user/like/${post_id}`, {
@@ -220,7 +217,6 @@ function PostCard({ item, index, filterPost, socket }) {
         setVisibilityModal(false)
     }
 
-    console.log({ VisibilityModal })
 
     return (
         <>

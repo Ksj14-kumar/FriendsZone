@@ -32,13 +32,11 @@ export default function Login(props) {
   const { users, dispatch } = useContext(Context)
   const [loader, setLoader] = useState(false)
 
-  // console.log("cookie", cookies)
 
 
 
   // const ShowImage = useSelector((state) => { return state.showImage.value })
   const ShowImageBackground = useSelector((state) => {
-    console.log("state for the Show Image load", state)
     return state.ShowImageBackground.value
   })
   const UserInformationLoad = useSelector((state) => { return state.UserInformationLoad })
@@ -106,11 +104,9 @@ export default function Login(props) {
         body: JSON.stringify({ email, password }),
         // redirect: "follow"
       })
-      console.log("server response after failed", response)
       const status = response.status
       const serverData = await response.json()
       if (status === 200) {
-        console.log("usercookie is", serverData)
         localStorage.setItem("uuid", serverData.cookie)
         const { user } = serverData
         success({ message: serverData.message })
@@ -337,7 +333,6 @@ export default function Login(props) {
 
 
 async function success(props) {
-  console.log("success", props)
   const notify = () => toast.success(props.message, {
     position: "top-center",
     autoClose: 1000,
@@ -362,7 +357,6 @@ async function success(props) {
 
 
 function error(props) {
-  // console.log("0fsdfsd", props)
   const notify = () => toast.error(props.message, {
     position: "top-center",
     autoClose: 7000,

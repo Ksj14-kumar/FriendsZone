@@ -16,7 +16,6 @@ function GetAllComments(state = "", action = {}) {
 // SET_TOTAL_COMMENT
 
 export function TotalComment(state = 0, action = {}) {
-    // console.log("get all comments here", action.payload)
     switch (action.type) {
         case "SET_TOTAL_COMMENT":
             return action.payload.length

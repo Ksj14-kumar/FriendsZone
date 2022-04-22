@@ -36,15 +36,12 @@ import FriendSuggestion from '../Components/ProfilePageComponent/FriendSuggestio
 
 
 export default function ProfileCard(props) {
-    // console.log(props.users)
     const [value, setValue] = useState(null)
     const buttonRef = useRef()
     const dispatch = useDispatch()
     const [query, setSearchQueary] = useState(null)
     const { search } = useLocation();
-    console.log(search)
     const params = new URLSearchParams(search);
-    console.log(params.get("id"))
     const [profileImage, setProfileImage] = useState("")
 
 
@@ -55,7 +52,6 @@ export default function ProfileCard(props) {
 
 
     const Query = useSelector((state) => {
-        console.log("state is ", state)
         return state.Query
 
     })
@@ -85,7 +81,6 @@ export default function ProfileCard(props) {
     const PostWhichUserSelectedImageORVideo = useSelector((state) => {
         return state.PostWhichUserSelectedImageORVideo
     })
-    // console.log("[profile card from redux", PostWhichUserSelectedImageORVideo)
 
     const { fname, lname, college, city, country, position, stream, aboutMe } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "" }
 
@@ -98,9 +93,7 @@ export default function ProfileCard(props) {
 
 
     useEffect(() => {
-        console.log(params.get("search"))
         params.set("id", Query)
-        console.log(params.get("id"))
 
     }, [Query])
 

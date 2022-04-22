@@ -97,7 +97,6 @@ function checkUrlExitsProfile(state = { value: "" }, action = {}) {
 
 
 function checkUrlExitsBg(state = { value: "" }, action = {}) {
-    // console.log("backghround actions is for select and unselect", action)
 
     switch (action.type) {
         case "SetValueOfPreviewImageBg":

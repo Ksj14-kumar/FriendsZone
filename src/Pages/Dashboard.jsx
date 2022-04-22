@@ -8,20 +8,16 @@ import AdminNavbar from '../Components/AdminNavbar';
 import { useSelector, useDispatch } from 'react-redux';
 
 function Dashboard(props) {
-    console.log(props)
 
 
     const dispatch = useDispatch()
 
     const users = useSelector((state) => {
-        // console.log("dashobard user login data0", state)
         return state.UserStillLogin.user
     })
 
     const history = useHistory()
     history.push('/dashboard?id=' + props.users)
-    console.log("path")
-    console.log(window.location.href)
 
 
 
@@ -30,7 +26,6 @@ function Dashboard(props) {
 
     // const { _id } = users ? users : { _id: "" }
 
-    console.log("iuser id is ", _id)
 
 
     // //LOAD ALL THE posts for users
@@ -41,7 +36,6 @@ function Dashboard(props) {
     //         const loadPostResponse = await fetch(`/blob/users/public/posts/${_id}`)
     //         const loadPostData = await loadPostResponse.json()
 
-    //         console.log("load post data", loadPostData.data, loadPostResponse)
     //         // if (loadPostData.status === 200) {
     //             dispatch({
     //                 type: "LOAD_POSTS",

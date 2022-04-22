@@ -1,7 +1,6 @@
 import React from 'react'
 
 function LoaderRedux(state = "", action = {}) {
-    // console.log("action of loader ", action)
 
     switch (action.type) {
         case "LOADER":

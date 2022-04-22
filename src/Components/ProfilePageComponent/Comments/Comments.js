@@ -40,7 +40,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
       );
   const addComment = async (text, parentId) => {
     const comment = await createCommentApi(text, parentId, UserIdForPostComments, currentUserId, currentUserName, ImageUrl, post_id)
-    console.log({ comment })
     const SaveUserComment = await fetch(`/blob/post/comment/save/`, {
       method: "POST",
       body: JSON.stringify({ comment, uuid: localStorage.getItem('uuid') }),
@@ -51,9 +50,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
       }
     })
     const SaveUserCommentJson = await SaveUserComment.json()
-    console.log({ SaveUserCommentJson })
     if (SaveUserComment.status === 200) {
-      console.log("comment saved", SaveUserCommentJson.data)
       setBackendComments([...backendComments, SaveUserCommentJson.data.comment]);
       setActiveComment(null);
     }
@@ -92,7 +89,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
         }
       })
       const DeleteResponseData = await deleteResponse.json()
-      console.log("delte response comments", DeleteResponseData)
       if (deleteResponse.status === 200) {
 
         setBackendComments(DeleteResponseData.data);
@@ -114,7 +110,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
         }
       })
       const commentData = await commentResponse.json()
-      console.log("comment data", commentData)
       if (commentResponse.status === 200) {
         setBackendComments(commentData.data)
         setLength(commentData.length)
@@ -132,7 +127,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
 
 
 
-  console.log({ backendComments })
   //load all total comment of user
   useEffect(() => {
     async function totalComment() {
@@ -147,7 +141,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
       })
       const totalCommentData = await totalCommentResponse.json()
       if (totalCommentResponse.status === 200) {
-        console.log({ totalCommentData })
         dispatch({ type: "SET_TOTAL_COMMENT", payload: totalCommentData.data })
       }
     }
@@ -170,7 +163,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
         }
       })
       const commentData = await commentResponse.json()
-      console.log("comment data", commentData)
       if (commentResponse.status === 200) {
         setBackendComments(commentData.data)
       }

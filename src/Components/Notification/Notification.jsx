@@ -11,8 +11,7 @@ import { useDispatch, useSelector, useStore } from 'react-redux';
 
 function Notification({ userLiked, socket }) {
     const [notification, setNotification] = useState([])
-    console.log("use details fetch from server", userLiked
-    )
+    // console.log("use details fetch from server", userLiked)
 
     const UserInformationLoad = useSelector((state) => {
         return state.UserInformationLoad.value
@@ -22,19 +21,19 @@ function Notification({ userLiked, socket }) {
 
     useEffect(() => {
         socket.on("getNotification", (data) => {
-            console.log({ data })
+            // console.log({ data })
             setNotification(pre => [...pre, data])
 
         })
     }, [socket])
 
     useEffect(() => {
-        console.log("notification", notification)
+        // console.log("notification", notification)
         setNotification(userLiked)
     },[userLiked])
 
 
-    console.log("notification", notification)
+    // console.log("notification", notification)
     return (
         <>
             {

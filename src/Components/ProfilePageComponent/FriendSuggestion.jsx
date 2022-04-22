@@ -20,7 +20,7 @@ export default function FriendSuggestion() {
     <>
       <Swiper navigation={true}
         slidesPerView={windowWidth <= 372 ? 2 : 3}
-        spaceBetween={windowWidth <= 372 ? -50 : -60}
+        spaceBetween={windowWidth <= 372 ? -50 : -85}
         slidesPerGroup={3}
         loop={false}
         loopFillGroupWithBlank={true}

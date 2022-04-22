@@ -4,7 +4,6 @@ import Icon from "@material-tailwind/react/Icon";
 import { ImCross } from 'react-icons/im';
 import { useDispatch, useSelector } from 'react-redux';
 function ImageShow(props) {
-    // console.log("prevew image is ", props.previewImage, props.setPreviewImage)
 
     const dispatch = useDispatch()
 

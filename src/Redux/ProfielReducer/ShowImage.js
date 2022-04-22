@@ -21,7 +21,6 @@ function ShowImage(state = { value: "" }, action = {}) {
 
 function ShowImageBackground(state = { value: "" }, action = {}) {
 
-    // console.log("background images")
 
 
 

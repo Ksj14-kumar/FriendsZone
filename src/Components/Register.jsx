@@ -76,7 +76,6 @@ export default function Register() {
 
                 const status = response.status
                 const data = await response.json()
-                console.log(response)
 
 
                 if (status == 200) {
@@ -213,7 +212,6 @@ export default function Register() {
 
 
 function success(props) {
-    console.log("success", props)
     const notify = () => toast.success(props.message, {
         position: "top-center",
         autoClose: 7000,
@@ -238,7 +236,6 @@ function success(props) {
 
 
 function error(props) {
-    // console.log("0fsdfsd", props)
     const notify = () => toast.error(props.message, {
         position: "top-center",
         autoClose: 7000,

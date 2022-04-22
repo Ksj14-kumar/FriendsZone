@@ -14,24 +14,20 @@ import { Context } from '../App';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function Sidebar(props) {
-    console.log("props data", { props })
     const [showSidebar, setShowSidebar] = useState('-left-64');
     const history = useHistory()
 
     const dispatch = useDispatch()
     const Name = useSelector((state) => {
-        // console.log("sidebar ", state)
         return state.Name
     })
 
 
     const UserInformationLoad = useSelector((state) => {
-        // console.log("state is for profile card is", state)
 
         return state.UserInformationLoad.value
     })
 
-    // console.log("user info for sidebar", user, JSON.parse(localStorage.getItem("uuid")))
 
     const _id = localStorage.getItem("uuid")
     const Name1 = JSON.parse(localStorage.getItem("user"))
@@ -52,7 +48,6 @@ export default function Sidebar(props) {
         // window.open("http://localhost:5000/logout", "_self")
         const _shouldWantTodelete = window.confirm("Are you sure you want to delete?")
         if (_shouldWantTodelete) {
-            // console.log("ok, want delete")
 
             const res = await fetch(`http://localhost:5000/delete/account/${_id}`, {
 
@@ -64,10 +59,8 @@ export default function Sidebar(props) {
                 }
             })
             const responseFromServer = await res.json()
-            // console.log("delete response from server for the web app", responseFromServer)
 
             const { message } = responseFromServer
-            // console.log(res.status)
 
             if (res.status === 200) {
                 localStorage.clear()
@@ -80,11 +73,9 @@ export default function Sidebar(props) {
             else {
 
 
-                // console.log("failed delete")
             }
         }
         else {
-            // console.log("canceled delete")
         }
     }
     return (

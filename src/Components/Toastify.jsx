@@ -4,7 +4,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export function Success(props) {
-    console.log("0fsdfsd", props)
     const notify = () => toast.success(props.message, {
         position: props.position ? props.position : "top-center",
         autoClose: 1000,

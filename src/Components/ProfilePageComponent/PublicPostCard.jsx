@@ -123,7 +123,6 @@ function PublicPostCard({ data, socket }) {
         }
       })
       const loadNotificationData = await loadNotificationResponse.json()
-      console.log("load notification data", loadNotificationData.data)
       if (loadNotificationResponse.status === 200) {
         dispatch({ type: "Send_Notification", payload: loadNotificationData.data })
       }
@@ -175,7 +174,6 @@ function PublicPostCard({ data, socket }) {
         }
       })
       const data1 = await res1.json()
-      console.log({ data1 })
       if (res1.status === 200) {
         // setuploadImageDataFromServer(parseValue.resources)
         dispatch({ type: "LOADER", payload: false })
@@ -262,7 +260,6 @@ function PublicPostCard({ data, socket }) {
 
 
 
-  console.log({ PostData })
   return (
     <>
       {
@@ -277,13 +274,17 @@ function PublicPostCard({ data, socket }) {
         })
       }
 
-      <InfiniteScroll
-        dataLength={PostData.length}
+      <div className="infinite_scroll  text-center ml-[5rem] -mt-[3rem]">
 
-        next={fetchData}
-        hasMore={true}
-        loader={<Spinner name="three-bounce" />}
-      />
+        <InfiniteScroll
+          dataLength={PostData.length}
+
+          next={fetchData}
+          hasMore={true}
+          loader={<Spinner name="three-bounce" />}
+          className="ml-[8rem]"
+        />
+      </div>
 
 
 

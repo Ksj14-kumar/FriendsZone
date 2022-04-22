@@ -37,21 +37,7 @@ export const getComments = async () => {
 };
 
 export const createComment = async (text, parentId = null, UserIdForPostComments, currentUserId, currentUserName, ImageUrl, post_id) => {
-    console.log({ UserIdForPostComments }, { post_id }, { ImageUrl })
-    console.log({
-        Sanju: {
-            id: Math.random().toString(36).substr(2, 9),
-            body: text,
-            parentId,
-            // userId: UserIdForPostComments,
-
-            userId: currentUserId,
-            username: currentUserName,
-            post_id: post_id,
-            ImageUrl: ImageUrl,
-            createdAt: new Date().toISOString(),
-        }
-    })
+    
     //UserIdForPostComments==="1"
     //change the id===uuid
     return {

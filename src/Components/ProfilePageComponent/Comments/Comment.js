@@ -18,7 +18,7 @@ const Comment = ({
     currentUserName,
 }) => {
 
-    console.log({ commentUserId: currentUserId, comment: comment.userId })
+    
 
 
     const isEditing =

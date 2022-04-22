@@ -7,11 +7,9 @@ import { useDispatch, useSelector } from 'react-redux';
 function SelectedImageShowWithURL(props) {
     const dispatch = useDispatch()
 
-    console.log("props for video0", props)
 
 
     const FileType = useSelector((state) => {
-        console.log("state is for chanmge file type ", state)
         return state.FileType
     })
 

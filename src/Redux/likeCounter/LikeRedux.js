@@ -7,7 +7,6 @@
 
 
 const LikeRedux = (state = [], action = {}) => {
-    // console.log("like redux", action)
 
     switch (action.type) {
         case 'LIKE':

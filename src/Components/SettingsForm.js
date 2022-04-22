@@ -56,7 +56,6 @@ export default function SettingsForm() {
     async function SubmitInfo(e) {
         e.preventDefault()
         const { username, fname, lname, gender, address, city, country, postalCode, aboutMe, college, stream, degree, position } = UserProfileInformationm
-        console.log("user infomation", UserProfileInformationm)
 
         if (!username || !fname || !lname || !gender || !address || !city || !country || !postalCode || !aboutMe || !college || !stream || !degree || !position) {
             error({ message: "Please fill all the fields" })
@@ -79,7 +78,6 @@ export default function SettingsForm() {
             })
 
             const resData = await res.json()
-            console.log("userinformation daat0", resData)
             if (res.status === 200) {
                 dispatch({ type: "USERINFO_LOAD", payload: resData.data })
                 success({ message: resData.message })
@@ -427,7 +425,6 @@ export default function SettingsForm() {
 
 
 function error(props) {
-    console.log("0fsdfsd", props)
     const notify = () => toast.error(props.message, {
         position: "top-center",
         autoClose: 7000,
@@ -451,7 +448,6 @@ function error(props) {
 
 
 async function success(props) {
-    console.log("success", props)
     const notify = () => toast.success(props.message, {
         position: "top-center",
         autoClose: 2000,
