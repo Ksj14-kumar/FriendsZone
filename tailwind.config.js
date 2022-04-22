@@ -10,6 +10,7 @@ module.exports = {
         "mdx-editor1": { "min": "863px", "max": "968px" },
         "mdx-editor2": { "min": "872px", "max": "969px" },
         "mds-editor2": { "max": "452px" },
+        "mds-editor13": { "max": "482px" },
         "mds-editor3": { "max": "318px" },
         "mdx-editor5": { "min": "1068px" },
         "post-screen": { "max": "680px" },

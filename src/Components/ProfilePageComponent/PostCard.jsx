@@ -225,7 +225,7 @@ function PostCard({ item, index, filterPost, socket }) {
     return (
         <>
             {/* post-screen:mt-[32rem] mt-[26rem] md:pl-48 md:mt-[18rem] relative sm-[25rem] */}
-            <div className="post-card flex justify-around md:pl-80 md:pr-[5.4rem] md:mb-[5rem] -mb-[3rem]    lg:mt-[11rem] post  w-full ">
+            <div className="post-card flex justify-around md:pl-[25rem] md:pr-[10.4rem] md:mb-[5rem] -mb-[3rem]    lg:mt-[11rem] post  w-full ">
                 <Card className="post   -mt-[9rem] p-0">
                     {/* <CardHeader color="lightBlue" size="lg">
       <H5 color="white">Login</H5>
@@ -365,7 +365,8 @@ function PostCard({ item, index, filterPost, socket }) {
                                 }
                             >
                                 <MdAddComment />
-                                {/* <Label color="" className="text-[1.5rem]">{lengthOfComments}</Label> */}
+                                {/* <span className='md:text-[1.2rem] md:mb-[5px] text-[.9rem] mb-[4px] text-medium'>{}</span> */}
+
                             </Button>
                         </section>
                         <section>

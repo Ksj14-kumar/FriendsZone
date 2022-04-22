@@ -12,7 +12,7 @@ function Status({ fname, lname, country, city, stream, position, aboutMe, colleg
     const history = useHistory()
     return (
         <>
-            <div className="text-center">
+            <div className="text-center ">
 
                 {
                     (fname && lname && country && city && stream && position && aboutMe) ? "" :

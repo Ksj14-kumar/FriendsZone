@@ -33,15 +33,14 @@ function RightSidebar() {
         ? (bgColor = "bg-white")
         : (bgColor = "bg-" + color + "500");
     return (
-
+        // text-white md:text-[1.5rem] font-bold  text-sm px-5 py-1 rounded  outline-none focus:outline-none mr-2 mb-1 ease-linear transition-all duration-150 flex
         <>
-            <div className="flex flex-wrap bg-[#03A9F4] rounded-t-lg live_user  ">
-                <div className="w-full sm:w-6/12 md:w-4/12 px-4">
-                    <div className="relative inline-flex align-middle w-full">
+        {/* w-full sm:w-6/12 md:w-4/12 */}
+            {/* <div className="flex flex-wrap rounded-sm live_user bg-red-600  "> */}
+                {/* <div className=" px-4 "> */}
+                    <div className="relative  align-middle w-full ">
                         <button
-                            className={
-                                "text-white font-bold  text-sm px-5 py-1 rounded  outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 "
-                            }
+                            className="text-[1rem] md:text-[1.5rem] text-white focus:outline-none"
                             type="button"
                             ref={btnDropdownRef}
                             onClick={() => {
@@ -51,25 +50,25 @@ function RightSidebar() {
                             }}
                         >
 
-                            live
+                            live <span className='text-[1rem] md:text-[1.5rem] text-bold ml-1 text-black bg-green-300 py-0 px-[1rem] rounded-lg  absolute '>5</span>
                         </button>
                         <div
                             ref={popoverDropdownRef}
                             className={
                                 (dropdownPopoverShow ? "block " : "hidden ") +
                                 (color === "red" ? "bg-white " : "") +
-                                "text-base  float-left py-2 list-none text-left rounded mb-1 bg-white mds-editor3:ml-6 md:mr-0 mds-editor11:w-[18rem] mds-editor11:w-[20rem] mds-editor12:w-[22rem]"
+                                "text-base  float-left py-2 list-none text-left rounded mb-1 bg-white mds-editor3:ml-6 md:mr-[.5rem] mds-editor11:w-[18rem] mds-editor11:w-[20rem] mds-editor12:w-[22rem]"
                             }
-                            // style={{ minWidth: "1rem" }}
+                        // style={{ minWidth: "1rem" }}
                         >
                             <FooterButton bool={dropdownPopoverShow} />
-                            
+
 
 
                         </div>
                     </div>
-                </div>
-            </div>
+                {/* </div> */}
+            {/* </div> */}
         </>
     );
 }

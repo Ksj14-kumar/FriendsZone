@@ -26,6 +26,10 @@ import Status from '../Components/ProfileCardComponents/Status'
 import Comments from '../Components/ProfileCardComponents/Comments'
 import Icon from '@material-tailwind/react/Icon';
 import UpdateProfile from './UpdateProfile';
+import RoundedSideBar from '../Components/RightSideBar/RoundedSideBar';
+import SliderNews from '../Components/RightSideBar/SliderNews';
+import NewsSection from '../Components/RightSideBar/NewsSection';
+import FriendSuggestion from '../Components/ProfilePageComponent/FriendSuggestion'
 
 
 
@@ -116,7 +120,7 @@ export default function ProfileCard(props) {
 
 
                 {/* md:ml-[.5rem] */}
-                <div className="profile_card-container    md:mr-[22rem] md:w-[65rem] md:ml-[8rem] ">
+                <div className="profile_card-container    md:mr-[22rem] md:w-[81rem] md:ml-[0rem] ">
 
 
 
@@ -143,7 +147,7 @@ export default function ProfileCard(props) {
                     </section>
 
 
-                    <div className=' card-container flex justify-around md:pl-48 relative     md:w-[58rem] md:ml-[4.5rem] md:mt-[6rem] mt-[17rem] '>
+                    <div className=' card-container flex justify-around md:pl-48 relative     md:w-[58rem] md:ml-[11.6rem] md:mt-[6rem] mt-[17rem] '>
 
 
                         <Card className=" lg:-mt-[170px] md:-mt-[280px] -mt-[300px] 
@@ -173,7 +177,7 @@ export default function ProfileCard(props) {
                                             dispatch({ type: "Model_Open", payload: true })
                                         }}
                                     >
-                                        <BsFillCameraFill className='text-[#000000] text-3xl md:text-4xl' />
+                                        {/* <BsFillCameraFill className='text-[#000000] text-3xl md:text-4xl' /> */}
                                     </div>
 
                                 </div>
@@ -221,7 +225,7 @@ export default function ProfileCard(props) {
                                 <BrowserRouter>
                                     <div className="bottom flex-col relative flex-wrap md:w-[42rem] md:mx-auto w-full ">
 
-                                        <div className="containe1 flex justify-around  w-full">
+                                        <div className="containe1 flex justify-around  w-full  rounded-lg border border-solid border-[#e6e3e39a]">
 
                                             <NavLink to="/user/status"
                                                 activeStyle={{ borderBottom: "2px solid #E91E63" }}
@@ -283,7 +287,7 @@ export default function ProfileCard(props) {
 
                                         <Switch>
 
-                                            <div className="section  mt-4  flex-auto  mds-editor8:w-full ">
+                                            <div className="section  mt-4  flex-auto  mds-editor8:w-full  border border-solid border-[#cccccc59] rounded-xl">
 
                                                 <Route exact path="/user/status" >
                                                     <Status fname={fname} lname={lname} country={country} city={city} stream={stream} position={position} aboutMe={aboutMe} college={college} />
@@ -322,9 +326,15 @@ export default function ProfileCard(props) {
                         <AddPost />
                     </div>
 
-                    {/* <div className="friends_groups bg-emerald-500 text-center ">
-                        hello
-                    </div> */}
+                    <div className="friends_groups  text-center  flex justify-center mb-[2rem] ">
+                        <div className="container1  ml-[2rem] md:ml-[20rem] md:mr-[6rem] mr-[2.6rem] mds-editor8:ml-0 mds-editor8:mr-0 mb-[1rem]">
+                            <div className="swiper_container w-full h-full">
+                                <FriendSuggestion />
+
+                            </div>
+
+                        </div>
+                    </div>
 
                     {/*========================== PUBLIC POST============== */}
                     <div className="public_post_card  -mt-[2rem]">
@@ -339,9 +349,22 @@ export default function ProfileCard(props) {
                     </Tooltips>
 
                 </div>
-                <div className="right_section bg-[#fffefe00] md:w-[18.5rem] md:fixed md:right-0 top-[3.7rem] md:block hidden">
-                    
+
+                {/* //=================right section of profile page start====== */}
+                <div className="right_section bg-[#fffefe00] md:w-[27.5rem] md:fixed md:right-0 top-[3.7rem]  hidden h-screen  md:flex md:flex-row-reverse md:justify-between">
+                    <aside className="right_side_bar bg-[#00000029]   w-[3rem]  rounded-[48px] h-full  ">
+                        {/* md:h-20 md:w-20 */}
+                        <div className="image mt-[2.5rem] mx-[2px] bg-[#6e6d6d5b] h-full rounded-lg pt-2 hover:transition-colors ">
+                            <RoundedSideBar />
+                        </div>
+                    </aside>
+                    <div className="left_side relative md:w-full" >
+                        {/* <SliderNews/> */}
+                        <NewsSection />
+                        {/* <SliderNews />- */}
+                    </div>
                 </div>
+                {/* //=========================right sectioon end of right sidebar================== */}
             </div>
 
         </>

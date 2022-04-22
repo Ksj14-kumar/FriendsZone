@@ -8,7 +8,7 @@ import img3 from '../../assets/img//team-3-800x800.jpg';
 import img4 from '../../assets/img/team-4-470x470.png';
 function FriendsCardInProfileCard() {
     return (
-        <main className="combine flex-col w-[11rem] border p-1 border-[#0e0d0d20] shadow-lg  cursor-pointer">
+        <main className="combine flex-col w-[11rem] border p-1 border-[#0e0d0d20] shadow-lg  cursor-pointer rounded-md">
 
             <section className=" left each_friends   w-full">
 

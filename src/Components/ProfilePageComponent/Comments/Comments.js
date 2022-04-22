@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import CommentForm from "./CommentForm";
 import Comment from "./Comment";
 import { useDispatch } from 'react-redux'
+import Button from "@material-tailwind/react/Button";
 
 
 import {
@@ -12,6 +13,8 @@ import {
 } from "./api";
 
 const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, currentUserName, UserIdForPostComments, post_id }) => {
+
+  const [Length, setLength] = useState(0)
 
 
 
@@ -102,7 +105,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
 
     //load the all comments from backend
     async function loadComment() {
-      const commentResponse = await fetch(`/blob/root/load/all/comments/${post_id}/${UserIdForPostComments}`, {
+      const commentResponse = await fetch(`/blob/root/load/all/comments/${post_id}/${UserIdForPostComments}/${4}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -114,6 +117,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
       console.log("comment data", commentData)
       if (commentResponse.status === 200) {
         setBackendComments(commentData.data)
+        setLength(commentData.length)
       }
 
 
@@ -154,6 +158,28 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
   }, [post_id])
 
 
+  function loadMoreComment() {
+    //load the all comments from backend
+    async function loadComment() {
+      const commentResponse = await fetch(`/blob/root/load/all/comments/${post_id}/${UserIdForPostComments}/${backendComments.length + 6}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("uuid")}`
+
+        }
+      })
+      const commentData = await commentResponse.json()
+      console.log("comment data", commentData)
+      if (commentResponse.status === 200) {
+        setBackendComments(commentData.data)
+      }
+
+
+    }
+    loadComment()
+
+  }
 
 
 
@@ -180,6 +206,39 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
             currentUserName={currentUserName}
           />
         ))}
+      </div>
+
+
+      <div className="load_more_comment flex justify-start ">
+
+
+        {
+
+          Length > 2 && (backendComments.length !== Length &&
+            <Button
+              color="blueGray"
+              buttonType="link"
+              size="sm"
+              rounded={false}
+              block={false}
+              iconOnly={false}
+              ripple=""
+              className="lowercase ml-[5rem] font-bold text-base"
+              onClick={() => {
+                loadMoreComment()
+              }}
+            >
+              load more comment
+            </Button>
+          )
+
+
+
+
+        }
+
+
+
       </div>
     </div>
   );

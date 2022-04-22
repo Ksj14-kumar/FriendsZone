@@ -109,7 +109,7 @@ function Photos() {
                 </CardHeader> */}
                 {/* gap-3 flex flex-wrap pt-2 */}
                 {/* mr-auto  pl-[2rem] -mt-[.5rem] pt-2 */}
-                <main className="main photos image_group gap-3 flex flex-wrap  relative mt-0  justify-center"
+                <main className="main photos image_group gap-3 flex flex-wrap  relative mt-0  justify-center rounded-md "
                     id="main"
 
                 >
@@ -118,7 +118,7 @@ function Photos() {
                             return (
 
                                 <>
-                                    <section className="border2 border-2 border-solid border-[#ada9a95d] shadow-lg relative ">
+                                    <section className="border2 border-2 border-solid border-[#ada9a95d] shadow-lg relative rounded-xl ">
 
 
                                         <Image

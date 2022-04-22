@@ -4,7 +4,7 @@ export async function success(props) {
     // window.alert("select files")
     const notify = () => toast.success(props.message, {
         position: "top-center",
-        zIndex: 9999,
+        zIndex: 29000,
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -30,7 +30,7 @@ export function error(props) {
 
     const notify = () => toast.error(props.message, {
         position: "top-center",
-        zIndex: 9999,
+        zIndex: 29000,
 
         autoClose: 2000,
         hideProgressBar: false,

@@ -93,161 +93,14 @@ function App() {
         loadData()
     }, [])
 
-    //====================LOAD PROFILE IMAGES=============
-    useEffect(() => {
-        // const id = setInterval(() => {
-        async function ProfileImages() {
-            dispatch({ type: "LOADER", payload: true })
-            // setLoader(true)
-            const res = await fetch(`/blob/profile/image/e9thhvkKqJpnTlYo1sQl/QVbghZqhoSr2Rt5qvNYJ/iKj3RoJojFWmcDo4wTlm/9Olk5vTenhdkjHrdYEWl/`, {
-                method: "GET",
-                credentials: 'same-origin',
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Credentials": true,
-                    "Authorization": "Bearer " + localStorage.getItem("uuid")
-                }
-            })
-            const data = await res.json()
-            // console.log({ data })
-            // const parseValue = data.parseData
-            if (res.status === 200) {
-                // setuploadImageDataFromServer(parseValue.resources)
-                // if (parseValue.resources.length === 0) {
-                // }
-                dispatch({ type: "LOADER", payload: false })
-                dispatch({ type: "uploadImageDataFromServer", payload: data })
-                // setShowImage(parseValue.resources[0].url)
-                dispatch({ type: "ShowImage", payload: data.url })
-                // setLoader(false)
-                dispatch({ type: "LOADER", payload: false })
-            }
-            else {
-                dispatch({ type: "LOADER", payload: false })
-                // console.log("Image is not load")
-            }
-        }
-        ProfileImages()
-        // }, 2000);
-        // return () => clearInterval(id)
-    }, [])
+   
 
-    //=====================LOAD THE BACKGROUND IMAGES=============
-    useEffect(() => {
-        // const id = setInterval(() => {
-        // console.log("id is ", _id)
-        async function BackgroundImage() {
-            dispatch({ type: "LOADER", payload: true })
-            // setLoader(true)
-            const res1 = await fetch(`/blob/bg/image/mwQgga2z5KfChXjuF1s0/r6dg0LqqWmCG4W5UQOTa/ftFhzft7YNwT6jb9EVoX/ogvnbpOcPnjgMatu3mtb/JSC2PQZQVlK19QXDbSl1/`, {
-                method: "GET",
-                credentials: 'same-origin',
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Credentials": true,
-                    "Authorization": "Bearer " + localStorage.getItem("uuid")
-                }
-            })
-            const data1 = await res1.json()
-            console.log({ data1 })
-            if (res1.status === 200) {
-                // setuploadImageDataFromServer(parseValue.resources)
-                dispatch({ type: "LOADER", payload: false })
-                dispatch({ type: "uploadImageDataFromServerBackground", payload: data1 })
-                // setShowImage(parseValue.resources[0].url)
-                dispatch({ type: "ShowImageBackground", payload: data1.url })
-                // setLoader(false)
-                dispatch({ type: "LOADER", payload: false })
-            }
-            else {
-                // console.log("Image is not load")
-            }
-        }
-        BackgroundImage()
-    }, [])
-    //===================LOAD THE USER INFORMATION FROM THE SERVER============
-    useEffect(() => {
-
-        async function userInfoLoad() {
-            const userInfo = await fetch(`/blob/user/083525p7ljhwmxifts31/l66cbrsuytmj1wujuauz/nqoye5ozdqj89b4s4qoq/ua1iztaxjo4bbmzvd391/3mzqeygnoszlknp90h51/t28uf00khscofxgjwj20/`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("uuid")
-                }
-            })
-            const res = await userInfo.json()
-            // console.log("userinformation load", res)
-            if (userInfo.status === 200) {
-                dispatch({ type: "USERINFO_LOAD", payload: res.message })
-            }
-        }
-        userInfoLoad()
-
-    }, [])
-    //LOAD ALL THE posts for users
-    useEffect(() => {
-        // const id = setInterval(() => {
-        // /blob/users/public/posts/${_id}
-        async function loadPosts() {
-            const loadPostResponse = await fetch(`/blob/load/all/post/`, {
-                method: "GET",
-
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("uuid")
-                }
-            })
-            const loadPostData = await loadPostResponse.json()
-            // console.log("load post data", loadPostData.data, loadPostResponse)
-            if (loadPostResponse.status === 200) {
-                dispatch({
-                    type: "LOAD_POSTS",
-                    payload: loadPostData.data
-                })
-            }
-        }
-        loadPosts()
-        // }, 1000);
-        // return (() => clearInterval(id))
-    }, [])
-    //load all the total comment for the post
-    //load all total comment of user
-    useEffect(() => {
-        async function totalComment() {
-            const totalCommentResponse = await fetch(`/blob/all/comment/user/${_id}`)
-            const totalCommentData = await totalCommentResponse.json()
-            // console.log("total comment data", totalCommentData.data)
-            if (totalCommentResponse.status === 200) {
-                // console.log({ totalCommentData })
-                dispatch({ type: "SET_TOTAL_COMMENT", payload: totalCommentData.data })
-                dispatch({ type: "Get_All_Comments", payload: totalCommentData.data })
-            }
-        }
-        totalComment()
-    }, [])
+   
+  
+    
 
 
-    //load the all notification 
-    useEffect(() => {
-        async function loadNotification() {
-            const loadNotificationResponse = await fetch(`/blob/load/all/notification/${_id}`,{
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("uuid")
-                }
-            })
-            const loadNotificationData = await loadNotificationResponse.json()
-            console.log("load notification data", loadNotificationData.data)
-            if (loadNotificationResponse.status === 200) {
-                dispatch({ type: "Send_Notification", payload: loadNotificationData.data })
-            }
-        }
-        loadNotification()
-    }, [])
+   
 
 
 
@@ -356,7 +209,7 @@ function App() {
 
                 {
                     (getUserData && user) &&
-                    <div className="right_section  fixed top-[93%] right-[.5rem]">
+                    <div className="right_section  fixed top-[95%] right-[.5rem] md:w-[10rem] bg-blue-800 rounded-sm py-[.5rem] md:px-[1.5rem] px-[3rem]">
 
                         <RightSidebar socket={socket} />
 

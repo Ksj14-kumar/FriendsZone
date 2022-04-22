@@ -533,7 +533,8 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     return (
         <>
         {/* md:ml-64 */}
-            <nav className="bg-light-blue-500  py-2 px-3 fixed w-full z-[10000]">
+        {/* bg-light-blue-500 */}
+            <nav className="bg-light-blue-500  py-2 px-3 fixed w-full z-[10000] drop-shadow-lg">
                 <div className="container max-w-full mx-auto flex items-center justify-between md:pr-8 md:pl-10">
                     <div className="md:hidden">
                         <Button
