@@ -7,7 +7,6 @@ import InputIcon from "@material-tailwind/react/InputIcon";
 import Button from "@material-tailwind/react/Button";
 import H5 from "@material-tailwind/react/Heading5";
 import Icon from "@material-tailwind/react/Icon";
-import Input from "@material-tailwind/react/Input";
 
 
 import { ImGooglePlus3 } from 'react-icons/im';
@@ -181,7 +180,7 @@ export default function Login(props) {
 
               />
 
-             
+
 
 
             </div>
