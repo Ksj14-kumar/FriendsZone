@@ -7,11 +7,13 @@ import InputIcon from "@material-tailwind/react/InputIcon";
 import Button from "@material-tailwind/react/Button";
 import H5 from "@material-tailwind/react/Heading5";
 import Icon from "@material-tailwind/react/Icon";
+import Input from "@material-tailwind/react/Input";
 
-import { AiFillTwitterCircle } from 'react-icons/ai';
-import { GoMarkGithub } from 'react-icons/go';
+
 import { ImGooglePlus3 } from 'react-icons/im';
-import { ImSpinner9 } from 'react-icons/im';
+import { MdEmail } from 'react-icons/md';
+import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
+
 import { FaFacebook } from 'react-icons/fa';
 import { FiHome } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
@@ -23,7 +25,7 @@ import { Context } from '../App';
 import LoginLoader from "../Loader/LoginLoader";
 import { useSelector } from "react-redux";
 import { Error } from "./Toastify";
-
+import TextField from '@mui/material/TextField';
 
 
 export default function Login(props) {
@@ -165,7 +167,7 @@ export default function Login(props) {
 
           <CardBody>
 
-            <div className="mb-8 px-4">
+            <div className="mb-8 px-4  ">
               <InputIcon
                 type="email"
                 color="lightBlue"
@@ -175,8 +177,13 @@ export default function Login(props) {
                 value={data.email}
                 onChange={handle}
                 defaultValue=""
+                className="border-0"
 
               />
+
+             
+
+
             </div>
 
             <div className="mb-4 px-4">
@@ -189,6 +196,7 @@ export default function Login(props) {
                 value={data.password}
                 onChange={handle}
                 defaultValue=""
+
                 outline={false}
               />
             </div>
@@ -227,7 +235,7 @@ export default function Login(props) {
                 ripple="light"
                 onClick={google}
               >
-                <ImGooglePlus3 className="text-4xl text-white  " />
+                <ImGooglePlus3 className="text-4xl text-white rounded-full focus:rounded-full " />
               </Button>
 
               <Button
@@ -240,7 +248,7 @@ export default function Login(props) {
                 ripple="light"
                 onClick={facebook}
               >
-                <FaFacebook className="text-4xl text-white " />
+                <FaFacebook className="text-4xl text-white rounded-full focus:rounded-full " />
               </Button>
 
               {/* <Button
@@ -253,7 +261,7 @@ export default function Login(props) {
                 ripple="light"
                 onClick={twitter}
               >
-                <AiFillTwitterCircle className="text-5xl text-white " />
+                <AiFillTwitterCircle className="text-5xl text-white rounded-full focus:rounded-full " />
               </Button> */}
 
 
@@ -268,7 +276,7 @@ export default function Login(props) {
                 onClick={github}
                 className=""
               >
-                <GoMarkGithub className="text-4xl text-dark " />
+                <GoMarkGithub className="text-4xl text-dark  rounded-full focus:rounded-full" />
               </Button> */}
 
 
@@ -286,7 +294,7 @@ export default function Login(props) {
                 ripple="light"
                 onClick={home}
               >
-                <FiHome className="text-3xl text-white " />
+                <FiHome className="text-3xl text-white  rounded-full focus:rounded-full" />
               </Button>
 
             </div>
