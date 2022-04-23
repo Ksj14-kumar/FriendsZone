@@ -55,8 +55,8 @@ function App() {
         async function loadData() {
             const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/all/google/success`, {
                 method: "GET",
-                credentials: "include",
-                credentials: 'include',
+                // credentials: "include",
+                // credentials: 'include',
                 headers: {
                     Accept: "application/json",
                     "Content-Type": "application/json",
