@@ -101,7 +101,7 @@ function App() {
     //trigger when user login your account
     useEffect(() => {
         // process.env.REACT_APP_API_BACKENDURL
-        setSocket(io(process.env.REACT_APP_API_BACKENDURL))
+        setSocket(io("https://vast-thicket-22345.herokuapp.com"))
 
     }, [])
 
