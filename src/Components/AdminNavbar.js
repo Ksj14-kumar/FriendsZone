@@ -199,7 +199,8 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         else {
             // setShowImage(previewImage)
             setUploadLoader(true)
-            const serverResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/user/blob/image/9fHtqOJumtxOzmTfLMFT/ETXsG3rHrnx2irUZmefU/njVzxxrEx84ZrUiERB0t/fxXRdJLMKIkzxucTbovy/sO9rLr3E0EuDpjYcawQD/`, {
+            // ${process.env.REACT_APP_API_BACKENDURL}
+            const serverResponse = await fetch(`/blob/user/blob/image/9fHtqOJumtxOzmTfLMFT/ETXsG3rHrnx2irUZmefU/njVzxxrEx84ZrUiERB0t/fxXRdJLMKIkzxucTbovy/sO9rLr3E0EuDpjYcawQD/`, {
                 method: "POST",
                 body: JSON.stringify({
                     data:
@@ -265,7 +266,8 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         else {
             // setShowImage(previewImage)
             setUploadLoaderBackground(true)
-            const serverResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/user/blob/image/bg/S6MjFqeb8HdJRGjkUs9W/QUCzIb1mKtMevddN24yB/YWYhtXwEEtUlHu0Nkhmq/eAQCSzpYo28SJxXCMV4d/yR3VTmMynJw6N3xlS530/WpsJsZKo4hGf18jaWmZL/`, {
+            // ${process.env.REACT_APP_API_BACKENDURL}
+            const serverResponse = await fetch(`/blob/user/blob/image/bg/S6MjFqeb8HdJRGjkUs9W/QUCzIb1mKtMevddN24yB/YWYhtXwEEtUlHu0Nkhmq/eAQCSzpYo28SJxXCMV4d/yR3VTmMynJw6N3xlS530/WpsJsZKo4hGf18jaWmZL/`, {
                 method: "POST",
                 body: JSON.stringify({
                     data:
@@ -331,8 +333,9 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         try {
             setDeleteLoader(true)
             setDisabledButton(true)
+            // ${process.env.REACT_APP_API_BACKENDURL}
             const res = await axios({
-                url: `${process.env.REACT_APP_API_BACKENDURL}/blob/delete/assest/`,
+                url: `/blob/delete/assest/`,
                 data: JSON.stringify({ uploadImageDataFromServer, uuid: _id }),
                 method: "DELETE",
                 headers: {
@@ -383,7 +386,8 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         try {
             setDisabledButtonBg(true)
             setDeleteLoader(true)
-            const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/delete/assest/bg/`, {
+            // ${process.env.REACT_APP_API_BACKENDURL}
+            const res = await fetch(`/blob/delete/assest/bg/`, {
                 body: JSON.stringify({ uploadImageDataFromBackground, uuid: _id }),
                 method: "DELETE",
 
@@ -429,7 +433,8 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         localStorage.removeItem("uuid")
         localStorage.removeItem("user_login")
         localStorage.clear()
-        const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/logout`, {
+        // ${process.env.REACT_APP_API_BACKENDURL}
+        const res = await fetch(`/logout`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -442,7 +447,8 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     //search the query from the server
     useEffect(() => {
         const search = async () => {
-            const res = await axios.get(`${process.env.REACT_APP_API_BACKENDURL}/blob/search?q=${query}`, {
+            // ${process.env.REACT_APP_API_BACKENDURL}
+            const res = await axios.get(`/blob/search?q=${query}`, {
                 headers: {
                     "Authorization": "Bearer " + localStorage.getItem("uuid")
                 }

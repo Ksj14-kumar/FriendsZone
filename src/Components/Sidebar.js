@@ -48,7 +48,8 @@ export default function Sidebar(props) {
         const _shouldWantTodelete = window.confirm("Are you sure you want to delete?")
         if (_shouldWantTodelete) {
 
-            const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/delete/account/${_id}`, {
+            // ${process.env.REACT_APP_API_BACKENDURL}
+            const res = await fetch(`/delete/account/${_id}`, {
 
                 method: "DELETE",
                 headers: {

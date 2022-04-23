@@ -53,7 +53,9 @@ function App() {
     // const {_id}
     useEffect(() => {
         async function loadData() {
-            const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/all/google/success`, {
+            // ${process.env.REACT_APP_API_BACKENDURL}
+        
+            const response = await fetch(`/all/google/success`, {
                 method: "GET",
                 // credentials: "include",
                 // credentials: 'include',
@@ -101,7 +103,7 @@ function App() {
     //trigger when user login your account
     useEffect(() => {
         // process.env.REACT_APP_API_BACKENDURL
-        setSocket(io(process.env.REACT_APP_API_BACKENDURL))
+        setSocket(io("http://localhost:5000"))
 
     }, [])
 

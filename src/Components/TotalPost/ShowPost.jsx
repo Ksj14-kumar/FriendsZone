@@ -36,7 +36,8 @@ function ShowPost({ item }) {
     //delete the post request to the server
     async function deletePost(post_id, user_id) {
         setDeleteLoader(true);
-        const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/delete/user/post/local/${post_id}`, {
+        // ${process.env.REACT_APP_API_BACKENDURL}
+        const response = await fetch(`/blob/delete/user/post/local/${post_id}`, {
             method: "DELETE",
             body: JSON.stringify({
                 id: user_id

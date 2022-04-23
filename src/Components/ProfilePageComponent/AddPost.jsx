@@ -39,7 +39,7 @@ import Pusher from 'pusher-js';
 import axios from 'axios';
 import { Error } from '../Toastify';
 import io from "socket.io-client";
-const socket = io.connect(`${process.env.REACT_APP_API_BACKENDURL}`);
+const socket = io.connect(`http://localhost:5000`);
 function useOutsideAlerter(ref, setTextAreaValue, dispatch, setUrlOfImageUpload) {
     useEffect(() => {
         /**
@@ -291,7 +291,8 @@ function AddPost() {
 
 
             // _id + 
-            const SaveUserPostIntoDb = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/local/url/`, {
+            // ${process.env.REACT_APP_API_BACKENDURL}
+            const SaveUserPostIntoDb = await fetch(`/blob/local/url/`, {
                 method: "POST",
                 body: JSON.stringify({
                     text: textareaValue,

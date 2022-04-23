@@ -81,7 +81,8 @@ function PostCard({ item, index, filterPost, socket }) {
         dispatch({ type: "LOAD_POSTS", payload: filterData })
         dispatch({ type: "SET_TOTAL_COMMENT", payload: filterComments })
         // send request to the serve for delete the post by id
-        const DeletePostResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/delete/user/post/local/delete/`, {
+        // ${process.env.REACT_APP_API_BACKENDURL}
+        const DeletePostResponse = await fetch(`/blob/delete/user/post/local/delete/`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -125,7 +126,8 @@ function PostCard({ item, index, filterPost, socket }) {
     async function VisibilityChange(post_id, visibility) {
         // console.log("post_id", post_id)
         // console.log("visibility", visibility)
-        const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/visibility/user/post/local/${post_id}`, {
+        // ${process.env.REACT_APP_API_BACKENDURL}
+        const response = await fetch(`/blob/visibility/user/post/local/${post_id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
