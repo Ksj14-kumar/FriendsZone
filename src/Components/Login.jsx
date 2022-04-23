@@ -125,6 +125,7 @@ export default function Login(props) {
         return Error({ message: "please, Check your internet connection!!!" })
       }
       else {
+        setLoader(false)
         return Error({ message: "Opps,Something error Occured" + serverData.message })
       }
     }
