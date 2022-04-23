@@ -53,7 +53,7 @@ function App() {
     // const {_id}
     useEffect(() => {
         async function loadData() {
-            const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}` + "/all/google/success", {
+            const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/all/google/success`, {
                 method: "GET",
                 credentials: "include",
                 credentials: 'include',
@@ -101,7 +101,7 @@ function App() {
     //trigger when user login your account
     useEffect(() => {
         // process.env.REACT_APP_API_BACKENDURL
-        setSocket(io("https://vast-thicket-22345.herokuapp.com"))
+        setSocket(io(process.env.REACT_APP_API_BACKENDURL))
 
     }, [])
 

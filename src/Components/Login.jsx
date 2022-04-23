@@ -107,6 +107,7 @@ export default function Login(props) {
       })
       const status = response.status
       const serverData = await response.json()
+      console.log({ serverData })
       if (status === 200) {
         localStorage.setItem("uuid", serverData.cookie)
         const { user } = serverData
@@ -124,7 +125,7 @@ export default function Login(props) {
         return Error({ message: "please, Check your internet connection!!!" })
       }
       else {
-        return Error({ message: "Opps,Something error Occured" })
+        return Error({ message: "Opps,Something error Occured" + serverData.message })
       }
     }
   }
