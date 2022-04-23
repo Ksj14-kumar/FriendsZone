@@ -39,7 +39,7 @@ import Pusher from 'pusher-js';
 import axios from 'axios';
 import { Error } from '../Toastify';
 import io from "socket.io-client";
-const socket = io.connect("http://localhost:5000");
+const socket = io.connect(`${process.env.REACT_APP_API_BACKENDURL}`);
 function useOutsideAlerter(ref, setTextAreaValue, dispatch, setUrlOfImageUpload) {
     useEffect(() => {
         /**

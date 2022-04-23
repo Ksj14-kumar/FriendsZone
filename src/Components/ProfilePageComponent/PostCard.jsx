@@ -391,7 +391,7 @@ function PostCard({ item, index, filterPost, socket }) {
                             // commentToggle ? <CommentSection /> : ""
                             (commentToggle ? (UserInformationLoad ?
                                 <Comments
-                                    commentsUrl="http://localhost:3004/comments"
+                                  
                                     // currentUserId={item.userId ? item.userId : null}
                                     commentToggle={commentToggle}
                                     currentUserId={googleId ? googleId : null}

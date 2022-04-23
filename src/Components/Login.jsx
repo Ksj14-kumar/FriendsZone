@@ -66,21 +66,21 @@ export default function Login(props) {
   }
 
   async function google() {
-    window.open("http://localhost:5000/all/google", "_self")
+    window.open(`${process.env.REACT_APP_API_BACKENDURL}/all/google`, "_self")
   }
 
   function twitter() {
-    window.open("http://localhost:5000/all/twitter", "_self")
+    window.open(`${process.env.REACT_APP_API_BACKENDURL}/all/twitter`, "_self")
   }
 
 
   function github() {
-    window.open("http://localhost:5000/all/github", "_self")
+    window.open(`${process.env.REACT_APP_API_BACKENDURL}/all/github`, "_self")
   }
 
 
   function facebook() {
-    window.open("http://localhost:5000/all/facebook", "_self")
+    window.open(`${process.env.REACT_APP_API_BACKENDURL}/all/facebook`, "_self")
 
 
   }

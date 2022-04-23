@@ -64,7 +64,7 @@ export default function Sidebar(props) {
             if (res.status === 200) {
                 localStorage.clear()
                 Redirect("/")
-                window.open("http://localhost:3000/", "_self")
+                window.open(process.env.REACT_APP_API_FRONTEND, "_self")
                 history.push("/")
 
 
