@@ -40,7 +40,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
       );
   const addComment = async (text, parentId) => {
     const comment = await createCommentApi(text, parentId, UserIdForPostComments, currentUserId, currentUserName, ImageUrl, post_id)
-    const SaveUserComment = await fetch(`/blob/post/comment/save/`, {
+    const SaveUserComment = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/post/comment/save/`, {
       method: "POST",
       body: JSON.stringify({ comment, uuid: localStorage.getItem('uuid') }),
       headers: {
@@ -60,7 +60,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
   //update the comment
   const updateComment = async (text, commentId) => {
 
-    const updateResponse = await fetch(`/blob/update/comment/${commentId}`, {
+    const updateResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/update/comment/${commentId}`, {
       method: "PUT",
       body: JSON.stringify({ text, commentId, post_id }),
       headers: {
@@ -78,7 +78,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
   };
   const deleteComment = async (commentId) => {
     if (window.confirm("Are you sure you want to remove comment?")) {
-      const deleteResponse = await fetch(`/blob/post/comment/delete/${commentId}`, {
+      const deleteResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/post/comment/delete/${commentId}`, {
         body: JSON.stringify({
           post_id: post_id,
         }),
@@ -101,7 +101,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
 
     //load the all comments from backend
     async function loadComment() {
-      const commentResponse = await fetch(`/blob/root/load/all/comments/${post_id}/${UserIdForPostComments}/${4}`, {
+      const commentResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/root/load/all/comments/${post_id}/${UserIdForPostComments}/${4}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -130,7 +130,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
   //load all total comment of user
   useEffect(() => {
     async function totalComment() {
-      const totalCommentResponse = await fetch(`/blob/all/comment/user/`, {
+      const totalCommentResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/all/comment/user/`, {
         method: "GET",
 
         headers: {
@@ -154,7 +154,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
   function loadMoreComment() {
     //load the all comments from backend
     async function loadComment() {
-      const commentResponse = await fetch(`/blob/root/load/all/comments/${post_id}/${UserIdForPostComments}/${backendComments.length + 6}`, {
+      const commentResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/root/load/all/comments/${post_id}/${UserIdForPostComments}/${backendComments.length + 6}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

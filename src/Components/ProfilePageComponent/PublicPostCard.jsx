@@ -71,7 +71,7 @@ function PublicPostCard({ data, socket }) {
     // const id = setInterval(() => {
     // /blob/users/public/posts/${_id}
     async function loadPosts() {
-      const loadPostResponse = await fetch(`/blob/load/all/post/${3}`, {
+      const loadPostResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/load/all/post/${3}`, {
         method: "GET",
 
         headers: {
@@ -98,7 +98,7 @@ function PublicPostCard({ data, socket }) {
   //load all total comment of user
   useEffect(() => {
     async function totalComment() {
-      const totalCommentResponse = await fetch(`/blob/all/comment/user/${_id}`)
+      const totalCommentResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/all/comment/user/${_id}`)
       const totalCommentData = await totalCommentResponse.json()
       // console.log("total comment data", totalCommentData.data)
       if (totalCommentResponse.status === 200) {
@@ -115,7 +115,7 @@ function PublicPostCard({ data, socket }) {
   //load the all notification 
   useEffect(() => {
     async function loadNotification() {
-      const loadNotificationResponse = await fetch(`/blob/load/all/notification/${_id}`, {
+      const loadNotificationResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/load/all/notification/${_id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -136,7 +136,7 @@ function PublicPostCard({ data, socket }) {
   useEffect(() => {
 
     async function userInfoLoad() {
-      const userInfo = await fetch(`/blob/user/083525p7ljhwmxifts31/l66cbrsuytmj1wujuauz/nqoye5ozdqj89b4s4qoq/ua1iztaxjo4bbmzvd391/3mzqeygnoszlknp90h51/t28uf00khscofxgjwj20/`, {
+      const userInfo = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/user/083525p7ljhwmxifts31/l66cbrsuytmj1wujuauz/nqoye5ozdqj89b4s4qoq/ua1iztaxjo4bbmzvd391/3mzqeygnoszlknp90h51/t28uf00khscofxgjwj20/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -163,7 +163,7 @@ function PublicPostCard({ data, socket }) {
     async function BackgroundImage() {
       dispatch({ type: "LOADER", payload: true })
       // setLoader(true)
-      const res1 = await fetch(`/blob/bg/image/mwQgga2z5KfChXjuF1s0/r6dg0LqqWmCG4W5UQOTa/ftFhzft7YNwT6jb9EVoX/ogvnbpOcPnjgMatu3mtb/JSC2PQZQVlK19QXDbSl1/`, {
+      const res1 = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/bg/image/mwQgga2z5KfChXjuF1s0/r6dg0LqqWmCG4W5UQOTa/ftFhzft7YNwT6jb9EVoX/ogvnbpOcPnjgMatu3mtb/JSC2PQZQVlK19QXDbSl1/`, {
         method: "GET",
         credentials: 'same-origin',
         headers: {
@@ -238,7 +238,7 @@ function PublicPostCard({ data, socket }) {
 
 
   async function fetchData() {
-    const loadPostResponse = await fetch(`/blob/load/all/post/${3 + PostData.length}`, {
+    const loadPostResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/load/all/post/${3 + PostData.length}`, {
       method: "GET",
 
       headers: {

@@ -2,15 +2,14 @@ import { useState } from 'react';
 import { NavLink, Link, useHistory, Redirect } from 'react-router-dom';
 import AdminNavbar from './AdminNavbar';
 import Icon from '@material-tailwind/react/Icon';
-import H6 from '@material-tailwind/react/Heading6';
-import { RiLogoutBoxLine } from 'react-icons/ri'
-import { useContext } from 'react'
+
+
 import { CgProfile } from 'react-icons/cg'
 import { MdDeleteForever } from 'react-icons/md'
 import { IoMdPhotos, IoMdSettings } from 'react-icons/io'
 import { BsViewList } from 'react-icons/bs'
 
-import { Context } from '../App';
+
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function Sidebar(props) {
@@ -49,12 +48,12 @@ export default function Sidebar(props) {
         const _shouldWantTodelete = window.confirm("Are you sure you want to delete?")
         if (_shouldWantTodelete) {
 
-            const res = await fetch(`http://localhost:5000/delete/account/${_id}`, {
+            const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/delete/account/${_id}`, {
 
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("user_login")}`
+                    "Authorization": `Bearer ${localStorage.getItem("uuid")}`
 
                 }
             })

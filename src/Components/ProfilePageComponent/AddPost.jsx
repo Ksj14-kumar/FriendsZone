@@ -291,7 +291,7 @@ function AddPost() {
 
 
             // _id + 
-            const SaveUserPostIntoDb = await fetch(`/blob/local/url/`, {
+            const SaveUserPostIntoDb = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/local/url/`, {
                 method: "POST",
                 body: JSON.stringify({
                     text: textareaValue,

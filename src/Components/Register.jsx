@@ -66,7 +66,7 @@ export default function Register() {
             }
             else {
                 setLoader(true)
-                const response = await fetch("/api/register", {
+                const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/register`, {
                     method: "POST",
                     headers: {
                         "content-type": "application/json"

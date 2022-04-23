@@ -1,30 +1,24 @@
 import React, { createContext, useEffect, useState } from 'react'
-import { Switch, Route, Redirect, useHistory, NavLink, useLocation } from 'react-router-dom'
+import { Switch, Route, Redirect, useHistory } from 'react-router-dom'
 import Register from './Components/Register'
 import Login from './Components/Login';
 import Email from './Components/Email';
 import Header from './Components/Header'
 import RightSidebar from './Components/RightSidebar';
 // import HomePage from './components/HomePage.jsx';
-import Header1 from './Header1'
 // import Header1 from './components/Header1';
 import "@material-tailwind/react/tailwind.css";
 import Dashboard from './Pages/Dashboard';
-import HomePage from './Components/HomePage';
 // import Header1 from './Header1';
-import { Init, Reducer } from './Reducer/Reducer';
-import { Toastify } from './Components/Toastify';
 import { useCookies } from 'react-cookie';
-import { ToastContainer, toast } from 'react-toastify';
 import ProfileCard from './Pages/ProfileCard';
 import { useSelector, useDispatch } from 'react-redux';
 import UpdateProfile from './Pages/UpdateProfile';
 import Sidebar from './Components/Sidebar';
 import UserPosts from './Pages/UserPosts';
 import UserPhotos from './Pages/UserPhotos';
-import axios from 'axios';
+
 import Channel from './SubscribeChannels/Channel';
-import SinglePost from './Components/SinglePost';
 import io from "socket.io-client"
 
 
@@ -32,7 +26,7 @@ import io from "socket.io-client"
 export const Context = createContext()
 
 
-
+console.log(process.env.REACT_APP_API_BACKENDURL)
 
 
 function App() {
@@ -59,7 +53,7 @@ function App() {
     // const {_id}
     useEffect(() => {
         async function loadData() {
-            const response = await fetch("/all/google/success", {
+            const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}` + "/all/google/success", {
                 method: "GET",
                 credentials: "include",
                 credentials: 'include',
@@ -93,14 +87,14 @@ function App() {
         loadData()
     }, [])
 
-   
-
-   
-  
-    
 
 
-   
+
+
+
+
+
+
 
 
 
@@ -177,12 +171,12 @@ function App() {
                             {/* <ProfileCard/> */}
                         </Route>
 
-                         <Route exact path='/pr'>
+                        <Route exact path='/pr'>
                             {
                                 (getUserData && user) ? <ProfileCard getUserData={getUserData} socket={socket} /> : <Redirect to="/login" />
                             }
                             {/* <ProfileCard/> */}
-                        </Route>  
+                        </Route>
 
                         <Route exact path="/update_profile">
                             {

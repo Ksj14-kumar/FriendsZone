@@ -5,7 +5,6 @@ import Button from '@material-tailwind/react/Button';
 import Input from '@material-tailwind/react/Input';
 import Textarea from '@material-tailwind/react/Textarea';
 import React from 'react'
-import H5 from "@material-tailwind/react/Heading5";
 // import Radio from "@material-tailwind/react/Radio"
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -65,7 +64,7 @@ export default function SettingsForm() {
 
         else {
             setLoader(true)
-            const res = await fetch(`/blob/user/i/b/y9y5y0q3eztm3ibcd8z0/bum6ozd9m1sw4w9fbxea/amqvdkbe49sn4u3cvsvt/e5ce6ba3miamapdl7wyv/`, {
+            const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/user/i/b/y9y5y0q3eztm3ibcd8z0/bum6ozd9m1sw4w9fbxea/amqvdkbe49sn4u3cvsvt/e5ce6ba3miamapdl7wyv/`, {
                 method: "PUT",
                 body: JSON.stringify({ UserProfileInformationm, uuid: _id }),
                 headers: {
