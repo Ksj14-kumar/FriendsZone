@@ -2,7 +2,7 @@
   "name": "tail",
   "version": "0.1.0",
   "private": true,
-  
+  "proxy": "https://vast-thicket-22345.herokuapp.com",
   "dependencies": {
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
