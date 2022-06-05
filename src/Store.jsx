@@ -16,7 +16,9 @@ import GetAllComments, { TotalComment } from './Redux/AllComments/GetAllComments
 import GetAllPosts from "./Redux/AllPostLoad/LoadPost";
 import Name from './Redux/UserInfo/Name';
 import Notification from './Redux/Notification/Notification'
+import OnlineUsers from "./Redux/onlineUsers/onlineUser"
 import Query from "./Redux/query/Query";
+import ActiveStatus from "./Redux/Chats/ActiveStatus";
 const rootReducer = combineReducers({
     imageReducer: ImageReducer,
     UnselectProfileImage: UnselectProfileImage,
@@ -43,7 +45,9 @@ const rootReducer = combineReducers({
     checkUrlExitsBg,
     checkUrlExitsProfile,
     Name,
-    Query
+    Query,
+    OnlineUsers,
+    ActiveStatus
 
 })
 export const store = createStore(rootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())

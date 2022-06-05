@@ -79,23 +79,23 @@ const CommentForm = ({
                     onChange={(e) => {
                         setText(e.target.value)
                         e.preventDefault()
-                      
+
                     }}
-                    className="focus:border-none indent-[1rem] pl-5
-                    border-none overflow-hidden
-        font-normal
-        text-gray-700
-        bg-white bg-clip-padding
-        border  border-gray-300
-        rounded
-        transition
-        ease-in-out
-        text-lg
-        m-0 
-        focus:text-gray-700 focus:bg-white focus:border-gray-300 focus:outline-none
+                    className="
+                    focus:border-none indent-[1rem] pl-5
+                    border-none overflow-hidden md:text-[1.5rem]
+                    font-normal
+                text-gray-700
+                bg-white bg-clip-padding
+                border  border-gray-300
+                rounded
+                transition
+                 ease-in-out
+                m-0 
+                focus:text-gray-700 focus:bg-white focus:border-gray-300 focus:outline-none
         resize-none
+        
         min-h-[1rem]
-                    
                     "
 
                     onClick={(e) => {

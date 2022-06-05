@@ -28,6 +28,10 @@ export default function Sidebar(props) {
     })
 
 
+
+
+    const { username, fname, lname, college, city, country, position, stream, aboutMe, googleId } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "" }
+
     const _id = localStorage.getItem("uuid")
     const Name1 = JSON.parse(localStorage.getItem("user"))
 
@@ -49,7 +53,7 @@ export default function Sidebar(props) {
         if (_shouldWantTodelete) {
 
             // ${process.env.REACT_APP_API_BACKENDURL}
-            const res = await fetch(`/delete/account/${_id}`, {
+            const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/delete/account/${_id}`, {
 
                 method: "DELETE",
                 headers: {
@@ -89,7 +93,7 @@ export default function Sidebar(props) {
             />
             <div
                 // w-64 sidebar width
-                className={`h-screen fixed top-0 md:left-0 ${showSidebar} overflow-y-auto flex-row flex-nowrap overflow-hidden shadow-xl bg-[#fff] w-64 z-10 py-4 px-6 transition-all duration-300 mr-36  mt-[3.7rem] text-black`}
+                className={`h-screen fixed top-0 md:left-0 ${showSidebar} overflow-y-auto flex-row flex-nowrap overflow-hidden shadow-xl bg-[#fff] w-64 z-[4] py-4 px-6 transition-all duration-300 mr-36  mt-[3.7rem] text-black`}
             >
                 <div className="flex-col items-stretch min-h-full flex-nowrap px-0 relative text-black" >
                     <NavLink
@@ -119,15 +123,27 @@ export default function Sidebar(props) {
                             hover:duration-2000
                             
                             hover:ease-in-out">
-                                <NavLink
-                                    to="/profile"
-                                    exact
-                                    className="flex items-center gap-4 text-sm text-black font-medium px-4 py-3 rounded-lg hover:text-white"
-                                    activeClassName="bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white shadow-md "
-                                >
-                                    <Icon name={<CgProfile />} size="2xl" />
-                                    Profile
-                                </NavLink>
+                                {
+                                    googleId ?
+                                        <NavLink
+                                            to={`/profile/${googleId}`}
+                                            exact
+                                            className="flex items-center gap-4 text-sm text-black font-medium px-4 py-3 rounded-lg hover:text-white"
+                                            activeClassName="bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white shadow-md "
+                                        >
+                                            <Icon name={<CgProfile />} size="2xl" />
+                                            Profile
+                                        </NavLink> :
+                                        <NavLink
+                                            to={`/unknownuser/`}
+                                            exact
+                                            className="flex items-center gap-4 text-sm text-black font-medium px-4 py-3 rounded-lg hover:text-white"
+                                            activeClassName="bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white shadow-md "
+                                        >
+                                            <Icon name={<CgProfile />} size="2xl" />
+                                            Profile
+                                        </NavLink>
+                                }
                             </li>
                             <li className="rounded-lg mb-2 hover:bg-[#2a97bb] transition duration-2000
                             hover:shadow-lg
@@ -188,15 +204,15 @@ export default function Sidebar(props) {
                             hover:duration-2000
                             hover:text-white
                             hover:ease-in-out ">
-                                <a
-                                    href="https://demos.creative-tim.com/material-tailwind-kit-react/#/login"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="flex items-center gap-4 text-sm font-light py-3 hover:text-white"
+                                <NavLink
+                                    to="/user/links"
+                                    className="flex items-center gap-4 text-sm text-black font-medium px-4 py-3 rounded-lg hover:text-white"
+                                    activeClassName="bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white shadow-md "
                                 >
-                                    <Icon name="fingerprint" size="2xl" />
-                                    Login
-                                </a>
+                                    <Icon name={<IoMdPhotos />} size="2xl" />
+                                    Simple Links
+                                </NavLink>
+
                             </li>
                             <li className="px-4 rounded-lg mb-2 text-black hover:bg-[#2a97bb] transition duration-2000
                             hover:shadow-lg

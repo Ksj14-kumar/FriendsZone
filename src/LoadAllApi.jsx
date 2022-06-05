@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+// import React, { useEffect, useState } from 'react'
+// import { useDispatch } from 'react-redux'
 
 
-function LoadAllApi() {
-    const dispatch = useDispatch()
+// function LoadAllApi() {
+//     const dispatch = useDispatch()
 
-    const { _id } = JSON.parse(localStorage.getItem("user_login")) ? JSON.parse(localStorage.getItem("user_login")) : { _id: "" }
-
-
+//     const { _id } = JSON.parse(localStorage.getItem("user_login")) ? JSON.parse(localStorage.getItem("user_login")) : { _id: "" }
 
 
-    return (
-        <>
-        </>
+
+
+//     return (
+//         <>
+//         </>
        
-    )
-}
+//     )
+// }
 
-export default LoadAllApi
+// export default LoadAllApi

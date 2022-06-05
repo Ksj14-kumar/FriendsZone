@@ -1,20 +1,18 @@
 import Card from '@material-tailwind/react/Card';
 
 import Image from '@material-tailwind/react/Image';
-
+import NavItem from "@material-tailwind/react/NavItem";
 import Button from '@material-tailwind/react/Button';
 import ProfilePicture from '../assets/img/team-1-800x800.jpg';
 // import Image from "@material-tailwind/react/Image";
 import Thomas from '../assets/img/thomas.jpg';
 import { useDispatch, useSelector } from 'react-redux';
-import { BsFillCameraFill } from 'react-icons/bs'
+import { BiUserX } from 'react-icons/bi'
 import { useEffect, useRef, useState } from 'react';
-import AdminNavbar from '../Components/AdminNavbar';
-import AddPost from '../Components/ProfilePageComponent/AddPost';
-import PublicPostCard from '../Components/ProfilePageComponent/PublicPostCard';
+
 import Tooltips from "@material-tailwind/react/Tooltips";
 import TooltipsContent from "@material-tailwind/react/TooltipsContent";
-import { BrowserRouter, NavLink, Redirect, useHistory, Route, Switch, useLocation, useParams } from 'react-router-dom';
+import { BrowserRouter, NavLink, Redirect, useHistory, Route, Switch, useLocation, useParams, useRouteMatch } from 'react-router-dom';
 import profile from '../assets/img/download.png'
 import { MdAirlineSeatIndividualSuite, MdMessage } from 'react-icons/md'
 import { FaUserPlus, FaFacebookMessenger } from 'react-icons/fa'
@@ -30,35 +28,39 @@ import RoundedSideBar from '../Components/RightSideBar/RoundedSideBar';
 import SliderNews from '../Components/RightSideBar/SliderNews';
 import NewsSection from '../Components/RightSideBar/NewsSection';
 import FriendSuggestion from '../Components/ProfilePageComponent/FriendSuggestion'
+import { IoNavigate } from 'react-icons/io5';
+import UserFeed from '../Components/UserFeed/UserFeed';
+import RightSide from '../Components/UserFeed/RightSide';
+import RightSidebar from '../Components/RightSidebar';
 
 
 
 
 
 export default function ProfileCard(props) {
-    const [value, setValue] = useState(null)
+    const [loadUserProfileInfo, setLoadUSerProfileInfo] = useState(false)
+
     const buttonRef = useRef()
     const dispatch = useDispatch()
     const [query, setSearchQueary] = useState(null)
     const { search } = useLocation();
     const params = new URLSearchParams(search);
-    const [profileImage, setProfileImage] = useState("")
-
-
-
-
-
-
-
-
+    const usernameId = useParams().username
+    const [userInfo, setUserInfo] = useState({})
+    const [connectMessage, setConnectMessage] = useState(null)
+    const [AcceptMessage, setAcceptMessage] = useState(false)
+    const [acceptorMessage, setAcceptorMessage] = useState(false)
     const Query = useSelector((state) => {
         return state.Query
 
     })
-
-    const DispatchProfileImage = useSelector((state) => {
-        return state.ShowImage
+    const UserInformationLoad = useSelector((state) => {
+        return state.UserInformationLoad.value
     })
+
+    // const DispatchProfileImage = useSelector((state) => {
+    //     return state.ShowImage
+    // })
 
     const GetAllPosts = useSelector((state) => {
         return state.GetAllPosts
@@ -66,37 +68,171 @@ export default function ProfileCard(props) {
     const TotalComment = useSelector((state) => {
         return state.TotalComment
     })
-
-
-    const UserInformationLoad = useSelector((state) => {
-        return state.UserInformationLoad.value
-    })
-    const ShowImageBackground = useSelector((state) => {
-        return state.ShowImageBackground.value
-    })
-
-
-
-
     const PostWhichUserSelectedImageORVideo = useSelector((state) => {
         return state.PostWhichUserSelectedImageORVideo
     })
-
-    const { fname, lname, college, city, country, position, stream, aboutMe } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "" }
-
-
-
-
-
-
-
-
+    const { fname, lname, googleId, url, senderrequest, receiverrequest, friends } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "", url: "", senderrequest: [] }
+    const { path } = useRouteMatch()
 
     useEffect(() => {
         params.set("id", Query)
 
     }, [Query])
 
+
+    useEffect(() => {
+
+        async function loadUserProfileData() {
+            try {
+                setLoadUSerProfileInfo(true)
+                const getUserResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/finduserprofile/`, {
+                    method: "POST",
+                    body: JSON.stringify({ anotherUserId: usernameId }),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("uuid")}`
+                    }
+                })
+                const ResponseData = await getUserResponse.json()
+                if (getUserResponse.status === 200) {
+                    setUserInfo(ResponseData)
+                    setLoadUSerProfileInfo(false)
+                }
+                else if (getUserResponse !== 200) {
+                    setLoadUSerProfileInfo(false)
+                }
+
+            }
+            catch (err) {
+                console.warn(err)
+            }
+
+        }
+        loadUserProfileData()
+    }, [usernameId])
+
+
+
+
+    //send the friends request to user
+
+    // useEffect(() => {
+    async function sendFriendRequest() {
+        try {
+            const sendFriendRequestResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/sendfriendrequest/`, {
+                method: "POST",
+                body: JSON.stringify({
+                    profileUrl: url,
+                    recieverName: userInfo.userGeneralInfo[0].fname + " " + userInfo.userGeneralInfo[0].lname,
+                    senderName: fname + " " + lname,
+                    userId: localStorage.getItem("uuid"),
+                    currentUser: googleId,
+                    anotherUserId: usernameId,
+                    receiverUrl: userInfo.ProfileURL,
+                    senderUrl: url,
+                    connectMessage
+                }
+                ),
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("uuid")}`
+                }
+            })
+
+            const sendFriendRequestResponseData = await sendFriendRequestResponse.json()
+            if (sendFriendRequestResponse.status === 200) {
+                // setConnectMessage(sendFriendRequestResponseData.message)
+                // setAcceptMessage(true)
+                // setaccepted(sendFriendRequestResponseData.accepted)
+            }
+        }
+        catch (err) {
+            console.warn(err)
+        }
+
+    }
+
+
+
+
+    //when user load the page or refresh the page and check jis user ki profile dekh rha hai wo user send request array mai wxit krta bhi hai or nhi 
+    useEffect(() => {
+        const value = UserInformationLoad.senderrequest !== undefined && UserInformationLoad.senderrequest.some(item => item._id === usernameId)
+        setConnectMessage(value)
+    }, [usernameId])
+
+
+
+    useEffect(() => {
+        setAcceptMessage((friends !== undefined) && (friends.some(item => item._id === usernameId
+        )))
+    }, [usernameId])
+
+
+    async function cancleFriendRequest() {
+        try {
+            const cancleFriendRequestResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/disconnect/friend`, {
+                method: "POST",
+                body: JSON.stringify({ senderId: usernameId }),
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("uuid")}`
+
+                }
+            })
+            const cancleFriendRequestResponseData = await cancleFriendRequestResponse.json()
+            if (cancleFriendRequestResponse.status === 200) {
+                setConnectMessage(false)
+                setAcceptMessage(false)
+                setLoadUSerProfileInfo(false)
+            }
+
+        }
+        catch (err) {
+            console.warn(err)
+
+        }
+
+    }
+    useEffect(() => {
+        setAcceptorMessage(UserInformationLoad.friends !== undefined && UserInformationLoad.friends.some(item => item._id === usernameId))
+    }, [usernameId])
+
+
+    //sstore the user search hostory
+    useEffect(() => {
+        async function History() {
+            try {
+                const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/history/user/history`, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        adminId: googleId,
+                        usernameId,
+                        // name: userInfo?.userGeneralInfo[0].fname + " " + userInfo?.userGeneralInfo[0].lname,
+                        // receiverUrl: userInfo?.ProfileURL
+
+                    }),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("uuid")}`
+
+                    }
+                })
+                const data = await res.json()
+                if (res.status === 200) {
+                    {
+                    }
+                }
+
+            }
+            catch (err) {
+                console.warn(err)
+            }
+
+        }
+        History()
+
+    }, [usernameId])
 
 
 
@@ -110,46 +246,43 @@ export default function ProfileCard(props) {
             {/* <AdminNavbar /> */}
 
             <div className="make_two_section md:flex md:justify-between relative">
-
-
                 {/* md:ml-[.5rem] */}
                 <div className="profile_card-container    md:mr-[22rem] md:w-[81rem] md:ml-[0rem] ">
-
-
-
-
-
-
                     <section className="relative block h-[300px] md:h-[400px]  md:ml-[16rem]">
                         <div className="bg-profile-background bg-cover bg-center absolute top-[3.7rem] w-full h-full flex flex-shrink-0  ">
-
                             {
-                                ShowImageBackground ? <Image
-                                    src={ShowImageBackground}
+                                loadUserProfileInfo ? <div
+                                    // src={userInfo.BgURL}
+                                    className="w-full h-full rounded-t-none bg-[#b9b8b8b5] animate-pulse rounded-b-sm"
+                                    rounded={false}
+                                    raised={false}
+                                // alt="Image"
+
+
+                                ></div> : (userInfo.BgURL ? <Image
+                                    src={userInfo.BgURL}
                                     className="w-full h-full rounded-t-none "
                                     rounded={false}
                                     raised={false}
                                     alt="Image"
 
 
-                                /> : ""
+                                /> : "")
                             }
 
 
                         </div>
                     </section>
-
-
                     <div className=' card-container flex justify-around md:pl-48 relative     md:w-[58rem] md:ml-[11.6rem] md:mt-[6rem] mt-[17rem] '>
 
 
                         <Card className=" lg:-mt-[170px] md:-mt-[280px] -mt-[300px] 
-                        md:ml-[8rem] md:mr-[6rem]  md-w-[71rem] mx-[2rem]    " >
+                        md:ml-[8rem] md:mr-[6rem]  md-w-[71rem] mx-[2rem]  " >
                             <div className="flex flex-wrap justify-center relative md:flex-col">
                                 <div className="w-48 mds-editor2:w-40 px-4 -mt-24 relative outline-1 outline-red-600 rounded-full md:justify-center md:mx-auto">
 
-                                    {DispatchProfileImage.value ?
-                                        <Image src={DispatchProfileImage.value} rounded={true} raised={true} className="object-cover  outline-3 rounded-full outline-double outline-offset-1 outline-neutral-500 " />
+                                    {userInfo.ProfileURL ?
+                                        <Image src={userInfo.ProfileURL} rounded={true} raised={true} className="object-cover  outline-3 rounded-full outline-double outline-offset-1 outline-neutral-500 " />
 
 
                                         :
@@ -175,38 +308,92 @@ export default function ProfileCard(props) {
 
                                 </div>
 
-                                <main className="buttons  flex  justify-center pl-0 ">
+                                <main className="buttons  flex  justify-center pl-0 
+                                md:mt-0 mt-[2rem] items-center content-center">
 
                                     {/* ml-[7rem] */}
-                                    <div className='mt-3   '>
-                                        <Button
-                                            color="purple"
-                                            buttonType="filled"
-                                            size="regular"
-                                            rounded={false}
-                                            block={false}
-                                            iconOnly={false}
-                                            ripple="light"
-                                        >
-                                            <Icon name={<FaUserPlus />} className="mr-2" />
-                                            Connect
-                                        </Button>
+                                    <div className='md:mt-3   '>
+                                        {
+                                            googleId !== usernameId &&
+                                            <Button
+                                                color="purple"
+                                                buttonType="filled"
+                                                size="regular"
+                                                rounded={false}
+                                                block={false}
+                                                iconOnly={false}
+                                                disabled={AcceptMessage === true ? true : false}
+                                                ripple="light"
+                                                className="normal-case tracking-wider font-light text-lg"
+                                                onClick={() => {
 
+                                                    sendFriendRequest()
+                                                    setConnectMessage(!connectMessage)
+
+
+                                                }}
+                                            >
+                                                <Icon name={<FaUserPlus className='text-[1.3rem]' />} className="mr-2" />
+
+
+                                                {
+                                                    AcceptMessage === true ? "Connected" : (connectMessage ? "request sent" : "Connect")
+                                                }
+                                            </Button>
+                                        }
                                     </div>
-                                    <div className='mt-3  ml-[.3rem] md:ml-[1rem]'>
-                                        <Button
-                                            color="lightBlue"
-                                            buttonType="filled"
-                                            size="regular"
-                                            rounded={false}
-                                            block={false}
-                                            iconOnly={false}
-                                            ripple="light"
-                                        >
-                                            <Icon name={<FaFacebookMessenger />} className="mr-2" />
-                                            Message
-                                        </Button>
+                                    <div className='  ml-[.3rem] md:ml-[1rem] flex md:mt-3'>
+                                        {
+                                            (AcceptMessage === true && acceptorMessage) &&
+                                            (googleId !== usernameId &&
+                                                <>
+                                                    {/* ${usernameId} */}
+                                                    <NavLink to={
+                                                        `/messages?q=${usernameId}`
+                                                    }>
+                                                        <Button
+                                                            color="lightBlue"
+                                                            buttonType="filled"
+                                                            size="regular"
+                                                            rounded={false}
+                                                            block={false}
+                                                            iconOnly={false}
+                                                            ripple="light"
+                                                            className="normal-case tracking-wider text-lg font-light"
+                                                        >
+                                                            <Icon name={<FaFacebookMessenger />} className="mr-2" />
+                                                            Message
+                                                        </Button>
+                                                    </NavLink>
 
+                                                    <Button
+                                                        color="red"
+                                                        buttonType="filled"
+                                                        size="regular"
+                                                        rounded={false}
+                                                        block={false}
+                                                        iconOnly={false}
+                                                        ripple="light"
+                                                        className="ml-2 normal-case tracking-wider text-lg font-light"
+                                                        onClick={() => {
+                                                            const bool = window.confirm("Are you sure want to Disconnect?")
+                                                            if (bool) {
+
+                                                                cancleFriendRequest(true)
+                                                                setAcceptMessage(false)
+                                                            }
+                                                            else {
+
+                                                            }
+                                                        }}
+
+                                                    >
+                                                        <Icon name={<BiUserX className='text-[1.4rem]' />} className="mr-2" />
+                                                        Disconnect
+                                                    </Button>
+                                                </>
+                                            )
+                                        }
                                     </div>
                                 </main>
 
@@ -220,25 +407,36 @@ export default function ProfileCard(props) {
 
                                         <div className="containe1 flex justify-around  w-full  rounded-lg border border-solid border-[#e6e3e39a]">
 
-                                            <NavLink to="/user/status"
+                                            <NavLink to={path}
                                                 activeStyle={{ borderBottom: "2px solid #E91E63" }}
-                                            //   className={(isActive)=>isActive?"active":"inactive"}
+                                                className={(isActive) => isActive ? "active" : "inactive"}
+
+
                                             >
-                                                <div className="p-4 text-center  rounded-lg rounded-b-none   pb-1">
-                                                    <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Status</span>
+
+                                                <div className="p-4 text-center  rounded-lg rounded-b-none   
+                                             pb-1">
+                                                    <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold
+                                                    
+                                                    space-x-1">Status</span>
                                                     <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
                                                         🎭
                                                     </span>
                                                 </div>
 
                                             </NavLink>
+
+
                                             <NavLink to="/user/friends"
                                                 activeStyle={{ borderBottom: "2px solid #E91E63" }}
+
                                             >
                                                 <div className="p-4 text-center  rounded-lg rounded-b-none  pb-1 ">
                                                     <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Friends</span>
                                                     <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
-                                                        22
+                                                        {
+                                                            Object.keys(userInfo).length > 0 && userInfo.userGeneralInfo[0].friends.length
+                                                        }
                                                     </span>
                                                 </div>
 
@@ -269,7 +467,7 @@ export default function ProfileCard(props) {
                                                     <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Posts</span>
                                                     <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
                                                         {
-                                                            GetAllPosts?.length
+                                                            Object.keys(userInfo).length > 0 && userInfo.getUserPost.length
                                                         }
                                                     </span>
                                                 </div>
@@ -280,13 +478,20 @@ export default function ProfileCard(props) {
 
                                         <Switch>
 
-                                            <div className="section  mt-4  flex-auto  mds-editor8:w-full  border border-solid border-[#cccccc59] rounded-xl">
+                                            <div className={`section  mt-4  flex-auto  mds-editor8:w-full  border border-solid border-[#cccccc59] rounded-xl ${loadUserProfileInfo && "bg-[#c4c3c3ea] animate-pulse"}`} >
 
-                                                <Route exact path="/user/status" >
-                                                    <Status fname={fname} lname={lname} country={country} city={city} stream={stream} position={position} aboutMe={aboutMe} college={college} />
+                                                {/* fname={fname} lname={lname} country={country} city={city} stream={stream} position={position} aboutMe={aboutMe} college={college} */}
+                                                <Route exact path={path} >
+                                                    <Status info={Object.keys(userInfo).length > 0 && userInfo.userGeneralInfo[0]} loadUserProfileInfo={loadUserProfileInfo} />
                                                 </Route>
                                                 <Route exact path="/user/friends">
-                                                    <Friends />
+                                                    {userInfo ? <Friends info={Object.keys(userInfo).length > 0 && userInfo.userGeneralInfo[0]} loadUserProfileInfo={loadUserProfileInfo} usernameId={usernameId} _id={googleId}
+                                                        cancleFriendRequest={cancleFriendRequest}
+                                                        setAcceptMessage={setAcceptMessage}
+                                                        friends={friends}
+                                                    /> : <Redirect to={path} />
+
+                                                    }
                                                 </Route>
                                                 <Route exact path="/user/comments">
                                                     <Comments />
@@ -314,26 +519,13 @@ export default function ProfileCard(props) {
                         </Card>
 
                     </div>
-                    <div className="add_post_card bg-black">
 
-                        <AddPost />
-                    </div>
+                    <UserFeed PostWhichUserSelectedImageORVideo={Object.keys(userInfo).length > 0 && userInfo.getUserPost} socket={props.socket} threeDot={Object.keys(userInfo).length > 0 && userInfo.ShowDot} />
 
-                    <div className="friends_groups  text-center  flex justify-center mb-[2rem] ">
-                        <div className="container1  ml-[2rem] md:ml-[20rem] md:mr-[6rem] mr-[2.6rem] mds-editor8:ml-0 mds-editor8:mr-0 mb-[1rem]">
-                            <div className="swiper_container w-full h-full">
-                                <FriendSuggestion />
 
-                            </div>
 
-                        </div>
-                    </div>
 
-                    {/*========================== PUBLIC POST============== */}
-                    <div className="public_post_card  -mt-[2rem]">
 
-                        <PublicPostCard data={PostWhichUserSelectedImageORVideo} socket={props.socket} />
-                    </div>
 
 
 
@@ -344,21 +536,10 @@ export default function ProfileCard(props) {
                 </div>
 
                 {/* //=================right section of profile page start====== */}
-                <div className="right_section bg-[#fffefe00] md:w-[27.5rem] md:fixed md:right-0 top-[3.7rem]  hidden h-screen  md:flex md:flex-row-reverse md:justify-between">
-                    <aside className="right_side_bar bg-[#00000029]   w-[3rem]  rounded-[48px] h-full  ">
-                        {/* md:h-20 md:w-20 */}
-                        <div className="image mt-[2.5rem] mx-[2px] bg-[#6e6d6d5b] h-full rounded-lg pt-2 hover:transition-colors ">
-                            <RoundedSideBar />
-                        </div>
-                    </aside>
-                    <div className="left_side relative md:w-full" >
-                        {/* <SliderNews/> */}
-                        <NewsSection />
-                        {/* <SliderNews />- */}
-                    </div>
-                </div>
+                <RightSide />
+
                 {/* //=========================right sectioon end of right sidebar================== */}
-            </div>
+            </div >
 
         </>
 
@@ -368,8 +549,3 @@ export default function ProfileCard(props) {
 
     );
 }
-
-
-
-
-

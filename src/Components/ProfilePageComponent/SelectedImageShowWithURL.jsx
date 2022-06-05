@@ -31,7 +31,8 @@ function SelectedImageShowWithURL(props) {
             }
             {/* [13.8rem] left-[17.5rem] */}
             <Button
-                className="cross-btn absolute top-[.5rem] left-[17.5rem] z-[1000]"
+            // left-[17.5rem]
+                className="cross-btn absolute top-[.5rem] left-[17.5rem] md:right-2 z-[1000]"
                 color="gray"
                 buttonType="outline"
                 size="sm"

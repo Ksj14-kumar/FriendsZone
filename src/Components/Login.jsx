@@ -27,9 +27,7 @@ import { Error } from "./Toastify";
 import TextField from '@mui/material/TextField';
 
 
-export default function Login(props) {
-  const [cookies, setCookie] = useCookies(['tokenId']);
-  let [user, setUser] = React.useState(null)
+export default function Login({ socket }) {
   const { users, dispatch } = useContext(Context)
   const [loader, setLoader] = useState(false)
 
@@ -98,19 +96,22 @@ export default function Login(props) {
     else {
       setLoader(true)
       // ${process.env.REACT_APP_API_BACKENDURL}
-      const response = await fetch(`/api/login`, {
+      const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/login`, {
         method: "POST",
-        // credentials: "same-origin",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+
         },
         body: JSON.stringify({ email, password }),
         // redirect: "follow"
       })
       const status = response.status
+      console.log(response)
       const serverData = await response.json()
       console.log({ serverData })
       if (status === 200) {
+        setLoader(false)
         localStorage.setItem("uuid", serverData.cookie)
         const { user } = serverData
         success({ message: serverData.message })
@@ -120,6 +121,15 @@ export default function Login(props) {
           dispatch({ type: "SET_USER", payload: { user: serverData.user } })
 
         }, 2000)
+
+        socket?.emit("login", serverData.cookie)
+        socket?.on("onlineUsers", (data) => {
+          console.log("online uyser", data)
+          // dispatch({ type: "onlineUsers", payload: data })
+        })
+      }
+      else if (status !== 200) {
+        error({ message: serverData.message })
         setLoader(false)
       }
       else if (status === 500) {
@@ -179,8 +189,7 @@ export default function Login(props) {
                 name="email"
                 value={data.email}
                 onChange={handle}
-                defaultValue=""
-                className="border-0"
+                className="border-0 text-[1.5rem] font-serif tracking-wider bg-red-600"
 
               />
 
@@ -198,7 +207,6 @@ export default function Login(props) {
                 iconName="lock"
                 value={data.password}
                 onChange={handle}
-                defaultValue=""
 
                 outline={false}
               />
@@ -215,6 +223,8 @@ export default function Login(props) {
                 size="lg"
                 block={false}
                 ripple="dark"
+                className={` `}
+                disabled={loader ? true : false}
 
                 onClick={submit}
               >
@@ -387,5 +397,3 @@ function error(props) {
     </div>
   );
 }
-
-

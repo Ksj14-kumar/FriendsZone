@@ -8,19 +8,22 @@ import DropdownItem from '@material-tailwind/react/DropdownItem';
 import userProfile from '../assets/img/download.png'
 import { useContext, useEffect, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import ImageShow from '../Components/ImageShow'
+import ImageShow from './ImageShow'
+
+
 import ProfileLoader from '../Loader/ProfileLoader';
 import axios from "axios";
 import Modal from "@material-tailwind/react/Modal";
 import ModalHeader from "@material-tailwind/react/ModalHeader";
 import ModalBody from "@material-tailwind/react/ModalBody";
 import ModalFooter from "@material-tailwind/react/ModalFooter";
-// import Button from "@material-tailwind/react/Button";
-import { ToastContainer, toast } from 'react-toastify';
+
+
 import { MdDelete, MdUploadFile, MdNotifications, MdError } from 'react-icons/md'
+import { FaLessThanEqual, FaUserFriends } from 'react-icons/fa'
 import { BsMessenger } from 'react-icons/bs'
 import { useState } from 'react'
-import ProgressBar from './ProgressBar';
+import img1 from '../assets/img/team-3-800x800.jpg';
 import CircleLoader from '../Loader/CircleLoader';
 import Badge from '@mui/material/Badge';
 import Notification from './Notification/Notification';
@@ -28,11 +31,14 @@ import Popover from "@material-tailwind/react/Popover";
 import PopoverContainer from "@material-tailwind/react/PopoverContainer";
 import PopoverHeader from "@material-tailwind/react/PopoverHeader";
 import PopoverBody from "@material-tailwind/react/PopoverBody";
-import SearchUserTable from './SearchUserTable';
-import { RiTreasureMapLine } from 'react-icons/ri';
-import Pusher from 'pusher-js';
-import { Error, Success } from './Toastify';
+
+
+
 import { success, error } from '../toastifyMessage/Toast';
+import SearchBarTable from '../SearchBarTable';
+import FriendsNoti from './Notification/FriendsNoti';
+import Messages from "./Notification/Messages";
+import AdminRightSideBar from './AdminRightSideBar';
 
 const _id = localStorage.getItem("uuid")
 function useOnClickOutside(ref, handler, setImageValue, setImageValueBackground, dispatch, setProgressMessage, setDeleteMessage) {
@@ -58,8 +64,6 @@ function useOnClickOutside(ref, handler, setImageValue, setImageValueBackground,
     );
 }
 export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
-    // , socket 
-
 
     //ALLS  HOOKS
     const wrapperRef = useRef()
@@ -81,10 +85,14 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     const [deleteMessage, setDeleteMessage] = useState("")
     const [disabledButton, setDisabledButton] = useState(false)
     const [disabledButtonBg, setDisabledButtonBg] = useState(false)
+    const [userSearchHistory, setUserSearchHistory] = useState([])
+    const [Group, setGroupMessage] = useState([])
+    const [Length, SetNotificationLength] = useState(null)
+    const [showRightSideBar, setShowRightSideBar] = useState(false)
     const notification = useRef(null)
+    const message = useRef(null)
+    const friends = useRef(null)
     const messenger = useRef(null)
-    const searchRef = useRef(null)
-    const inputRef = useRef(null)
     const profileInput = useRef(null)
     const SearchFilter = useRef(null)
     const backgroundInput = useRef(null)
@@ -95,8 +103,10 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     const [url, setUrl] = useState("")
     const [BgUrl, setBackgroundImageUrl] = useState("")
     const [showSearch, setShowSearch] = useState(false)
+    const [friendsRequest, setFriendsRequest] = useState([])
     const [Noti, setNotification] = useState([])
-
+    const [NotificationGroup, setNotificationGroup] = useState([])
+    const [friendsMessage, setFriendsMessage] = useState(false)
 
     const dispatch = useDispatch()
     // useOnClickOutside(wrapperRef, setImageValue, setImageValueBackground, dispatch, setProgressMessage, setDeleteMessage)
@@ -140,6 +150,21 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     const checkUrlExitsProfile = useSelector((state) => {
         return state.checkUrlExitsProfile
     })
+
+
+
+    const UserInformationLoad = useSelector((state) => {
+        return state.UserInformationLoad.value
+    })
+
+    const { fname, lname, college, city, country, position, stream, aboutMe, googleId, senderrequest, receiverrequest } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "", senderrequest: [], receiverrequest: [] }
+
+
+
+
+
+    // console.log({UserInformationLoad})
+
     let formData;
     //profile image uploader
     function imageUploadHandler(e) {
@@ -200,7 +225,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             // setShowImage(previewImage)
             setUploadLoader(true)
             // ${process.env.REACT_APP_API_BACKENDURL}
-            const serverResponse = await fetch(`/blob/user/blob/image/9fHtqOJumtxOzmTfLMFT/ETXsG3rHrnx2irUZmefU/njVzxxrEx84ZrUiERB0t/fxXRdJLMKIkzxucTbovy/sO9rLr3E0EuDpjYcawQD/`, {
+            const serverResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/user/blob/image/9fHtqOJumtxOzmTfLMFT/ETXsG3rHrnx2irUZmefU/njVzxxrEx84ZrUiERB0t/fxXRdJLMKIkzxucTbovy/sO9rLr3E0EuDpjYcawQD/`, {
                 method: "POST",
                 body: JSON.stringify({
                     data:
@@ -267,7 +292,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             // setShowImage(previewImage)
             setUploadLoaderBackground(true)
             // ${process.env.REACT_APP_API_BACKENDURL}
-            const serverResponse = await fetch(`/blob/user/blob/image/bg/S6MjFqeb8HdJRGjkUs9W/QUCzIb1mKtMevddN24yB/YWYhtXwEEtUlHu0Nkhmq/eAQCSzpYo28SJxXCMV4d/yR3VTmMynJw6N3xlS530/WpsJsZKo4hGf18jaWmZL/`, {
+            const serverResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/user/blob/image/bg/S6MjFqeb8HdJRGjkUs9W/QUCzIb1mKtMevddN24yB/YWYhtXwEEtUlHu0Nkhmq/eAQCSzpYo28SJxXCMV4d/yR3VTmMynJw6N3xlS530/WpsJsZKo4hGf18jaWmZL/`, {
                 method: "POST",
                 body: JSON.stringify({
                     data:
@@ -335,7 +360,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             setDisabledButton(true)
             // ${process.env.REACT_APP_API_BACKENDURL}
             const res = await axios({
-                url: `/blob/delete/assest/`,
+                url: `${process.env.REACT_APP_API_BACKENDURL}/blob/delete/assest/`,
                 data: JSON.stringify({ uploadImageDataFromServer, uuid: _id }),
                 method: "DELETE",
                 headers: {
@@ -387,7 +412,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             setDisabledButtonBg(true)
             setDeleteLoader(true)
             // ${process.env.REACT_APP_API_BACKENDURL}
-            const res = await fetch(`/blob/delete/assest/bg/`, {
+            const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/delete/assest/bg/`, {
                 body: JSON.stringify({ uploadImageDataFromBackground, uuid: _id }),
                 method: "DELETE",
 
@@ -430,11 +455,15 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     }
     //====================LOGOUT THE ACCOUNT=============================
     async function logout() {
+        // socket?.emit("newUser", { data: localStorage.getItem("uuid") })
+        socket?.emit("logout", socket?.id)
+        // socket?.disconnect()
+        // socket?.emit("disconnect", { uuid: localStorage.getItem("uuid") })
+
         localStorage.removeItem("uuid")
-        localStorage.removeItem("user_login")
         localStorage.clear()
         // ${process.env.REACT_APP_API_BACKENDURL}
-        const res = await fetch(`/logout`, {
+        const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/logout`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -443,12 +472,13 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         })
         const url = await res.json()
         window.open(url.message, "_self")
+        window.location.reload()
     }
     //search the query from the server
     useEffect(() => {
         const search = async () => {
             // ${process.env.REACT_APP_API_BACKENDURL}
-            const res = await axios.get(`/blob/search?q=${query}`, {
+            const res = await axios.get(`${process.env.REACT_APP_API_BACKENDURL}/blob/search?q=${query}`, {
                 headers: {
                     "Authorization": "Bearer " + localStorage.getItem("uuid")
                 }
@@ -475,53 +505,174 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             setUploadLoaderBackground(false)
         }
     }, [showModal, showModalBackground])
+
+
     //now setup the serach bar when user search the query
     useEffect(() => {
-        if (window.innerWidth <= 482) {
-            SearchFilter.current.children[0].classList.add("search-bar-mobile")
-            notification.current.classList.add("search-msg")
-            messenger.current.classList.add("search-noti")
-            if (showSearch === true) {
-                notification.current.style.display = "none"
-                messenger.current.style.display = "none"
-                SearchFilter.current.children[0].classList.add("search-bar-mobile-animation")
+        // if (window.innerWidth <= 369) {
+        //     SearchFilter.current.children[0].classList.add("search-bar-mobile")
+        //     notification.current.classList.add("search-msg")
+        //     messenger.current?.classList.add("search-noti")
+        //     if (showSearch === true) {
+        //         notification.current.style.display = "none"
+        //         messenger.current.style.display = "none"
+        //         SearchFilter.current.children[0].classList.add("search-bar-mobile-animation")
 
-                // SearchFilter.current.children[0].style.width = "110%"
-            }
-            else if (showSearch === false) {
-                SearchFilter.current.children[0].classList.add("search-bar-mobile-down")
-                notification.current.style.display = "block"
-                messenger.current.style.display = "block"
-                SearchFilter.current.style.width = "100%"
-            }
-        }
+        //         SearchFilter.current.children[0].style.width = "110%"
+        //     }
+        //     else if (showSearch === false) {
+        //         SearchFilter.current.children[0].classList.add("search-bar-mobile-down")
+        //         notification.current.style.display = "block"
+        //         // messenger.current.style.display = "block"
+        //         SearchFilter.current.style.width = "100%"
+        //     }
+        // }
     }, [showSearch])
 
 
 
 
+
+    // useEffect(() => {
+
+    //     socket?.on("getNotification", (data) => {
+    //         setNotification(pre => [...pre, data])
+    //         dispatch({ type: "Send_Notification", payload: Noti })
+    //     })
+    // }, [socket])
+
+
+
+    //now accept and reject friendrequest
+
+    // useEffect(() => {
+    //     setNotificationGroup(UserInformationLoad.friends)
+    // },[])
+
+    useEffect(() => {
+        setFriendsRequest(receiverrequest)
+        // setNotificationGroup((pre)=>[...pre,receiverrequest])
+    }, [receiverrequest])
+
+
+    async function DeleteFriendRequest(senderId) {
+        setFriendsRequest(friendsRequest.filter(friend => friend._id !== senderId))
+        // setNotificationGroup(NotificationGroup.filter(friend => friend._id !== senderId))
+        const deleteResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/deletefriend/request`, {
+            method: "DELETE",
+            body: JSON.stringify({ senderId }),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("uuid")
+
+            }
+        })
+        const deleteResponseData = await deleteResponse.json()
+        console.log({ deleteResponseData })
+        if (deleteResponse.status === 200) {
+            // success({ message: deleteResponseData.message })
+        }
+        else if (deleteResponse.status !== 200) {
+            // error({ message: deleteResponseData.message })
+
+        }
+
+
+    }
+
+
+    //accecpt the friend request
+    async function AcceptFriendRequest(senderId, name) {
+
+        const acceptResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/acceptfriend/request`, {
+            method: "POST",
+            body: JSON.stringify({ senderId, name }),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("uuid")
+
+            }
+        })
+        const acceptResponseData = await acceptResponse.json()
+        console.log("accepy friends reqeust", acceptResponseData)
+        if (acceptResponse.status === 200) {
+            setFriendsMessage(true)
+            // success({ message: acceptResponseData.message })
+            setFriendsRequest(friendsRequest.filter(friend => friend._id !== senderId))
+
+        }
+        else if (acceptResponse.status !== 200) {
+            // error({ message: acceptResponseData.message })
+
+        }
+
+
+    }
+
     useEffect(() => {
 
-        socket?.on("getNotification", (data) => {
-            setNotification(pre => [...pre, data])
-            dispatch({ type: "Send_Notification", payload: Noti })
+        async function loadHistory() {
+            const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/history/user/history/fetch`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("uuid")
+
+                }
+            })
+
+            const resData = await res.json()
+            const data = resData.data
+            console.log({ resData })
+
+            if (res.status === 200) {
+                setUserSearchHistory(data?.history)
+            }
+            else if (res.status !== 200) {
+                console.log(data)
+                //not load hisory
+            }
+        }
+        loadHistory()
+
+    }, [])
+
+
+
+    async function deleteHistory(searchUserId) {
+        const filterData = userSearchHistory.filter((item) => item.searchUserId !== searchUserId)
+        setUserSearchHistory(filterData)
+        const deleteHistory = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/history/delete/history`, {
+            method: "DELETE",
+            body: JSON.stringify(
+                {
+                    searchUserId
+                }),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("uuid")
+
+            }
         })
-    }, [socket])
 
 
+    }
 
 
+    // useEffect(() => {
+    //     setGroupMessage([...friendsRequest, ...UserInformationLoad?.message])
 
-    socket?.on("he", (data) => {
-        // dispatch({ type: "Get_Notification", payload: data })
-    })
+    // }, [friendsRequest, UserInformationLoad])
 
+
+    // console.log({friendsRequest})
 
     return (
         <>
-        {/* md:ml-64 */}
-        {/* bg-light-blue-500 */}
-            <nav className="bg-light-blue-500  py-2 px-3 fixed w-full z-[10000] drop-shadow-lg">
+            {/* md:ml-64 */}
+            {/* bg-light-blue-500 */}
+            {/* 10000 */}
+            <nav className="bg-light-blue-500  py-2 px-3 fixed w-full z-[5] drop-shadow-lg">
                 <div className="container max-w-full mx-auto flex items-center justify-between md:pr-8 md:pl-10">
                     <div className="md:hidden">
                         <Button
@@ -545,7 +696,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                 size="lg"
                                 iconOnly
                                 rounded
-                                ripple="light" 
+                                ripple="light"
                                 className="mt-[2rem]"
                                 onClick={() =>
                                     setShowSidebar('-left-64')}
@@ -555,15 +706,31 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                         </div>
                     </div>
                     <div className="flex  items-center w-full  justify-end">
-                        <div className="flex ">
-                            <div className="searchFiled relative  align-baseline mt-[5px]"
+                        <div className="flex  relative  w-full justify-end ">
+                            {/* searchFiled   align-baseline mt-[5px] bg-red-500 flex-3 */}
+                            {/* //  mds-editor29:w-[5rem]  mds-editor29:left-[5rem] */}
+                            {/* md:left-[35rem] md:w-[52rem] */}
+                            <div className={`searchFiled   align-baseline mt-[5px]  fixed 
+                            md:right-[22rem] md:w-[38rem] 
+                            mds-editor24:w-[33rem] mds-editor24:right-[18rem] 
+                            mds-editor25:w-[26rem] mds-editor25:right-[18rem] 
+                            mds-editor26:w-[20rem] mds-editor26:right-[18rem]
+                             mds-editor27:w-[17rem] mds-editor27:right-[18rem] 
+                             mds-editor28:w-[17.5rem] mds-editor27:right-[16rem] 
+                               mds-editor29:left-[5rem]
+                             mds-editor29:cursor-pointer 
+                        
+                            ${showSearch ? "fixed w-[29rem] left-[2.7rem] top-[10px]" : "w-[2rem]"}
+                            `}
+
                                 ref={SearchFilter}
                             >
-                                <NavbarInput placeholder="Search"
+                                {/* <NavbarInput placeholder="Search"
                                     id="search"
                                     className="text-black "
                                     onFocus={() => {
                                         setShowSearch(true)
+                                        
                                         setPopOverEffect(true)
                                     }}
                                     onBlur={() => {
@@ -575,93 +742,147 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                             setQuery(e.target.value)
                                         }
                                     }
-                                />
-                                {
-                                    popOver && (
-                                        query.length > 0 && <div className='searchArea absolute w-full rounded-lg 
-                                    h-[15rem] z-10
-                                    bg-white
-                                    border-[1px]
-                                    border-gray-300
-                                    rounded-t-none
-                                    
-                                   overflow-auto
-                                   '>
-                                            <SearchUserTable data={userData} />
-                                        </div>
-                                    )
-                                }
+                                /> */}
+
+                                <SearchBarTable showSearch={showSearch} setShowSearch={setShowSearch} setQuery={setQuery} setPopOverEffect={setPopOverEffect} query={query} data={userData} userSearchHistory1={userSearchHistory} deleteHistory={deleteHistory} />
+
+
+
+
+
+
                             </div>
-                            {/* //userSerach the data from server */}
-                            <section className='notification  flex  ml-[3rem] cursor-pointer relative  align-middle
+                            {/* ml-auto */}
+                            <div className={`group_right_s flex    ${showSearch ? "hidden" : "block"}`}>
+
+                                <div className={`group_icons flex `}>
+
+                                    {/* //user friends group */}
+                                    <section className='friends  flex  ml-[3rem] -mr-[1.5rem] cursor-pointer relative  align-middle
+                            mt-[4px]
+                            justify-center'
+                                        ref={friends}
+                                        onClick={() => { }}
+
+                                    >
+                                        <FaUserFriends className='text-[2rem] self-center text-[#270082]' />
+                                        <article className=' bg-red-500 absolute right-2 -top-2 mds-editor8:-top-3'>
+
+                                            {
+                                                (friendsRequest !== undefined && friendsRequest.length > 0) &&
+
+                                                <Badge badgeContent={friendsRequest.length} showZero color="success" max={20}>
+
+                                                </Badge>
+                                            }
+
+                                        </article>
+                                    </section>
+
+
+
+                                    {/* //userSerach the data from server */}
+                                    <section className='notification  flex  ml-[3rem] cursor-pointer relative  align-middle
                             mt-[4px]
                            
                             justify-center'
-                                onClick={() => setShowNotification(!showNotification)}
-                                ref={notification}
-                            >
-                                <MdNotifications className='text-[2rem] self-center text-[#270082]' />
-                                <article className=' bg-red-500 absolute right-2 -top-2 mds-editor8:-top-3'>
-                                    <Badge badgeContent={likedUserDatails.length > 0 ? likedUserDatails.length : 0} showZero color="success" max={20}>
-                                        {/* <MailIcon color="action" /> */}
-                                        {/* 4 */}
-                                    </Badge>
-                                </article>
-                            </section>
-                            <section className='messenger  flex ml-[2rem] cursor-pointer  mb-1 relative'
-                                ref={messenger}
-                            >
-                                <BsMessenger className='text-[1.6rem] self-center mt-2 text-[#270082]' />
-                                <article className='absolute -mt-[2.5rem] ml-[1.5rem]'>
-                                    <Badge badgeContent={2} color="success" max={20}>
-                                        {/* <MailIcon color="action" /> */}
-                                        {/* 4 */}
-                                    </Badge>
-                                </article>
-                            </section>
-                            <div className="-mr-4 ml-6  ">
-                                <Dropdown
-                                    color="transparent"
-                                    buttonText={
-                                        <div className="w-11 bg-black rounded-full        h-11 text-center d-flex justify-center object-cover" style={{
-                                            display: "flex", justifyContent: "center"
-                                        }}
-                                        >
+                                        onClick={() => setShowNotification(!showNotification)}
+                                        ref={notification}
+                                    >
+                                        <MdNotifications className='text-[2rem] self-center text-[#270082]' />
+                                        <article className=' bg-red-500 absolute right-2 -top-2 mds-editor8:-top-3'>
                                             {
-                                                LoaderRedux ? <CircleLoader /> : !showImage ? <Image src={userProfile}
-                                                    rounded alt="img" style={{ width: "100%", height: "100%", backgroundSize: "cover" }} /> : <Image src={showImage}
-                                                        rounded alt="img" style={{ width: "100%", height: "100%" }} />
+                                                <Badge badgeContent={Length} showZero color="secondary" max={20}>
+
+                                                </Badge>
                                             }
-                                            <div className=' bg-[#00FF7F] rounded-full   w-[10px] h-[10px] absolute ml-[1.6rem] 1sm:w-[8px] 1sm:h-[8px] animate-ping animate-pulse '></div>
-                                        </div>
-                                    }
-                                    rounded
-                                    style={{
-                                        padding: 0,
-                                        color: 'transparent',
-                                    }}
-                                >
-                                    <DropdownItem color="lightBlue"
-                                        onClick={(e) => setShowModalCode(true)}
+
+                                        </article>
+                                    </section>
+                                    <section className='messenger  flex ml-[1.8rem] cursor-pointer   relative mt-[3px]'
+                                        ref={message}
                                     >
-                                        Change Profile Picture
-                                    </DropdownItem>
-                                    <DropdownItem color="lightBlue"
-                                        onClick={(e) => setShowModalCodeBackground(true)}
+                                        <BsMessenger className='text-[1.6rem] self-center  text-[#270082]' />
+                                        {/* -mt-[2.5rem] ml-[1.5rem] */}
+                                        <article className='absolute right-1 -top-2 mds-editor8:-top-3 '>
+                                            {
+                                                UserInformationLoad?.message &&
+                                                <Badge badgeContent={UserInformationLoad?.message.length} color="primary" max={20} >
+
+                                                </Badge>
+                                            }
+                                        </article>
+                                    </section>
+                                </div>
+                                <div className="-mr-4 ml-6  relative">
+                                    <div className="img cursor-pointer"
+                                        onClick={() => {
+                                            setShowRightSideBar(!showRightSideBar)
+                                        }}
+
                                     >
-                                        Change background Picture
-                                    </DropdownItem>
-                                    <DropdownItem color="lightBlue"
-                                        onClick={(e) => logout()}
+                                        <Image src={userProfile}
+                                            rounded alt="img" style={{ backgroundSize: "cover" }}
+                                            className="w-[2.5rem] h-[2.5rem] mr-[.8rem] flex-shrink-0 cursor-pointer"
+                                        />
+                                    </div>
+
+
+                                    {/* <Dropdown
+                                        color="transparent"
+                                        buttonText={
+                                            <div className={`w-11 bg-black rounded-full h-11 text-center d-flex justify-center object-cover ${LoaderRedux && "animate-pulse"}`} style={{
+                                                display: "flex", justifyContent: "center"
+                                            }}
+                                            >
+                                                {
+                                                    // showImage
+                                                    // <CircleLoader />
+                                                    LoaderRedux ? "" : !showImage ? <Image src={userProfile}
+                                                        rounded alt="img" style={{ width: "100%", height: "100%", backgroundSize: "cover" }} /> : <Image src={showImage}
+                                                            rounded alt="img" style={{ width: "100%", height: "100%" }} />
+                                                }
+                                                <div className=' bg-[#00FF7F] rounded-full   w-[10px] h-[10px] absolute ml-[1.6rem] 1sm:w-[8px] 1sm:h-[8px] animate-ping animate-pulse '></div>
+                                            </div>
+                                        }
+                                        rounded
+                                        onClick={() => {
+                                            setShowRightSideBar(!showRightSideBar)
+                                        }}
+                                        style={{
+                                            padding: 0,
+                                            color: 'transparent',
+                                        }}
                                     >
-                                        Logout
-                                    </DropdownItem>
-                                </Dropdown>
+                                        <DropdownItem color="lightBlue"
+                                            onClick={(e) => setShowModalCode(true)}
+                                        >
+                                            Change Profile Picture
+                                        </DropdownItem>
+                                        <DropdownItem color="lightBlue"
+                                            onClick={(e) => setShowModalCodeBackground(true)}
+                                        >
+                                            Change background Picture
+                                        </DropdownItem>
+                                        <DropdownItem color="lightBlue"
+                                            onClick={(e) => logout()}
+                                        >
+                                            Logout
+                                        </DropdownItem>
+
+
+                                    </Dropdown> */}
+                                </div>
+
                             </div>
                         </div>
+
                     </div>
                 </div>
             </nav >
+            {
+                showRightSideBar && <AdminRightSideBar />
+            }
             {/* //  MAIN BODY OF DASHBOARD */}
             {/* 
             <Route exact path="/update_profile">
@@ -919,7 +1140,52 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 <PopoverContainer>
                     <PopoverHeader>Notifications</PopoverHeader>
                     <PopoverBody>
-                        <Notification userLiked={likedUserDatails} socket={socket} />
+                        <Notification userLiked={likedUserDatails} socket={socket} SetNotificationLength={SetNotificationLength} />
+                    </PopoverBody>
+                </PopoverContainer>
+            </Popover>
+
+            <Popover placement="bottom" ref={message}>
+                <PopoverContainer>
+                    <PopoverHeader>Messages</PopoverHeader>
+                    <PopoverBody>
+
+                        <Messages message={UserInformationLoad?.message} socket={socket} />
+                    </PopoverBody>
+                </PopoverContainer>
+            </Popover>
+
+            <Popover placement="bottom" ref={friends}>
+                <PopoverContainer>
+                    <PopoverHeader>{friendsRequest !== undefined && friendsRequest.length > 0 ? "Friends Notification" : "No Notification: "}</PopoverHeader>
+                    <PopoverBody>
+                        {
+                            // friendsRequest
+
+
+                            friendsRequest !== undefined &&
+
+                            friendsRequest.length > 0 && (
+                                friendsRequest.map((item) => {
+                                    console.log({ item })
+                                    return (
+                                        <>
+                                            <FriendsNoti
+                                                currentUser={item._id}
+                                                name={item.name}
+                                                url={item.url}
+                                                type={item.type}
+
+                                                AcceptFriendRequest={AcceptFriendRequest}
+
+                                                DeleteFriendRequest={
+                                                    DeleteFriendRequest
+                                                } />
+                                        </>
+                                    )
+
+                                }))
+                        }
                     </PopoverBody>
                 </PopoverContainer>
             </Popover>

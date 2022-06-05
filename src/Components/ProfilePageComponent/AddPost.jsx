@@ -35,11 +35,11 @@ import { ToastContainer, toast } from 'react-toastify';
 import ModalForPostVideoImages from '../Notification/ModalForPostVideoImages';
 import { BrowserRouter } from 'react-router-dom';
 import { IoVideocam } from 'react-icons/io5';
-import Pusher from 'pusher-js';
+import { format } from 'timeago.js';
 import axios from 'axios';
 import { Error } from '../Toastify';
-import io from "socket.io-client";
-const socket = io.connect(`http://localhost:5000`);
+
+
 function useOutsideAlerter(ref, setTextAreaValue, dispatch, setUrlOfImageUpload) {
     useEffect(() => {
         /**
@@ -282,7 +282,7 @@ function AddPost() {
 
 
 
-            
+
 
 
 
@@ -291,21 +291,24 @@ function AddPost() {
 
 
             // _id + 
+            // /local/url/
+            // /users/post/
             // ${process.env.REACT_APP_API_BACKENDURL}
-            const SaveUserPostIntoDb = await fetch(`/blob/local/url/`, {
+            const SaveUserPostIntoDb = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/local/url/`, {
                 method: "POST",
                 body: JSON.stringify({
                     text: textareaValue,
                     image: ImageAsUrl,
+                    // image: userPost,
                     privacy: PrivateOrPublic,
                     post_id: uuidv4(),
                     fileType: fileType,
                     name: fname + " " + lname,
                     userProfileImageUrl: DispatchProfileImage,
                     // likes_count: 100,
-
-                    time: new Date(Date.now()).toDateString().split(" ")[2] + " " + new Date(Date.now()).toDateString().split(" ")[1] + " " + new Date(Date.now()).toDateString().split(" ")[3],
-                    uuid:_id
+                    // new Date(Date.now()).toDateString().split(" ")[2] + " " + new Date(Date.now()).toDateString().split(" ")[1] + " " + new Date(Date.now()).toDateString().split(" ")[3]
+                    time: Date.now(),
+                    uuid: _id
                 }),
                 headers: {
                     "Content-Type": "application/json",
@@ -317,7 +320,7 @@ function AddPost() {
             // setTextAreaValue("")
             // const SaveUserPostIntoDbJson = await SaveUserPostIntoDb.json()
             if (SaveUserPostIntoDb.status === 200) {
-                success({message:"posted successfully"})
+                success({ message: "posted successfully" })
                 // Pusher.logToConsole = true
                 setDisabledGroup(false)
                 setDisabledPhotos(false)
@@ -326,7 +329,6 @@ function AddPost() {
                 setDisabledVideo(false)
                 var socketId;
 
-               
 
 
 
@@ -334,29 +336,30 @@ function AddPost() {
 
 
 
-                var pusher = new Pusher(process.env.REACT_APP_API_KEY, {
-                    cluster: process.env.REACT_APP_API_CLUSTER,
-                    // authEndpoint:`/blob/local/url/${_id}`
-                    // encrypted: true,
-                });
-                // retrieve the socket ID on successful connection
-                pusher.connection.bind('connected', function () {
-                    // console.log("connected/.....")
-                    socketId = pusher.connection.socket_id;
-                });
-                var channel = pusher.subscribe('AddPost');
-                channel.bind('AddPostMessage', function (PusherData) {
-                    socketId = pusher.connection.socket_id;
-                    // console.log("pusher message is.. for add p[ poost", PusherData.GetAllUserPost)
-                    dispatch({
-                        type: "LOAD_POSTS",
-                        payload: PusherData.GetAllUserPost
-                    })
-                    dispatch({ type: "UNSELECT_POST_IMAGE", payload: "" })
-                    // setTextAreaValue("")
-                    setFileType("")
-                    setTextAreaValue("")
-                })
+
+                // var pusher = new Pusher(process.env.REACT_APP_API_KEY, {
+                //     cluster: process.env.REACT_APP_API_CLUSTER,
+                //     // authEndpoint:`/blob/local/url/${_id}`
+                //     // encrypted: true,
+                // });
+                // // retrieve the socket ID on successful connection
+                // pusher.connection.bind('connected', function () {
+                //     // console.log("connected/.....")
+                //     socketId = pusher.connection.socket_id;
+                // });
+                // var channel = pusher.subscribe('AddPost');
+                // channel.bind('AddPostMessage', function (PusherData) {
+                //     socketId = pusher.connection.socket_id;
+                //     // console.log("pusher message is.. for add p[ poost", PusherData.GetAllUserPost)
+                //     dispatch({
+                //         type: "LOAD_POSTS",
+                //         payload: PusherData.GetAllUserPost
+                //     })
+                //     dispatch({ type: "UNSELECT_POST_IMAGE", payload: "" })
+                //     // setTextAreaValue("")
+                //     setFileType("")
+                //     setTextAreaValue("")
+                // })
                 // console.log({SaveUserPostIntoDbJson})
                 // dispatch({
                 //     type: "LOAD_POSTS",
@@ -376,9 +379,17 @@ function AddPost() {
                     // dispatch({ type: "POST_WHICH_USER_SELECTED_IMAGE", payload: mergeArrayData })
                 }, 2000)
             }
+
+            else if (SaveUserPostIntoDb.status === 500) {
+
+                setDisabledGroup(false)
+                setDisabledPhotos(false)
+                setDisabledText(false)
+                setDisabledVideo(false)
+            }
             else {
                 // Error({ message: "This Post is Already exit.." })
-               
+
                 inputFileRef.current.value = ""
                 videoRef.current.value = ""
                 textRef.current.value = ""
@@ -422,7 +433,7 @@ function AddPost() {
     //============================================MODAL FOR Photos===================
     return (
         <>
-            <div className="post-card flex justify-around md:pl-48 md:mt-[18rem] relative sm-[25rem]  shadow-lg  lg:mt-[11rem] ">
+            <div className="post-card flex justify-around md:pl-48 md:mt-[18rem] relative sm-[25rem]   lg:mt-[11rem] ">
                 {/* ===================POST CARD PAGE ========================*/}
                 <Card className="inner-post-card lg:-mt-[170px] md:-mt-[280px] -mt-[300px] 
         md:ml-[8rem] md:mr-[6rem]  md-w-[71rem] mx-[2rem]  shadow-lg h-[12rem] pt-[0rem] ">
@@ -434,13 +445,13 @@ function AddPost() {
                             <H6 color="gray" >Create Post</H6>
                         </div>
                         <div className="inner-body  flex mds-editor7:-ml-[.5rem] ">
-                            <div className="card-post-image bg-green-900 w-[4rem] h-[4rem] rounded-full flex-shrink-0 mds-editor7:w-[3rem] mds-editor7:h-[3rem]">
+                            <div className={`card-post-image bg-[#d9d9d9] w-[4rem] h-[4rem] rounded-full flex-shrink-0 mds-editor7:w-[3rem] mds-editor7:h-[3rem] ${!DispatchProfileImage && "animate-pulse"}`}>
                                 {
                                     DispatchProfileImage ? <Image
                                         src={DispatchProfileImage}
                                         rounded={true}
                                         raised={false}
-                                        alt="Rounded Image"
+                                        alt=""
                                         className="w-full h-full"
                                     /> : ""
                                 }
@@ -533,14 +544,14 @@ function AddPost() {
                 </Card>
             </div>
             {/* ================MODAL FOR POST PHotos and Video ================== */}
-            <div className="con"
+            <div className="con "
             >
-                <Modal size="sm" active={showModal} toggler={(e) => {
+                <Modal size="lg" active={showModal} toggler={(e) => {
                     setShowModalCode(false)
                 }
                 }
                 >
-                    <div className="contain divide-y-2 divide-[#ccc] w-full " ref={wrapperref} >
+                    <div className="contain divide-y-2 divide-[#ccc] md:w-[30rem] " ref={wrapperref} >
                         <div className="modal-header ">
                             <ModalHeader toggler={(e) => {
                                 setShowModalCode(false)
@@ -548,7 +559,8 @@ function AddPost() {
                                 New Post
                             </ModalHeader>
                         </div>
-                        <div className="modal-body w-[21rem] ">
+                        {/* w-[21rem] */}
+                        <div className="modal-body w-[21rem] md:w-full ">
                             <ModalBody >
                                 <p className="text-base leading-relaxed text-gray-600 font-normal
                             mt-5
@@ -586,7 +598,7 @@ function AddPost() {
                                         </main>
                                     </section>
                                     <section className='input-field-section mt-[1rem]
-                                    relative 
+                                    relative w-full
                                 
                                 '>
                                         <textarea
@@ -702,17 +714,16 @@ function AddPost() {
                 </Modal>
             </div>
             {/* =======================MODAL FOR THE VIDEO=========================== */}
-            <Modal size="lg" className="" active={showModalVideo
-            } toggler={() => {
+            <Modal size="lg" className="" active={showModalVideo} toggler={() => {
                 setShowModalCodeVideo(false)
             }}>
-                <div className="modalHeader -mb-[1rem] -mt-[1rem]" ref={VideoModelRef}>
+                <div className="modalHeader -mb-[1rem] -mt-[1rem]  md:w-[30rem] " ref={VideoModelRef}>
                     <ModalHeader className="" toggler={() => setShowModalCodeVideo(false)}>
                         Video
                     </ModalHeader>
                 </div>
                 <hr />
-                <div className="modal-body w-[21rem] ">
+                <div className="modal-body w-[21rem] md:w-full ">
                     <ModalBody >
                         <p className="text-base leading-relaxed text-gray-600 font-normal
                             mt-5
@@ -853,13 +864,13 @@ function AddPost() {
             <Modal size="lg" className="" active={showModalPhoto} toggler={() => {
                 setShowModalCodePhoto(false)
             }}>
-                <div className="modalHeader -mb-[1rem] -mt-[1rem]">
+                <div className="modalHeader -mb-[1rem] -mt-[1rem]  md:w-[30rem] ">
                     <ModalHeader className="" toggler={() => setShowModalCodePhoto(false)}>
                         Photos
                     </ModalHeader>
                 </div>
                 <hr />
-                <div className="modal-body w-[21rem] ">
+                <div className="modal-body w-[21rem] md:w-full ">
                     <ModalBody >
                         <p className="text-base leading-relaxed text-gray-600 font-normal
                             mt-5
@@ -1004,13 +1015,13 @@ function AddPost() {
             <Modal size="lg" className="" active={showModalText} toggler={() => {
                 setShowModalCodeText(false)
             }}>
-                <div className="modalHeader -mb-[1rem] -mt-[1rem]">
+                <div className="modalHeader -mb-[1rem] -mt-[1rem]  md:w-[30rem] ">
                     <ModalHeader className="" toggler={() => setShowModalCodeText(false)}>
                         Text
                     </ModalHeader>
                 </div>
                 <hr />
-                <div className="modal-body w-[21rem] ">
+                <div className="modal-body w-[21rem] md:w-full ">
                     <ModalBody >
                         <p className="text-base leading-relaxed text-gray-600 font-normal
                             mt-5

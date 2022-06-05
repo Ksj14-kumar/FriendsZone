@@ -263,7 +263,7 @@ function CommentSection() {
     useEffect(() => {
 
         async function PostComment() {
-            const res = await fetch(`/comment/posts`, {
+            const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/comment/posts`, {
                 method: "POST",
                 body: JSON.stringify(arrayUserComment),
                 headers: {

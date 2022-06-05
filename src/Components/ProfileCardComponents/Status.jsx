@@ -7,7 +7,8 @@ import LeadText from '@material-tailwind/react/LeadText';
 import { HiPencil } from 'react-icons/hi'
 import Button from '@material-tailwind/react/Button';
 import { BrowserRouter, NavLink, Redirect, useHistory, Route, Switch } from 'react-router-dom';
-function Status({ fname, lname, country, city, stream, position, aboutMe, college }) {
+
+function Status({ info, loadUserProfileInfo }) {
     const buttonRef = useRef()
     const history = useHistory()
     return (
@@ -15,7 +16,7 @@ function Status({ fname, lname, country, city, stream, position, aboutMe, colleg
             <div className="text-center ">
 
                 {
-                    (fname && lname && country && city && stream && position && aboutMe) ? "" :
+                    (info.fname && info.lname && info.country && info.city && info.stream && info.position && info.aboutMe) ? "" :
                         <section>
                             {/* <Button
                                 color="deepPurple"
@@ -38,31 +39,55 @@ function Status({ fname, lname, country, city, stream, position, aboutMe, colleg
                 }
                 <H5 color="gray">
 
-                    {(fname && lname) ? fname + " " + lname : "NA"}
+
+                    {
+
+
+                        (
+                            loadUserProfileInfo ? "" :
+                                (info.fname && info.lname) ? info.fname + " " + info.lname : "")
+
+
+                    }
 
                 </H5>
                 <div className="mt-0 mb-2 text-gray-700 flex items-center justify-center gap-2">
-                    <Icon name="place" size="xl" />
-                    {/* {city + "," + country ? city + "," + country : "NA"} */}
-                    {
-                        (city && country) ? city + ", " + country : "NA"
+                    {loadUserProfileInfo ? "" : (info.city && info.country) &&
+                        <>
+                            <Icon name="place" size="xl" />
+
+                            {
+
+                                (info.city && info.country) ? info.city + ", " + info.country : ""
+                            }
+                        </>
 
                     }
                 </div>
                 <div className="mb-2 text-gray-700 mt-10 flex items-center justify-center gap-2">
-                    <Icon name="work" size="xl" />
+                    {
+                        loadUserProfileInfo ? "" : (info.position && info.stream) &&
+                            <>
+                                <Icon name="work" size="xl" />
 
-                    {(position && stream) ? position + "," + stream : "NA"}
+                                {(info.position && info.stream) ? info.position + "," + info.stream : ""}
+                            </>
+                    }
                 </div>
                 <div className="mb-2 text-gray-700 flex items-center justify-center gap-2">
-                    <Icon name="account_balance" size="xl" />
-                    {college ? college : "NA"}
+                    {
+                        loadUserProfileInfo ? "" : info.college &&
+                            <>
+                                <Icon name="account_balance" size="xl" />
+                                {info.college ? info.college : ""}
+                            </>
+                    }
                 </div>
             </div>
             <CardBody>
                 <div className="border-t border-lightBlue-200 text-center px-2 ">
                     <LeadText color="blueGray">
-                        {aboutMe ? aboutMe : "NA"}
+                        {loadUserProfileInfo ? "" : (info.aboutMe ? info.aboutMe : "")}
                     </LeadText>
                 </div>
             </CardBody>
@@ -73,9 +98,12 @@ function Status({ fname, lname, country, city, stream, position, aboutMe, colleg
                         className="mt-5"
                         onClick={(e) => e.preventDefault()}
                     >
-                        <Button color="purple" buttonType="link" ripple="dark">
-                            Show more
-                        </Button>
+                        {
+                            loadUserProfileInfo ? "" :
+                                <Button color="purple" buttonType="link" ripple="dark">
+                                    Show more
+                                </Button>
+                        }
                     </a>
                 </div>
 

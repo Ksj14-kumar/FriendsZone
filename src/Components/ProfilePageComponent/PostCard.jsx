@@ -14,7 +14,7 @@ import emoji3 from '../../assets/emoji/animated-emoticons-2018-21.gif';
 import emoji4 from '../../assets/emoji/animated-emoticons-2018-41.gif';
 import emoji5 from '../../assets/emoji/animated-emoticons-2018-8.gif';
 import { IoEarth } from 'react-icons/io5';
-import { MdAddComment, MdDelete, MdLock, MdOutlineThumbUpAlt, MdVisibilityOff, MdVisibility } from 'react-icons/md';
+import { MdAddComment, MdDelete, MdLock, MdOutlineThumbUpAlt, MdVisibilityOff, MdVisibility, MdThumbUpAlt } from 'react-icons/md';
 import { RiShareFill, RiThumbDownFill, RiThumbUpFill } from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux'
 import Popover from "@material-tailwind/react/Popover";
@@ -26,7 +26,8 @@ import ReadMoreReact from 'read-more-react';
 import axios from 'axios';
 import Comments from './Comments/Comments';
 import OverlayLoader from '../../Loader/BackgrooundImageLoader';
-import Pusher from 'pusher-js';
+import { format } from 'timeago.js';
+
 import ReadMore from './ReadMore';
 import { Error, Success } from '../Toastify';
 import { error } from '../../toastifyMessage/Toast';
@@ -34,14 +35,17 @@ import { success } from '../../toastifyMessage/Toast';
 import Model from './Model';
 import profile from '../../assets/img/download.png'
 
-// Pusher.logToConsole = true;
 
 
 
-function PostCard({ item, index, filterPost, socket }) {
+
+function PostCard({ item, index, filterPost, socket, threeDot }) {
     // console.log("user detail with likes", item)
+    // console.log(item.liked.length)
     const [emojiURL, setEmojiURL] = useState("")
     const [commentToggle, setCommentToggle] = useState(false)
+    const [commentsLength, setCommentLength] = useState(0)
+    const [shareLength, setShareLength] = useState(0)
     const dispatch = useDispatch()
     const buttonRef = useRef()
     const avatarGroup = useRef()
@@ -49,11 +53,12 @@ function PostCard({ item, index, filterPost, socket }) {
     const visibilityRef = useRef()
     const [PostIdForDelete, setPostIdForDelete] = useState()
     const [VisibilityModal, setVisibilityModal] = useState()
+    const [disabled, setDisabled] = useState(false)
     const [like, setLike] = useState(false)
 
-    const [likeCount, setLikeCount] = useState(item.liked === null ? 0 : item.liked.length)
+    const [likeCount, setLikeCount] = useState(item.liked.length === 0 ? 0 : item.liked.length)
     const [userIds, setUserId] = useState([])
-    const [readMore, setReadMore] = useState(false);
+
     const DeletedPost = useRef()
     const ShowImage = useSelector((state) => {
         // console.log("state is ", state)
@@ -62,7 +67,7 @@ function PostCard({ item, index, filterPost, socket }) {
     const UserInformationLoad = useSelector((state) => {
         return state.UserInformationLoad.value
     })
-    const { _id, fname, lname, googleId, college, city, country, position, stream, aboutMe } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "" }
+    const { _id, fname, lname, googleId } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "" }
     function emojiHandle() {
         dispatch({ type: "ADD_EMOJI_URL", paylaod: emojiURL })
     }
@@ -75,49 +80,43 @@ function PostCard({ item, index, filterPost, socket }) {
     }
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^DELETE THE by specific id POST ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     async function DeletePostById(post_id, adminId) {
-        //display post after filter data
-        const { filterData, filterComments } = filterPost(post_id)
-        // console.log("filter data is ", filterData)
-        dispatch({ type: "LOAD_POSTS", payload: filterData })
-        dispatch({ type: "SET_TOTAL_COMMENT", payload: filterComments })
-        // send request to the serve for delete the post by id
-        // ${process.env.REACT_APP_API_BACKENDURL}
-        const DeletePostResponse = await fetch(`/blob/delete/user/post/local/delete/`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem("uuid")
-            },
-            body: JSON.stringify({ post_id, userId: adminId })
-        })
 
-        const { message, data } = await DeletePostResponse.json()
+        try {
+            //display post after filter data]
+            const { filterData, filterComments } = await filterPost(post_id)
+            // console.log("filter data is ", filterData)
+            dispatch({ type: "LOAD_POSTS", payload: filterData })
+            // dispatch({ type: "SET_TOTAL_COMMENT", payload: filterComments })
+            // send request to the serve for delete the post by id
+            // ${process.env.REACT_APP_API_BACKENDURL}
+            const DeletePostResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/delete/user/post/local/delete/`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("uuid")
+                },
+                body: JSON.stringify({ post_id, userId: adminId })
+            })
+
+            const { message, data } = await DeletePostResponse.json()
 
 
 
-        if (DeletePostResponse.status === 200) {
-            success({ message: message })
+            if (DeletePostResponse.status === 200) {
+                success({ message: message })
 
-            //intialize the pusher connection
-            // var pusher = new Pusher(process.env.REACT_APP_API_KEY, {
-            //     cluster: process.env.REACT_APP_API_CLUSTER,
-            //     // encrypted: true,
-            // });
-            // const LikedPost = pusher.subscribe("DeleteNotiByPost");
-            // //this is used for subscribe the channel
-            // LikedPost.bind('pusher:subscription_succeeded', function (members) {
-            //     // alert('successfully subscribed!');
-            // });
-            // //get the instance response from server
-            // LikedPost.bind("DeleteNotiMessage", (data) => {
-            //     console.log("Delete post data.......", data)
-            //     dispatch({ type: "Send_Notification", payload: data.allNotiAfterDelete })
-            // })
+
+
+            }
+            else if (DeletePostResponse.status !== 200) {
+                error("not delete")
+            }
+
+        } catch (err) {
+            console.warn(err)
 
         }
-        else if (DeletePostResponse.status !== 200) {
-            error("not delete")
-        }
+
     }
 
 
@@ -127,23 +126,32 @@ function PostCard({ item, index, filterPost, socket }) {
         // console.log("post_id", post_id)
         // console.log("visibility", visibility)
         // ${process.env.REACT_APP_API_BACKENDURL}
-        const response = await fetch(`/blob/visibility/user/post/local/${post_id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem("uuid")
-            },
-            body: JSON.stringify({ visibility, uuid: localStorage.getItem("uuid") })
-        })
-        const data = await response.json()
-        if (response.status === 200) {
-            success({ message: "Visibility Changed Successfully" })
-            dispatch({ type: "LOAD_POSTS", payload: data.data })
-        } else if (response.status === 500) {
-            error({ message: "Something went wrong" })
+        try {
+            setDisabled(true)
+            const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/visibility/user/post/local/${post_id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("uuid")
+                },
+                body: JSON.stringify({ visibility, uuid: localStorage.getItem("uuid") })
+            })
+            const data = await response.json()
+            if (response.status === 200) {
+                success({ message: "Visibility Changed Successfully" })
+                dispatch({ type: "LOAD_POSTS", payload: data.data.reverse() })
+                setDisabled(false)
+            } else if (response.status === 500) {
+                error({ message: "Something went wrong" })
 
+
+            }
+
+        } catch (err) {
+            console.warn(err)
 
         }
+
 
 
 
@@ -165,10 +173,23 @@ function PostCard({ item, index, filterPost, socket }) {
     //function which excute when current user liked it any post
     async function callLikeHnadler(userId, post_id, bgImageUrl, profileImage) {
         try {
-            
 
 
-            const result = await axios.put(`/blob/user/like/${post_id}`, {
+
+            //UNCOMMENT THIS FOR REALTIME LIKE SYSTEMe
+
+            // socket.emit("like", {
+            //     likedBy: googleId,
+            //     likeTo: userId,
+            //     post_id,
+            //     bg: bgImageUrl,
+            //     profile: profileImage,
+            //     type: like
+
+            // })
+
+
+            const result = await axios.put(`${process.env.REACT_APP_API_BACKENDURL}/blob/user/like/${post_id}`, {
                 likedBy: googleId,
                 likeTo: userId,
                 headers: {
@@ -177,36 +198,12 @@ function PostCard({ item, index, filterPost, socket }) {
 
                 }
             })
-            // console.log({ result })
 
-            //connect to socket
-            // //intialize the pusher connection
-            // var pusher = new Pusher(process.env.REACT_APP_API_KEY, {
-            //     cluster: process.env.REACT_APP_API_CLUSTER,
-            //     // encrypted: true,
-            // });
-            // const LikedPost = pusher.subscribe("LikePost");
-            // //this is used for subscribe the channel
-            // LikedPost.bind('pusher:subscription_succeeded', function (members) {
-            //     // alert('successfully subscribed!');
-            // });
-            // //get the instance response from server
-            // LikedPost.bind("LikePostMessage", (data) => {
-            //     console.log("liked poost data.......", data)
-            //     dispatch({ type: "Send_Notification", payload: data.allNoti })
-            // })
 
-            socket.emit("like", {
-                likedBy: googleId,
-                likeTo: userId,
-                post_id,
-                bg: bgImageUrl,
-                profile: profileImage,
-                type: like
 
-            })
             like ? setLikeCount(likeCount - 1) : setLikeCount(likeCount + 1)
         } catch (err) {
+            console.log("err is ", err)
             like ? setLike(false) : setLike(true)
             like ? setLikeCount(likeCount - 1) : setLikeCount(likeCount + 1)
         }
@@ -218,6 +215,41 @@ function PostCard({ item, index, filterPost, socket }) {
     async function visibleHandler(con) {
         setVisibilityModal(false)
     }
+
+
+    //load all the comment length regarding each post
+    useEffect(() => {
+        async function NumberOfComments() {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/number/comment/length`, {
+                    method: "POST",
+                    body: JSON.stringify({ post_id: item.post_id }),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("uuid")
+                    }
+                })
+
+                if (response.status === 200) {
+                    const data = await response.json()
+
+                    setCommentLength(data.data)
+                }
+                else if (response.status !== 200) {
+                    setCommentLength(0)
+
+                }
+
+            } catch (error) {
+                console.warn(error)
+
+            }
+
+        }
+        NumberOfComments()
+
+    }, [])
+
 
 
     return (
@@ -243,7 +275,7 @@ function PostCard({ item, index, filterPost, socket }) {
                                                 src={item.profileImage}
                                                 rounded={true}
                                                 raised={false}
-                                                alt="Rounded Image"
+                                                alt=""
                                                 className="w-full h-full"
                                             /> : <Image
                                                 src={profile}
@@ -261,7 +293,7 @@ function PostCard({ item, index, filterPost, socket }) {
                                     </article>
                                     <article className='flex'>
                                         {/* {new Date(Date.now()).toDateString()} */}
-                                        {item.createdAt}
+                                        {format(item.time)}
                                         {
                                             item.privacy === "public" ?
                                                 <IoEarth className='mt-[4px] ml-[.3rem]' /> : <MdLock className='mt-[4px] ml-[.3rem]' />
@@ -269,32 +301,139 @@ function PostCard({ item, index, filterPost, socket }) {
                                     </article>
                                 </article>
                             </main>
+                            {/* item.userId === googleId */}
                             {
-                                item.userId === googleId &&
-                                <section className=" flex justify-center align-middle" ref={deletePost}
+                                (threeDot === true) ?
+                                    (<>
+                                        <section className=" flex justify-center align-middle" ref={deletePost}
 
-                                >
-                                    <button className=' focus:border-0 border-0 focus:outline-0 outline-none -mt-2 '>
-                                        <BsThreeDotsVertical className='text-[1.5rem]' />
-                                    </button>
-                                </section>
+                                        >
+                                            <button className=' focus:border-0 border-0 focus:outline-0 outline-none -mt-2 '>
+                                                <BsThreeDotsVertical className='text-[1.5rem]' />
+                                            </button>
+
+
+
+                                        </section>
+
+                                        <Popover placement="auto" ref={deletePost}>
+                                            <PopoverContainer>
+                                                <PopoverHeader>
+                                                    {/* <H6 className="text-center">Delete Post</H6> */}
+                                                </PopoverHeader>
+                                                <PopoverBody>
+                                                    <div className="container1 flex flex-col justify-center -mt-3">
+                                                        <section className=" flex  justify-between cursor-pointer align-baseline hover:bg-red-700 hover:rounded-lg hover:text-white px-6 py-2"
+                                                            ref={DeletedPost}
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+
+                                                                DeletePostById(item.post_id, item.userId);
+                                                                setPostIdForDelete(item.post_id);
+                                                                // console.log(e.target.id)
+                                                                // alert("hello")
+                                                            }}
+                                                        >
+                                                            <MdDelete className='text-xl mt-[2px] mr-2' />
+                                                            <p className='cursor-pointer flex text-[1rem] '
+                                                            >
+                                                                Delete Post
+                                                            </p>
+                                                        </section>
+
+                                                        <section
+                                                            className='px-6 py-2 hover:bg-red-800 hover:rounded-lg hover:text-white flex   cursor-pointer align-baseline '
+
+                                                            onClick={(e) => {
+                                                                // VisibilityChange(item.post_id, item.privacy);
+                                                                setVisibilityModal(true)
+
+                                                            }}
+
+                                                        >
+                                                            {
+                                                                item.privacy === "public" ?
+                                                                    <MdVisibility className='text-xl mt-[2px] mr-2' /> :
+                                                                    <MdVisibilityOff className='text-xl mt-[2px] mr-2' />
+                                                            }
+
+                                                            <p
+                                                                className='cursor-pointer flex text-[1rem] '
+                                                            >Visibility</p>
+                                                        </section>
+                                                    </div>
+                                                </PopoverBody>
+                                            </PopoverContainer>
+                                        </Popover>
+                                    </>
+
+
+                                    ) : (item.userId === googleId && (
+                                        <>
+                                            <section className=" flex justify-center align-middle" ref={deletePost} >
+                                                <button className=' focus:border-0 border-0 focus:outline-0 outline-none -mt-2 '>
+                                                    <BsThreeDotsVertical className='text-[1.5rem]' />
+                                                </button>
+                                            </section>
+                                            <Popover placement="auto" ref={deletePost}>
+                                                <PopoverContainer>
+                                                    <PopoverHeader>
+                                                        {/* <H6 className="text-center">Delete Post</H6> */}
+                                                    </PopoverHeader>
+                                                    <PopoverBody>
+                                                        <div className="container1 flex flex-col justify-center -mt-3">
+                                                            <section className=" flex  justify-between cursor-pointer align-baseline hover:bg-red-700 hover:rounded-lg hover:text-white px-6 py-2"
+                                                                ref={DeletedPost}
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+
+                                                                    DeletePostById(item.post_id, item.userId);
+                                                                    setPostIdForDelete(item.post_id);
+                                                                    // console.log(e.target.id)
+                                                                    // alert("hello")
+                                                                }}
+                                                            >
+                                                                <MdDelete className='text-xl mt-[2px] mr-2' />
+                                                                <p className='cursor-pointer flex text-[1rem] '
+                                                                >
+                                                                    Delete Post
+                                                                </p>
+                                                            </section>
+
+                                                            <section
+                                                                className='px-6 py-2 hover:bg-red-800 hover:rounded-lg hover:text-white flex   cursor-pointer align-baseline '
+
+                                                                onClick={(e) => {
+                                                                    // VisibilityChange(item.post_id, item.privacy);
+                                                                    setVisibilityModal(true)
+
+                                                                }}
+
+                                                            >
+                                                                {
+                                                                    item.privacy === "public" ?
+                                                                        <MdVisibility className='text-xl mt-[2px] mr-2' /> :
+                                                                        <MdVisibilityOff className='text-xl mt-[2px] mr-2' />
+                                                                }
+
+                                                                <p
+                                                                    className='cursor-pointer flex text-[1rem] '
+                                                                >Visibility</p>
+                                                            </section>
+                                                        </div>
+                                                    </PopoverBody>
+                                                </PopoverContainer>
+                                            </Popover>
+                                        </>
+
+                                    ))
                             }
                         </section>
                         {/* <main className='  w-full mt-[2rem]'> */}
                         <section className='text-caption ml-2  mt-[2rem]   px-[1rem]  text-[1.3rem] md:text-lg '>
-                            {/* {
-                                item.text
-                            } */}
-                            {/* {readMore && item.text.slice(0, 150)}
-                            <a className="read-more-link" onClick={() => { setReadMore(!readMore) }}><h2>{readMore ? 'Read Less << ' : 'Read More >> '}</h2></a> */}
-                            <ReadMore children={item.text} />
-                            {/* {console.log("readmore text for the pucloic ", item.text)} */}
-                            {/* <ReadMoreReact text={item.text}
-                                min={80}
-                                ideal={100}
-                                max={200}
-                                readMoreText={<p color="lightBlue" className="cursor-pointer  text-xl font-medium">Read more</p>}
-                            /> */}
+
+                            <ReadMore children={item.text} className='cursor-pointer' />
+
                         </section>
                     </CardBody>
                     <section className='image section mt-[.8rem]   relative w-full bg-red-600    '>
@@ -314,7 +453,33 @@ function PostCard({ item, index, filterPost, socket }) {
                                     : "")
                         }
                     </section>
+                    <hr className='bg-grey-200 mt-[2px]' />
                     <CardFooter className="like and dislike section flex justify-start py-0  mb-[.8rem] ">
+                        <main className="main_section flex  w-full  -mb-[5px] ">
+
+                            <section className='like_love mds-editor20:flex-[5] md:flex-[9]'>
+
+                                <p className="text-[1.3rem] font-light  ml-[2.5rem] md:ml-[4rem] flex  items-center">
+                                    <div className="thump rounded-[50px] p-[2.5px] bg-blue-500 mr-1 border border-solid border-[#efeded] cursor-pointer"><MdThumbUpAlt className='text-white' /></div> <span className='mr-[3px]'>
+                                        {
+                                            likeCount
+                                        }
+                                    </span>
+                                </p>
+                            </section>
+                            <section className="comments mds-editor20:flex-[3] md:flex-[2]">
+                                <p className='text-[1.2rem] font-light cursor-pointer underline truncate'>comments <span>{commentsLength}
+                                </span></p>
+
+                            </section>
+                            <section className="share mds-editor20:flex-[3] md:flex-[1]">
+                                <p className='text-[1.2rem] font-light cursor-pointer underline truncate mds-editor20:ml-[10px]
+                                 '>share <span>{shareLength}</span></p>
+
+                            </section>
+
+                        </main>
+
                     </CardFooter>
                     <hr className='mb-[.2rem]' />
                     <CardFooter className=" flex justify-between -mt-[1rem] mx-[0rem]mds-editor10:justify-center ">
@@ -337,13 +502,9 @@ function PostCard({ item, index, filterPost, socket }) {
                             >
                                 {/* //load all the likes */}
                                 {
-                                    like ? <RiThumbUpFill className='text-[1.5rem] md:text-[2rem] text-blue-600' /> : <MdOutlineThumbUpAlt className="text-[1.5rem] md:text-[2rem] text-red-500" />
+                                    like ? <RiThumbUpFill className='text-[1.5rem] md:text-[2rem] text-blue-600' /> : <MdOutlineThumbUpAlt className="text-[1.5rem] md:text-[2rem] hover:text-blue-500" />
                                 }
-                                <small className="text-[1.1rem]">
-                                    {
-                                        likeCount
-                                    }
-                                </small>
+
                             </Button>
                         </section>
                         <section>
@@ -363,7 +524,7 @@ function PostCard({ item, index, filterPost, socket }) {
                                 }
                             >
                                 <MdAddComment />
-                                {/* <span className='md:text-[1.2rem] md:mb-[5px] text-[.9rem] mb-[4px] text-medium'>{}</span> */}
+
 
                             </Button>
                         </section>
@@ -390,17 +551,18 @@ function PostCard({ item, index, filterPost, socket }) {
                     <section className="comment-section  mt-2">
                         {/* // {item.post_id} */}
                         {
-                            // commentToggle ? <CommentSection /> : ""
+
                             (commentToggle ? (UserInformationLoad ?
                                 <Comments
-                                  
-                                    // currentUserId={item.userId ? item.userId : null}
+
                                     commentToggle={commentToggle}
                                     currentUserId={googleId ? googleId : null}
                                     post_id={item.post_id ? item.post_id : null}
                                     UserIdForPostComments={item.userId ? item.userId : null}
                                     currentUserName={fname + " " + lname}
                                     ImageUrl={ShowImage ? ShowImage : null}
+
+
                                 /> : Error({ message: "Kindly, Create Profile" })) : "")
                         }
                     </section>
@@ -408,74 +570,9 @@ function PostCard({ item, index, filterPost, socket }) {
             </div>
 
 
-            <Popover placement="auto" ref={deletePost}>
-                <PopoverContainer>
-                    <PopoverHeader>
-                        {/* <H6 className="text-center">Delete Post</H6> */}
-                    </PopoverHeader>
-                    <PopoverBody>
-                        <div className="container1 flex flex-col justify-center -mt-3">
-                            <section className=" flex  justify-between cursor-pointer align-baseline hover:bg-red-700 hover:rounded-lg hover:text-white px-6 py-2"
-                                ref={DeletedPost}
-                                onClick={(e) => {
-                                    e.preventDefault();
-
-                                    DeletePostById(item.post_id, item.userId);
-                                    setPostIdForDelete(item.post_id);
-                                    // console.log(e.target.id)
-                                    // alert("hello")
-                                }}
-                            >
-                                <MdDelete className='text-xl mt-[2px] mr-2' />
-                                <p className='cursor-pointer flex text-[1rem] '
-                                >
-                                    Delete Post
-                                </p>
-                            </section>
-
-                            <section
-                                className='px-6 py-2 hover:bg-red-800 hover:rounded-lg hover:text-white flex   cursor-pointer align-baseline '
-
-                                onClick={(e) => {
-                                    // VisibilityChange(item.post_id, item.privacy);
-                                    setVisibilityModal(true)
-
-                                }}
-
-                            >
-                                {
-                                    item.privacy === "public" ?
-                                        <MdVisibility className='text-xl mt-[2px] mr-2' /> :
-                                        <MdVisibilityOff className='text-xl mt-[2px] mr-2' />
-                                }
-
-                                <p
-                                    className='cursor-pointer flex text-[1rem] '
-                                >Visibility</p>
-                            </section>
-                        </div>
-                    </PopoverBody>
-                </PopoverContainer>
-            </Popover>
-
-
-
-
             {
-                VisibilityModal && <Model visible={VisibilityModal} visibilityHandle={visibleHandler} setPrivacyToServer={VisibilityChange} privacy={item.privacy} post_id={item.post_id} />
+                VisibilityModal && <Model visible={VisibilityModal} visibilityHandle={visibleHandler} setPrivacyToServer={VisibilityChange} privacy={item.privacy} post_id={item.post_id} disabled={disabled} />
             }
-
-
-
-
-
-
-
-
-
-
-
-
 
             <Tooltips placement="top" ref={buttonRef} className="ml-[5rem]">
                 <TooltipsContent className="flex justify-center md:justify-between  px-[5px] ">

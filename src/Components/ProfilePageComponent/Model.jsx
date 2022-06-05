@@ -7,7 +7,7 @@ import Button from "@material-tailwind/react/Button";
 import { MdAddComment, MdDelete, MdLock, MdOutlineThumbUpAlt, MdVisibilityOff, MdVisibility } from 'react-icons/md';
 import { BsFillCheckCircleFill } from 'react-icons/bs';
 
-function Model({ visible, visibilityHandle, privacy, setPrivacyToServer, post_id }) {
+function Model({ visible, visibilityHandle, privacy, setPrivacyToServer, post_id, disabled }) {
 
     const [showModal, setShowModal] = React.useState(visible);
     return (
@@ -25,13 +25,14 @@ function Model({ visible, visibilityHandle, privacy, setPrivacyToServer, post_id
                     <p className="text-base leading-relaxed text-gray-600 font-normal">
                         <ul >
                             <hr />
-                            <li className=' flex justify-between text-[1.5rem] align-middle  hover:text-white  cursor-pointer hover:bg-blue-500 hover:rounded-lg hover:-py-[5px] hover:transition-all hover:ease-in-out hover:delay-100 hover:duration-75 '
+                            <li className={` flex justify-between text-[1.5rem] align-middle  hover:text-white  cursor-pointer hover:bg-blue-500 hover:rounded-lg hover:-py-[5px] hover:transition-all hover:ease-in-out hover:delay-100 hover:duration-75  ${disabled ? "cursor-wait" : "cursor-pointer"}`}
 
                                 onClick={() => {
                                     setPrivacyToServer(post_id, "private")
 
 
                                 }}
+
                             >
                                 <div className="div left"
 
@@ -61,7 +62,7 @@ function Model({ visible, visibilityHandle, privacy, setPrivacyToServer, post_id
                             </li>
                             <hr />
                             <li
-                                className='flex justify-between text-[1.5rem] align-middle  hover:text-white  cursor-pointer hover:bg-blue-500 hover:rounded-lg hover:-py-[5px] hover:transition-all hover:ease-in-out hover:delay-100 hover:duration-75'
+                                className={`flex justify-between text-[1.5rem] align-middle  hover:text-white  cursor-pointer hover:bg-blue-500 hover:rounded-lg hover:-py-[5px] hover:transition-all hover:ease-in-out hover:delay-100 hover:duration-75 ${disabled ? "cursor-wait" : "cursor-pointer"}`}
 
                                 onClick={() => {
                                     setPrivacyToServer(post_id, "public")

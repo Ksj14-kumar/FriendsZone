@@ -12,7 +12,7 @@ import {
   deleteComment as deleteCommentApi,
 } from "./api";
 
-const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, currentUserName, UserIdForPostComments, post_id }) => {
+const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, currentUserName, UserIdForPostComments, post_id}) => {
 
   const [Length, setLength] = useState(0)
 
@@ -206,7 +206,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
 
         {
 
-          Length > 2 && (backendComments.length !== Length &&
+          Length >= 2 && (backendComments.length !== Length &&
             <Button
               color="blueGray"
               buttonType="link"

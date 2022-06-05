@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from 'react'
+import React, { createContext, StrictMode, useEffect, useRef, useState } from 'react'
 import { Switch, Route, Redirect, useHistory } from 'react-router-dom'
 import Register from './Components/Register'
 import Login from './Components/Login';
@@ -20,6 +20,13 @@ import UserPhotos from './Pages/UserPhotos';
 
 import Channel from './SubscribeChannels/Channel';
 import io from "socket.io-client"
+import UserLink from './Components/UserLink';
+import Feed from './Pages/Feed';
+import AllFriends from './Components/loadAllFriends/AllFriends';
+import Messages from './Components/Messages/Messages';
+import UnknowUser from './Pages/UnknowUser';
+import AllNotification from './Pages/AllNotification';
+import ChatSection from "./Pages/ChatSection"
 
 
 
@@ -41,6 +48,12 @@ function App() {
     })
 
 
+    const UserInformationLoad = useSelector((state) => {
+        return state.UserInformationLoad.value
+    })
+
+
+
 
 
     // console.log(typeof localStorage.getItem("uuid"))
@@ -54,8 +67,8 @@ function App() {
     useEffect(() => {
         async function loadData() {
             // ${process.env.REACT_APP_API_BACKENDURL}
-        
-            const response = await fetch(`/all/google/success`, {
+
+            const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/all/google/success`, {
                 method: "GET",
                 // credentials: "include",
                 // credentials: 'include',
@@ -103,116 +116,187 @@ function App() {
     //trigger when user login your account
     useEffect(() => {
         // process.env.REACT_APP_API_BACKENDURL
-        setSocket(io("http://localhost:5000"))
+        setSocket(io("ws://localhost:5000"))
 
     }, [])
 
     //add  new user info to the server by socket when user login
     useEffect(() => {
         socket?.emit("newUser", getUserData)
+
     }, [socket, getUserData])
 
 
 
-    // socket?.on("newUser", (data) => {
-    //     console.log("new user", data)
-    // })
 
-    // console.log({ socket })
+
+
+
+
+
+
+
 
 
 
     return (
         // w-screen h-screen
-        <Context.Provider value={{ users, dispatch }}>
+        <StrictMode>
+            <Context.Provider value={{ users, dispatch }}>
 
-            <div className="left_section">
+                <div className="left_section">
 
-                {
-                    getUserData && <Channel />
-                }
-                {
-                    // \\userData
-                    // (getUserData) && <Sidebar />
-                    (getUserData && user) && <Sidebar socket={socket} />
-                }
-            </div>
-            <>
-                {/* 000B49 */}
-                <div className=' bg-cover app_class'>
-                    <Switch Switch >
-                        <Route exact path="/" >
-                            {
-                                (getUserData && user) ? <Redirect to="/profile" /> : <Header />
-                            }
-                            {/* <Dashboard /> */}
-                        </Route>
-                        <Route exact path="/register">
-                            {
-                                (getUserData && user) ? <Redirect to="/profile" /> : <Register />
-                            }
-                            {/* <Register /> */}
-                        </Route>
-                        <Route exact path="/login">
-                            {(getUserData && user) ? <Redirect to="/profile" /> : <Login />}
-                            {/* <Login /> */}
-                        </Route>
-                        <Route exact path="/forget" component={Email} />
-                        <Route exact path="/dashboard">
-                            {
-                                (getUserData && user) ? <Dashboard users={getUserData} socket={socket} /> : <Redirect to="/login" />
-                            }
-                            {/* <Dashboard /> */}
-                        </Route>
+                    {
+                        getUserData && <Channel />
+                    }
+                    {
+                        // \\userData
+                        // (getUserData) && <Sidebar />
+                        (getUserData && user) && <Sidebar socket={socket} />
+                    }
+                </div>
+                <>
+                    {/* 000B49 */}
+                    <div className=' bg-cover app_class'>
+                        <Switch >
+                            <Route exact path="/" >
+                                {
+                                    (getUserData && user) ? <Feed socket={socket} /> : <Header />
+                                }
+                            </Route>
+                            <Route exact path="/register">
+                                {
+                                    (getUserData && user) ? <Redirect to="/" /> : <Register />
+                                }
+                            </Route>
+                            <Route exact path="/login">
+                                {(getUserData && user) ? <Redirect to="/" /> : <Login socket={socket} />}
+                            </Route>
+                            <Route exact path="/forget" component={Email} />
+                            <Route exact path="/dashboard">
+                                {
+                                    (getUserData && user) ? <Dashboard users={getUserData} socket={socket} />
+                                        : <Redirect to="/login" />
+                                }
+                            </Route>
 
 
-                        <Route exact path={'/profile'}>
-                            {
-                                (getUserData && user) ? <ProfileCard getUserData={getUserData} socket={socket} /> : <Redirect to="/login" />
-                            }
-                            {/* <ProfileCard/> */}
-                        </Route>
+                            <Route exact path='/profile/:username'>
+                                {
+                                    // (getUserData && user) ?
+                                    <ProfileCard getUserData={getUserData} socket={socket} />
+                                    // : <Redirect to="/login" />
+                                }
+                            </Route>
 
-                        <Route exact path='/pr'>
-                            {
-                                (getUserData && user) ? <ProfileCard getUserData={getUserData} socket={socket} /> : <Redirect to="/login" />
-                            }
-                            {/* <ProfileCard/> */}
-                        </Route>
+                            {/* <Route exact path='/profile/:username/:name'>
+                                {
+                                    (getUserData && user) ? <ProfileCard getUserData={getUserData} socket={socket} />
+                                        : <Redirect to="/login" />
+                                }
+                            </Route> */}
 
-                        <Route exact path="/update_profile">
-                            {
-                                (getUserData && user) ? <UpdateProfile getUserData={getUserData} socket={socket} /> : <Redirect to="/login" />
-                            }
-                            {/* <UpdateProfile/> */}
-                        </Route>
-                        <Route exact path="/user/posts">
-                            {
-                                (getUserData && user) ? <UserPosts user={getUserData} socket={socket} /> : <Redirect to="/login" />
-                            }
-                        </Route>
-                        <Route exact path="/user/photos">
-                            {
-                                (getUserData && user) ? <UserPhotos user={getUserData} socket={socket} /> : <Redirect to="/login" />
-                            }
-                        </Route>
+
+                            <Route exact path='/unknownuser'>
+                                {
+                                    // (getUserData && user) ? 
+                                    <UnknowUser getUserData={getUserData} socket={socket} />
+                                    // : <Redirect to="/login" />
+                                }
+                            </Route>
 
 
 
 
-                    </Switch>
-                </div >
+                            <Route exact path="/update_profile">
+                                {
+                                    // (getUserData && user) ? 
+                                    <UpdateProfile getUserData={getUserData} socket={socket} />
+                                    // : <Redirect to="/login" />
+                                }
+                                {/* <UpdateProfile/> */}
+                            </Route>
+                            <Route exact path="/user/posts">
+                                {
+                                    (getUserData && user) ? <UserPosts user={getUserData} socket={socket} />
+                                        : <Redirect to="/login" />
+                                }
+                            </Route>
+                            <Route exact path="/user/photos">
+                                {
+                                    (getUserData && user) ? <UserPhotos user={getUserData} socket={socket} />
+                                        : <Redirect to="/login" />
+                                }
+                            </Route>
 
-                {
-                    (getUserData && user) &&
-                    <div className="right_section  fixed top-[95%] right-[.5rem] md:w-[10rem] bg-blue-800 rounded-sm py-[.5rem] md:px-[1.5rem] px-[3rem]">
+                            {/* /user/links" */}
 
-                        <RightSidebar socket={socket} />
+                            <Route exact path="/user/links">
+                                {
+                                    // (getUserData && user) ?
+                                    <UserLink user={getUserData} socket={socket} />
+                                    // : <Redirect to="/login" />
+                                }
+                            </Route>
 
-                    </div>
-                }
-            </>
-        </Context.Provider>
+
+
+
+                            <Route exact path="/load/friends/">
+                                {
+                                    // (getUserData && user) ?
+                                    <AllFriends user={getUserData} socket={socket} />
+                                    // : <Redirect to="/login" />
+                                }
+                            </Route>
+                            {/* /all/notification/${googleId */}
+
+                            <Route exact path="/messages">
+                                {/* {
+                                    (getUserData && user) ? <Messages user={UserInformationLoad?.googleId} socket={socket} />
+                                        : <Redirect to="/login" />
+
+                                } */}
+
+
+                               { (getUserData && user) ? <ChatSection user={UserInformationLoad?.googleId} socket={socket} setSocket={setSocket} />
+                                : <Redirect to="/login" />}
+                                
+                            </Route>
+
+
+                            <Route exact path="/all/notification/:id">
+                                {
+                                    (getUserData && user) ?
+                                        <AllNotification user={UserInformationLoad?.googleId} socket={socket} />
+                                        : <Redirect to="/login" />
+                                }
+                            </Route>
+
+
+
+
+
+
+
+
+                        </Switch>
+                    </div >
+
+                    {
+                        (getUserData && user) &&
+                        <abbr title="live User">
+                            <div className="right_section  fixed top-[95%] right-[.5rem] md:w-[5rem] bg-[#6d369a7a] rounded-sm py-[.5rem] md:px-[1rem] px-[1rem]">
+
+                                <RightSidebar socket={socket} />
+
+                            </div>
+
+                        </abbr>
+                    }
+                </>
+            </Context.Provider>
+        </StrictMode>
     )
 }
 export default App

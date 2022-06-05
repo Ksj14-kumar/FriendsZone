@@ -3,7 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 export async function success(props) {
     // window.alert("select files")
     const notify = () => toast.success(props.message, {
-        position: "top-center",
+        position: props.pos?props.pos:"top-right",
         zIndex: 29000,
         autoClose: 2000,
         hideProgressBar: false,
@@ -29,7 +29,7 @@ export async function success(props) {
 export function error(props) {
 
     const notify = () => toast.error(props.message, {
-        position: "top-center",
+        position: props.pos?props.pos:"top-right",
         zIndex: 29000,
 
         autoClose: 2000,

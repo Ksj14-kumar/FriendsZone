@@ -37,7 +37,7 @@ function ShowPost({ item }) {
     async function deletePost(post_id, user_id) {
         setDeleteLoader(true);
         // ${process.env.REACT_APP_API_BACKENDURL}
-        const response = await fetch(`/blob/delete/user/post/local/${post_id}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/delete/user/post/local/${post_id}`, {
             method: "DELETE",
             body: JSON.stringify({
                 id: user_id
@@ -61,15 +61,15 @@ function ShowPost({ item }) {
     }
 
     return (
-    <div className="each-post  mt-0    mds-editor6:w-full flex justify-center gap-y-2 md:ml-2 post-screen:mt-2   md:content-between
+        <div className="each-post  mt-0    mds-editor6:w-full flex justify-center gap-y-2 md:ml-2 post-screen:mt-2   md:content-between
     md:mt-[5rem]
     
     ">
             <Card className=" w-[22rem] mds-editor3:w-[15rem] px-0 pb-0 cursor-pointer mds-editor6:w-full h-full md:mt-2 "
-            onClick={()=>{
-                console.log(window.location.href, window.location.href=`/post/${item.post_id}`)
-                window.location.href=`/post/${item.post_id}`
-            }}
+                onClick={() => {
+                    console.log(window.location.href, window.location.href = `/post/${item.post_id}`)
+                    window.location.href = `/post/${item.post_id}`
+                }}
             >
 
 
@@ -112,7 +112,7 @@ function ShowPost({ item }) {
                     />
                 }
 
-          
+
             </Card>
             <Popover placement="left" ref={buttonRef} className="lowercase bg-white">
                 <PopoverContainer className="bg-white">

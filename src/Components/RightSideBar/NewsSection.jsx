@@ -5,12 +5,12 @@ function NewsSection() {
     return (
         <main className="main_container  relative cursor-pointer">
             <div className="image_container">
-                <Image
+                {/* <Image
                     src={img}
                     rounded={false}
                     className="rounded-none"
 
-                />
+                /> */}
             </div>
             <div className="info_container absolute bg-[#0000003c] w-full -mt-[13.2rem]">
                 <header className="header flex justify-between px-3">

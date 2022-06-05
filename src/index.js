@@ -10,6 +10,8 @@ import { BrowserRouter } from 'react-router-dom'
 
 import 'react-toastify/dist/ReactToastify.min.css';
 import { store } from './Store';
+import 'video.js/dist/video-js.css';
+
 
 import { useDispatch, useSelector, Provider } from 'react-redux'
 

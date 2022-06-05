@@ -10,7 +10,7 @@ import React from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import Icon from '@material-tailwind/react/Icon';
 import ProfileCreateLoader from '../Loader/ProfileCreateLoader';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 
@@ -20,6 +20,9 @@ export default function SettingsForm() {
     const dispatch = useDispatch()
 
 
+    const url = useSelector((state) => {
+        return state.ShowImage.value
+    })
     const _id = localStorage.getItem("uuid")
 
     const [UserProfileInformationm, setUserProfileInformationm] = React.useState({
@@ -65,9 +68,28 @@ export default function SettingsForm() {
         else {
             setLoader(true)
             // ${process.env.REACT_APP_API_BACKENDURL}
-            const res = await fetch(`/blob/user/i/b/y9y5y0q3eztm3ibcd8z0/bum6ozd9m1sw4w9fbxea/amqvdkbe49sn4u3cvsvt/e5ce6ba3miamapdl7wyv/`, {
+            console.log({ UserProfileInformationm })
+            const UserProfileInformation={
+                username:await titleCase(UserProfileInformationm.username),
+                fname:await titleCase(UserProfileInformationm.fname),
+                lname:await titleCase(UserProfileInformationm.lname),
+                position:await titleCase(UserProfileInformationm.position),
+                aboutMe:await titleCase(UserProfileInformationm.aboutMe),
+                stream:await titleCase(UserProfileInformationm.stream),
+                degree:await titleCase(UserProfileInformationm.degree),
+                postalCode:await titleCase(UserProfileInformationm.postalCode),
+                city:await titleCase(UserProfileInformationm.city),
+                country:await titleCase(UserProfileInformationm.country),
+                college:await titleCase(UserProfileInformationm.college),
+                address:await titleCase(UserProfileInformationm.address),
+                gender:await titleCase(UserProfileInformationm.gender)
+
+
+
+            }
+            const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/user/i/b/y9y5y0q3eztm3ibcd8z0/bum6ozd9m1sw4w9fbxea/amqvdkbe49sn4u3cvsvt/e5ce6ba3miamapdl7wyv/`, {
                 method: "PUT",
-                body: JSON.stringify({ UserProfileInformationm, uuid: _id }),
+                body: JSON.stringify({ UserProfileInformation, url: url, uuid: _id }),
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + localStorage.getItem("uuid"),
@@ -467,3 +489,13 @@ async function success(props) {
         </div>
     );
 }
+
+
+
+function titleCase(str) {
+    str = str.toLowerCase().split(' ');
+    for (var i = 0; i < str.length; i++) {
+      str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+    }
+    return str.join(' ');
+  }

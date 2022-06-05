@@ -17,7 +17,7 @@ function Dashboard(props) {
     })
 
     const history = useHistory()
-    history.push('/dashboard?id=' + props.users)
+    // history.push('/dashboard?id=' + props.users)
 
 
 
