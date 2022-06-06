@@ -128,10 +128,8 @@ function MessageBox({ message, own, friendId, upload, socket, setBool, setOverla
 
                         <>
 
-                            <motion.div
-                                // initial={{ x: own ? 200 : -200 }}
-                                animate={{ x: "0" }}
-                                transition={{ duration: 0 }}
+                            <div
+
                                 className={`box  flex  w-full ${text.senderId !== friendId ? "justify-end items-end" : "justify-start items-start"} flex-col`}
                                 ref={scrollRef}
                                 key={text.messageID}
@@ -148,7 +146,20 @@ function MessageBox({ message, own, friendId, upload, socket, setBool, setOverla
 
                                         messageId.includes(text.messageID) && <NotUpload />
                                     }
-                                    <div className={`left_message_box cursor-pointer overflow-hidden max-w-[80%]  mt-[.8rem] ${text.senderId === friendId ? "bg-[#2E0249] rounded-[13px]  rounded-bl-[0]" : "bg-[#005555] rounded-[13px]  rounded-br-[0]"}  ml-[.5rem]  p-2   ${own && "mr-[.5rem] mb-2"}`}
+                                    <motion.div className={`left_message_box cursor-pointer overflow-hidden max-w-[80%]  mt-[.8rem] ${text.senderId === friendId ? "bg-[#2E0249] rounded-[13px]  rounded-bl-[0]" : "bg-[#005555] rounded-[13px]  rounded-br-[0]"}  ml-[.5rem]  p-2   ${own && "mr-[.5rem] mb-2"}`}
+
+
+                                        initial={{ opacity: 0, x: text.senderId !== friendId ? 10 : -200 }}
+                                        animate={{
+                                            opacity: 1,
+                                            y: 0,
+                                            x: 0,
+                                        }}
+                                        transition={{
+                                            duration: 0.4,
+                                            ease: "easeInOut",
+                                            type: "tween"
+                                        }}
 
                                     >
 
@@ -200,14 +211,14 @@ function MessageBox({ message, own, friendId, upload, socket, setBool, setOverla
                                                                     <Image src={text.message}
                                                                         rounded={false}
                                                                         className="cursor-pointer w-[24rem]"
-                                                                        // onClick={() => {
-                                                                        //     setBool(true)
-                                                                        //     setOverlayObject({
-                                                                        //         type: "image", url: text.message, bool: true,
-                                                                        //         MessageId: text.messageID
-                                                                        //     })
+                                                                    // onClick={() => {
+                                                                    //     setBool(true)
+                                                                    //     setOverlayObject({
+                                                                    //         type: "image", url: text.message, bool: true,
+                                                                    //         MessageId: text.messageID
+                                                                    //     })
 
-                                                                        // }}
+                                                                    // }}
 
 
                                                                     />
@@ -218,12 +229,12 @@ function MessageBox({ message, own, friendId, upload, socket, setBool, setOverla
                                         }
                                         <p className="mt-2 text-right  text-lg text-white">{format(text.time)}
                                         </p>
-                                    </div>
+                                    </motion.div>
                                 </div>
 
 
 
-                            </motion.div>
+                            </div>
 
 
                         </>

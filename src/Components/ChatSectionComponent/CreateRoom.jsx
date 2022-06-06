@@ -161,4 +161,4 @@ function CreateRoom({ q, setRooms, Rooms, setRoomChatHeader }) {
     )
 }
 
-export default CreateRoom
+export default CreateRoom;

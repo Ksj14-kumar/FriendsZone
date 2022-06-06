@@ -100,11 +100,10 @@ function Feed({ socket }) {
 
     async function FilterUser(id) {
         setAllUser(AllUser.filter(user => user._id !== id))
-
     }
 
     return (
-        <UserFeed PostWhichUserSelectedImageORVideo={PostWhichUserSelectedImageORVideo} socket={socket} AllUser={suggestionFriends} FilterUser={FilterUser} />
+        <UserFeed PostWhichUserSelectedImageORVideo={PostWhichUserSelectedImageORVideo}  socket={socket} AllUser={suggestionFriends} FilterUser={FilterUser} />
 
     )
 }

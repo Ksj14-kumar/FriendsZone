@@ -69,7 +69,13 @@ function MessageChatHeader({ chatHeader, setVideoOverlay, q, RoomData, setRoomCh
 
                         }
                             <br />
-                            <small classNAme="text-[1.2rem] tracking-wider text-semibold">Room</small>
+
+                            {
+                                q.length === 9 &&
+                                <small classNAme="text-[1.2rem] tracking-wider text-semibold">Room</small>
+
+                            }
+
                         </p>
                     </div>
                 </div>
@@ -89,10 +95,10 @@ function MessageChatHeader({ chatHeader, setVideoOverlay, q, RoomData, setRoomCh
 
                     </div>
                 }
-            </header>
+            </header >
 
 
-        </div>
+        </div >
 
     )
 }

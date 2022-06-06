@@ -957,15 +957,17 @@ function ChatSection({ user, socket, setSocket }) {
                   {
                     messageLoader ? <MessageLoader /> :
                       (q?.length === 24 && currentChat.length ?
-                        <MessageBox message={currentChat} own={user} upload={uploadLoaderMessage} friendId={q} socket={socket} setBool={setBool} setOverlayObject={setOverlayObject} isTyping={isTyping} sendMessageLoader={sendMessageLoader} textMessage={textMessage} messageId={messageId} docID={docID} /> : (q.length === 9 && (
-                          groupMessageLoader ? <MessageLoader /> :
-                            groupMessages.length > 0 ?
+                        <MessageBox
 
-                              <GroupMessageBox groupMessages={groupMessages} currentId={UserInformationLoad?._id} /> : <NoChatHere />
+                          message={currentChat} own={user} upload={uploadLoaderMessage} friendId={q} socket={socket} setBool={setBool} setOverlayObject={setOverlayObject} isTyping={isTyping} sendMessageLoader={sendMessageLoader} textMessage={textMessage} messageId={messageId} docID={docID} /> : (q.length === 9 && (
+                            groupMessageLoader ? <MessageLoader /> :
+                              groupMessages.length > 0 ?
+
+                                <GroupMessageBox groupMessages={groupMessages} currentId={UserInformationLoad?._id} /> : <NoChatHere />
 
 
 
-                        )
+                          )
 
                         ))
 

@@ -3,6 +3,7 @@ import React, { useRef, useEffect } from 'react'
 import { format } from 'timeago.js'
 import Photos from "../../assets/img/team-2-800x800.jpg"
 import videojs from 'video.js';
+import { motion } from "framer-motion"
 
 
 
@@ -44,7 +45,19 @@ function GroupMessageBox({ groupMessages, currentId }) {
                             <div className={`inner4 flex w-full    ${items.userId === currentId ? "justify-end" : "justify-start"} relative`}
                                 ref={ScrollToBottom}
                             >
-                                {items.userId !== currentId && <div className="contain  w-[2rem] flex  items-end ml-2 relative">
+                                {items.userId !== currentId && <motion.div
+                                    initial={{ opacity: 0, x: items.userId !== currentId && -200 }}
+                                    animate={{
+                                        opacity: 1,
+                                        y: 0,
+                                        x: 0,
+                                    }}
+                                    transition={{
+                                        duration: 0.4,
+                                        ease: "easeInOut",
+                                        type: "tween"
+                                    }}
+                                    className="contain  w-[2rem] flex  items-end ml-2 relative">
 
                                     <div className="imagr_logo_container  w-[4rem]  border rounded-[100%] border-solid border-[#dadada] border-r-0 border-t-0 border-l-0 -ml-[4px] mb-[4.5px] absolute"
                                     >
@@ -55,8 +68,22 @@ function GroupMessageBox({ groupMessages, currentId }) {
 
 
                                     </div>
-                                </div>}
-                                <div className={`_message_wrapper p-4 pb-1 pt-1 overflow-hidden flex flex-col flex-wrap mb-2 ${items ? "bg-[#e1e1e1]" : "bg-[#dadada]"} max-w-[95%] mt-2 ${items.userId === currentId ? "mr-2  rounded-lg rounded-br-none " : "rounded-lg rounded-bl-none ml-2"}`}>
+                                </motion.div>}
+                                <motion.div
+
+                                    initial={{ opacity: 0, x: items.userId === currentId? 10 : -200 }}
+                                    animate={{
+                                        opacity: 1,
+                                        y: 0,
+                                        x: 0,
+                                    }}
+                                    transition={{
+                                        duration: 0.4,
+                                        ease: "easeInOut",
+                                        type: "tween"
+                                    }}
+
+                                    className={`_message_wrapper p-4 pb-1 pt-1 overflow-hidden flex flex-col flex-wrap mb-2 ${items ? "bg-[#e1e1e1]" : "bg-[#dadada]"} max-w-[95%] mt-2 ${items.userId === currentId ? "mr-2  rounded-lg rounded-br-none " : "rounded-lg rounded-bl-none ml-2"}`}>
                                     {/* text-[#239E79] */}
                                     <p className={`flex justify-end mb-1 text-[1.4rem] font-serif ${items.userId === currentId ? "text-[#FF0075]" : "text-[#239E79]"}`}>~{items?.name.toLowerCase()}</p>
 
@@ -90,7 +117,7 @@ function GroupMessageBox({ groupMessages, currentId }) {
                                     }
 
                                     <p className="text-[.8rem]  flex justify-end mt-1">{format(items.time)}</p>
-                                </div>
+                                </motion.div>
 
 
                             </div>

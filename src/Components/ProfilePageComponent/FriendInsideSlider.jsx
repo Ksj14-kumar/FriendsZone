@@ -30,7 +30,7 @@ function FriendInsideSlider({ image, item, FilterUser, sendFriendRequest }) {
                 })
                 const data = await res.json()
                 if (res.status === 200) {
-                    const UserHasSameFriends =  data?.friendList.filter(value => {
+                    const UserHasSameFriends = data?.friendList.filter(value => {
                         return UserInformationLoad?.friends.some(i => {
                             return item._id !== i._id
                         })
@@ -63,11 +63,11 @@ function FriendInsideSlider({ image, item, FilterUser, sendFriendRequest }) {
     return (
         <>
             <div className="friends_suggests  bg-white  flex flex-col w-[15rem] mds-editor13:w-[10rem] rounded-lg p-1  border-[#d0cfcf] border border-solid">
-                <NavLink to={`/profile/${item.googleId}`}>
 
-                    <header className="image w-full h-full relative cursor-pointer"
+                <header className="image w-full h-full relative cursor-pointer"
 
-                    >
+                >
+                    <NavLink to={`/profile/${item.googleId}`}>
                         {item.url ? <Image src={item.url}
                             className="w-full md:min-h-[15rem] rounded-lg "
                         /> :
@@ -75,23 +75,23 @@ function FriendInsideSlider({ image, item, FilterUser, sendFriendRequest }) {
                                 className="w-full md:min-h-[15rem] rounded-lg"
                             />
                         }
-                        <Button
-                            color=""
-                            buttonType="filled"
-                            size="regular"
-                            rounded={true}
-                            block={false}
-                            iconOnly={true}
-                            ripple="light"
-                            className="absolute -top-1 -right-1 md:top-1 md:right-1"
-                            onClick={() => {
-                                FilterUser(item._id)
-                            }}
-                        >
-                            <Icon name={<MdCancel className='text-[1.8rem] md:text-[2.6rem] rounded-full  bg-[#05040400] text-[#fff]' />} size="sm" />
-                        </Button>
-                    </header>
-                </NavLink>
+                    </NavLink>
+                    <Button
+                        color=""
+                        buttonType="filled"
+                        size="regular"
+                        rounded={true}
+                        block={false}
+                        iconOnly={true}
+                        ripple="light"
+                        className="absolute -top-1 -right-1 md:top-1 md:right-1"
+                        onClick={() => {
+                            FilterUser(item._id)
+                        }}
+                    >
+                        <Icon name={<MdCancel className='text-[1.8rem] md:text-[2.6rem] rounded-full  bg-[#05040400] text-[#fff]' />} size="sm" />
+                    </Button>
+                </header>
 
                 <div className="already_friends my-3">
                     <p className='text-[1.4rem] font-semibold truncate '>{item.fname + " " + item.lname}</p>
