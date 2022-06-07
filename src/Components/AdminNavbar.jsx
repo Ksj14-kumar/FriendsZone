@@ -825,12 +825,12 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                             <Image src={userProfile}
                                                 rounded alt="img" style=
                                                 ""
-                                                className="w-[2.5rem] h-[2.5rem] flex-shrink-0"
+                                                className="w-[2.5rem] h-[2.5rem] flex-shrink-0 mr-2"
                                             />
                                             :
 
                                             <Image src={showImage}
-                                                rounded alt="img" className="w-[2.5rem] h-[2.5rem] flex-shrink-0" />}
+                                                rounded alt="img" className="w-[2.5rem] h-[2.5rem] flex-shrink-0 mr-2" />}
                                     </div>
 
 
