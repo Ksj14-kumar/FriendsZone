@@ -45,19 +45,27 @@ function Feed({ socket }) {
 
     useEffect(() => {
         async function getAllUser() {
-            const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/all/user`, {
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("uuid")}`
+            try {
+                const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/all/user`, {
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("uuid")}`
+                    }
+                })
+                const data = await res.json()
+                if (res.status === 200) {
+                    setAllUser(data)
+
                 }
-            })
-            const data = await res.json()
-            if (res.status === 200) {
-                setAllUser(data)
+                else if (res.status !== 200) {
+                    console.log("error")
+                }
 
             }
-            else if (res.status !== 200) {
-                console.log("error")
+            catch (err) {
+                console.log(err)
+
             }
+
 
         }
         getAllUser()
@@ -103,7 +111,7 @@ function Feed({ socket }) {
     }
 
     return (
-        <UserFeed PostWhichUserSelectedImageORVideo={PostWhichUserSelectedImageORVideo}  socket={socket} AllUser={suggestionFriends} FilterUser={FilterUser} />
+        <UserFeed PostWhichUserSelectedImageORVideo={PostWhichUserSelectedImageORVideo} socket={socket} AllUser={suggestionFriends} FilterUser={FilterUser} />
 
     )
 }

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { MdAdd, MdSend } from "react-icons/md"
 import { success, error } from "../../toastifyMessage/Toast"
 
-function SelectMultipleImage({ setImageFileSelector, setImageGroupURl, imageGroupURl, senderId, SendMessage }) {
+function SelectMultipleImage({ setImageFileSelector, setImageGroupURl, imageGroupURl, senderId, SendMessage, imageSentLoader }) {
     const [imagelocalUrl, setImageLocalUrl] = React.useState([])
 
 
@@ -21,7 +21,7 @@ function SelectMultipleImage({ setImageFileSelector, setImageGroupURl, imageGrou
 
 
 
-
+    console.log(imageSentLoader)
     function SelectFiles(e) {
         e.preventDefault()
         const Files = e.target.files[0]
@@ -43,10 +43,10 @@ function SelectMultipleImage({ setImageFileSelector, setImageGroupURl, imageGrou
                         time: Date.now(),
                         type: Files.type.split("/")[0],
                         messageID: Math.floor(Math.random() * 10000000000),
-                        base64URl:e.target.result
+                        base64URl: e.target.result
                     }])
                 }
-                
+
 
             }
             else {
@@ -72,7 +72,7 @@ function SelectMultipleImage({ setImageFileSelector, setImageGroupURl, imageGrou
     // console.log(imagelocalUrl)
     return (
         <>
-            <div className="select-multiple-image absolute h-screen w-screen bg-[#4a4949] z-[15]" id="imageSelectOverlay">
+            <div className="select-multiple-image absolute h-screen w-screen bg-[#4a4949] z-[15] overflow-x-hidden" id="imageSelectOverlay">
                 <div className="_inner flex flex-col">
 
                     <div className="  text-white text-[2.2rem] flex justify-end">
@@ -84,14 +84,14 @@ function SelectMultipleImage({ setImageFileSelector, setImageGroupURl, imageGrou
                             className="btn mr-[2rem] mt-[.8rem] text-white text-lg"
                         >X</button>
                     </div>
-                    <div className="_image_wrapper  mx-[1rem] md:mx-[8rem]  mds-editor8:h-[45rem] rounded overflow-y-hidden" id="outer_image_section">
+                    <div className="_image_wrapper  mx-[1rem] md:mx-[8rem]  mds-editor8:h-[45rem] rounded overflow-hidden" id="outer_image_section">
                         <div className="file_upload rounded-md bg-[#570a5798] mx-[1rem] flex  flex-col  mt-[8px]  h-full  relative overflow-y-auto" id="image_select_scrollbar">
                             {/* overflow-x-auto scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 */}
                             <div className="_image_wrapper  flex gap-x-1 gap-y-1 flex-wrap over">
                                 {/* , 6, 6, 7, 8,6,7,8,9,34,2,4 */}
                                 {imagelocalUrl.length > 0 && imagelocalUrl.map(item => {
                                     return (
-                                        <div className="wrap  flex  flex-shrink-0 w-[24rem] h-[24rem] cursor-pointer relative">{
+                                        <div className="wrap  flex  flex-shrink-0 md:w-[24rem] md:h-[24rem] w-[18rem] h-[20rem] cursor-pointer relative">{
                                             item.type === "image" ? (<Image
                                                 src={item.message}
                                                 rounded={false}
@@ -138,6 +138,10 @@ function SelectMultipleImage({ setImageFileSelector, setImageGroupURl, imageGrou
                                         // setImageGroupURl(imagelocalUrl)
                                         SendMessage()
                                         setImageFileSelector(false)
+                                        if (imageSentLoader) {
+                                            if (imageSentLoader === false) {
+                                            }
+                                        }
                                     }}
                                 >
                                     <MdSend />

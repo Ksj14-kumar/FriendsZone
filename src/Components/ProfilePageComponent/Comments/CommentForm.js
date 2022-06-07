@@ -18,9 +18,12 @@ const CommentForm = ({
 }) => {
     const [text, setText] = useState(initialText);
     const buttonRef = useRef()
+    const textRef = useRef()
+
     const [emojiModal, setEmojiModal] = useState(false);
     const [chosenEmoji, setChosenEmoji] = useState(null);
-    const CommentArea = useRef(null)
+
+
     const isTextareaDisabled = text.length === 0;  // if text is empty, disable textarea
 
 
@@ -46,12 +49,22 @@ const CommentForm = ({
 
 
 
+    useEffect(() => {
+        if (textRef.current) {
+            textRef.current.style.height = "0px";
+            textRef.current.style.height = textRef.current.scrollHeight + "px";
+
+        }
+    }, [text])
+
+
+
 
 
     return (
 
         <>
-            <div className="md:mr-10 md:ml-[1rem]">
+            <div className="md:mr-10 md:ml-[1rem]" id="comment_area_section">
                 {/* <textarea
                 className="comment-form-textarea"
                 value={text}
@@ -65,10 +78,27 @@ const CommentForm = ({
 
 
 
+                <textarea
+                    ref={textRef}
+                    className="resize-none border border-solid border-[#dad7d7] focus:outline-none  w-full overflow-hidden p-4 rounded-lg text-[1.1rem] font-serif tracking-wider"
+                    placeholder="Write a comment..."
+                    onChange={(e) => {
+                        setText(e.target.value)
+                        e.preventDefault()
+                    }}
+                    value={text}
+                >
+
+                </textarea>
 
 
 
-                <Textarea
+
+
+
+
+
+                {/* <Textarea
                     color="lightBlue"
                     size="sm"
                     outline={false}
@@ -101,7 +131,7 @@ const CommentForm = ({
                     onClick={(e) => {
                         e.preventDefault()
                     }}
-                />
+                /> */}
 
                 <section className="bg-red-600  flex justify-end relative ">
 
@@ -118,7 +148,7 @@ const CommentForm = ({
                         ref={buttonRef}
 
                     >
-                        <Icon name={<BsFillEmojiSmileFill className="text-[#630606]" />} />
+                        <Icon name={<BsFillEmojiSmileFill className="text-[#ef703d] text-[1.5rem] mb-[8px]" />} />
                     </Button>
                 </section>
 
@@ -136,7 +166,7 @@ const CommentForm = ({
                         ripple="none"
                         disabled={isTextareaDisabled}
 
-                        className="lowercase"
+                        className="normal-case  tracking-widest"
                         onClick={(e) => {
 
                             e.preventDefault()
@@ -175,9 +205,21 @@ const CommentForm = ({
                 </section>
 
 
-                <Tooltips placement="top" ref={buttonRef}>
+
+                <Tooltips placement="auto" ref={buttonRef}>
                     <TooltipsContent>
-                        <Picker onEmojiClick={onEmojiClick} />
+                        <Picker onEmojiClick={onEmojiClick}
+
+                            disableSearchBar={true}
+                            disableAutoFocus={true}
+                            preload={true}
+                            pickerStyle={{
+                                "nav": {
+                                    "display": "none",
+                                    "visibility": "hidden"
+                                }
+                            }
+                            } />
 
                     </TooltipsContent>
                 </Tooltips>

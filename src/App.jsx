@@ -68,36 +68,43 @@ function App() {
         async function loadData() {
             // ${process.env.REACT_APP_API_BACKENDURL}
 
-            const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/all/google/success`, {
-                method: "GET",
-                // credentials: "include",
-                // credentials: 'include',
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Credentials": true,
-                    // "Authorization": "Bearer " + localStorage.getItem("user_login"),
+            try {
+                const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/all/google/success`, {
+                    method: "GET",
+                    // credentials: "include",
+                    // credentials: 'include',
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Credentials": true,
+                        // "Authorization": "Bearer " + localStorage.getItem("user_login"),
+                    }
+                })
+                // console.log("google response data", response)
+                const status = response.status
+                // console.log("cookie", cookie.info)
+                const data = await response.json()
+                // console.log("google user login data ", data.user)
+                // console.log(data)
+                if (status === 200) {
+                    // success({ message: data.message })
+                    // localStorage.setItem("uuid", JSON.stringify(data.user))
+                    // console.log("user login data from google", JSON.stringify(data.user))
+                    // dispatch({ type: "SET_USER", payload: { user: data.user } })
+                    setUserData(data.user)
+                    // history.push("/dashboard")
                 }
-            })
-            // console.log("google response data", response)
-            const status = response.status
-            // console.log("cookie", cookie.info)
-            const data = await response.json()
-            // console.log("google user login data ", data.user)
-            // console.log(data)
-            if (status === 200) {
-                // success({ message: data.message })
-                // localStorage.setItem("uuid", JSON.stringify(data.user))
-                // console.log("user login data from google", JSON.stringify(data.user))
-                // dispatch({ type: "SET_USER", payload: { user: data.user } })
-                setUserData(data.user)
-                // history.push("/dashboard")
+                else {
+                    Error({ message: data.message })
+                    // error({ message: data.message })
+                    history.push("/login")
+                }
+
             }
-            else {
-                Error({ message: data.message })
-                // error({ message: data.message })
-                history.push("/login")
+            catch (err) {
+                console.log(err)
             }
+
         }
         loadData()
     }, [])
@@ -259,9 +266,9 @@ function App() {
                                 } */}
 
 
-                               { (getUserData && user) ? <ChatSection user={UserInformationLoad?.googleId} socket={socket} setSocket={setSocket} />
-                                : <Redirect to="/login" />}
-                                
+                                {(getUserData && user) ? <ChatSection user={UserInformationLoad?.googleId} socket={socket} setSocket={setSocket} />
+                                    : <Redirect to="/login" />}
+
                             </Route>
 
 
@@ -286,7 +293,7 @@ function App() {
                     {
                         (getUserData && user) &&
                         <abbr title="live User">
-                            <div className="right_section  fixed top-[95%] right-[.5rem] md:w-[5rem] bg-[#6d369a7a] rounded-sm py-[.5rem] md:px-[1rem] px-[1rem]">
+                            <div className="right_section  fixed md:top-[95%] top-[94.6%] right-[.5rem] md:w-[5rem] bg-[#6d369a7a] rounded-sm py-[.5rem] md:px-[1rem] px-[1rem]">
 
                                 <RightSidebar socket={socket} />
 

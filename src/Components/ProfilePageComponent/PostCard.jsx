@@ -257,9 +257,7 @@ function PostCard({ item, index, filterPost, socket, threeDot }) {
             {/* post-screen:mt-[32rem] mt-[26rem] md:pl-48 md:mt-[18rem] relative sm-[25rem] */}
             <div className="post-card flex justify-around md:pl-[25rem] md:pr-[10.4rem] md:mb-[5rem] -mb-[3rem]    lg:mt-[11rem] post  w-full ">
                 <Card className="post   -mt-[9rem] p-0">
-                    {/* <CardHeader color="lightBlue" size="lg">
-      <H5 color="white">Login</H5>
-        </CardHeader> */}
+                    
                     <CardBody >
                         <div className="flex justify-center ">
                             {/* <H6 color="gray" >Create Post</H6> */}
@@ -459,7 +457,7 @@ function PostCard({ item, index, filterPost, socket, threeDot }) {
 
                             <section className='like_love mds-editor20:flex-[5] md:flex-[9]'>
 
-                                <p className="text-[1.3rem] font-light  ml-[2.5rem] md:ml-[4rem] flex  items-center">
+                                <p className="text-[1.3rem] font-light  ml-[2rem] md:ml-[4rem] flex  items-center">
                                     <div className="thump rounded-[50px] p-[2.5px] bg-blue-500 mr-1 border border-solid border-[#efeded] cursor-pointer"><MdThumbUpAlt className='text-white' /></div> <span className='mr-[3px]'>
                                         {
                                             likeCount
@@ -502,7 +500,7 @@ function PostCard({ item, index, filterPost, socket, threeDot }) {
                             >
                                 {/* //load all the likes */}
                                 {
-                                    like ? <RiThumbUpFill className='text-[1.5rem] md:text-[2rem] text-blue-600' /> : <MdOutlineThumbUpAlt className="text-[1.5rem] md:text-[2rem] hover:text-blue-500" />
+                                    like ? <RiThumbUpFill className='text-[2rem] md:text-[2rem] text-blue-600' /> : <MdOutlineThumbUpAlt className="text-[2rem] md:text-[2rem] hover:text-blue-500" />
                                 }
 
                             </Button>
@@ -523,7 +521,7 @@ function PostCard({ item, index, filterPost, socket, threeDot }) {
                                     }
                                 }
                             >
-                                <MdAddComment />
+                                <MdAddComment className="text-[2rem]" />
 
 
                             </Button>
@@ -543,7 +541,7 @@ function PostCard({ item, index, filterPost, socket, threeDot }) {
                                     console.log(item.post_url)
                                 }}
                             >
-                                <RiShareFill />
+                                <RiShareFill className="text-[2rem]" />
                             </Button>
                         </section>
                     </CardFooter>

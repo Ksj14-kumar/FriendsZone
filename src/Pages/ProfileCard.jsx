@@ -309,7 +309,7 @@ export default function ProfileCard(props) {
                                 </div>
 
                                 <main className="buttons  flex  justify-center pl-0 
-                                md:mt-0 mt-[2rem] items-center content-center">
+                                md:mt-0 mt-[1rem] items-center content-center flex-wrap gap-y-2">
 
                                     {/* ml-[7rem] */}
                                     <div className='md:mt-3   '>

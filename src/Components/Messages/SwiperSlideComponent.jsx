@@ -14,7 +14,7 @@ function SwiperSlideComponent({ conversation, user, active, setInfo }) {
         <>
 
             <NavLink to={`/messages?q=${conversation._id}`}>
-                <section className="chat_users  w-[2.4rem] h-[2.2rem] flex items-center  rounded-full relative cursor-pointer flex-shrink-0 mr-3">
+                <section className="chat_users  w-[2.4rem] h-[2.2rem] flex items-center  rounded-full relative cursor-pointer flex-shrink-0 mr-3 ml-[.8rem] border border-solid border-[#fff]">
                     {
                         conversation?.url &&
                         <section className="image relative">

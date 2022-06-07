@@ -97,6 +97,7 @@ function ChatSection({ user, socket, setSocket }) {
   const [groupMessages, setGroupMessages] = useState([])
   const [groupMessageLoader, setGroupMessageLoader] = useState(false)
   const [arrivalGroupMessages, setArrivalGroupMessages] = useState(null)
+  const [imageSentLoader, setImageSentLoader] = useState(false)
 
   const history = useHistory()
   const params = useParams()
@@ -250,6 +251,7 @@ function ChatSection({ user, socket, setSocket }) {
     if (textMessage.length === 0) {
       setErr(true)
     }
+    setImageSentLoader(true)
 
     if (q.length === 9) {
       const MessageGroupId = Math.floor(Math.random() * 100000000)
@@ -339,7 +341,8 @@ function ChatSection({ user, socket, setSocket }) {
           }
 
           else if (imageGroupURl.length > 0) {
-            console.log({ imageGroupURl })
+            // console.log({ imageGroupURl })
+            setImageSentLoader(true)
             imageGroupURl.forEach(async (img) => {
               const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/group/message/save`, {
                 method: "POST",
@@ -361,10 +364,12 @@ function ChatSection({ user, socket, setSocket }) {
               })
               const data = await res.json()
               if (res.status === 200) {
+                setImageSentLoader(false)
                 setGroupMessages(data.result.RoomMessages)
 
               }
               else if (res.status !== 200) {
+                setImageSentLoader(false)
                 error({ message: "not send", pos: "top-right" })
               }
             })
@@ -434,13 +439,14 @@ function ChatSection({ user, socket, setSocket }) {
       const value = currentChat !== undefined ? currentChat : ""
       // setcurrentChat([...value, ...imageGroupURl])
 
+
+      setImageSentLoader(true)
       imageGroupURl.forEach(async (item) => {
         try {
           socket.emit("sendMessage", {
             ...item,
             receiverId: q
           })
-
           const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/messages/send`, {
             // Instance.post
             method: "POST",
@@ -467,15 +473,16 @@ function ChatSection({ user, socket, setSocket }) {
             // setMessageId([...messageId, item.messageID])
             setcurrentChat([...resData.result.messages])
             setImageGroupURl([])
+            setImageSentLoader(false)
           }
           else if (res.status !== 200) {
             setMessageId([...messageId, res.messageId])
             setSentMessageLoader("not")
             setUploadLoaderMessage(false)
+            setImageSentLoader(false)
             error({ message: "not send", pos: "top-right" })
 
           }
-
         }
         catch (err) {
           console.warn(err)
@@ -483,6 +490,7 @@ function ChatSection({ user, socket, setSocket }) {
 
 
       })
+      setImageSentLoader(false)
     }
 
 
@@ -846,7 +854,7 @@ function ChatSection({ user, socket, setSocket }) {
 
 
   // console.log({ groupMessages })
-
+  console.log({ imageSentLoader })
   return (
     <>
 
@@ -863,7 +871,7 @@ function ChatSection({ user, socket, setSocket }) {
         callerDetails ? (<VideoOverlay videoOverlay={videoOverlay} setVideoOverlay={setVideoOverlay} socket={socket} anotherUserId={q} />) : videoOverlay && <VideoOverlay videoOverlay={videoOverlay} setVideoOverlay={setVideoOverlay} socket={socket} anotherUserId={q} />
       }
       {
-        ImageSelector && <SelectMultipleImage setImageFileSelector={setImageFileSelector} setImageGroupURl={setImageGroupURl} imageGroupURl={imageGroupURl} senderId={user} SendMessage={SendMessage} />
+        ImageSelector && <SelectMultipleImage setImageFileSelector={setImageFileSelector} setImageGroupURl={setImageGroupURl} imageGroupURl={imageGroupURl} senderId={user} SendMessage={SendMessage} imageSentLoader={imageSentLoader} />
       }
 
       {
@@ -877,13 +885,14 @@ function ChatSection({ user, socket, setSocket }) {
 
         {/* ======================================LEFT SIDE OF CHAT SECTION=================================== */}
 
-        {liveFriends !== undefined && liveFriends.length > 0 && <aside id="live_top_users" className=" md:hidden mt-[4.2rem] flex w-full   fixed bg-[#bcbcbc] ">
+        {liveFriends !== undefined && liveFriends.length > 0 && <aside id="live_top_users" className=" md:hidden mt-[4.2rem] flex w-full   fixed bg-[#d0d0d0] ">
           <ChatUSerSwiper liveFriends={liveFriends} />
 
         </aside>}
         <hr className="block md:hidden" />
 
-        <div className={`'text-center md:mt-[5rem] ${liveFriends !== undefined && liveFriends.length > 0 && "mds-editor23:mt-[7.5rem]"} ${liveFriends !== undefined && liveFriends.length > 0 ? "mt-[7rem]" : "mt-[5rem] "}   fixed   md:left-[18rem] mds-editor23:w-full md:w-[85rem]  flex h-full rounded-sm   flex-wrap  mr-[5rem] mds-editor23::mx-[2rem]`} id='chat_container'>
+        <div className={`'text-center md:mt-[5rem] ${liveFriends !== undefined && liveFriends.length > 0 && "mds-editor23:mt-[7.5rem]"} ${liveFriends !== undefined && liveFriends.length > 0 ? "mt-[7rem]" : "mt-[5rem] "}   fixed   md:left-[18rem] mds-editor23:w-full md:w-[85rem]  flex h-full rounded-sm   flex-wrap  
+        md:mr-[5rem]    justify-center`} id='chat_container'>
           {/* md:flex-[3] lg:flex-[2]  */}
           <aside className="left_section md:flex-[3]  bg-[#dbdbdb] relative rounded-sm  md:block hidden" id="left_chat_section">
             {/* <div class="form-control toogle_theme -mb-[10px]">
@@ -942,7 +951,7 @@ function ChatSection({ user, socket, setSocket }) {
 
           {/* ============================================== CENTER SECTION CHAT SECTION================ */}
           {/* md:flex-[7] */}
-          <aside className="chat_section_message_area md:flex-[7]  flex flex-col overflow-y-auto flex-1 mds-editor31:w-[62rem] mds-editor31:ml-[4rem]  relative" id={`${q.length === 9 && "chat_section_group"} mds-editor23::mx-[.3rem]`}>
+          <aside className="chat_section_message_area md:flex-[7]  flex flex-col overflow-y-auto flex-1  relative  " id={`${q.length === 9 && "chat_section_group"}`}>
 
             {
               RoomChatHeader && <RoomChatInfo setRoomChatHeader={setRoomChatHeader} RoomData={RoomData} setRoomData={setRoomData} setModalForFriends={setModalForFriends} groupMembers={groupMembers} setGroupMembers={setGroupMembers} />
@@ -976,7 +985,7 @@ function ChatSection({ user, socket, setSocket }) {
                   {/* (<NoChatHere q={q} />) */}
                 </div>
                 {
-                  btnGroup && <ButtonGroup setModal={setModal} setStickerDrawer={setStickerDrawer} />
+                  btnGroup && <ButtonGroup setModal={setModal} setStickerDrawer={setStickerDrawer} setButtonGroup={setButtonGroup} />
                 }
 
 
@@ -1118,12 +1127,12 @@ function ChatSection({ user, socket, setSocket }) {
             </div>
           </aside>
         </div>
-        <Tooltips placement="top" ref={Video}>
+        {/* <Tooltips placement="top" ref={Video}>
           <TooltipsContent className="text-black">Video / Image</TooltipsContent>
         </Tooltips>
         <Tooltips placement="top" ref={Files}>
           <TooltipsContent className="text-black">Add Some Files</TooltipsContent>
-        </Tooltips>
+        </Tooltips> */}
       </div>
     </>
 
@@ -1161,7 +1170,7 @@ function NoChat() {
 
 
 
-function ButtonGroup({ setModal, setStickerDrawer }) {
+function ButtonGroup({ setModal, setStickerDrawer, setButtonGroup }) {
   const docFile = useRef()
   const Stickers = useRef()
   const Gif = useRef()
@@ -1211,6 +1220,7 @@ function ButtonGroup({ setModal, setStickerDrawer }) {
           className="focus:outline-none rounded-full w-[3.8rem] h-[3.8rem] bg-[#a68e03] text-center text-white border-2 border-solid flex justify-center items-center  border-white "
           onClick={() => {
             setModal(true)
+            setButtonGroup(false)
           }}
         >
           <AiOutlineGif className="text-[2rem]" />

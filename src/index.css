@@ -112,7 +112,7 @@ background-attachment: fixed;
         
         @media (max-width: 767px) {
             .post-card{
-            margin-top:14rem;
+            margin-top:12.5rem;
             }
         }
         @media (max-width: 409px) {
@@ -922,7 +922,7 @@ padding:1rem 0rem;
 
   .w-full.bg-white.rounded-xl.overflow-hdden.shadow-md.p-4.inner-post-card.lg\:-mt-\[170px\].md\:-mt-\[280px\].-mt-\[300px\].md\:ml-\[8rem\].md\:mr-\[6rem\].md-w-\[71rem\].mx-\[2rem\].shadow-lg.h-\[12rem\].pt-\[0rem\]{
   
-  margin-top:-9rem;
+  margin-top:-7rem;
   margin-bottom:1rem;
   }
 
@@ -1058,7 +1058,15 @@ height:calc(100vh - 0rem);
     }
     }
 
-#chat_container,.bottom_users{
+
+
+
+.bottom_users{
+height:calc(100vh - 1rem)
+
+    }
+
+#chat_container{
 height:calc(100vh - 1rem)
 }
 
@@ -1071,7 +1079,7 @@ height:calc(100vh - 1rem)
 
 @media (max-width: 768px) {
     .chat_section_message_area{
-        height:calc(100vh - 7rem)
+        height:calc(100vh - 9rem)
 
     }
 }
@@ -1436,9 +1444,35 @@ border: 1px solid rgba(0,0,0,0.15);
 
 
 
+#comment_area_section nav.emoji-categories{
+background: rgba(255,255,255,0.3);
+visibility:hidden;
+display: none;
+}
 
 
 
+
+
+#comment_area_section .emoji-picker-react .content-wrapper .emoji-scroll-wrapper::-webkit-scrollbar{
+    width:.7rem;
+    background-color:#dbdbdb;
+    
+}
+#comment_area_section .emoji-picker-react .content-wrapper .emoji-scroll-wrapper::-webkit-scrollbar-track{
+    width:inherit;
+    background-color:#dbdbdb;
+    
+}
+
+#comment_area_section .emoji-picker-react .content-wrapper .emoji-scroll-wrapper::-webkit-scrollbar-thumb{
+    width:.1rem;
+    padding:0 .5rem;
+    border-radius:2px;
+    border:1.5px solid #2D46B9;
+    outline-offset:3px;
+    background-color:#1e3163;
+}
 
 
 

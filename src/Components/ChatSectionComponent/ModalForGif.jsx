@@ -44,35 +44,45 @@ function ModalForGif({ setSelectedGif, selectedGif, senderId, setModal, sendMess
     }
 
     // console.log(Giphy)
-    console.log({ selected_Gif_url:selected_Gif_url })
+    console.log({ selected_Gif_url: selected_Gif_url })
     return (
         <>
             <div className="w-screen h-screen bg-[#0a0a0a3a] fixed z-[16] flex   justify-center ">
-                <div className="btn_container flex justify-end  pr-3 pt-2">
-                    <button className="btn px-4 py-1 bg-white text-black text-[1.4rem] hover:text-white"
-                        onClick={() => {
-                            setModal(false)
-                            setGiPhy([])
-                            setSelected_Gif_URL([])
 
 
-                        }}
-                    >X</button>
-                </div>
+                <div className="w-[51rem]  mt-[2rem] bg-[#fff] text-black rounded-lg z-[17] p-3 mb-[0rem] overflow-y-auto  overflow-x-hidden" id="selected_Giphy_scroll">
+                    <div className="search_input flex">
+                        <div className="inpu flex-[10]">
+                            <input type="text" name="" id="" className="w-full font-serif text-[1.3rem] border border-solid border-gray-300 rounded-md h-[3rem] focus:outline-none indent-2 tracking-wider" placeholder="Search..."
+                                onChange={(e) => {
+                                    giphy.search(e.target.value).then(res => {
+                                        setGiPhy(res.data)
+                                    })
+                                }}
+                            />
+                        </div>
+                        <div className="btn_container flex justify-center flex-[2]  ">
+                            <button className="btn px-4 py-1 bg-white text-black text-[1.4rem] hover:text-white"
+                                onClick={() => {
+                                    setModal(false)
+                                    setGiPhy([])
+                                    setSelected_Gif_URL([])
 
-                <div className="w-[51rem]  mt-[2rem] bg-[#fff] text-black rounded-lg z-[17] p-3 mb-[0rem] overflow-y-auto  overflow-x-hidden " id="selected_Giphy_scroll">
-                    <div className="search_input">
-                        <input type="text" name="" id="" className="w-full font-serif text-[1.3rem] border border-solid border-gray-300 rounded-md h-[3rem] focus:outline-none indent-2 tracking-wider" placeholder="Search..."
-                            onChange={(e) => {
-                                giphy.search(e.target.value).then(res => {
-                                    setGiPhy(res.data)
-                                })
-                            }}
-                        />
+
+                                }}
+                            >X</button>
+                        </div>
+
+
                     </div>
 
                     {selected_Gif_url.length > 0 && <div className="selected_Gif_image relative my-[.8rem]">
-                        <p className="text-[1.5rem] text-[#080808] font-serif py-1 text-center underline">Selected Gif</p>
+                        <p className="text-[1.5rem] text-[#080808] font-serif py-1 text-center underline">Selected Gif
+
+                        </p>
+                        {
+                            selected_Gif_url.length
+                        }
                         <div className="container12 flex flex-wrap gap-2 overflow-y-auto  max-h-[20rem]" id="selected_Gif">
 
                             {selected_Gif_url.length > 0 && selected_Gif_url.map(item => {
@@ -103,7 +113,7 @@ function ModalForGif({ setSelectedGif, selectedGif, senderId, setModal, sendMess
                         </p>
                     </div>}
 
-                    <div className="Gif_container grid md:grid-cols-3 grid-cols-2 mds-editor17:grid-cols-1 grid-row-2  md:grid-row-3 overflow-y-auto gap-[6px] mt-[8px]" id="Search_scroll_bar_filter">
+                    <div className="Gif_container grid md:grid-cols-3 grid-cols-2 mds-editor17:grid-cols-1 grid-row-2  md:grid-row-3 overflow-y-auto gap-[6px] mt-[8px] place-items-center" id="Search_scroll_bar_filter">
                         {
                             Giphy.length > 0 && Giphy.map((item, index) => {
                                 return (
