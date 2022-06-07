@@ -247,201 +247,206 @@ export default function ProfileCard(props) {
 
             <div className="make_two_section md:flex md:justify-between relative">
                 {/* md:ml-[.5rem] */}
-                <div className="profile_card-container    md:mr-[22rem] md:w-[81rem] md:ml-[0rem] ">
-                    <section className="relative block h-[300px] md:h-[400px]  md:ml-[16rem]">
-                        <div className="bg-profile-background bg-cover bg-center absolute top-[3.7rem] w-full h-full flex flex-shrink-0  ">
-                            {
-                                loadUserProfileInfo ? <div
-                                    // src={userInfo.BgURL}
-                                    className="w-full h-full rounded-t-none bg-[#b9b8b8b5] animate-pulse rounded-b-sm"
-                                    rounded={false}
-                                    raised={false}
-                                // alt="Image"
+                {/* md:mr-[22rem] md:w-[81rem] md:ml-[0rem] */}
+                <div className="profile_card-container  w-full">
+                    <div className="profile_wrapper flex  flex-col items-center">
+
+                        <section className="relative block h-[300px] md:h-[400px] w-[615px]">
+                            <div className="bg-profile-background bg-cover bg-center absolute top-[3.7rem] w-full h-full flex flex-shrink-0  ">
+                                {
+                                    loadUserProfileInfo ? <div
+                                        // src={userInfo.BgURL}
+                                        className="w-full h-full rounded-t-none bg-[#b9b8b8b5] animate-pulse rounded-b-sm"
+                                        rounded={false}
+                                        raised={false}
+                                    // alt="Image"
 
 
-                                ></div> : (userInfo.BgURL ? <Image
-                                    src={userInfo.BgURL}
-                                    className="w-full h-full rounded-t-none "
-                                    rounded={false}
-                                    raised={false}
-                                    alt="Image"
+                                    ></div> : (userInfo.BgURL ? <Image
+                                        src={userInfo.BgURL}
+                                        className="w-full h-full rounded-t-none "
+                                        rounded={false}
+                                        raised={false}
+                                        alt="Image"
 
 
-                                /> : "")
-                            }
+                                    /> : "")
+                                }
+
+                                
 
 
-                        </div>
-                    </section>
-                    <div className=' card-container flex justify-around md:pl-48 relative     md:w-[58rem] md:ml-[11.6rem] md:mt-[6rem] mt-[17rem] '>
+                            </div>
+                        </section>
+                        <div className=' card-container flex justify-center md:pl-[0] relative     md:w-[58rem]  md:mt-[6rem] mt-[17rem]  -mb-[6rem] '>
 
 
-                        <Card className=" lg:-mt-[170px] md:-mt-[280px] -mt-[300px] 
+                            <Card className=" lg:-mt-[170px] md:-mt-[280px] -mt-[300px] 
                         md:ml-[8rem] md:mr-[6rem]  md-w-[71rem] mx-[2rem]  " >
-                            <div className="flex flex-wrap justify-center relative md:flex-col">
-                                <div className="w-48 mds-editor2:w-40 px-4 -mt-24 relative outline-1 outline-red-600 rounded-full md:justify-center md:mx-auto">
+                                <div className="flex flex-wrap justify-center relative md:flex-col">
+                                    <div className="w-48 mds-editor2:w-40 px-4 -mt-24 relative outline-1 outline-red-600 rounded-full md:justify-center md:mx-auto">
 
-                                    {userInfo.ProfileURL ?
-                                        <Image src={userInfo.ProfileURL} rounded={true} raised={true} className="object-cover  outline-3 rounded-full outline-double outline-offset-1 outline-neutral-500 " />
+                                        {userInfo.ProfileURL ?
+                                            <Image src={userInfo.ProfileURL} rounded={true} raised={true} className="object-cover  outline-3 rounded-full outline-double outline-offset-1 outline-neutral-500 " />
 
 
-                                        :
-                                        <>
-                                            <Image src={profile} rounded={true} raised={true} className="object-cover" />
-                                        </>
-                                    }
+                                            :
+                                            <>
+                                                <Image src={profile} rounded={true} raised={true} className="object-cover" />
+                                            </>
+                                        }
 
-                                    {/* THISIS PROFILE CHANGE CAMERA */}
+                                        {/* THISIS PROFILE CHANGE CAMERA */}
 
-                                    <div className='
+                                        <div className='
                             absolute 
                             top-[95px]
                             right-[21px]
                             cursor-pointer
                             '
-                                        onClick={() => {
-                                            dispatch({ type: "Model_Open", payload: true })
-                                        }}
-                                    >
-                                        {/* <BsFillCameraFill className='text-[#000000] text-3xl md:text-4xl' /> */}
+                                            onClick={() => {
+                                                dispatch({ type: "Model_Open", payload: true })
+                                            }}
+                                        >
+                                            {/* <BsFillCameraFill className='text-[#000000] text-3xl md:text-4xl' /> */}
+                                        </div>
+
                                     </div>
 
-                                </div>
-
-                                <main className="buttons  flex  justify-center pl-0 
+                                    <main className="buttons  flex  justify-center pl-0 
                                 md:mt-0 mt-[1rem] items-center content-center flex-wrap gap-y-2">
 
-                                    {/* ml-[7rem] */}
-                                    <div className='md:mt-3   '>
-                                        {
-                                            googleId !== usernameId &&
-                                            <Button
-                                                color="purple"
-                                                buttonType="filled"
-                                                size="regular"
-                                                rounded={false}
-                                                block={false}
-                                                iconOnly={false}
-                                                disabled={AcceptMessage === true ? true : false}
-                                                ripple="light"
-                                                className="normal-case tracking-wider font-light text-lg"
-                                                onClick={() => {
+                                        {/* ml-[7rem] */}
+                                        <div className='md:mt-3   '>
+                                            {
+                                                googleId !== usernameId &&
+                                                <Button
+                                                    color="purple"
+                                                    buttonType="filled"
+                                                    size="regular"
+                                                    rounded={false}
+                                                    block={false}
+                                                    iconOnly={false}
+                                                    disabled={AcceptMessage === true ? true : false}
+                                                    ripple="light"
+                                                    className="normal-case tracking-wider font-light text-lg"
+                                                    onClick={() => {
 
-                                                    sendFriendRequest()
-                                                    setConnectMessage(!connectMessage)
-
-
-                                                }}
-                                            >
-                                                <Icon name={<FaUserPlus className='text-[1.3rem]' />} className="mr-2" />
+                                                        sendFriendRequest()
+                                                        setConnectMessage(!connectMessage)
 
 
-                                                {
-                                                    AcceptMessage === true ? "Connected" : (connectMessage ? "request sent" : "Connect")
-                                                }
-                                            </Button>
-                                        }
-                                    </div>
-                                    <div className='  ml-[.3rem] md:ml-[1rem] flex md:mt-3'>
-                                        {
-                                            (AcceptMessage === true && acceptorMessage) &&
-                                            (googleId !== usernameId &&
-                                                <>
-                                                    {/* ${usernameId} */}
-                                                    <NavLink to={
-                                                        `/messages?q=${usernameId}`
-                                                    }>
+                                                    }}
+                                                >
+                                                    <Icon name={<FaUserPlus className='text-[1.3rem]' />} className="mr-2" />
+
+
+                                                    {
+                                                        AcceptMessage === true ? "Connected" : (connectMessage ? "request sent" : "Connect")
+                                                    }
+                                                </Button>
+                                            }
+                                        </div>
+                                        <div className='  ml-[.3rem] md:ml-[1rem] flex md:mt-3'>
+                                            {
+                                                (AcceptMessage === true && acceptorMessage) &&
+                                                (googleId !== usernameId &&
+                                                    <>
+                                                        {/* ${usernameId} */}
+                                                        <NavLink to={
+                                                            `/messages?q=${usernameId}`
+                                                        }>
+                                                            <Button
+                                                                color="lightBlue"
+                                                                buttonType="filled"
+                                                                size="regular"
+                                                                rounded={false}
+                                                                block={false}
+                                                                iconOnly={false}
+                                                                ripple="light"
+                                                                className="normal-case tracking-wider text-lg font-light"
+                                                            >
+                                                                <Icon name={<FaFacebookMessenger />} className="mr-2" />
+                                                                Message
+                                                            </Button>
+                                                        </NavLink>
+
                                                         <Button
-                                                            color="lightBlue"
+                                                            color="red"
                                                             buttonType="filled"
                                                             size="regular"
                                                             rounded={false}
                                                             block={false}
                                                             iconOnly={false}
                                                             ripple="light"
-                                                            className="normal-case tracking-wider text-lg font-light"
+                                                            className="ml-2 normal-case tracking-wider text-lg font-light"
+                                                            onClick={() => {
+                                                                const bool = window.confirm("Are you sure want to Disconnect?")
+                                                                if (bool) {
+
+                                                                    cancleFriendRequest(true)
+                                                                    setAcceptMessage(false)
+                                                                }
+                                                                else {
+
+                                                                }
+                                                            }}
+
                                                         >
-                                                            <Icon name={<FaFacebookMessenger />} className="mr-2" />
-                                                            Message
+                                                            <Icon name={<BiUserX className='text-[1.4rem]' />} className="mr-2" />
+                                                            Disconnect
                                                         </Button>
-                                                    </NavLink>
+                                                    </>
+                                                )
+                                            }
+                                        </div>
+                                    </main>
 
-                                                    <Button
-                                                        color="red"
-                                                        buttonType="filled"
-                                                        size="regular"
-                                                        rounded={false}
-                                                        block={false}
-                                                        iconOnly={false}
-                                                        ripple="light"
-                                                        className="ml-2 normal-case tracking-wider text-lg font-light"
-                                                        onClick={() => {
-                                                            const bool = window.confirm("Are you sure want to Disconnect?")
-                                                            if (bool) {
+                                    <div className="w-full flex justify-center py-2 lg:pt-4 pt-8 ">
 
-                                                                cancleFriendRequest(true)
-                                                                setAcceptMessage(false)
-                                                            }
-                                                            else {
-
-                                                            }
-                                                        }}
-
-                                                    >
-                                                        <Icon name={<BiUserX className='text-[1.4rem]' />} className="mr-2" />
-                                                        Disconnect
-                                                    </Button>
-                                                </>
-                                            )
-                                        }
                                     </div>
-                                </main>
-
-                                <div className="w-full flex justify-center py-2 lg:pt-4 pt-8 ">
-
-                                </div>
 
 
-                                <BrowserRouter>
-                                    <div className="bottom flex-col relative flex-wrap md:w-[42rem] md:mx-auto w-full ">
+                                    <BrowserRouter>
+                                        <div className="bottom flex-col relative flex-wrap md:w-[42rem] md:mx-auto w-full ">
 
-                                        <div className="containe1 flex justify-around  w-full  rounded-lg border border-solid border-[#e6e3e39a]">
+                                            <div className="containe1 flex justify-around  w-full  rounded-lg border border-solid border-[#e6e3e39a]">
 
-                                            <NavLink to={path}
-                                                activeStyle={{ borderBottom: "2px solid #E91E63" }}
-                                                className={(isActive) => isActive ? "active" : "inactive"}
+                                                <NavLink to={path}
+                                                    activeStyle={{ borderBottom: "2px solid #E91E63" }}
+                                                    className={(isActive) => isActive ? "active" : "inactive"}
 
 
-                                            >
+                                                >
 
-                                                <div className="p-4 text-center  rounded-lg rounded-b-none   
+                                                    <div className="p-4 text-center  rounded-lg rounded-b-none   
                                              pb-1">
-                                                    <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold
+                                                        <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold
                                                     
                                                     space-x-1">Status</span>
-                                                    <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
-                                                        🎭
-                                                    </span>
-                                                </div>
+                                                        <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
+                                                            🎭
+                                                        </span>
+                                                    </div>
 
-                                            </NavLink>
+                                                </NavLink>
 
 
-                                            <NavLink to="/user/friends"
-                                                activeStyle={{ borderBottom: "2px solid #E91E63" }}
+                                                <NavLink to="/user/friends"
+                                                    activeStyle={{ borderBottom: "2px solid #E91E63" }}
 
-                                            >
-                                                <div className="p-4 text-center  rounded-lg rounded-b-none  pb-1 ">
-                                                    <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Friends</span>
-                                                    <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
-                                                        {
-                                                            Object.keys(userInfo).length > 0 && userInfo.userGeneralInfo[0].friends.length
-                                                        }
-                                                    </span>
-                                                </div>
+                                                >
+                                                    <div className="p-4 text-center  rounded-lg rounded-b-none  pb-1 ">
+                                                        <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Friends</span>
+                                                        <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
+                                                            {
+                                                                Object.keys(userInfo).length > 0 && userInfo.userGeneralInfo[0].friends.length
+                                                            }
+                                                        </span>
+                                                    </div>
 
-                                            </NavLink>
-                                            {/* <NavLink to="/user/comments">
+                                                </NavLink>
+                                                {/* <NavLink to="/user/comments">
                                         <div className="p-4 text-center">
                                             <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
                                                 {TotalComment}
@@ -450,73 +455,74 @@ export default function ProfileCard(props) {
                                         </div>
 
                                     </NavLink> */}
-                                            <NavLink to="/user/photos"
-                                                activeStyle={{ borderBottom: "2px solid #E91E63" }}
-                                            >
-                                                <div className="p-4 text-center  rounded-lg rounded-b-none  pb-1 ">
-                                                    <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Photos</span>
-                                                    <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
-                                                        22
-                                                    </span>
-                                                </div>
-                                            </NavLink>
-                                            <NavLink to="/user/posts"
-                                                activeStyle={{ borderBottom: "2px solid #E91E63" }}
-                                            >
-                                                <div className="p-4 text-center  rounded-lg rounded-b-none  pb-1 ">
-                                                    <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Posts</span>
-                                                    <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
-                                                        {
-                                                            Object.keys(userInfo).length > 0 && userInfo.getUserPost.length
-                                                        }
-                                                    </span>
-                                                </div>
+                                                <NavLink to="/user/photos"
+                                                    activeStyle={{ borderBottom: "2px solid #E91E63" }}
+                                                >
+                                                    <div className="p-4 text-center  rounded-lg rounded-b-none  pb-1 ">
+                                                        <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Photos</span>
+                                                        <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
+                                                            22
+                                                        </span>
+                                                    </div>
+                                                </NavLink>
+                                                <NavLink to="/user/posts"
+                                                    activeStyle={{ borderBottom: "2px solid #E91E63" }}
+                                                >
+                                                    <div className="p-4 text-center  rounded-lg rounded-b-none  pb-1 ">
+                                                        <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Posts</span>
+                                                        <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
+                                                            {
+                                                                Object.keys(userInfo).length > 0 && userInfo.getUserPost.length
+                                                            }
+                                                        </span>
+                                                    </div>
 
 
-                                            </NavLink>
-                                        </div>
-
-                                        <Switch>
-
-                                            <div className={`section  mt-4  flex-auto  mds-editor8:w-full  border border-solid border-[#cccccc59] rounded-xl ${loadUserProfileInfo && "bg-[#c4c3c3ea] animate-pulse"}`} >
-
-                                                {/* fname={fname} lname={lname} country={country} city={city} stream={stream} position={position} aboutMe={aboutMe} college={college} */}
-                                                <Route exact path={path} >
-                                                    <Status info={Object.keys(userInfo).length > 0 && userInfo.userGeneralInfo[0]} loadUserProfileInfo={loadUserProfileInfo} />
-                                                </Route>
-                                                <Route exact path="/user/friends">
-                                                    {userInfo ? <Friends info={Object.keys(userInfo).length > 0 && userInfo.userGeneralInfo[0]} loadUserProfileInfo={loadUserProfileInfo} usernameId={usernameId} _id={googleId}
-                                                        cancleFriendRequest={cancleFriendRequest}
-                                                        setAcceptMessage={setAcceptMessage}
-                                                        friends={friends}
-                                                    /> : <Redirect to={path} />
-
-                                                    }
-                                                </Route>
-                                                <Route exact path="/user/comments">
-                                                    <Comments />
-                                                </Route>
-                                                <Route exact path="/user/photos">
-                                                    <Photos1 />
-                                                </Route>
-                                                <Route exact path="/user/posts"  >
-
-                                                    <Posts />
-                                                </Route>
-
-                                                <Route exact path="/update_profile"  >
-
-                                                    <UpdateProfile />
-                                                </Route>
+                                                </NavLink>
                                             </div>
 
-                                        </Switch>
-                                    </div>
+                                            <Switch>
 
-                                </BrowserRouter>
-                            </div>
+                                                <div className={`section  mt-4  flex-auto  mds-editor8:w-full  border border-solid border-[#cccccc59] rounded-xl ${loadUserProfileInfo && "bg-[#c4c3c3ea] animate-pulse"}`} >
 
-                        </Card>
+                                                    {/* fname={fname} lname={lname} country={country} city={city} stream={stream} position={position} aboutMe={aboutMe} college={college} */}
+                                                    <Route exact path={path} >
+                                                        <Status info={Object.keys(userInfo).length > 0 && userInfo.userGeneralInfo[0]} loadUserProfileInfo={loadUserProfileInfo} />
+                                                    </Route>
+                                                    <Route exact path="/user/friends">
+                                                        {userInfo ? <Friends info={Object.keys(userInfo).length > 0 && userInfo.userGeneralInfo[0]} loadUserProfileInfo={loadUserProfileInfo} usernameId={usernameId} _id={googleId}
+                                                            cancleFriendRequest={cancleFriendRequest}
+                                                            setAcceptMessage={setAcceptMessage}
+                                                            friends={friends}
+                                                        /> : <Redirect to={path} />
+
+                                                        }
+                                                    </Route>
+                                                    <Route exact path="/user/comments">
+                                                        <Comments />
+                                                    </Route>
+                                                    <Route exact path="/user/photos">
+                                                        <Photos1 />
+                                                    </Route>
+                                                    <Route exact path="/user/posts"  >
+
+                                                        <Posts />
+                                                    </Route>
+
+                                                    <Route exact path="/update_profile"  >
+
+                                                        <UpdateProfile />
+                                                    </Route>
+                                                </div>
+
+                                            </Switch>
+                                        </div>
+
+                                    </BrowserRouter>
+                                </div>
+
+                            </Card>
+                        </div>
 
                     </div>
 

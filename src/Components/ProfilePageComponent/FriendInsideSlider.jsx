@@ -55,7 +55,7 @@ function FriendInsideSlider({ image, item, FilterUser, sendFriendRequest }) {
 
 
     useEffect(() => {
-        const bool = item.receiverrequest.some((item) => item._id === UserInformationLoad?.googleId)
+        const bool = item?.receiverrequest.some((item) => item._id === UserInformationLoad?.googleId)
         setConnectMessage(bool)
 
 
@@ -67,8 +67,8 @@ function FriendInsideSlider({ image, item, FilterUser, sendFriendRequest }) {
                 <header className="image w-full h-full relative cursor-pointer"
 
                 >
-                    <NavLink to={`/profile/${item.googleId}`}>
-                        {item.url ? <Image src={item.url}
+                    <NavLink to={`/profile/${item?.googleId}`}>
+                        {item?.url ? <Image src={item?.url}
                             className="w-full md:min-h-[15rem] rounded-lg "
                         /> :
                             <Image src={Photos}
@@ -86,7 +86,7 @@ function FriendInsideSlider({ image, item, FilterUser, sendFriendRequest }) {
                         ripple="light"
                         className="absolute -top-1 -right-1 md:top-1 md:right-1"
                         onClick={() => {
-                            FilterUser(item._id)
+                            FilterUser(item?._id)
                         }}
                     >
                         <Icon name={<MdCancel className='text-[1.8rem] md:text-[2.6rem] rounded-full  bg-[#05040400] text-[#fff]' />} size="sm" />
@@ -94,7 +94,7 @@ function FriendInsideSlider({ image, item, FilterUser, sendFriendRequest }) {
                 </header>
 
                 <div className="already_friends my-3">
-                    <p className='text-[1.4rem] font-semibold truncate '>{item.fname + " " + item.lname}</p>
+                    <p className='text-[1.4rem] font-semibold truncate '>{item?.fname + " " + item?.lname}</p>
 
                 </div>
                 <div className={`friends_se  flex -mt-[8px] cursor-pointer py-1 rounded bg-[#c0c0c0] ${friends.length > 3 ? "justify-evenly" : ""}`}>
@@ -115,8 +115,8 @@ function FriendInsideSlider({ image, item, FilterUser, sendFriendRequest }) {
                             })
                         }
                     </div>
-                    {friends.length > 3 &&
-                        <p className='text-lg font-sans font-semibold tracking-wider truncate  flex-[3] -ml-[1rem]'>+{friends.length - 3} more </p>
+                    {friends?.length > 3 &&
+                        <p className='text-lg font-sans font-semibold tracking-wider truncate  flex-[3] ml-[1.8rem]'>+{friends?.length - 3} more </p>
                     }
                 </div>
                 <div className="friend_connect flex justify-center bg-white mt-1 mb-1 px-2">

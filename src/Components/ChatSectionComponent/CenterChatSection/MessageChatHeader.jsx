@@ -65,7 +65,7 @@ function MessageChatHeader({ chatHeader, setVideoOverlay, q, RoomData, setRoomCh
 
                         <p className='text-[1.2-rem] tracking-wider text-[#1a1919] truncate'>{
 
-                            q.length !== 9 ? (fullName.length > 16 ? fullName.substring(0, 16) + "..." : fullName) : RoomData.RoomName
+                            q.length !== 9 ? (fullName.length > 16 ? fullName.substring(0, 16) + "..." : fullName) : RoomData?.RoomName
 
                         }
                             <br />

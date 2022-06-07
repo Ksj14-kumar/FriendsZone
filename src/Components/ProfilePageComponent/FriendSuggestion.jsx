@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
 // Import Swiper React components
-import { Swiper, SwiperSlide } from "swiper/react";
 import img1 from '../../assets/img/team-1-800x800.jpg'
 import img2 from '../../assets/img/team-2-800x800.jpg'
 import img3 from '../../assets/img/team-3-800x800.jpg'
@@ -9,15 +8,11 @@ import img5 from '../../assets/img/thomas.jpg'
 import img6 from '../../assets/img/team-3-800x800.jpg'
 import img7 from '../../assets/img/background-1920x1280.jpg'
 
-// Import Swiper styles
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
 
-// import "./styles.css";
+
+
 
 // import required modules
-import { Pagination, Navigation } from "swiper";
 import FriendInsideSlider from "./FriendInsideSlider";
 import { useSelector } from "react-redux"
 
@@ -70,64 +65,36 @@ export default function FriendSuggestion({ AllUser, FilterUser }) {
   }
   return (
     <>
-      <Swiper navigation={true}
-        slidesPerView={windowWidth <= 372 ? 2 : 3}
-        spaceBetween={windowWidth <= 372 ? 10 : -85}
-        slidesPerGroup={windowWidth <= 372 ? 2 : 3}
-        loop={false}
-        loopFillGroupWithBlank={true}
-        pagination={{
-          clickable: false,
-          type: '',
 
-        }}
+      <main className="main_friend flex gap-x-2 w-full overflow-x-auto" id="friends_suggestion_slider">
+        {
+          (AllUser !== null || AllUser !== undefined) && AllUser.map((item, index) => {
+            return (
+              <>
+                <div key={index}>
+                  <FriendInsideSlider image={img1} item={item} FilterUser={FilterUser} sendFriendRequest={sendFriendRequest} />
+                </div>
 
-        modules={[Pagination, Navigation]}
-        className="mySwiper"
+              </>
+            )
+          })
+        }
 
 
 
-      >
-        <main className="main_friend flex gap-x-2">
-          {
-            (AllUser !== null || AllUser !== undefined) && AllUser.map((item, index) => {
-              return (
-                <>
-                  <SwiperSlide key={index}>
-                    <FriendInsideSlider image={img1} item={item} FilterUser={FilterUser} sendFriendRequest={sendFriendRequest} />
-                  </SwiperSlide>
 
-                </>
-              )
-            })
-          }
+        {
+          // [1, 2, 3, 4, 5, 6, 7].map(item => {
+          //   return (
 
-          {/* // <SwiperSlide>
-              //   <FriendInsideSlider image={img2} />
-              // </SwiperSlide>
-              // <SwiperSlide>
-              //   <FriendInsideSlider image={img3} />
-              // </SwiperSlide>
-              // <SwiperSlide>
-              //   <FriendInsideSlider image={img4} />
-              // </SwiperSlide>
-              // <SwiperSlide>
-              //   <FriendInsideSlider image={img5} />
-              // </SwiperSlide>
-              // <SwiperSlide>
-              //   <FriendInsideSlider image={img6} />
-              // </SwiperSlide>
-              // <SwiperSlide>
-              //   <FriendInsideSlider image={img7} />
-              // </SwiperSlide>
-              // <SwiperSlide>
-              //   <FriendInsideSlider image={img1} />
-              // </SwiperSlide>
-              // <SwiperSlide>
-              //   <FriendInsideSlider image={img4} />
-              // </SwiperSlide> */}
-        </main>
-      </Swiper>
+          //     <FriendInsideSlider image={img4} />
+          //   )
+          // })
+        }
+
+
+
+      </main>
 
     </>
   );

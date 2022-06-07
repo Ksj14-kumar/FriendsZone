@@ -83,7 +83,7 @@ function SearchBarTable({ showSearch, setShowSearch, setPopOverEffect, setQuery,
             // ref={SearchFilter}
             >
                 {/* post-screen1:w-[35rem] mds-editor14:w-[28rem] mds-editor15:w-[22rem] mds-editor16:w-[18rem] mds-editor17:w-[14rem] w-[10rem] */}
-                <div className="_top_search_bar flex   bg-[#fff] rounded-lg flex-col  mds-editor18:w-full  mds-editor18:bg-red-600  "
+                <div className="_top_search_bar flex   bg-[#fff] rounded-lg flex-col  mds-editor18:w-full   "
                 >
 
                     <div className="search_container  w-full">

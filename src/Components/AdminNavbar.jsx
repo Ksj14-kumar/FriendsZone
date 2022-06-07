@@ -31,7 +31,7 @@ import Popover from "@material-tailwind/react/Popover";
 import PopoverContainer from "@material-tailwind/react/PopoverContainer";
 import PopoverHeader from "@material-tailwind/react/PopoverHeader";
 import PopoverBody from "@material-tailwind/react/PopoverBody";
-
+import { motion, AnimatePresence } from "framer-motion"
 
 
 import { success, error } from '../toastifyMessage/Toast';
@@ -672,7 +672,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             {/* md:ml-64 */}
             {/* bg-light-blue-500 */}
             {/* 10000 */}
-            <nav className="bg-light-blue-500  py-2 px-3 fixed w-full z-[5] drop-shadow-lg">
+            <nav className="bg-light-blue-500  py-2 px-3 fixed w-full z-[18] drop-shadow-lg">
                 <div className="container max-w-full mx-auto flex items-center justify-between md:pr-8 md:pl-10">
                     <div className="md:hidden">
                         <Button
@@ -716,7 +716,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                             mds-editor25:w-[26rem] mds-editor25:right-[18rem] 
                             mds-editor26:w-[20rem] mds-editor26:right-[18rem]
                              mds-editor27:w-[17rem] mds-editor27:right-[18rem] 
-                             mds-editor28:w-[17.5rem] mds-editor27:right-[16rem] 
+                             mds-editor28:w-[17.5rem] 
                                mds-editor29:left-[5rem]
                              mds-editor29:cursor-pointer 
                         
@@ -766,7 +766,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
 
                                     >
                                         <FaUserFriends className='text-[2rem] self-center text-[#270082]' />
-                                        <article className=' bg-red-500 absolute right-2 -top-2 mds-editor8:-top-3'>
+                                        <article className='  absolute right-2 -top-2 mds-editor8:-top-3'>
 
                                             {
                                                 (friendsRequest !== undefined && friendsRequest.length > 0) &&
@@ -821,10 +821,16 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                         }}
 
                                     >
-                                        <Image src={userProfile}
-                                            rounded alt="img" style={{ backgroundSize: "cover" }}
-                                            className="w-[2.5rem] h-[2.5rem] mr-[.8rem] flex-shrink-0 cursor-pointer"
-                                        />
+                                        {LoaderRedux ? "" : !showImage ?
+                                            <Image src={userProfile}
+                                                rounded alt="img" style=
+                                                ""
+                                                className="w-[2.5rem] h-[2.5rem] flex-shrink-0"
+                                            />
+                                            :
+
+                                            <Image src={showImage}
+                                                rounded alt="img" className="w-[2.5rem] h-[2.5rem] flex-shrink-0" />}
                                     </div>
 
 
@@ -880,9 +886,16 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                     </div>
                 </div>
             </nav >
-            {
-                showRightSideBar && <AdminRightSideBar />
-            }
+            <AnimatePresence>
+                {
+                    showRightSideBar &&
+                    <AdminRightSideBar showRightSideBar={showRightSideBar}
+                        setShowRightSideBar={setShowRightSideBar}
+                    />
+
+
+                }
+            </AnimatePresence>
             {/* //  MAIN BODY OF DASHBOARD */}
             {/* 
             <Route exact path="/update_profile">

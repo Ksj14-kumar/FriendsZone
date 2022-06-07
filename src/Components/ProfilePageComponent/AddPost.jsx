@@ -433,10 +433,9 @@ function AddPost() {
     //============================================MODAL FOR Photos===================
     return (
         <>
-            <div className="post-card flex justify-around md:pl-48 md:mt-[18rem] relative sm-[25rem]   lg:mt-[11rem] ">
+            <div className="post-card flex justify-around relative">
                 {/* ===================POST CARD PAGE ========================*/}
-                <Card className="inner-post-card lg:-mt-[170px] md:-mt-[280px] -mt-[300px] 
-        md:ml-[8rem] md:mr-[6rem]  md-w-[71rem] mx-[2rem]  shadow-lg h-[12rem] pt-[0rem] ">
+                <Card className="inner-post-card  shadow-lg h-[12rem]">
                     {/* <CardHeader color="lightBlue" size="lg">
                 <H5 color="white">Login</H5>
             </CardHeader> */}
@@ -445,6 +444,7 @@ function AddPost() {
                             <H6 color="gray" >Create Post</H6>
                         </div>
                         <div className="inner-body  flex mds-editor7:-ml-[.5rem] ">
+                        {/* d9d9d9 */}
                             <div className={`card-post-image bg-[#d9d9d9] w-[4rem] h-[4rem] rounded-full flex-shrink-0 mds-editor7:w-[3rem] mds-editor7:h-[3rem] ${!DispatchProfileImage && "animate-pulse"}`}>
                                 {
                                     DispatchProfileImage ? <Image
@@ -456,7 +456,7 @@ function AddPost() {
                                     /> : ""
                                 }
                             </div>
-                            <div className="post-text-container  ml-[1rem]    mr-[3rem] relative flex w-full flex-wrap items-stretch mb-3 mds-editor7:mb-2">
+                            <div className="post-text-container  ml-[1rem]    mr-[3rem] relative flex w-full flex-wrap items-stretch  mb-3 mds-editor7:mb-2">
                                 <button type="button"
                                     className=" py-4  
                                  Gray-600     border shadow 

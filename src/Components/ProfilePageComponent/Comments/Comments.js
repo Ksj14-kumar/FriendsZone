@@ -237,7 +237,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
       {/* <h3 className="comments-title">Comments</h3> */}
       {/* <div className="comment-form-title">Write comment</div> */}
       <CommentForm submitLabel="Comment" handleSubmit={addComment} commentToggle={commentToggle} />
-      <div className={`comments-container ${commentLoader && "w-full flex justify-center items-center"}`}>
+      <div className={`comments-container mb-[1.5rem] ${commentLoader && "w-full flex justify-center items-center mb-[2rem]"}`}>
 
         {commentLoader ? <CommentLodaer /> : rootComments.map((rootComment) => (
           <Comment

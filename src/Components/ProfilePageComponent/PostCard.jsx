@@ -255,14 +255,14 @@ function PostCard({ item, index, filterPost, socket, threeDot }) {
     return (
         <>
             {/* post-screen:mt-[32rem] mt-[26rem] md:pl-48 md:mt-[18rem] relative sm-[25rem] */}
-            <div className="post-card flex justify-around md:pl-[25rem] md:pr-[10.4rem] md:mb-[5rem] -mb-[3rem]    lg:mt-[11rem] post  w-full ">
-                <Card className="post   -mt-[9rem] p-0">
+            <div className="post-card flex justify-around w-full mb-2">
+                <Card className="post p-0">
                     
                     <CardBody >
                         <div className="flex justify-center ">
                             {/* <H6 color="gray" >Create Post</H6> */}
                         </div>
-                        <section className='header-image-section post rounded-lg  flex justify-between' >
+                        <section className='header-image-section post md:rounded-lg  flex justify-between' >
                             <main className='flex  join-of-name-select-option post '>
                                 <article className='
                               card-post-image-modal w-[3rem]  h-[3rem] rounded-full flex-shrink-0 pos
@@ -434,7 +434,7 @@ function PostCard({ item, index, filterPost, socket, threeDot }) {
 
                         </section>
                     </CardBody>
-                    <section className='image section mt-[.8rem]   relative w-full bg-red-600    '>
+                    <section className='image section mt-[.8rem]   relative bg-red-600 w-full   '>
                         {
                             item.fileType === "video" ?
                                 (item.image ?
