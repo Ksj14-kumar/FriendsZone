@@ -24,7 +24,7 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar }) {
                     ease: "easeInOut",
                 }}
                 exit={{ opacity: 0, x: 200 }}
-                className="fixed bg-[#fffefe] top-[3.4rem] right-[0rem] z-[17] w-[25rem] h-screen px-4" id="adminRightSideBar">
+                className="fixed bg-[#fffefe] top-[3.4rem] right-[0rem] z-[17] w-[25rem] mds-editor28:w-[16rem] h-screen px-4" id="adminRightSideBar">
 
 
                 <div className="Con">
@@ -38,15 +38,15 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar }) {
                     <div className="wrap flex items-center flex-[10]">
 
                         <p className="bg-[#c4c4c4] rounded-full p-2 ml-2">
-                            <MdSettings className="text-[2rem] " />
+                            <MdSettings className="text-[2rem] mds-editor28:text-[1.5rem] " />
                         </p>
-                        <p className="text-[1.5rem] text-[#1b1a1a] font-serif tracking-wider ml-[1rem]">
+                        <p className="text-[1.5rem] mds-editor28:text-[1rem] text-[#1b1a1a] font-serif tracking-wider ml-[1rem]">
                             Setting
                         </p>
                     </div>
                     <div className="arrow flex-[2]">
                         <p className="flex justify-end mr-1">
-                            <MdArrowForwardIos className="text-[1.8rem]" />
+                            <MdArrowForwardIos className="text-[1.8rem] mds-editor28:text-[1.3rem]" />
                         </p>
                     </div>
                 </div>
@@ -59,15 +59,15 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar }) {
                     <div className="wrap flex items-center flex-[10]">
 
                         <p className="bg-[#c4c4c4] rounded-full p-2 ml-2">
-                            <FaMoon className="text-[2rem] " />
+                            <FaMoon className="text-[2rem] mds-editor28:text-[1.5rem]" />
                         </p>
-                        <p className="text-[1.5rem] text-[#1b1a1a] font-serif tracking-wider ml-[1rem]">
+                        <p className="text-[1.5rem] text-[#1b1a1a] font-serif tracking-wider ml-[1rem] mds-editor28:text-[1rem]">
                             Theme Mode
                         </p>
                     </div>
                     <div className="arrow flex-[2]">
                         <p className="flex justify-end mr-1">
-                            <MdArrowForwardIos className="text-[1.8rem]" />
+                            <MdArrowForwardIos className="text-[1.8rem] mds-editor28:text-[1.3rem]" />
                         </p>
                     </div>
                 </div>
@@ -78,15 +78,15 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar }) {
                     <div className="wrap flex items-center flex-[10]">
 
                         <p className="bg-[#c4c4c4] rounded-full p-2 ml-2">
-                            <MdMusicNote className="text-[2rem] " />
+                            <MdMusicNote className="text-[2rem] mds-editor28:text-[1.5rem]" />
                         </p>
-                        <p className="text-[1.5rem] text-[#1b1a1a] font-serif tracking-wider ml-[1rem]">
+                        <p className="text-[1.5rem] text-[#1b1a1a] font-serif tracking-wider ml-[1rem] mds-editor28:text-[1rem]">
                             Songs Accessbility
                         </p>
                     </div>
                     <div className="arrow flex-[2]">
                         <p className="flex justify-end mr-1">
-                            <MdArrowForwardIos className="text-[1.8rem]" />
+                            <MdArrowForwardIos className="text-[1.8rem] mds-editor28:text-[1.3rem]" />
                         </p>
                     </div>
                 </div>
@@ -99,15 +99,15 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar }) {
                     <div className="wrap flex items-center flex-[10]">
 
                         <p className="bg-[#c4c4c4] rounded-full p-2 ml-2">
-                            <GiNewspaper className="text-[2rem] " />
+                            <GiNewspaper className="text-[2rem] mds-editor28:text-[1.5rem]" />
                         </p>
-                        <p className="text-[1.5rem] text-[#1b1a1a] font-serif tracking-wider ml-[1rem]">
+                        <p className="text-[1.5rem] text-[#1b1a1a] font-serif tracking-wider ml-[1rem] mds-editor28:text-[1rem]">
                             News
                         </p>
                     </div>
                     <div className="arrow flex-[2]">
                         <p className="flex justify-end mr-1">
-                            <MdArrowForwardIos className="text-[1.8rem]" />
+                            <MdArrowForwardIos className="text-[1.8rem] mds-editor28:text-[1.3rem]" />
                         </p>
                     </div>
                 </div>

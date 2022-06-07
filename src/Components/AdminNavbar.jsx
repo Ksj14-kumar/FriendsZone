@@ -823,8 +823,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                     >
                                         {LoaderRedux ? "" : !showImage ?
                                             <Image src={userProfile}
-                                                rounded alt="img" style=
-                                                ""
+                                                rounded alt="img"
                                                 className="w-[2.5rem] h-[2.5rem] flex-shrink-0 mr-2"
                                             />
                                             :
