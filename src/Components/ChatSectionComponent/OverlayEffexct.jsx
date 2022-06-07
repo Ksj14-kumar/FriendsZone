@@ -24,7 +24,7 @@ function OverlayEffexct({ setBool, overlayObject, setOverlayObject, AllImages })
                     initial={{ opacity: 0, y: overlayBool ? 100 : -100, y: -100 }}
                     animate={{ opacity: 1, y: overlayBool ? 200 : 0, y: 0 }}
                     transition={{ type: "tween", stiffness: 100, damping: 10 }}
-                    className="overlay_effect fixed w-screen h-screen z-[10] bg-[#030202d6] ">
+                    className="overlay_effect fixed w-screen h-screen z-[19] bg-[#030202d6] ">
                     <p className=" flex justify-end ">
 
                         <button className="text-white px-4 py-2 rounded-full mr-[2rem] mt-[.8rem] text-[2rem] focus:outline-none "
@@ -40,8 +40,7 @@ function OverlayEffexct({ setBool, overlayObject, setOverlayObject, AllImages })
                         </button>
                     </p>
                     <div className="wrapper_container flex justify-center items-center h-full w-full ">
-                        <div className="image md:h-[45rem] md:w-[68rem] md:-mt-[4rem]">
-
+                        <div className="image md:h-[45rem] md:w-[34rem] md:-mt-[10rem] -mt-[18rem]">
                             {overlayObject.type === "image" && (
                                 <Image
                                     src={overlayObject.url}

@@ -47,7 +47,7 @@ function ModalForGif({ setSelectedGif, selectedGif, senderId, setModal, sendMess
     console.log({ selected_Gif_url: selected_Gif_url })
     return (
         <>
-            <div className="w-screen h-screen bg-[#0a0a0a3a] fixed z-[16] flex   justify-center ">
+            <div className="w-screen h-screen bg-[#0a0a0a3a] fixed z-[19] flex   justify-center ">
 
 
                 <div className="w-[51rem]  mt-[2rem] bg-[#fff] text-black rounded-lg z-[17] p-3 mb-[0rem] overflow-y-auto  overflow-x-hidden" id="selected_Giphy_scroll">

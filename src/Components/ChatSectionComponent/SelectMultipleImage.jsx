@@ -72,7 +72,7 @@ function SelectMultipleImage({ setImageFileSelector, setImageGroupURl, imageGrou
     // console.log(imagelocalUrl)
     return (
         <>
-            <div className="select-multiple-image absolute h-screen w-screen bg-[#4a4949] z-[15] overflow-x-hidden" id="imageSelectOverlay">
+            <div className="select-multiple-image absolute h-screen w-screen bg-[#4a4949] z-[19] overflow-x-hidden" id="imageSelectOverlay">
                 <div className="_inner flex flex-col">
 
                     <div className="  text-white text-[2.2rem] flex justify-end">
@@ -87,7 +87,7 @@ function SelectMultipleImage({ setImageFileSelector, setImageGroupURl, imageGrou
                     <div className="_image_wrapper  mx-[1rem] md:mx-[8rem]  mds-editor8:h-[45rem] rounded overflow-hidden" id="outer_image_section">
                         <div className="file_upload rounded-md bg-[#570a5798] mx-[1rem] flex  flex-col  mt-[8px]  h-full  relative overflow-y-auto" id="image_select_scrollbar">
                             {/* overflow-x-auto scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 */}
-                            <div className="_image_wrapper  flex gap-x-1 gap-y-1 flex-wrap over">
+                            <div className="_image_wrapper  flex gap-x-1 gap-y-1 flex-wrap justify-center over">
                                 {/* , 6, 6, 7, 8,6,7,8,9,34,2,4 */}
                                 {imagelocalUrl.length > 0 && imagelocalUrl.map(item => {
                                     return (

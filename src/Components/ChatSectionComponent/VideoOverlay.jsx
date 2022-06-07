@@ -130,7 +130,7 @@ function LiveVideo({ setVideoOverlay, socket,videoOverlay,anotherUserId }) {
             initial={{ opacity: 0, y: -100 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, type: "tween" }}
-            className="liver_video fixed w-full h-full bg-[#0a0a0ad5] z-[10]  flex flex-col">
+            className="liver_video fixed w-full h-full bg-[#0a0a0ad5] z-[19]  flex flex-col">
             <div className="button  bg-[#bab9b9] rounded-full relative ml-auto  h-[3rem] flex justify-center items-center w-[3rem] mt-[1rem] mr-[2rem]"
                 onClick={() => {
                     setVideoOverlay(false)
