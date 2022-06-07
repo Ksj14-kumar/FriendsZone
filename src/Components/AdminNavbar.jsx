@@ -107,6 +107,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     const [Noti, setNotification] = useState([])
     const [NotificationGroup, setNotificationGroup] = useState([])
     const [friendsMessage, setFriendsMessage] = useState(false)
+    const [expandSearch, setExpandSearch] = useState(false)
 
     const dispatch = useDispatch()
     // useOnClickOutside(wrapperRef, setImageValue, setImageValueBackground, dispatch, setProgressMessage, setDeleteMessage)
@@ -673,7 +674,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             {/* bg-light-blue-500 */}
             {/* 10000 */}
             <nav className="bg-light-blue-500  py-2 px-3 fixed w-full z-[18] drop-shadow-lg">
-                <div className="container max-w-full mx-auto flex items-center justify-between md:pr-8 md:pl-10">
+                <div className="container max-w-full mx-auto flex items-center justify-between md:pr-8 md:pl-10 ">
                     <div className="md:hidden">
                         <Button
                             color="transparent"
@@ -705,12 +706,9 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                             </Button>
                         </div>
                     </div>
-                    <div className="flex  items-center w-full  justify-end">
-                        <div className="flex  relative  w-full justify-end ">
-                            {/* searchFiled   align-baseline mt-[5px] bg-red-500 flex-3 */}
-                            {/* //  mds-editor29:w-[5rem]  mds-editor29:left-[5rem] */}
-                            {/* md:left-[35rem] md:w-[52rem] */}
-                            <div className={`searchFiled   align-baseline mt-[5px]  fixed 
+                    <div className="flex  items-center w-full  justify-end ">
+                        <div className="flex  relative  w-full justify-end  ">
+                            {/* <div className={`searchFiled   align-baseline mt-[5px]  fixed 
                             md:right-[22rem] md:w-[38rem] 
                             mds-editor24:w-[33rem] mds-editor24:right-[18rem] 
                             mds-editor25:w-[26rem] mds-editor25:right-[18rem] 
@@ -719,52 +717,29 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                              mds-editor28:w-[17.5rem] 
                                mds-editor29:left-[5rem]
                              mds-editor29:cursor-pointer 
-                        
                             ${showSearch ? "fixed w-[29rem] left-[2.7rem] top-[10px]" : "w-[2rem]"}
                             `}
-
                                 ref={SearchFilter}
                             >
-                                {/* <NavbarInput placeholder="Search"
-                                    id="search"
-                                    className="text-black "
-                                    onFocus={() => {
-                                        setShowSearch(true)
-                                        
-                                        setPopOverEffect(true)
-                                    }}
-                                    onBlur={() => {
-                                        setShowSearch(false)
-                                        setPopOverEffect(false)
-                                    }}
-                                    onChange={
-                                        (e) => {
-                                            setQuery(e.target.value)
-                                        }
-                                    }
-                                /> */}
-
                                 <SearchBarTable showSearch={showSearch} setShowSearch={setShowSearch} setQuery={setQuery} setPopOverEffect={setPopOverEffect} query={query} data={userData} userSearchHistory1={userSearchHistory} deleteHistory={deleteHistory} />
+                            </div> */}
 
+                            <div className="left_side_search flex  flex-[10] md:justify-end justify-start items-center relative">
+                                {/* w-[38rem] */}
+                                <div className={`wrap_inout_search w-[38rem] mds-editor31:w-[25rem] mds-editor32:w-[3rem] rounded-full ${expandSearch ? "mds-editor32:w-full" : ""}`}>
+                                    <SearchBarTable showSearch={showSearch} setShowSearch={setShowSearch} setQuery={setQuery} setPopOverEffect={setPopOverEffect} query={query} data={userData} userSearchHistory1={userSearchHistory} deleteHistory={deleteHistory} setExpandSearch={setExpandSearch} expandSearch={expandSearch} />
 
-
-
-
-
+                                </div>
                             </div>
                             {/* ml-auto */}
-                            <div className={`group_right_s flex    ${showSearch ? "hidden" : "block"}`}>
+                            <div className={`group_right_s flex flex-[2]   justify-end  ${expandSearch ? "mds-editor32:hidden" : "block"}`}>
 
                                 <div className={`group_icons flex `}>
 
                                     {/* //user friends group */}
-                                    <section className='friends  flex  ml-[3rem] -mr-[1.5rem] cursor-pointer relative  align-middle
-                            mt-[4px]
-                            justify-center'
+                                    <section className='friends  flex  ml-[1rem] -mr-[1.5rem] cursor-pointer relative     align-middle mt-[4px] justify-center'
                                         ref={friends}
-                                        onClick={() => { }}
-
-                                    >
+                                        onClick={() => { }}>
                                         <FaUserFriends className='text-[2rem] self-center text-[#270082]' />
                                         <article className='  absolute right-2 -top-2 mds-editor8:-top-3'>
 
@@ -782,13 +757,9 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
 
 
                                     {/* //userSerach the data from server */}
-                                    <section className='notification  flex  ml-[3rem] cursor-pointer relative  align-middle
-                            mt-[4px]
-                           
-                            justify-center'
+                                    <section className='notification  flex  ml-[3rem] cursor-pointer relative  align-middle mt-[4px] justify-center'
                                         onClick={() => setShowNotification(!showNotification)}
-                                        ref={notification}
-                                    >
+                                        ref={notification}>
                                         <MdNotifications className='text-[2rem] self-center text-[#270082]' />
                                         <article className=' bg-red-500 absolute right-2 -top-2 mds-editor8:-top-3'>
                                             {
@@ -800,8 +771,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                         </article>
                                     </section>
                                     <section className='messenger  flex ml-[1.8rem] cursor-pointer   relative mt-[3px]'
-                                        ref={message}
-                                    >
+                                        ref={message}>
                                         <BsMessenger className='text-[1.6rem] self-center  text-[#270082]' />
                                         {/* -mt-[2.5rem] ml-[1.5rem] */}
                                         <article className='absolute right-1 -top-2 mds-editor8:-top-3 '>
@@ -814,8 +784,8 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                         </article>
                                     </section>
                                 </div>
-                                <div className="-mr-4 ml-6  relative">
-                                    <div className="img cursor-pointer"
+                                <div className="mr-2 ml-6  relative ">
+                                    <div className="img cursor-pointer flex-shrink-0 w-[2.5rem] h-[2.5rem] mr-3 md:mr-0"
                                         onClick={() => {
                                             setShowRightSideBar(!showRightSideBar)
                                         }}
