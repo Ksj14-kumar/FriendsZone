@@ -1,7 +1,6 @@
 import Image from '@material-tailwind/react/Image'
-import img from "../../assets/img/team-3-800x800.jpg"
-import img1 from "../../assets/img/team-4-470x470.png"
-import React, { useEffect, useState } from 'react'
+
+import React, { useEffect} from 'react'
 import { MdAdd, MdSend } from "react-icons/md"
 import { success, error } from "../../toastifyMessage/Toast"
 
@@ -21,7 +20,6 @@ function SelectMultipleImage({ setImageFileSelector, setImageGroupURl, imageGrou
 
 
 
-    console.log(imageSentLoader)
     function SelectFiles(e) {
         e.preventDefault()
         const Files = e.target.files[0]

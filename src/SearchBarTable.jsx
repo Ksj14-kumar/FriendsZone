@@ -2,9 +2,8 @@ import Image from '@material-tailwind/react/Image';
 import React, { useState, useEffect, useRef } from 'react'
 // import { MdOutlineCancel } from 'react-icons/bi';
 import { MdSearch, MdOutlineCancel, MdHistory } from 'react-icons/md';
-import { BrowserRouter, NavLink, Redirect, Route, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import img1 from './assets/img/download.png';
-import Header from './Components/Header';
 import Button from "@material-tailwind/react/Button";
 
 
@@ -104,20 +103,19 @@ function SearchBarTable({ showSearch, setShowSearch, setPopOverEffect, setQuery,
                 ref={ref}
             >
                 <div className="_top_search_bar flex   bg-[#fff] rounded-lg flex-col  mds-editor18:w-full relative"
+                    ref={searchRef}
                 >
                     <div className="search_container  w-full"
                         onClick={() => {
                             setExpandSearch(true)
                         }}
 
-                        ref={searchRef}
                     >
                         <p className="flex justify-start items-center relative mds-editor32:cursor-pointer">
-                            {/* mds-editor18:text-[2rem] mds-editor18:mt-[3px] mds-editor18:ml-[0] */}
                             <MdSearch className={`absolute mt-[30px] text-[#9d9c9c]  mds-editor32:text-[2rem] ml-3 text-[2rem]`} />
                         </p>
                         {/* ${userSearchHistory === false ? "" : "rounded-b-none  mds-editor18:hidden"} */}
-                        <input type="search" className={`w-full h-[2.3rem] focus:outline-none rounded-lg indent-12  border-b-none ${history || query.length > 0 ? "rounded-b-none" : "rounded-b-lg"}  ${expandSearch ? "mds-editor32:pl-[0rem]" : ""}`}
+                        <input type="search" className={`w-full h-[2.3rem] focus:outline-none rounded-lg  indent-12   ${(history && userSearchHistory1?.length > 0) || query.length > 0 ? "rounded-b-none" : "rounded-b-lg"}  ${expandSearch ? "mds-editor32:pl-[0rem]" : ""}`}
                             onFocus={() => {
                                 if (window.innerWidth <= 463) {
                                     setShowSearch(false)

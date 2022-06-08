@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 
-import { useSelector, useDispatch } from "react-redux"
-import Spinner from "react-spinkit"
-import { Audio, Bars, Circles, Oval, Grid, TailSpin } from 'react-loader-spinner'
+import { useSelector} from "react-redux"
+
+import { TailSpin } from 'react-loader-spinner'
 import AllFriendsBeforeSearch from './AllFriendsBeforeSearch'
 import AllFriendsAfterSearch from './AllFriendsAfterSearch'
 import { motion } from "framer-motion"

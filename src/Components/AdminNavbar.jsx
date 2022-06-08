@@ -726,10 +726,11 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
 
                             <div className="left_side_search flex  flex-[10] md:justify-end justify-start items-center relative">
                                 {/* w-[38rem] */}
-                                <div className={`wrap_inout_search w-[38rem] mds-editor31:w-[25rem] mds-editor32:w-[3rem] rounded-full ${expandSearch ? "mds-editor32:w-full" : ""}`}>
+                                <motion.div className={`wrap_inout_search w-[38rem] mds-editor31:w-[25rem] mds-editor32:w-[3rem] rounded-full transition-all duration-300 ${expandSearch ? "mds-editor32:w-full" : ""}`}
+                                >
                                     <SearchBarTable showSearch={showSearch} setShowSearch={setShowSearch} setQuery={setQuery} setPopOverEffect={setPopOverEffect} query={query} data={userData} userSearchHistory1={userSearchHistory} deleteHistory={deleteHistory} setExpandSearch={setExpandSearch} expandSearch={expandSearch} />
 
-                                </div>
+                                </motion.div>
                             </div>
                             {/* ml-auto */}
                             <div className={`group_right_s flex flex-[2]   justify-end  ${expandSearch ? "mds-editor32:hidden" : "block"}`}>
