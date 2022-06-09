@@ -786,7 +786,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                     </section>
                                 </div>
                                 <div className="mr-2 ml-6  relative ">
-                                    <div className="img cursor-pointer flex-shrink-0 w-[2.5rem] h-[2.5rem] mr-3 md:mr-0"
+                                    <div className={`img cursor-pointer flex-shrink-0 w-[2.5rem] h-[2.5rem] mr-3 md:mr-0 bg-[#d5d5d5] border border-solid border-[#f1f0f0] rounded-full ${LoaderRedux && "animate-pulse"}`}
                                         onClick={() => {
                                             setShowRightSideBar(!showRightSideBar)
                                         }}

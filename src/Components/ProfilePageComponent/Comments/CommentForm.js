@@ -64,7 +64,7 @@ const CommentForm = ({
     // console.log({ commentReplyId })
 
     useEffect(() => {
-        commentReplyName && setText(`@${commentReplyName}\b`)
+        commentReplyName && setText(`@${commentReplyName}\t`)
 
     }, [commentReplyName])
 
