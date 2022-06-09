@@ -15,7 +15,8 @@ const CommentForm = ({
     handleCancel,
     initialText = "",
     commentToggle,
-    commentReplyId,
+    commentReplyName,
+
     backendComments
 }) => {
     const [text, setText] = useState(initialText);
@@ -60,41 +61,37 @@ const CommentForm = ({
     }, [text])
 
 
-    console.log({ commentReplyId })
+    // console.log({ commentReplyId })
 
     useEffect(() => {
-        commentReplyId && setText(`@${commentReplyId}`)
+        commentReplyName && setText(`@${commentReplyName}\b`)
 
-    }, [commentReplyId])
+    }, [commentReplyName])
 
     return (
 
         <>
             <div className="md:mr-10 md:ml-[1rem] px-1" id="comment_area_section">
-                {/* <textarea
-                className="comment-form-textarea"
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-            /> */}
-                {/* <button className="comment-form-button" >
-                {submitLabel}
-            </button> */}
 
-
-
-
-
-                <textarea
-                    ref={textRef}
-                    className={`resize-none border border-solid border-[#dad7d7] focus:outline-none  w-full overflow-hidden p-4 rounded-lg text-[1.1rem] font-serif tracking-wider ${text?.length ? (text.includes("@") ? ("underline font-bold") : ("")) : ("")}`}
-                    placeholder="Write a comment..."
-                    onChange={(e) => {
-                        setText(e.target.value)
-                        e.preventDefault()
-                    }}
-                    value={text}
+                {/* ${text?.length ? (text.includes("@") ? ("underline font-bold") : ("")) : ("")}` */}
+                <div className="textArea"
+                // dangerouslySetInnerHTML={{ __html: text }}
                 >
-                </textarea>
+
+                    <textarea
+                        ref={textRef}
+                        className={`resize-none border border-solid border-[#dad7d7] focus:outline-none  w-full overflow-hidden p-4 rounded-lg text-[1.1rem] font-serif tracking-wider`}
+                        placeholder="Write a comment..."
+                        onChange={(e) => {
+                            setText(e.target.value)
+                            e.preventDefault()
+                        }}
+                        value={text}
+                    // dangerouslySetInnerHTML={{ __html: text }}
+                    >
+                    </textarea>
+                </div>
+
                 <section className="bg-red-600  flex justify-end relative ">
 
                     <Button

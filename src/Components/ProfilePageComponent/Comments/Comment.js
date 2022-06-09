@@ -145,7 +145,7 @@ const Comment = ({
                 {isReplying && (
                     <CommentForm
                         submitLabel="Reply"
-                        commentReplyId={comment.username}
+                        commentReplyName={comment.username}
                         handleSubmit={(text) => addComment(text, replyId)}
                     />
                 )}
