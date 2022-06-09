@@ -18,7 +18,8 @@ function RightSidebar({ socket, currentUser, currentId, setCurrentChat1, current
     const [friends, setFriendsLength] = useState(null)
     const dispatch = useDispatch()
     const [onlineUser, setOnlineUser] = useState([])
- 
+    const componentMount = useRef(true)
+
 
     const UserInformationLoad = useSelector((state) => {
         return state.UserInformationLoad.value
@@ -48,15 +49,21 @@ function RightSidebar({ socket, currentUser, currentId, setCurrentChat1, current
 
 
     useEffect(async () => {
+
+    if(componentMount.current){
+
         socket?.emit("login", localStorage.getItem("uuid"))
         socket?.on("onlineUsers", (data) => {
             setOnlineUser(data)
             // dispatch({ type: "onlineUsers", payload: value })
-
+            
         })
-
+        
         socket?.on("userExist", (data) => {
         })
+    }
+
+    return (()=>{componentMount.current= false})
 
 
     }, [socket, UserInformationLoad])

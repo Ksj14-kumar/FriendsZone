@@ -1472,19 +1472,3 @@ function NoChatHere({ q }) {
     </>
   )
 }
-
-
-
-function GippySelect(q, selectedGif, setcurrentChat, setSelectedGif, setMessageId, setSentMessageLoader, setUploadLoaderMessage, socket, user, messageId) {
-
-
-
-  try {
-
-  }
-  catch (err) {
-    console.warn(err)
-  }
-
-
-}

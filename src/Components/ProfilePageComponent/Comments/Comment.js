@@ -60,10 +60,18 @@ const Comment = ({
             </div>
             <div className="comment-right-part  w-full mr-2 mds-editor6:text-[.9rem]">
                 <div className="comment-content  flex ml-2 -mt-1 ">
-                    <div className="comment-author  font-medium text-[1.1rem] mds-editor6:text-[.9rem]">{comment.username}</div>
+                    <div className="comment-author text-[1.1rem] mds-editor6:text-[.9rem] font-semibold">{comment.username}</div>
                     <div className="ml-2">{comment.createdAt}</div>
                 </div>
-                {!isEditing && <div className="comment-text ml-2  font-sans  ">{comment.body}</div>}
+                {!isEditing &&
+                    <div>
+
+                        <div className="comment-text ml-2  font-san"
+                            dangerouslySetInnerHTML={{ __html: convertToLink(comment.body) }}
+                        ></div>
+                    </div>
+                }
+
                 {isEditing && (
                     <CommentForm
                         submitLabel="Update"
@@ -172,8 +180,16 @@ const Comment = ({
             </div>
 
 
-        </div>
+        </div >
     );
 };
 
 export default Comment;
+
+
+const convertToLink = (text) => {
+    var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    var text1 = text.replace(exp, "<a href='$1' class='text-blue-500 hover:underline'  target='_blank'>$1</a>");
+    var exp2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+    return text1.replace(exp2, '$1<a  href="http://$2" class="text-blue-500 hover:underline">$2</a>');
+}

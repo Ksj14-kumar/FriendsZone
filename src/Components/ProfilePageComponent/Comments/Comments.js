@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import CommentForm from "./CommentForm";
 import Comment from "./Comment";
 import { useDispatch } from 'react-redux'
@@ -17,6 +17,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
 
   const [Length, setLength] = useState(0)
   const [commentLoader, setCommentLoader] = useState(false)
+  const isMount = useRef(true)
 
 
 
@@ -108,7 +109,10 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
         const DeleteResponseData = await deleteResponse.json()
         if (deleteResponse.status === 200) {
 
+
+
           setBackendComments(DeleteResponseData.data);
+
 
         }
 
@@ -138,9 +142,12 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
         })
         const commentData = await commentResponse.json()
         if (commentResponse.status === 200) {
-          setBackendComments(commentData.data)
-          setLength(commentData.length)
-          setCommentLoader(false)
+          if (isMount.current) {
+
+            setBackendComments(commentData.data)
+            setLength(commentData.length)
+            setCommentLoader(false)
+          }
 
         }
         else if (commentResponse.status !== 200) {
@@ -157,6 +164,9 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
 
     }
     loadComment()
+    return (() => {
+      isMount.current = false
+    })
 
     // getCommentsApi().then((data) => {
     //   setBackendComments(data);
@@ -182,8 +192,10 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
         })
         const totalCommentData = await totalCommentResponse.json()
         if (totalCommentResponse.status === 200) {
-          setCommentLoader(false)
-          dispatch({ type: "SET_TOTAL_COMMENT", payload: totalCommentData.data })
+          if (isMount.current) {
+            setCommentLoader(false)
+            dispatch({ type: "SET_TOTAL_COMMENT", payload: totalCommentData.data })
+          }
         }
 
       }
@@ -194,7 +206,9 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
 
     }
     totalComment()
-
+    return (() => {
+      isMount.current = false
+    })
 
 
   }, [post_id])
@@ -215,15 +229,13 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
         const commentData = await commentResponse.json()
         if (commentResponse.status === 200) {
           setBackendComments(commentData.data)
+
         }
 
       }
       catch (err) {
         console.warn(err)
       }
-
-
-
     }
     loadComment()
 
@@ -241,18 +253,18 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
 
         {commentLoader ? <CommentLodaer /> : rootComments.map((rootComment) => (
           < Comment
-            key = { rootComment.uuid }
-            comment = { rootComment }
-            replies = { getReplies(rootComment.uuid)}
-        activeComment={activeComment}
-        setActiveComment={setActiveComment}
-        addComment={addComment}
-        deleteComment={deleteComment}
-        updateComment={updateComment}
-        currentUserId={currentUserId}
-        ImageUrl={rootComment.ImageUrl}
+            key={rootComment.uuid}
+            comment={rootComment}
+            replies={getReplies(rootComment.uuid)}
+            activeComment={activeComment}
+            setActiveComment={setActiveComment}
+            addComment={addComment}
+            deleteComment={deleteComment}
+            updateComment={updateComment}
+            currentUserId={currentUserId}
+            ImageUrl={rootComment.ImageUrl}
             // ImageUrl={ImageUrl}
-        currentUserName={currentUserName}
+            currentUserName={currentUserName}
 
           />
         ))}

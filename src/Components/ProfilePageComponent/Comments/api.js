@@ -45,7 +45,7 @@ export const createComment = async (text, parentId = null, UserIdForPostComments
         body: text,
         parentId,
         userId: currentUserId,
-        username: currentUserName,
+        username: changeTextCase(currentUserName),
         post_id: post_id,
         ImageUrl: ImageUrl,
         createdAt: new Date(Date.now()).toDateString().split(" ")[2] + " " + new Date(Date.now()).toDateString().split(" ")[1] + " " + new Date(Date.now()).toDateString().split(" ")[3],
@@ -59,3 +59,11 @@ export const updateComment = async (text) => {
 export const deleteComment = async () => {
     return {};
 };
+
+
+function changeTextCase(str){
+    const value =str.split(' ')
+   .map(w => w[0].toUpperCase() + w.substring(1).toLowerCase())
+   .join(' ');
+   return value
+}

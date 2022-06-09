@@ -10,7 +10,7 @@ import img4 from '../assets/img/team-4-470x470.png'
 import LiveUser from './chatSection/LiveUser';
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-function FooterButton({ bool, online, currentId, socket,setFriendsLength}) {
+function FooterButton({ bool, online, currentId, socket, setFriendsLength }) {
     const dispatch = useDispatch()
     const targetDiv = useRef()
     const siblingDiv = useRef()
@@ -18,16 +18,14 @@ function FooterButton({ bool, online, currentId, socket,setFriendsLength}) {
     const [onlinefriends, setOnlineFriends] = useState([])
     const [friends, setFriends] = useState([])
     const [chats, setChats] = useState([])
+    const isMount = useRef(true)
 
     const UserInformationLoad = useSelector((state) => {
         return state.UserInformationLoad.value
     })
 
-// console.log({chats, currentChats})
+    // console.log({chats, currentChats})
 
-useEffect(() => {
-    
-},[])
 
 
     useEffect(() => {
@@ -73,18 +71,21 @@ useEffect(() => {
                 })
                 const data = await res.json()
                 // console.log("userdata",{data})
-       
+
                 if (res.status === 200) {
                     // setFriends(data.friendList)
-                    const value = data.friendList.filter(item => {
-                        return online.some(value => {
-                           
-                            return item._id === value.adminId
+                    if (isMount.current) {
+
+                        const value = data.friendList.filter(item => {
+                            return online.some(value => {
+
+                                return item._id === value.adminId
+                            })
                         })
-                    })
-                    setFriends(value)
-                    setFriendsLength(value.length)
-                dispatch({ type: "onlineUsers", payload: value })
+                        setFriends(value)
+                        setFriendsLength(value.length)
+                        dispatch({ type: "onlineUsers", payload: value })
+                    }
 
                 }
                 else if (res.status !== 200) {
@@ -99,6 +100,10 @@ useEffect(() => {
         }
         loadFriends()
 
+        return (() => {
+            isMount.current = false
+        })
+
     }, [online, currentId])
 
 
@@ -110,7 +115,6 @@ useEffect(() => {
 
     async function handleClick(item) {
         try {
-
             const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/conversation/${UserInformationLoad?.googleId}/${item._id}`)
             const resData = await res.json()
             console.log({ resData: resData.data })
@@ -120,16 +124,9 @@ useEffect(() => {
                 dispatch({
                     type: "Chat", payload: resData.data
                 })
-
-
             }
             else if (res.status !== 200) {
-
-
             }
-
-
-
         } catch (err) {
             console.warn(err)
 
@@ -197,7 +194,7 @@ useEffect(() => {
                         return (
                             <>
                                 <NavLink to={`/messages?q=${item._id}`}>
-                                {/* <div className="con" onClick={(e) => {
+                                    {/* <div className="con" onClick={(e) => {
                                     handleClick(item)
                                    
                                 }}
@@ -206,12 +203,12 @@ useEffect(() => {
 
 
                                     <LiveUser value={item} />
-                                {/* </div> */}
+                                    {/* </div> */}
                                 </NavLink>
                             </>
 
                         )
-                    }):<NoUserLive/>
+                    }) : <NoUserLive />
                 }
 
 
@@ -235,10 +232,10 @@ export default FooterButton;
 
 
 
-function NoUserLive(){
-    return(
+function NoUserLive() {
+    return (
         <>
-        <p className="text-[2rem] text-black text-center py-2">No User Live</p>
+            <p className="text-[2rem] text-black text-center py-2">No User Live</p>
 
         </>
     )
