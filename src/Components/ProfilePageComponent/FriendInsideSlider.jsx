@@ -43,6 +43,7 @@ function FriendInsideSlider({ image, item, FilterUser, sendFriendRequest }) {
 
             } catch (err) {
                 console.log(err)
+
             }
         }
         fetchData()
@@ -62,7 +63,7 @@ function FriendInsideSlider({ image, item, FilterUser, sendFriendRequest }) {
     }, [item])
     return (
         <>
-            <div className="friends_suggests  bg-white  flex flex-col w-[15rem] mds-editor13:w-[10rem] rounded-lg p-1  border-[#d0cfcf] border border-solid">
+            <div className="friends_suggests  bg-white  flex flex-col w-[15rem] mds-editor13:w-[13rem] rounded-lg p-1  border-[#d0cfcf] border border-solid">
 
                 <header className="image w-full h-full relative cursor-pointer"
 
@@ -97,7 +98,7 @@ function FriendInsideSlider({ image, item, FilterUser, sendFriendRequest }) {
                     <p className='text-[1.4rem] font-semibold truncate '>{item?.fname + " " + item?.lname}</p>
 
                 </div>
-                <div className={`friends_se  flex -mt-[8px] cursor-pointer py-1 rounded bg-[#c0c0c0] ${friends.length > 3 ? "justify-evenly" : ""}`}>
+                {friends !== undefined && <div className={`friends_se  flex -mt-[8px] cursor-pointer py-1 rounded bg-[#c0c0c0] ${friends.length > 3 ? "justify-evenly" : ""}`}>
                     <div className="inner_wr flex -ml-[.8rem]">
 
                         {
@@ -118,7 +119,7 @@ function FriendInsideSlider({ image, item, FilterUser, sendFriendRequest }) {
                     {friends?.length > 3 &&
                         <p className='text-lg font-sans font-semibold tracking-wider truncate  flex-[3] ml-[1.8rem]'>+{friends?.length - 3} more </p>
                     }
-                </div>
+                </div>}
                 <div className="friend_connect flex justify-center bg-white mt-1 mb-1 px-2">
 
 

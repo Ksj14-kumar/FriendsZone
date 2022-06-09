@@ -34,6 +34,7 @@ import { error } from '../../toastifyMessage/Toast';
 import { success } from '../../toastifyMessage/Toast';
 import Model from './Model';
 import profile from '../../assets/img/download.png'
+import { NavLink } from "react-router-dom"
 
 
 
@@ -123,9 +124,7 @@ function PostCard({ item, index, filterPost, socket, threeDot }) {
 
     //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Change the visibility^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     async function VisibilityChange(post_id, visibility) {
-        // console.log("post_id", post_id)
-        // console.log("visibility", visibility)
-        // ${process.env.REACT_APP_API_BACKENDURL}
+        
         try {
             setDisabled(true)
             const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/visibility/user/post/local/${post_id}`, {
@@ -139,22 +138,14 @@ function PostCard({ item, index, filterPost, socket, threeDot }) {
             const data = await response.json()
             if (response.status === 200) {
                 success({ message: "Visibility Changed Successfully" })
-                dispatch({ type: "LOAD_POSTS", payload: data.data.reverse() })
+                dispatch({ type: "LOAD_POSTS", payload: data.data })
                 setDisabled(false)
             } else if (response.status === 500) {
                 error({ message: "Something went wrong" })
-
-
             }
-
         } catch (err) {
             console.warn(err)
-
         }
-
-
-
-
     }
 
 
@@ -248,57 +239,61 @@ function PostCard({ item, index, filterPost, socket, threeDot }) {
         }
         NumberOfComments()
 
-    }, [])
+    }, [item])
 
 
 
     return (
         <>
             {/* post-screen:mt-[32rem] mt-[26rem] md:pl-48 md:mt-[18rem] relative sm-[25rem] */}
-            <div className="post-card flex justify-around w-full mb-2">
+            <div className="post-card flex justify-around w-full mb-2 rounded-md">
                 <Card className="post p-0">
-                    
+
                     <CardBody >
                         <div className="flex justify-center ">
                             {/* <H6 color="gray" >Create Post</H6> */}
                         </div>
                         <section className='header-image-section post md:rounded-lg  flex justify-between' >
-                            <main className='flex  join-of-name-select-option post '>
-                                <article className='
+                            <NavLink to={`/profile/${item.userId}`}>
+
+                                <main className='flex  join-of-name-select-option post '>
+                                    <article className='
                               card-post-image-modal w-[3rem]  h-[3rem] rounded-full flex-shrink-0 pos
                               '>
-                                    {
-                                        item.profileImage ?
-                                            <Image
-                                                src={item.profileImage}
-                                                rounded={true}
-                                                raised={false}
-                                                alt=""
-                                                className="w-full h-full"
-                                            /> : <Image
-                                                src={profile}
-                                                rounded={true}
-                                                raised={false}
-                                                alt="Rounded Image"
-                                                className="w-full h-full"
-                                            />
-                                    }
-                                </article>
-                                <article className=' public-name-article ml-[.5rem] -mt-[.4rem] post'>
-                                    <article className='text-black text-xl'>
-                                        {item.username ? item.username : "NA"}
-                                        {/* <p> Dunga Ram</p> */}
-                                    </article>
-                                    <article className='flex'>
-                                        {/* {new Date(Date.now()).toDateString()} */}
-                                        {format(item.time)}
                                         {
-                                            item.privacy === "public" ?
-                                                <IoEarth className='mt-[4px] ml-[.3rem]' /> : <MdLock className='mt-[4px] ml-[.3rem]' />
+                                            item.profileImage ?
+                                                <Image
+                                                    src={item.profileImage}
+                                                    rounded={true}
+                                                    raised={false}
+                                                    alt=""
+                                                    className="w-full h-full"
+                                                /> : <Image
+                                                    src={profile}
+                                                    rounded={true}
+                                                    raised={false}
+                                                    alt="Rounded Image"
+                                                    className="w-full h-full"
+                                                />
                                         }
                                     </article>
-                                </article>
-                            </main>
+                                    <article className=' public-name-article ml-[.5rem] -mt-[.4rem] post'>
+                                        <article className='text-black text-xl'>
+                                            {item.username ? item.username : "NA"}
+                                            {/* <p> Dunga Ram</p> */}
+                                        </article>
+                                        <article className='flex'>
+                                            {/* {new Date(Date.now()).toDateString()} */}
+                                            {format(item.time)}
+                                            {
+                                                item.privacy === "public" ?
+                                                    <IoEarth className='mt-[4px] ml-[.3rem]' /> : <MdLock className='mt-[4px] ml-[.3rem]' />
+                                            }
+                                        </article>
+                                    </article>
+                                </main>
+                            </NavLink>
+
                             {/* item.userId === googleId */}
                             {
                                 (threeDot === true) ?
@@ -548,20 +543,17 @@ function PostCard({ item, index, filterPost, socket, threeDot }) {
                     <hr className='-mt-[.8rem]' />
                     <section className="comment-section  mt-2">
                         {/* // {item.post_id} */}
+
                         {
-
-                            (commentToggle ? (UserInformationLoad ?
-                                <Comments
-
-                                    commentToggle={commentToggle}
-                                    currentUserId={googleId ? googleId : null}
-                                    post_id={item.post_id ? item.post_id : null}
-                                    UserIdForPostComments={item.userId ? item.userId : null}
-                                    currentUserName={fname + " " + lname}
-                                    ImageUrl={ShowImage ? ShowImage : null}
-
-
-                                /> : Error({ message: "Kindly, Create Profile" })) : "")
+                            UserInformationLoad !== undefined &&
+                            <Comments
+                                commentToggle={commentToggle}
+                                currentUserId={googleId ? googleId : null}
+                                post_id={item.post_id ? item.post_id : null}
+                                UserIdForPostComments={item.userId ? item.userId : null}
+                                currentUserName={fname + " " + lname}
+                                ImageUrl={ShowImage ? ShowImage : null}
+                            />
                         }
                     </section>
                 </Card>

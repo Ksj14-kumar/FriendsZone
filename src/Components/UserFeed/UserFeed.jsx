@@ -1,13 +1,43 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import AddPost from '../ProfilePageComponent/AddPost'
 import FriendSuggestion from '../ProfilePageComponent/FriendSuggestion'
 import PublicPostCard from '../ProfilePageComponent/PublicPostCard'
 import RightSide from './RightSide'
+import { useSelector } from "react-redux"
 
 
 function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser, FilterUser }) {
     const params = useParams()
+    const [Users, setAllUser] = useState([])
+
+
+
+
+
+
+    const UserInformationLoad = useSelector((state) => {
+        return state.UserInformationLoad.value
+    })
+    useEffect(() => {
+        async function areFriends() {
+            try {
+                const WithoutFriends = AllUser !== undefined && AllUser.filter((item) => {
+                    return !UserInformationLoad?.friends.some(value => {
+                        return value._id === item.googleId
+                    })
+                })
+                setAllUser(WithoutFriends)
+            }
+            catch (err) {
+                console.warn(err)
+            }
+        }
+
+        areFriends()
+
+    }, [AllUser])
+
 
     return (
         <>
@@ -15,7 +45,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
 
                 {/* md:mr-[22rem] md:w-[81rem] md:ml-[0rem] */}
                 <div className="profile_card-container flex ">
-                    
+
                     <div className="wrapper_container w-full  lg:flex lg:justify-center">
 
                         <div className="inne flex items-center flex-col  py-0  md:ml-[17rem] lg:ml-[0] mt-[3.8rem]  md:w-[52rem] w-full">
@@ -29,7 +59,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
 
                                 {
                                     Object.keys(params).length === 0 ?
-                                        <FriendSuggestion AllUser={AllUser} FilterUser={FilterUser} />
+                                        <FriendSuggestion AllUser={Users} FilterUser={FilterUser} />
 
                                         : <></>
                                 }

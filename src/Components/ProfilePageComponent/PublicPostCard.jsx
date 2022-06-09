@@ -9,6 +9,8 @@ import { useParams } from 'react-router-dom';
 // MATERIAL UI
 function PublicPostCard({ data, socket, threeDot }) {
   const [PostData, setPostdata] = useState([])
+  const [length, setLength] = useState(null)
+  const [PostLength, setLoadPostLength] = useState(null)
   const checkParams = useParams()
 
   const _id = localStorage.getItem("uuid")
@@ -35,7 +37,6 @@ function PublicPostCard({ data, socket, threeDot }) {
       return post.post_id !== post_id
     })
 
-    console.log({ GetAllComments })
     //filter the comments
     // const filterComments = GetAllComments.filter(comment => {
     //   return comment.post_id !== post_id
@@ -45,10 +46,7 @@ function PublicPostCard({ data, socket, threeDot }) {
       return notification.post_id !== post_id
     })
 
-    console.log({
-      filterData,
-      // filterComments
-    })
+
     dispatch({ type: "Send_Notification", payload: filterNotification })
     return {
       filterData,
@@ -58,7 +56,6 @@ function PublicPostCard({ data, socket, threeDot }) {
   //now load all the notification
   useEffect(async () => {
     const allNoti = await axios.get(`${process.env.REACT_APP_API_BACKENDURL}/blob/load/notification/${_id}`)
-    console.log("all notification", allNoti)
     const { data } = allNoti.data
     dispatch({ type: "Send_Notification", payload: data })
   }, [])
@@ -93,7 +90,12 @@ function PublicPostCard({ data, socket, threeDot }) {
         })
         const loadPostData = await loadPostResponse.json()
         // console.log("load post data", loadPostData.data, loadPostResponse)
+
+
         if (loadPostResponse.status === 200) {
+          // const value = loadPostData.data.length > 0 && loadPostData.data.sort((a, b) => {
+          //   return b.time - a.time
+          // })
           dispatch({
             type: "LOAD_POSTS",
             payload: loadPostData.data
@@ -111,7 +113,6 @@ function PublicPostCard({ data, socket, threeDot }) {
     // return (() => clearInterval(id))
   }, [])
 
-  console.log("hello")
   //load all the total comment for the post
   //load all total comment of user
   useEffect(() => {
@@ -297,6 +298,32 @@ function PublicPostCard({ data, socket, threeDot }) {
     // return () => clearInterval(id)
   }, [])
 
+  useEffect(() => {
+    async function getAllPostDataLength() {
+      try {
+
+        const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/load/all/postlength`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("uuid")
+          }
+        })
+        const response = await res.json()
+        if (res.status === 200) {
+          setLength(response.l)
+        }
+        else if (res.status !== 200) {
+          setLength(0)
+        }
+      }
+      catch (err) {
+        console.log(err)
+      }
+    }
+    getAllPostDataLength()
+  }, [])
+
 
 
 
@@ -308,18 +335,20 @@ function PublicPostCard({ data, socket, threeDot }) {
       // ${process.env.REACT_APP_API_BACKENDURL}
       const loadPostResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/load/all/post/${3 + PostData.length}`, {
         method: "GET",
-
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer " + localStorage.getItem("uuid")
         }
       })
       const loadPostData = await loadPostResponse.json()
-      // console.log("load post data", loadPostData.data, loadPostResponse)
       if (loadPostResponse.status === 200) {
+        setLoadPostLength(loadPostData?.data.length)
+        // const value = loadPostData.data !== undefined && loadPostData.data.sort((a, b) => {
+        //   return b.time - a.time
+        // })
         dispatch({
           type: "LOAD_POSTS",
-          payload: loadPostData.data.reverse()
+          payload: loadPostData.data
         })
         // setPostdata([loadPostData.data])
       }
@@ -363,7 +392,8 @@ function PublicPostCard({ data, socket, threeDot }) {
 
       }
 
-      <div className="infinite_scroll  text-center md:ml-[5rem] ml-[2rem] mt-[6rem]">
+
+      <div className={`infinite_scroll  text-center md:ml-[5rem] ml-[2rem] mt-[6rem] ${PostLength === length && "hidden"}`}>
 
         <InfiniteScroll
           dataLength={PostData.length}

@@ -273,7 +273,6 @@ function AddPost() {
             // console.log("user image url is", userPost)
             // ImageAsUrl
             // 
-            console.log({ _id })
             setDisabledGroup(true)
             setDisabledPhotos(true)
 
@@ -306,7 +305,6 @@ function AddPost() {
                     name: fname + " " + lname,
                     userProfileImageUrl: DispatchProfileImage,
                     // likes_count: 100,
-                    // new Date(Date.now()).toDateString().split(" ")[2] + " " + new Date(Date.now()).toDateString().split(" ")[1] + " " + new Date(Date.now()).toDateString().split(" ")[3]
                     time: Date.now(),
                     uuid: _id
                 }),
@@ -327,7 +325,6 @@ function AddPost() {
 
                 setDisabledText(false)
                 setDisabledVideo(false)
-                var socketId;
 
 
 
@@ -444,7 +441,7 @@ function AddPost() {
                             <H6 color="gray" >Create Post</H6>
                         </div>
                         <div className="inner-body  flex mds-editor7:-ml-[.5rem] ">
-                        {/* d9d9d9 */}
+                            {/* d9d9d9 */}
                             <div className={`card-post-image bg-[#d9d9d9] w-[4rem] h-[4rem] rounded-full flex-shrink-0 mds-editor7:w-[3rem] mds-editor7:h-[3rem] ${!DispatchProfileImage && "animate-pulse"}`}>
                                 {
                                     DispatchProfileImage ? <Image

@@ -128,7 +128,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
       try {
         setCommentLoader(true)
 
-        const commentResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/root/load/all/comments/${post_id}/${UserIdForPostComments}/${4}`, {
+        const commentResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/root/load/all/comments/${post_id}/${UserIdForPostComments}/${3}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -236,23 +236,23 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
     <div className="comments">
       {/* <h3 className="comments-title">Comments</h3> */}
       {/* <div className="comment-form-title">Write comment</div> */}
-      <CommentForm submitLabel="Comment" handleSubmit={addComment} commentToggle={commentToggle} />
+      <CommentForm submitLabel="Comment" handleSubmit={addComment} commentToggle={commentToggle} backendComments={backendComments} />
       <div className={`comments-container mb-[1.5rem] ${commentLoader && "w-full flex justify-center items-center mb-[2rem]"}`}>
 
         {commentLoader ? <CommentLodaer /> : rootComments.map((rootComment) => (
-          <Comment
-            key={rootComment.uuid}
-            comment={rootComment}
-            replies={getReplies(rootComment.uuid)}
-            activeComment={activeComment}
-            setActiveComment={setActiveComment}
-            addComment={addComment}
-            deleteComment={deleteComment}
-            updateComment={updateComment}
-            currentUserId={currentUserId}
-            ImageUrl={rootComment.ImageUrl}
+          < Comment
+            key = { rootComment.uuid }
+            comment = { rootComment }
+            replies = { getReplies(rootComment.uuid)}
+        activeComment={activeComment}
+        setActiveComment={setActiveComment}
+        addComment={addComment}
+        deleteComment={deleteComment}
+        updateComment={updateComment}
+        currentUserId={currentUserId}
+        ImageUrl={rootComment.ImageUrl}
             // ImageUrl={ImageUrl}
-            currentUserName={currentUserName}
+        currentUserName={currentUserName}
 
           />
         ))}
@@ -264,7 +264,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
 
         {
 
-          !commentLoader && (Length >= 2 && (backendComments.length !== Length &&
+          !commentLoader && (Length >= 2 && backendComments.length !== Length &&
             <Button
               color="blueGray"
               buttonType="link"
@@ -273,14 +273,14 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
               block={false}
               iconOnly={false}
               ripple=""
-              className="lowercase ml-[5rem] font-bold text-base"
+              className="lowercase ml-[5rem] font-bold text-base mb-3"
               onClick={() => {
                 loadMoreComment()
               }}
             >
               load more comment
             </Button>
-          ))
+          )
 
 
 

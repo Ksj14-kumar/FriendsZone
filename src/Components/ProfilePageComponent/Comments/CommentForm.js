@@ -14,7 +14,9 @@ const CommentForm = ({
     hasCancelButton = false,
     handleCancel,
     initialText = "",
-    commentToggle
+    commentToggle,
+    commentReplyId,
+    backendComments
 }) => {
     const [text, setText] = useState(initialText);
     const buttonRef = useRef()
@@ -58,13 +60,17 @@ const CommentForm = ({
     }, [text])
 
 
+    console.log({ commentReplyId })
 
+    useEffect(() => {
+        commentReplyId && setText(`@${commentReplyId}`)
 
+    }, [commentReplyId])
 
     return (
 
         <>
-            <div className="md:mr-10 md:ml-[1rem]" id="comment_area_section">
+            <div className="md:mr-10 md:ml-[1rem] px-1" id="comment_area_section">
                 {/* <textarea
                 className="comment-form-textarea"
                 value={text}
@@ -80,7 +86,7 @@ const CommentForm = ({
 
                 <textarea
                     ref={textRef}
-                    className="resize-none border border-solid border-[#dad7d7] focus:outline-none  w-full overflow-hidden p-4 rounded-lg text-[1.1rem] font-serif tracking-wider"
+                    className={`resize-none border border-solid border-[#dad7d7] focus:outline-none  w-full overflow-hidden p-4 rounded-lg text-[1.1rem] font-serif tracking-wider ${text?.length ? (text.includes("@") ? ("underline font-bold") : ("")) : ("")}`}
                     placeholder="Write a comment..."
                     onChange={(e) => {
                         setText(e.target.value)
@@ -88,51 +94,7 @@ const CommentForm = ({
                     }}
                     value={text}
                 >
-
                 </textarea>
-
-
-
-
-
-
-
-
-                {/* <Textarea
-                    color="lightBlue"
-                    size="sm"
-                    outline={false}
-                    ref={CommentArea}
-                    value={text}
-                    rows="1"
-                    cols="1"
-                    onChange={(e) => {
-                        setText(e.target.value)
-                        e.preventDefault()
-
-                    }}
-                    className="
-                    focus:border-none indent-[1rem] pl-5
-                    border-none overflow-hidden md:text-[1.5rem]
-                    font-normal
-                text-gray-700
-                bg-white bg-clip-padding
-                border  border-gray-300
-                rounded
-                transition
-                 ease-in-out
-                m-0 
-                focus:text-gray-700 focus:bg-white focus:border-gray-300 focus:outline-none
-        resize-none
-        
-        min-h-[1rem]
-                    "
-
-                    onClick={(e) => {
-                        e.preventDefault()
-                    }}
-                /> */}
-
                 <section className="bg-red-600  flex justify-end relative ">
 
                     <Button
