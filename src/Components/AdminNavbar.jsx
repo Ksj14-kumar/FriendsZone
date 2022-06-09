@@ -860,7 +860,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 {
                     showRightSideBar &&
                     <AdminRightSideBar showRightSideBar={showRightSideBar}
-                        setShowRightSideBar={setShowRightSideBar}
+                        setShowRightSideBar={setShowRightSideBar} logout={logout}
                     />
 
 

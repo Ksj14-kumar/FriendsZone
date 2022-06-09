@@ -4,7 +4,7 @@ import { MdSettings, MdMusicNote, MdArrowForwardIos } from "react-icons/md"
 import { FaMoon } from "react-icons/fa"
 import { GiNewspaper } from "react-icons/gi"
 
-function AdminRightSideBar({ showRightSideBar, setShowRightSideBar }) {
+function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout }) {
     const [bool, setBool] = useState(true)
 
 
@@ -112,8 +112,18 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar }) {
                     </div>
                 </div>
 
-
-
+                {
+                    // ============================LOG OUT=====================
+                }
+                {
+                    <p
+                        className="text-bold font-serif text-[1.5rem]" onClick={() => {
+                            logout()
+                        }}
+                    >
+                        LogOut
+                    </p>
+                }
             </motion.div>
 
         </>
