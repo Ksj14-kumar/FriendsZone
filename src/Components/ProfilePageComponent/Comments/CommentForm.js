@@ -16,6 +16,7 @@ const CommentForm = ({
     initialText = "",
     commentToggle,
     commentReplyName,
+    comment,
 
     backendComments
 }) => {
@@ -71,7 +72,7 @@ const CommentForm = ({
     return (
 
         <>
-            <div className="md:mr-10 md:ml-[1rem] px-1" id="comment_area_section">
+            <div className={`md:mr-10 md:ml-[1rem] px-1`} id="comment_area_section">
 
                 {/* ${text?.length ? (text.includes("@") ? ("underline font-bold") : ("")) : ("")}` */}
                 <div className="textArea"
@@ -87,7 +88,6 @@ const CommentForm = ({
                             e.preventDefault()
                         }}
                         value={text}
-                    // dangerouslySetInnerHTML={{ __html: text }}
                     >
                     </textarea>
                 </div>
@@ -151,8 +151,6 @@ const CommentForm = ({
                             rounded={false}
                             block={false}
                             iconOnly={false}
-
-
                             ripple="none"
                             onClick={handleCancel}
                             // disabled={isTextareaDisabled}

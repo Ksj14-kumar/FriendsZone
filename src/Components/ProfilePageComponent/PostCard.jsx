@@ -124,7 +124,7 @@ function PostCard({ item, index, filterPost, socket, threeDot }) {
 
     //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Change the visibility^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     async function VisibilityChange(post_id, visibility) {
-        
+
         try {
             setDisabled(true)
             const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/visibility/user/post/local/${post_id}`, {
@@ -246,7 +246,7 @@ function PostCard({ item, index, filterPost, socket, threeDot }) {
     return (
         <>
             {/* post-screen:mt-[32rem] mt-[26rem] md:pl-48 md:mt-[18rem] relative sm-[25rem] */}
-            <div className="post-card flex justify-around w-full mb-2 rounded-md">
+            <div className="post-card flex justify-around w-full mb-2 rounded-md md:w-[42rem] drop-shadow-sm">
                 <Card className="post p-0">
 
                     <CardBody >
@@ -465,7 +465,7 @@ function PostCard({ item, index, filterPost, socket, threeDot }) {
                                 </span></p>
 
                             </section>
-                            <section className="share mds-editor20:flex-[3] md:flex-[1]">
+                            <section className="share mds-editor20:flex-[3] md:flex-[1] md:ml-[1rem]">
                                 <p className='text-[1.2rem] font-light cursor-pointer underline truncate mds-editor20:ml-[10px]
                                  '>share <span>{shareLength}</span></p>
 

@@ -44,6 +44,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
   const addComment = async (text, parentId) => {
     const comment = await createCommentApi(text, parentId, UserIdForPostComments, currentUserId, currentUserName, ImageUrl, post_id)
     try {
+      console.log({ comment })
       const SaveUserComment = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/post/comment/save/`, {
         method: "POST",
         body: JSON.stringify({ comment, uuid: localStorage.getItem('uuid') }),
@@ -250,8 +251,8 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
       {/* <div className="comment-form-title">Write comment</div> */}
       <CommentForm submitLabel="Comment" handleSubmit={addComment} commentToggle={commentToggle} backendComments={backendComments} />
       <div className={`comments-container mb-[1.5rem] ${commentLoader && "w-full flex justify-center items-center mb-[2rem]"}`}>
-
-        {commentLoader ? <CommentLodaer /> : rootComments.map((rootComment) => (
+        {/* commentLoader ? <CommentLodaer /> : */}
+        { commentLoader ? "" :rootComments.map((rootComment) => (
           < Comment
             key={rootComment.uuid}
             comment={rootComment}
@@ -275,24 +276,24 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
 
 
         {
+          // !commentLoader && (
+          (Length >= 2 && backendComments.length !== Length) &&
+          <Button
+            color="blueGray"
+            buttonType="link"
+            size="sm"
+            rounded={false}
+            block={false}
+            iconOnly={false}
+            ripple=""
+            className="lowercase ml-[5rem] font-bold text-base mb-3"
+            onClick={() => {
+              loadMoreComment()
+            }}
+          >
+            load more comment
+          </Button>
 
-          !commentLoader && (Length >= 2 && backendComments.length !== Length &&
-            <Button
-              color="blueGray"
-              buttonType="link"
-              size="sm"
-              rounded={false}
-              block={false}
-              iconOnly={false}
-              ripple=""
-              className="lowercase ml-[5rem] font-bold text-base mb-3"
-              onClick={() => {
-                loadMoreComment()
-              }}
-            >
-              load more comment
-            </Button>
-          )
 
 
 
