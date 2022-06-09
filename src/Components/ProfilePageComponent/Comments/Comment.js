@@ -72,7 +72,7 @@ const Comment = ({
             </div>
             <div className="comment-right-part w-full mr-2 mds-editor6:text-[.9rem]">
                 {!isEditing &&
-                    <div className={`w-full overflow-hidden flex flex-wrap pl-[4rem] mds-editor33:pl-[1.5rem] mds-editor33:pr-[1.2rem]  ${comment.parentId !== null && "pl-[4.3rem] mds-editor33:pl-[4rem] mds-editor33:pr-[2rem]"}`}>
+                    <div className={`w-full overflow-hidden flex flex-wrap pl-[4rem] mds-editor33:pl-[1.5rem] mds-editor33:pr-[1.2rem]  ${comment.parentId !== null && "pl-[7rem] mds-editor33:pl-[1.3rem] mds-editor33:pr-[2rem]"}`}>
 
                         <div className="comment-text ml-2  font-sans w-full flex flex-wrap"
                             dangerouslySetInnerHTML={{ __html: convertToLink(comment.body) }}
