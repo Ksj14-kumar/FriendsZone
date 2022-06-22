@@ -50,6 +50,7 @@ export default function ProfileCard(props) {
     const [connectMessage, setConnectMessage] = useState(null)
     const [AcceptMessage, setAcceptMessage] = useState(false)
     const [acceptorMessage, setAcceptorMessage] = useState(false)
+    const [URLS, setURL] = useState({})
     const Query = useSelector((state) => {
         return state.Query
 
@@ -223,28 +224,31 @@ export default function ProfileCard(props) {
                     {
                     }
                 }
-
             }
             catch (err) {
                 console.warn(err)
             }
-
         }
         History()
-
     }, [usernameId])
 
+    useEffect(async () => {
+        const res = await fetch(userInfo?.BgURL)
+        const res1 = await fetch(userInfo?.ProfileURL)
+        const blob = await res.blob()
+        const blobP = await res1.blob()
+        const bgURL = URL.createObjectURL(blob)
+        const PURL = URL.createObjectURL(blobP)
+        setURL({ BgURL: bgURL, ProfileURL: PURL })
 
+    }, [usernameId])
 
 
     return (
 
         <>
-
             {/* <div className='con'> */}
-
             {/* <AdminNavbar /> */}
-
             <div className="make_two_section md:flex md:justify-between relative">
                 {/* md:ml-[.5rem] */}
                 {/* md:mr-[22rem] md:w-[81rem] md:ml-[0rem] */}
@@ -262,18 +266,20 @@ export default function ProfileCard(props) {
                                     // alt="Image"
 
 
-                                    ></div> : (userInfo.BgURL ? <Image
-                                        src={userInfo.BgURL}
-                                        className="w-full h-full rounded-t-none "
-                                        rounded={false}
-                                        raised={false}
-                                        alt="Image"
+                                    ></div> :
+                                        (userInfo.BgURL ? <Image
+                                            // src={userInfo.BgURL}
+                                            src={URLS.BgURL}
+                                            className="w-full h-full rounded-t-none "
+                                            rounded={false}
+                                            raised={false}
+                                            alt="Image"
 
 
-                                    /> : "")
+                                        /> : "")
                                 }
 
-                                
+
 
 
                             </div>
@@ -287,9 +293,10 @@ export default function ProfileCard(props) {
                                     <div className="w-48 mds-editor2:w-40 px-4 -mt-24 relative outline-1 outline-red-600 rounded-full md:justify-center md:mx-auto">
 
                                         {userInfo.ProfileURL ?
-                                            <Image src={userInfo.ProfileURL} rounded={true} raised={true} className="object-cover  outline-3 rounded-full outline-double outline-offset-1 outline-neutral-500 " />
-
-
+                                            <Image
+                                            // src={userInfo.ProfileURL}
+                                            src={URLS.ProfileURL}
+                                                rounded={true} raised={true} className="object-cover  outline-3 rounded-full outline-double outline-offset-1 outline-neutral-500 " />
                                             :
                                             <>
                                                 <Image src={profile} rounded={true} raised={true} className="object-cover" />

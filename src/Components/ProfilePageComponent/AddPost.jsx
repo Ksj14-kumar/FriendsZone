@@ -1,22 +1,17 @@
 import React, { useRef, useEffect } from 'react'
 import Card from "@material-tailwind/react/Card";
-import CardImage from "@material-tailwind/react/CardImage";
 import CardBody from "@material-tailwind/react/CardBody";
 import CardFooter from "@material-tailwind/react/CardFooter";
 import H6 from "@material-tailwind/react/Heading6";
-import Paragraph from "@material-tailwind/react/Paragraph";
 import Button from "@material-tailwind/react/Button";
-import CardHeader from "@material-tailwind/react/CardHeader";
-import H5 from "@material-tailwind/react/Heading5";
 import Image from "@material-tailwind/react/Image";
 import { useDispatch, useSelector } from 'react-redux';
-import Input from "@material-tailwind/react/Input";
 import Modal from "@material-tailwind/react/Modal";
 import ModalHeader from "@material-tailwind/react/ModalHeader";
 import ModalBody from "@material-tailwind/react/ModalBody";
 import ModalFooter from "@material-tailwind/react/ModalFooter";
 import ProfileLoader from '../../Loader/ProfileLoader';
-import ImageShow from '../ImageShow';
+
 import Icon from "@material-tailwind/react/Icon";
 import ProgressBar from '../ProgressBar';
 import SelectedImageShowWithURL from './SelectedImageShowWithURL';
@@ -24,23 +19,15 @@ import Picker, { SKIN_TONE_MEDIUM_DARK } from 'emoji-picker-react';
 import { BsFillEmojiSmileFill } from 'react-icons/bs';
 import { MdAddToPhotos, MdRssFeed } from 'react-icons/md';
 import { RiVideoAddFill, RiVideoUploadFill } from 'react-icons/ri';
-import { FcStackOfPhotos } from 'react-icons/fc';
-import { IoMdVideocam } from 'react-icons/io';
 import { v4 as uuidv4 } from 'uuid';
 import { error, success } from "../../toastifyMessage/Toast"
 import Tooltips from "@material-tailwind/react/Tooltips";
 import TooltipsContent from "@material-tailwind/react/TooltipsContent";
-import ReactModal from 'react-modal';
-import { ToastContainer, toast } from 'react-toastify';
-import ModalForPostVideoImages from '../Notification/ModalForPostVideoImages';
-import { BrowserRouter } from 'react-router-dom';
+import { ThreeDots } from "react-loader-spinner"
 import { IoVideocam } from 'react-icons/io5';
-import { format } from 'timeago.js';
-import axios from 'axios';
-import { Error } from '../Toastify';
 
 
-function useOutsideAlerter(ref, setTextAreaValue, dispatch, setUrlOfImageUpload) {
+function useOutsideAlerter(ref, setTextAreaValue, dispatch, setUrlOfImageUpload, setPostLoader) {
     useEffect(() => {
         /**
          * Alert if clicked on outside of element
@@ -52,6 +39,7 @@ function useOutsideAlerter(ref, setTextAreaValue, dispatch, setUrlOfImageUpload)
                 // setTextAreaValue("")
                 // setUrlOfImageUpload("")
                 // dispatch({ type: "UNSELECT_POST_IMAGE", payload: "" })
+                setPostLoader(false)
             }
         }
         // Bind the event listener
@@ -84,6 +72,7 @@ function AddPost() {
     const [videoDisable, setDisabledVideo] = React.useState(false);
     const [photosDisable, setDisabledPhotos] = React.useState(false);
     const [textDisable, setDisabledText] = React.useState(false);
+    const [postLoader, setPostLoader] = React.useState(false)
     const inputRef = React.useRef()
     const photosRef = React.useRef()
     const videoRef = React.useRef()
@@ -99,7 +88,7 @@ function AddPost() {
     const DispatchProfileImage = useSelector((state) => {
         return state.ShowImage.value
     })
-    useOutsideAlerter(wrapperref, setTextAreaValue, dispatch, setUrlOfImageUpload)
+    useOutsideAlerter(wrapperref, setTextAreaValue, dispatch, setUrlOfImageUpload, setPostLoader)
     const UserInformationLoad = useSelector((state) => {
         return state.UserInformationLoad.value
     })
@@ -109,6 +98,11 @@ function AddPost() {
     const UserStillLogin = useSelector((state) => {
         return state.UserStillLogin.user
     })
+
+    const OriginalProfileURL = useSelector((state) => {
+        return state.OriginalProfileURL
+    })
+    // OriginalProfileURL
     // const {_id}= UserStillLogin
     const _id = localStorage.getItem("uuid")
     const { fname, lname, college, city, country, position, stream, aboutMe } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "" }
@@ -116,12 +110,16 @@ function AddPost() {
     const name1 = `Say Something About your post if.  👀   ${fname ? fname.toLowerCase() : "NA"}`
     const name2 = `Say Something About your video if.   ${fname ? fname.toLowerCase() : "NA"}`
     let subtitle;
+
+    let signal;
+    let controller = new AbortController()
+    signal = controller.signal
     //Hndle funtion start from here
     // ====================================================selected mixed post=======================
     function SelectImage(e) {
         const file = e.target.files[0]
         // console.log("user selected post", file)
-        if (file.size < 16777216) {
+        if (file.size < 104857600) {
             // set the size limit to 16MB
             if (file.type === "image/jpeg" || file.type === "image/png" || file.type === "image/jpg" || file.type === "image/*" || file.type === "video/*" || file.type === "video/mp4") {
                 if (file.type === "video/mp4") {
@@ -176,7 +174,7 @@ function AddPost() {
     //==========================================select video==========================
     function SelectVideo(e) {
         const file = e.target.files[0]
-        if (file.size < 16777216) {
+        if (file.size < 104857600) {
             // set the size limit to 16MB
             if (file.type === "video/*" || file.type === "video/mp4") {
                 dispatch({ type: "SELECT_POST_VIDEO", payload: "video" })
@@ -218,7 +216,7 @@ function AddPost() {
     function SelectPhotos(e) {
         const file = e.target.files[0]
         // console.log("user selected post", file)
-        if (file.size < 16777216) {
+        if (file.size < 104857600) {
             // set the size limit to 16MB
             if (file.type === "image/jpeg" || file.type === "image/png" || file.type === "image/jpg" || file.type === "image/*") {
                 dispatch({ type: "SELECT_POST_VIDEO", payload: "image" })
@@ -266,7 +264,7 @@ function AddPost() {
     //Upload the post---------------------------------------To the server-------------
     async function SubmitPost(e) {
         if (!textareaValue && !UnselectPostImage) {
-            alert("please add some post")
+
             return
         }
         else {
@@ -279,31 +277,25 @@ function AddPost() {
             setDisabledText(true)
             setDisabledVideo(true)
 
-
-
-
-
-
-
-
-
-
-
             // _id + 
             // /local/url/
             // /users/post/
             // ${process.env.REACT_APP_API_BACKENDURL}
+            setPostLoader(true)
+            setDisabledGroup(true)
             const SaveUserPostIntoDb = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/local/url/`, {
                 method: "POST",
+                signal: signal,
                 body: JSON.stringify({
                     text: textareaValue,
-                    image: ImageAsUrl,
-                    // image: userPost,
+                    // image: ImageAsUrl,
+                    image: userPost,
                     privacy: PrivateOrPublic,
                     post_id: uuidv4(),
                     fileType: fileType,
                     name: fname + " " + lname,
-                    userProfileImageUrl: DispatchProfileImage,
+                    // userProfileImageUrl: DispatchProfileImage,
+                    userProfileImageUrl: OriginalProfileURL,
                     // likes_count: 100,
                     time: Date.now(),
                     uuid: _id
@@ -322,46 +314,9 @@ function AddPost() {
                 // Pusher.logToConsole = true
                 setDisabledGroup(false)
                 setDisabledPhotos(false)
-
                 setDisabledText(false)
                 setDisabledVideo(false)
-
-
-
-
-
-
-
-
-
-                // var pusher = new Pusher(process.env.REACT_APP_API_KEY, {
-                //     cluster: process.env.REACT_APP_API_CLUSTER,
-                //     // authEndpoint:`/blob/local/url/${_id}`
-                //     // encrypted: true,
-                // });
-                // // retrieve the socket ID on successful connection
-                // pusher.connection.bind('connected', function () {
-                //     // console.log("connected/.....")
-                //     socketId = pusher.connection.socket_id;
-                // });
-                // var channel = pusher.subscribe('AddPost');
-                // channel.bind('AddPostMessage', function (PusherData) {
-                //     socketId = pusher.connection.socket_id;
-                //     // console.log("pusher message is.. for add p[ poost", PusherData.GetAllUserPost)
-                //     dispatch({
-                //         type: "LOAD_POSTS",
-                //         payload: PusherData.GetAllUserPost
-                //     })
-                //     dispatch({ type: "UNSELECT_POST_IMAGE", payload: "" })
-                //     // setTextAreaValue("")
-                //     setFileType("")
-                //     setTextAreaValue("")
-                // })
-                // console.log({SaveUserPostIntoDbJson})
-                // dispatch({
-                //     type: "LOAD_POSTS",
-                //     payload: SaveUserPostIntoDbJson.data
-                // })
+                setPostLoader(false)
 
                 dispatch({ type: "UNSELECT_POST_IMAGE", payload: "" })
                 setTextAreaValue("")
@@ -371,20 +326,20 @@ function AddPost() {
                     type: "LOAD_POSTS",
                     payload: SaveUserPostIntoDbJson.data
                 })
-                setTimeout(() => {
-                    // dispatch({ type: "POST_WHICH_USER_SELECTED_TEXT", payload: textArray })
-                    // dispatch({ type: "POST_WHICH_USER_SELECTED_IMAGE", payload: mergeArrayData })
-                }, 2000)
+                window.location.reload()
+
+
             }
 
             else if (SaveUserPostIntoDb.status === 500) {
-
+                error({ message: SaveUserPostIntoDbJson.message })
                 setDisabledGroup(false)
                 setDisabledPhotos(false)
                 setDisabledText(false)
                 setDisabledVideo(false)
+                setPostLoader(false)
             }
-            else {
+            else if (SaveUserPostIntoDb.status !== 200 && SaveUserPostIntoDb.status !== 500) {
                 // Error({ message: "This Post is Already exit.." })
 
                 inputFileRef.current.value = ""
@@ -392,6 +347,7 @@ function AddPost() {
                 textRef.current.value = ""
                 photosRef.current.value = ""
                 setTextAreaValue("")
+                setPostLoader(false)
                 setFile(inputFileRef.current.value)
                 setFile(photosRef.current.value)
                 setFile(videoRef.current.value)
@@ -424,6 +380,9 @@ function AddPost() {
             dispatch({ type: "SELECTED_POST_IMAGE", payload: "" })
             dispatch({ type: "UNSELECT_POST_IMAGE", payload: "" })
             setTextAreaValue("")
+            setPostLoader(false)
+            //abort the request
+            controller.abort()
 
         }
     }, [showModalPhoto, showModal, showModalVideo, showModalText])
@@ -590,6 +549,9 @@ function AddPost() {
                                                     <option value="private"
                                                     //    onChange={GetPrivatORPublic}
                                                     >Private</option>
+                                                    <option value="friends"
+                                                    //    onChange={GetPrivatORPublic}
+                                                    >Friends</option>
                                                 </select>
                                             </article>
                                         </main>
@@ -690,20 +652,32 @@ function AddPost() {
                                     >
                                         Close
                                     </Button> */}
-                                    <Button
+                                    {postLoader ? <Button
                                         color="green"
 
                                         disabled={groupDisable ? true : false}
                                         onClick={(e) => {
                                             SubmitPost()
-                                            setDisabledGroup(true)
+
+                                        }}
+                                        ripple="light"
+                                        block={true}
+                                    >
+                                        <LoaderForPost />
+                                    </Button> : <Button
+                                        color="green"
+
+                                        disabled={groupDisable ? true : false}
+                                        onClick={(e) => {
+                                            SubmitPost()
+
                                             // setShowModalCode(false)
                                         }}
                                         ripple="light"
                                         block={true}
                                     >
                                         Post
-                                    </Button>
+                                    </Button>}
                                 </div>
                             </ModalFooter>
                         </div>
@@ -753,6 +727,9 @@ function AddPost() {
                                             <option value="private"
                                             //    onChange={GetPrivatORPublic}
                                             >Private</option>
+                                            <option value="friends"
+                                            //    onChange={GetPrivatORPublic}
+                                            >Friends</option>
                                         </select>
                                     </article>
                                 </main>
@@ -841,8 +818,21 @@ function AddPost() {
                 <footer className="">
                     <ModalFooter >
                         <div className="btn-group flex justify-center  w-full">
-                            <Button
+                            {postLoader ? <Button
                                 color="green"
+                                disabled={videoDisable ? true : false}
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    SubmitPost()
+                                    // setShowModalCodeVideo(false)
+                                }}
+                                ripple="light"
+                                block={true}
+                            >
+                                <LoaderForPost />
+                            </Button> : <Button
+                                color="green"
+                                disabled={videoDisable ? true : false}
                                 onClick={(e) => {
                                     e.preventDefault()
                                     SubmitPost()
@@ -852,7 +842,7 @@ function AddPost() {
                                 block={true}
                             >
                                 Post
-                            </Button>
+                            </Button>}
                         </div>
                     </ModalFooter>
                 </footer>
@@ -900,6 +890,9 @@ function AddPost() {
                                             <option value="private"
                                             //    onChange={GetPrivatORPublic}
                                             >Private</option>
+                                            <option value="friends"
+                                            //    onChange={GetPrivatORPublic}
+                                            >Friends</option>
                                         </select>
                                     </article>
                                 </main>
@@ -992,18 +985,31 @@ function AddPost() {
                 <footer className="">
                     <ModalFooter >
                         <div className="btn-group flex justify-center  w-full">
-                            <Button
+                            {postLoader ? <Button
                                 color="green"
-                                ondbclick={(e) => {
+                                disabled={photosDisable ? true : false}
+                                onClick={(e) => {
                                     e.preventDefault()
-                                    // setShowModalCodePhoto(false)
                                     SubmitPost()
+                                    // setShowModalCodeVideo(false)
+                                }}
+                                ripple="light"
+                                block={true}
+                            >
+                                <LoaderForPost />
+                            </Button> : <Button
+                                color="green"
+                                disabled={photosDisable ? true : false}
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    SubmitPost()
+                                    // setShowModalCodeVideo(false)
                                 }}
                                 ripple="light"
                                 block={true}
                             >
                                 Post
-                            </Button>
+                            </Button>}
                         </div>
                     </ModalFooter>
                 </footer>
@@ -1051,6 +1057,10 @@ function AddPost() {
                                             <option value="private"
                                             //    onChange={GetPrivatORPublic}
                                             >Private</option>
+
+                                            <option value="friends"
+                                            //    onChange={GetPrivatORPublic}
+                                            >Friends</option>
                                         </select>
                                     </article>
                                 </main>
@@ -1116,19 +1126,31 @@ function AddPost() {
                 <footer className="">
                     <ModalFooter >
                         <div className="btn-group flex justify-center  w-full">
-                            <Button
+                            {postLoader ? <Button
                                 color="green"
+                                disabled={textDisable ? true : false}
                                 onClick={(e) => {
                                     e.preventDefault()
-                                    // SelectTextHandle()
                                     SubmitPost()
-                                    // setShowModalCodeText(false)
+                                    // setShowModalCodeVideo(false)
+                                }}
+                                ripple="light"
+                                block={true}
+                            >
+                                <LoaderForPost />
+                            </Button> : <Button
+                                color="green"
+                                disabled={textDisable ? true : false}
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    SubmitPost()
+                                    // setShowModalCodeVideo(false)
                                 }}
                                 ripple="light"
                                 block={true}
                             >
                                 Post
-                            </Button>
+                            </Button>}
                         </div>
                     </ModalFooter>
                 </footer>
@@ -1151,3 +1173,16 @@ function AddPost() {
     )
 }
 export default AddPost
+
+
+
+
+function LoaderForPost() {
+    return (
+
+        <>
+            <ThreeDots color="#001D6E" height={22} width={22} />
+
+        </>
+    )
+}

@@ -52,21 +52,26 @@ function RightSidebar({ socket, currentUser, currentId, setCurrentChat1, current
 
     useEffect(async () => {
 
-        if (componentMount.current) {
+        const AbortController1 = new AbortController()
+        const Aborted = AbortController1.signal.aborted
 
+
+        
             socket?.emit("login", localStorage.getItem("uuid"))
             socket?.on("onlineUsers", (data) => {
+                
+                if (Aborted === false) {
                 setOnlineUser(data)
                 // dispatch({ type: "onlineUsers", payload: value })
 
+            }
             })
 
             socket?.on("userExist", (data) => {
             })
+        return () => {
+            AbortController1.abort()
         }
-
-        return (() => { componentMount.current = false })
-
 
     }, [socket, UserInformationLoad])
 

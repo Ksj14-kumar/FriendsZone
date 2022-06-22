@@ -44,7 +44,6 @@ function ModalForGif({ setSelectedGif, selectedGif, senderId, setModal, sendMess
     }
 
     // console.log(Giphy)
-    console.log({ selected_Gif_url: selected_Gif_url })
     return (
         <>
             <div className="w-screen h-screen bg-[#0a0a0a3a] fixed z-[19] flex   justify-center ">

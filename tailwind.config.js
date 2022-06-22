@@ -43,11 +43,14 @@ module.exports = {
         "mds-editor31": { "max": "717px" },
         "mds-editor32": { "max": "561px" },
         "mds-editor33": { "max": "345px" },
+        "mds-editor34": { "max": "315px" },
+        "mds-editor35": { "min": "480px", "max": "768px" },
+
 
       }
     },
   },
-  plugins: [require("daisyui"),require('tailwind-scrollbar-hide'),require('tailwind-scrollbar'),],
+  plugins: [require("daisyui"), require('tailwind-scrollbar-hide'), require('tailwind-scrollbar'),],
   variants: {
     scrollbar: ['dark']
   }

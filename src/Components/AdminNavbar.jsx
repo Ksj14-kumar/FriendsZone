@@ -33,7 +33,6 @@ import PopoverHeader from "@material-tailwind/react/PopoverHeader";
 import PopoverBody from "@material-tailwind/react/PopoverBody";
 import { motion, AnimatePresence } from "framer-motion"
 
-
 import { success, error } from '../toastifyMessage/Toast';
 import SearchBarTable from '../SearchBarTable';
 import FriendsNoti from './Notification/FriendsNoti';
@@ -96,6 +95,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     const profileInput = useRef(null)
     const SearchFilter = useRef(null)
     const backgroundInput = useRef(null)
+    const ImageRef = useRef(null)
     const disableProfilePostButton = useRef(null)
     const [query, setQuery] = useState("")
     const [userData, setUserData] = useState([])
@@ -404,7 +404,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             // window.alert(res.data.message)
         }
         catch (err) {
-            console.error(err)
+            console.warn(err)
         }
     }
     //remove the backgrounf Photos
@@ -451,59 +451,90 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 return
             }
         } catch (err) {
-            console.error(err)
+            console.warn(err)
         }
     }
     //====================LOGOUT THE ACCOUNT=============================
     async function logout() {
-        // socket?.emit("newUser", { data: localStorage.getItem("uuid") })
-        socket?.emit("logout", socket?.id)
-        // socket?.disconnect()
-        // socket?.emit("disconnect", { uuid: localStorage.getItem("uuid") })
 
-        localStorage.removeItem("uuid")
-        localStorage.clear()
-        // ${process.env.REACT_APP_API_BACKENDURL}
-        const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/logout`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-                // "Authorization": "Bearer " + localStorage.getItem("uuid")
-            }
-        })
-        const url = await res.json()
-        window.open(url.message, "_self")
-        window.location.reload()
+        try {
+            // socket?.emit("newUser", { data: localStorage.getItem("uuid") })
+            socket?.emit("logout", socket?.id)
+            // socket?.disconnect()
+            // socket?.emit("disconnect", { uuid: localStorage.getItem("uuid") })
+
+            localStorage.removeItem("uuid")
+            localStorage.clear()
+            // ${process.env.REACT_APP_API_BACKENDURL}
+            const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/logout`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                    // "Authorization": "Bearer " + localStorage.getItem("uuid")
+                }
+            })
+            const url = await res.json()
+            window.open(url.message, "_self")
+            window.location.reload()
+
+        }
+        catch (err) {
+            console.warn(err)
+
+        }
+
     }
     //search the query from the server
     useEffect(() => {
-        const search = async () => {
-            // ${process.env.REACT_APP_API_BACKENDURL}
-            const res = await axios.get(`${process.env.REACT_APP_API_BACKENDURL}/blob/search?q=${query}`, {
-                headers: {
-                    "Authorization": "Bearer " + localStorage.getItem("uuid")
+        const AbortController1 = new AbortController()
+        const Aborted = AbortController1.signal.aborted
+
+        try {
+            const search = async () => {
+                // ${process.env.REACT_APP_API_BACKENDURL}
+                const res = await axios.get(`${process.env.REACT_APP_API_BACKENDURL}/blob/search?q=${query}`, {
+                    headers: {
+                        "Authorization": "Bearer " + localStorage.getItem("uuid")
+                    }
+                })
+                if (Aborted === false) {
+                    setUserData(res.data)  //notice that we can not use await keyword inside here
                 }
-            })
-            setUserData(res.data)  //notice that we can not use await keyword inside here
+            }
+            search()
         }
-        search()
+        catch (err) {
+            console.warn(err)
+        }
+        return () => {
+            AbortController1.abort()
+        }
     }, [query])
+
     useEffect(() => {
+        const AbortController1 = new AbortController()
+        const Aborted = AbortController1.signal.aborted
         if (wrapperRef.current.contains(document.activeElement) === false) {
             // profileInput.current.value = null
-            setPreviewImage("")
-            setImageValue("")
-            dispatch({ type: "UNSELECT_PROFILE_IMAGE", payload: "" })
-            dispatch({ type: "UNSELECT_BACKGROUND_IMAGE", payload: "" })
-            dispatch({ type: "SetValueOfPreviewImageProfile", payload: "" })
-            dispatch({ type: "SetValueOfPreviewImageBg", payload: "" })
-            setProgressMessage("")
-            setUploadLoader(false)
-            setDisabledButton(false)
-            setDeleteLoader(false)
-            setDisabledButtonBg(false)
-            setDisabledButton(false)
-            setUploadLoaderBackground(false)
+
+            if (Aborted === false) {
+                setPreviewImage("")
+                setImageValue("")
+                dispatch({ type: "UNSELECT_PROFILE_IMAGE", payload: "" })
+                dispatch({ type: "UNSELECT_BACKGROUND_IMAGE", payload: "" })
+                dispatch({ type: "SetValueOfPreviewImageProfile", payload: "" })
+                dispatch({ type: "SetValueOfPreviewImageBg", payload: "" })
+                setProgressMessage("")
+                setUploadLoader(false)
+                setDisabledButton(false)
+                setDeleteLoader(false)
+                setDisabledButtonBg(false)
+                setDisabledButton(false)
+                setUploadLoaderBackground(false)
+            }
+        }
+        return () => {
+            AbortController1.abort()
         }
     }, [showModal, showModalBackground])
 
@@ -551,112 +582,134 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     // },[])
 
     useEffect(() => {
-        setFriendsRequest(receiverrequest)
+        const AbortController1 = new AbortController()
+        const Aborted = AbortController1.signal.aborted
+        if (Aborted === false) {
+            setFriendsRequest(receiverrequest)
+        }
         // setNotificationGroup((pre)=>[...pre,receiverrequest])
+        return () => {
+            AbortController1.abort()
+        }
     }, [receiverrequest])
 
 
     async function DeleteFriendRequest(senderId) {
-        setFriendsRequest(friendsRequest.filter(friend => friend._id !== senderId))
-        // setNotificationGroup(NotificationGroup.filter(friend => friend._id !== senderId))
-        const deleteResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/deletefriend/request`, {
-            method: "DELETE",
-            body: JSON.stringify({ senderId }),
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem("uuid")
-
-            }
-        })
-        const deleteResponseData = await deleteResponse.json()
-        console.log({ deleteResponseData })
-        if (deleteResponse.status === 200) {
-            // success({ message: deleteResponseData.message })
-        }
-        else if (deleteResponse.status !== 200) {
-            // error({ message: deleteResponseData.message })
-
-        }
-
-
-    }
-
-
-    //accecpt the friend request
-    async function AcceptFriendRequest(senderId, name) {
-
-        const acceptResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/acceptfriend/request`, {
-            method: "POST",
-            body: JSON.stringify({ senderId, name }),
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem("uuid")
-
-            }
-        })
-        const acceptResponseData = await acceptResponse.json()
-        console.log("accepy friends reqeust", acceptResponseData)
-        if (acceptResponse.status === 200) {
-            setFriendsMessage(true)
-            // success({ message: acceptResponseData.message })
+        try {
             setFriendsRequest(friendsRequest.filter(friend => friend._id !== senderId))
-
-        }
-        else if (acceptResponse.status !== 200) {
-            // error({ message: acceptResponseData.message })
-
-        }
-
-
-    }
-
-    useEffect(() => {
-
-        async function loadHistory() {
-            const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/history/user/history/fetch`, {
-                method: "GET",
+            // setNotificationGroup(NotificationGroup.filter(friend => friend._id !== senderId))
+            const deleteResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/deletefriend/request`, {
+                method: "DELETE",
+                body: JSON.stringify({ senderId }),
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + localStorage.getItem("uuid")
 
                 }
             })
-
-            const resData = await res.json()
-            const data = resData.data
-            console.log({ resData })
-
-            if (res.status === 200) {
-                setUserSearchHistory(data?.history)
+            const deleteResponseData = await deleteResponse.json()
+            if (deleteResponse.status === 200) {
+                // success({ message: deleteResponseData.message })
             }
-            else if (res.status !== 200) {
-                console.log(data)
-                //not load hisory
+            else if (deleteResponse.status !== 200) {
+                // error({ message: deleteResponseData.message })
             }
         }
+        catch (err) {
+            console.warn(err)
+        }
+    }
+
+
+    //accecpt the friend request
+    async function AcceptFriendRequest(senderId, name) {
+        try {
+            const acceptResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/acceptfriend/request`, {
+                method: "POST",
+                body: JSON.stringify({ senderId, name }),
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("uuid")
+
+                }
+            })
+            const acceptResponseData = await acceptResponse.json()
+            console.log("accepy friends reqeust", acceptResponseData)
+            if (acceptResponse.status === 200) {
+                setFriendsMessage(true)
+                // success({ message: acceptResponseData.message })
+                setFriendsRequest(friendsRequest.filter(friend => friend._id !== senderId))
+            }
+            else if (acceptResponse.status !== 200) {
+                // error({ message: acceptResponseData.message })
+            }
+        }
+        catch (err) {
+            console.warn(err)
+        }
+    }
+
+    useEffect(() => {
+        const AbortController1 = new AbortController()
+        const Aborted = AbortController1.signal.aborted
+        async function loadHistory() {
+            try {
+                const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/history/user/history/fetch`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("uuid")
+
+                    }
+                })
+
+                const resData = await res.json()
+                const data = resData.data
+                if (res.status === 200) {
+                    if (Aborted === false) {
+                        setUserSearchHistory(data?.history)
+                    }
+                }
+                else if (res.status !== 200) {
+                    console.log(data)
+                    //not load hisory
+                }
+            }
+            catch (err) {
+                console.warn(err)
+
+            }
+
+        }
         loadHistory()
+
+        return () => {
+            AbortController1.abort()
+        }
 
     }, [])
 
 
 
     async function deleteHistory(searchUserId) {
-        const filterData = userSearchHistory.filter((item) => item.searchUserId !== searchUserId)
-        setUserSearchHistory(filterData)
-        const deleteHistory = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/history/delete/history`, {
-            method: "DELETE",
-            body: JSON.stringify(
-                {
-                    searchUserId
-                }),
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem("uuid")
-
-            }
-        })
-
-
+        try {
+            const filterData = userSearchHistory.filter((item) => item.searchUserId !== searchUserId)
+            setUserSearchHistory(filterData)
+            const deleteHistory = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/history/delete/history`, {
+                method: "DELETE",
+                body: JSON.stringify(
+                    {
+                        searchUserId
+                    }),
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("uuid")
+                }
+            })
+        }
+        catch (err) {
+            console.warn(err)
+        }
     }
 
 
@@ -667,6 +720,17 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
 
 
     // console.log({friendsRequest})
+
+
+
+    useEffect(() => {
+        if (ImageRef.current) {
+            const { top, left, width, height } = ImageRef.current.getBoundingClientRect()
+            dispatch({ type: "POS_AdminNavBar", payload: { x: left + width / 2, y: top + height / 2 } })
+        }
+    }, [ImageRef])
+
+
 
     return (
         <>
@@ -790,6 +854,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                         onClick={() => {
                                             setShowRightSideBar(!showRightSideBar)
                                         }}
+                                        ref={ImageRef}
 
                                     >
                                         {LoaderRedux ? "" : !showImage ?

@@ -12,7 +12,7 @@ import { NavLink } from 'react-router-dom';
 
 
 
-function Notification({ userLiked, socket,SetNotificationLength }) {
+function Notification({ userLiked, socket, SetNotificationLength }) {
     const [notification, setNotification] = useState([])
     const [length, setAllNotificationLength] = useState(0)
     // console.log("use details fetch from server", userLiked)
@@ -22,32 +22,22 @@ function Notification({ userLiked, socket,SetNotificationLength }) {
     })
     const { _id, fname, lname, googleId, college, city, country, position, stream, aboutMe } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "" }
 
-
-    //UNCOMMENT THIS FOR REALTIME LIKE NOTIFICATION
-    // useEffect(() => {
-    //     socket.on("getNotification", (data) => {
-    //         console.log({ data })
-
-    //         const isUSerExit = notification.some(item => item.likedBy === data.likedBy && item.post_Id === data.post_Id)
-    //         console.log({ isUSerExit })
-    //         if (isUSerExit===false) {
-
-    //                 setNotification(pre => [...pre, data])
-
-
-    //         }
-
-
-    //     })
-    // }, [socket])
-
     useEffect(() => {
         // console.log("notification", notification)
-        setNotification(userLiked)
+        const AbortController1 = new AbortController()
+        const Aborted = AbortController1.signal.aborted
+        if (Aborted === false) {
+            setNotification(userLiked)
+        }
+        return () => {
+            AbortController1.abort()
+        }
     }, [userLiked])
 
 
     useEffect(() => {
+        const AbortController1 = new AbortController()
+        const Aborted = AbortController1.signal.aborted
         async function loadNoti() {
             try {
                 const loadNoti = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/load/all/notification/byId/${googleId}`, {
@@ -60,8 +50,11 @@ function Notification({ userLiked, socket,SetNotificationLength }) {
                 const resData = await loadNoti.json()
                 // console.log({ resData })
                 if (loadNoti.status === 200) {
-                    setAllNotificationLength(resData.data.length)
-                    SetNotificationLength(resData.data.length)
+                    if (Aborted === false) {
+
+                        setAllNotificationLength(resData.data.length)
+                        SetNotificationLength(resData.data.length)
+                    }
                 }
                 else if (loadNoti.status !== 200) {
 
@@ -76,6 +69,10 @@ function Notification({ userLiked, socket,SetNotificationLength }) {
         }
         loadNoti()
 
+        return () => {
+            AbortController1.abort()
+        }
+
     }, [userLiked])
 
 
@@ -86,50 +83,54 @@ function Notification({ userLiked, socket,SetNotificationLength }) {
                     return (
                         <>
                             {
-                                (item.postImageURL && item.name) &&
-                                <ul className="notifications" key={index}>
-                                    <li className="links1 flex align-middle justify-between cursor-pointer mt-2 transition-all delay-100 ">
-                                        <NavLink to={`/profile/${item.likedBy}`}>
+                                <div key={index}>
+                                    {
+                                        (item.postImageURL && item.name) &&
+                                        <ul className="notifications" key={index}>
+                                            <li className="links1 flex align-middle justify-between cursor-pointer mt-2 transition-all delay-100 ">
+                                                <NavLink to={`/profile/${item.likedBy}`}>
 
 
-                                        <div className="left-side flex rounded-full w-[2.5rem] h-[2.5rem]">
-                                            <Image
-                                                src={item.url ? item.url : image}
-                                                rounded={true}
-                                                raised={false}
-                                                alt="Rounded Image"
-                                            />
-                                        </div>
-                                        </NavLink>
+                                                    <div className="left-side flex rounded-full w-[2.5rem] h-[2.5rem]">
+                                                        <Image
+                                                            src={item.url ? item.url : image}
+                                                            rounded={true}
+                                                            raised={false}
+                                                            alt="Rounded Image"
+                                                        />
+                                                    </div>
+                                                </NavLink>
 
-                                        <div className="right-side flex align-middle mt-2 ml-2 ">
-
-
-                                            {
-                                                item.likedBy === googleId ?
-                                                    <>
-                                                        <p className='font-bold mr-1 truncate'>you</p> like your post
-                                                    </>
-                                                    :
-                                                    <>
-                                                        <p className='font-bold mr-1 truncate'>{item.name}</p> like your post
-                                                    </>
-                                            }
-
-                                        </div>
+                                                <div className="right-side flex align-middle mt-2 ml-2 ">
 
 
-                                        <div className="post_image w-[2.5rem] h-[2.5rem] ml-[1rem]">
-                                            {
-                                                item.postImageURL &&
-                                                <Image src={item.postImageURL}
-                                                    rounded={false}
-                                                    className="w-full h-full rounded-none" />
-                                            }
-                                        </div>
+                                                    {
+                                                        item.likedBy === googleId ?
+                                                            <>
+                                                                <p className='font-bold mr-1 truncate'>you</p> like your post
+                                                            </>
+                                                            :
+                                                            <>
+                                                                <p className='font-bold mr-1 truncate'>{item.name}</p> like your post
+                                                            </>
+                                                    }
 
-                                    </li>
-                                </ul>
+                                                </div>
+
+
+                                                <div className="post_image w-[2.5rem] h-[2.5rem] ml-[1rem]">
+                                                    {
+                                                        item.postImageURL &&
+                                                        <Image src={item.postImageURL}
+                                                            rounded={false}
+                                                            className="w-full h-full rounded-none" />
+                                                    }
+                                                </div>
+
+                                            </li>
+                                        </ul>}
+                                </div>
+
                             }
                         </>
                     )

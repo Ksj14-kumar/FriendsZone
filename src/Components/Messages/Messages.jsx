@@ -294,9 +294,9 @@ function Messages({ user }) {
                                 {/* (conversations !== undefined && conversations.length > 0) && */}
                                 {
                                     conversations.map((conversation, index) => {
-                                        console.log({ conversation })
                                         return (
                                             <div className={`friends_list   `}
+                                            key={index}
 
                                                 onClick={() => {
                                                     // setActive(!active)

@@ -221,7 +221,7 @@ export default function Sidebar(props) {
                             hover:duration-2000
                             hover:text-white
                             hover:ease-in-out ">
-                                <a
+                                {/* <a
                                     href="https://demos.creative-tim.com/material-tailwind-kit-react/#/register"
                                     target="_blank"
                                     rel="noreferrer"
@@ -229,7 +229,7 @@ export default function Sidebar(props) {
                                 >
                                     <Icon name="list_alt" size="2xl" />
                                     Register
-                                </a>
+                                </a> */}
                             </li>
                             <li className="px-4 rounded-lg mb-2 text-black selection:hover:bg-[#2a97bb] transition duration-2000
                             hover:shadow-lg
@@ -238,7 +238,7 @@ export default function Sidebar(props) {
                             hover:duration-2000
                             hover:text-white
                             hover:ease-in-out">
-                                <a
+                                {/* <a
                                     href="https://demos.creative-tim.com/material-tailwind-kit-react/#/landing"
                                     target="_blank"
                                     rel="noreferrer"
@@ -246,7 +246,7 @@ export default function Sidebar(props) {
                                 >
                                     <Icon name="web" size="2xl" />
                                     Landing Page
-                                </a>
+                                </a> */}
                             </li>
 
 

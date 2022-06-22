@@ -19,6 +19,10 @@ import Notification from './Redux/Notification/Notification'
 import OnlineUsers from "./Redux/onlineUsers/onlineUser"
 import Query from "./Redux/query/Query";
 import ActiveStatus from "./Redux/Chats/ActiveStatus";
+import BookMark from "./Redux/BookMarkPosts"
+import getPos from "./Redux/GetPosition"
+import OriginalProfileURL from "./Redux/OriginalProfileUrl"
+
 const rootReducer = combineReducers({
     imageReducer: ImageReducer,
     UnselectProfileImage: UnselectProfileImage,
@@ -47,7 +51,12 @@ const rootReducer = combineReducers({
     Name,
     Query,
     OnlineUsers,
-    ActiveStatus
+    ActiveStatus,
+    getPos,
+    BookMark,
+    OriginalProfileURL
+
+
 
 })
 export const store = createStore(rootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())

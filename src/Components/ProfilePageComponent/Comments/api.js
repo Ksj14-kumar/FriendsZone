@@ -36,20 +36,37 @@ export const getComments = async () => {
     ];
 };
 
-export const createComment = async (text, parentId = null, UserIdForPostComments, currentUserId, currentUserName, ImageUrl, post_id) => {
-    
+// text, parentId = null,
+export const createComment = async (value, parentId = null, UserIdForPostComments, currentUserId, currentUserName, ImageUrl, post_id) => {
     //UserIdForPostComments==="1"
     //change the id===uuid
-    return {
-        uuid: Math.random().toString(36).substr(2, 9),
-        body: text,
+
+    //This is old method
+    // console.log({ text, parentId===null, UserIdForPostComments, currentUserId, currentUserName, ImageUrl, post_id })
+
+    console.log({uuid: Math.random().toString(36).substr(2, 9),
+        body: value.value,
         parentId,
         userId: currentUserId,
-        username: changeTextCase(currentUserName),
+        username: currentUserName,
         post_id: post_id,
         ImageUrl: ImageUrl,
-        createdAt: new Date(Date.now()).toDateString().split(" ")[2] + " " + new Date(Date.now()).toDateString().split(" ")[1] + " " + new Date(Date.now()).toDateString().split(" ")[3],
-    };
+        // createdAt: new Date(Date.now()).toDateString().split(" ")[2] + " " + new Date(Date.now()).toDateString().split(" ")[1] + " " + new Date(Date.now()).toDateString().split(" ")[3],
+        createdAt: Date.now(),
+        type: value.type
+})
+return {
+    uuid: Math.random().toString(36).substr(2, 9),
+    body: value.value,
+    parentId,
+    userId: currentUserId,
+    username: currentUserName,
+    post_id: post_id,
+    ImageUrl,
+    // createdAt: new Date(Date.now()).toDateString().split(" ")[2] + " " + new Date(Date.now()).toDateString().split(" ")[1] + " " + new Date(Date.now()).toDateString().split(" ")[3],
+    createdAt: Date.now(),
+    type: value.type
+};
 };
 
 export const updateComment = async (text) => {
@@ -61,9 +78,14 @@ export const deleteComment = async () => {
 };
 
 
-function changeTextCase(str){
-    const value =str.split(' ')
-   .map(w => w[0].toUpperCase() + w.substring(1).toLowerCase())
-   .join(' ');
-   return value
+function changeTextCase(str) {
+
+
+    const value = str.split(' ')?.map(w => {
+
+
+        return w[0].toUpperCase() + w.slice(1).toLowerCase();
+    })
+        .join(' ');
+    return value
 }

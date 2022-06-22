@@ -1,5 +1,5 @@
 import React, { createContext, StrictMode, useEffect, useRef, useState } from 'react'
-import { Switch, Route, Redirect, useHistory } from 'react-router-dom'
+import { Switch, Route, Redirect, useHistory, useRouteMatch } from 'react-router-dom'
 import Register from './Components/Register'
 import Login from './Components/Login';
 import Email from './Components/Email';
@@ -27,6 +27,14 @@ import Messages from './Components/Messages/Messages';
 import UnknowUser from './Pages/UnknowUser';
 import AllNotification from './Pages/AllNotification';
 import ChatSection from "./Pages/ChatSection"
+import SinglePost from './Pages/SinglePost';
+import Setting from "./Pages/AdminRightSideBarPages/Setting"
+import BookMark from "./Pages/AdminRightSideBarPages/BookMark"
+import News from "./Pages/AdminRightSideBarPages/News"
+import ThemeMode from "./Pages/AdminRightSideBarPages/ThemeMode"
+import Music from "./Pages/AdminRightSideBarPages/Music"
+import UserSinglePost from './Pages/UserSinglePost';
+
 
 
 
@@ -39,9 +47,14 @@ console.log(process.env.REACT_APP_API_BACKENDURL)
 function App() {
     const [userData, setUserData] = React.useState(null)
     const [socket, setSocket] = useState()
+    const [showLikeUserModal, setShowLikeUserModal] = useState({ bool: false, reactUser: [] })
     const history = useHistory()
     // const [users, dispatch] = React.useReducer(Reducer, Init)
     const [cookie, setCookie] = useCookies()
+    const path = useRouteMatch()
+    console.log({ path })
+    const location = window.location
+    console.log({ location })
     const dispatch = useDispatch()
     const users = useSelector((state) => {
         return state.UserStillLogin
@@ -102,7 +115,7 @@ function App() {
 
             }
             catch (err) {
-                console.log(err)
+                console.warn(err)
             }
 
         }
@@ -171,31 +184,40 @@ function App() {
                         <Switch >
                             <Route exact path="/" >
                                 {
-                                    (getUserData && user) ? <Feed socket={socket} /> : <Header />
+                                    (getUserData && user) ?
+                                        <Feed socket={socket} setShowLikeUserModal={setShowLikeUserModal} showLikeUserModal={showLikeUserModal} />
+                                        : <Header />
                                 }
                             </Route>
                             <Route exact path="/register">
                                 {
-                                    (getUserData && user) ? <Redirect to="/" /> : <Register />
+                                    (getUserData && user)
+                                        // && ?
+                                        ?
+                                        <Redirect to={"/"} /> :
+                                        <Register />
                                 }
                             </Route>
                             <Route exact path="/login">
-                                {(getUserData && user) ? <Redirect to="/" /> : <Login socket={socket} />}
+                                {
+                                    (getUserData && user)
+                                        //  &&
+                                        ? <Redirect to={"/"} /> :
+                                        <Login socket={socket} />
+
+                                }
                             </Route>
                             <Route exact path="/forget" component={Email} />
                             <Route exact path="/dashboard">
                                 {
-                                    (getUserData && user) ? <Dashboard users={getUserData} socket={socket} />
-                                        : <Redirect to="/login" />
+                                    (getUserData && user) &&
+                                    <Dashboard users={getUserData} socket={socket} />
+                                    // : <Redirect to="/" />
                                 }
                             </Route>
-
-
                             <Route exact path='/profile/:username'>
                                 {
-                                    // (getUserData && user) ?
                                     <ProfileCard getUserData={getUserData} socket={socket} />
-                                    // : <Redirect to="/login" />
                                 }
                             </Route>
 
@@ -209,57 +231,40 @@ function App() {
 
                             <Route exact path='/unknownuser'>
                                 {
-                                    // (getUserData && user) ? 
                                     <UnknowUser getUserData={getUserData} socket={socket} />
-                                    // : <Redirect to="/login" />
                                 }
                             </Route>
-
-
-
 
                             <Route exact path="/update_profile">
                                 {
-                                    // (getUserData && user) ? 
                                     <UpdateProfile getUserData={getUserData} socket={socket} />
-                                    // : <Redirect to="/login" />
                                 }
-                                {/* <UpdateProfile/> */}
                             </Route>
                             <Route exact path="/user/posts">
                                 {
-                                    (getUserData && user) ? <UserPosts user={getUserData} socket={socket} />
-                                        : <Redirect to="/login" />
+                                    <UserPosts user={getUserData} socket={socket} />
                                 }
                             </Route>
                             <Route exact path="/user/photos">
                                 {
-                                    (getUserData && user) ? <UserPhotos user={getUserData} socket={socket} />
-                                        : <Redirect to="/login" />
+                                    <UserPhotos user={getUserData} socket={socket} />
                                 }
                             </Route>
 
-                            {/* /user/links" */}
 
                             <Route exact path="/user/links">
                                 {
-                                    // (getUserData && user) ?
                                     <UserLink user={getUserData} socket={socket} />
-                                    // : <Redirect to="/login" />
                                 }
                             </Route>
-
-
-
 
                             <Route exact path="/load/friends/">
                                 {
-                                    // (getUserData && user) ?
                                     <AllFriends user={getUserData} socket={socket} />
-                                    // : <Redirect to="/login" />
                                 }
                             </Route>
-                            {/* /all/notification/${googleId */}
+
+
 
                             <Route exact path="/messages">
                                 {/* {
@@ -267,19 +272,55 @@ function App() {
                                         : <Redirect to="/login" />
 
                                 } */}
-
-
-                                {(getUserData && user) ? <ChatSection user={UserInformationLoad?.googleId} socket={socket} setSocket={setSocket} />
-                                    : <Redirect to="/login" />}
-
+                                {
+                                    <ChatSection user={UserInformationLoad?.googleId} socket={socket} setSocket={setSocket} />
+                                }
                             </Route>
 
 
                             <Route exact path="/all/notification/:id">
                                 {
-                                    (getUserData && user) ?
-                                        <AllNotification user={UserInformationLoad?.googleId} socket={socket} />
-                                        : <Redirect to="/login" />
+                                    <AllNotification user={UserInformationLoad?.googleId} socket={socket} />
+                                }
+                            </Route>
+
+
+                            <Route exact path={`/user/single/post/`}>
+                                {
+                                    // <SinglePost user={UserInformationLoad?.googleId} socket={socket} />
+                                    <UserSinglePost user={UserInformationLoad?.googleId} socket={socket} setShowLikeUserModal={setShowLikeUserModal} showLikeUserModal={showLikeUserModal} />
+                                }
+                            </Route>
+
+
+                            {/* ==============================================RIGHTSIDE BAR PAGES===================================== */}
+                            <Route exact path="/blog/:name/setting">
+                                {
+                                    <Setting socket={socket} />
+                                }
+                            </Route>
+
+                            <Route exact path="/blog/:name/bookmark">
+                                {
+                                    <BookMark socket={socket} />
+                                }
+                            </Route>
+
+
+                            <Route exact path="/blog/:name/songs-accessbility">
+                                {
+                                    <Music socket={socket} />
+                                }
+                            </Route>
+                            <Route exact path="/blog/:name/themeMode">
+                                {
+                                    <ThemeMode socket={socket} />
+                                }
+                            </Route>
+
+                            <Route exact path="/blog/:name/news">
+                                {
+                                    <News socket={socket} />
                                 }
                             </Route>
 

@@ -3,11 +3,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import UserFeed from '../Components/UserFeed/UserFeed'
 
 
-function Feed({ socket }) {
+function Feed({ socket,setShowLikeUserModal,showLikeUserModal  }) {
     const dispatch = useDispatch()
     const [AllUser, setAllUser] = useState([])
     const [suggestionFriends, setSuggestionFriends] = useState([])
-    // const [socket, setSocket] = useState()
 
 
     const UserInformationLoad = useSelector((state) => {
@@ -21,26 +20,11 @@ function Feed({ socket }) {
 
 
 
-
-    //  //trigger when user login your account
-    //  useEffect(() => {
-    //     // process.env.REACT_APP_API_BACKENDURL
-    //     setSocket(io("ws://localhost:5000"))
-
-    // }, [])
-
-    // console.log({socket})
-
-
-
     useEffect(() => {
         socket?.emit("login", localStorage.getItem("uuid"))
-        socket?.on('onlineUsers', (data) => {
-
+        socket?.off("onlineUsers").on('onlineUsers', (data) => {
             dispatch({ type: "onlineUsers", payload: data })
-
         })
-
     }, [])
 
     useEffect(() => {
@@ -54,19 +38,14 @@ function Feed({ socket }) {
                 const data = await res.json()
                 if (res.status === 200) {
                     setAllUser(data)
-
                 }
                 else if (res.status !== 200) {
                     console.log("error")
                 }
-
             }
             catch (err) {
-                console.log(err)
-
+                console.warn(err)
             }
-
-
         }
         getAllUser()
     }, [])
@@ -81,7 +60,6 @@ function Feed({ socket }) {
                     }
                 })
                 const data = await res.json()
-                // console.log("is friends", data)
                 if (res.status === 200) {
                     const filterUsers = data.friendList !== null && AllUser.filter((item) => {
                         return data.friendList.some((value) => {
@@ -89,21 +67,20 @@ function Feed({ socket }) {
                         })
 
                     })
-                    // setAllUser({ filterUsers })
                     setSuggestionFriends(filterUsers)
                 }
                 else if (res.status !== 200) {
-                    console.log("error")
+                    return
+
                 }
 
             } catch (err) {
-                console.log(err)
+                console.warn(err)
 
             }
         }
-        isFriends()
-
-    }, [AllUser])
+        UserInformationLoad?.googleId && isFriends()
+    }, [])
 
 
     async function FilterUser(id) {
@@ -111,7 +88,7 @@ function Feed({ socket }) {
     }
 
     return (
-        <UserFeed PostWhichUserSelectedImageORVideo={PostWhichUserSelectedImageORVideo} socket={socket} AllUser={suggestionFriends} FilterUser={FilterUser} />
+        <UserFeed PostWhichUserSelectedImageORVideo={PostWhichUserSelectedImageORVideo} socket={socket} AllUser={suggestionFriends} FilterUser={FilterUser} showLikeUserModal={showLikeUserModal} setShowLikeUserModal={setShowLikeUserModal} />
 
     )
 }
