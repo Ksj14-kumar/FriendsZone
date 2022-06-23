@@ -124,7 +124,7 @@ function App() {
     useEffect(() => {
         socket?.emit("newUser", getUserData)
         socket?.io.on("error", (err) => {
-            alert("please connect to internet")
+            // alert("please connect to internet")
         })
         socket?.io.on("reconnect", (connect) => {
             console.log("reconnect successfull" + connect)
