@@ -2,23 +2,16 @@ import React, { useRef, useState, useEffect } from 'react'
 import Icon from "@material-tailwind/react/Icon";
 import Button from "@material-tailwind/react/Button";
 import { MdLocationOn, MdSearch } from 'react-icons/md';
-import img1 from '../assets/img/team-1-800x800.jpg'
-import img2 from '../assets/img/team-2-800x800.jpg'
-import img3 from '../assets/img/team-3-800x800.jpg'
-import img4 from '../assets/img/team-4-470x470.png'
-
+import { motion } from "framer-motion"
 import LiveUser from './chatSection/LiveUser';
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-function FooterButton({ bool, online, currentId, socket, setFriendsLength }) {
+function FooterButton({ bool, onlinefriends, currentId, socket, NumberOfFriendsOnline }) {
     const dispatch = useDispatch()
     const targetDiv = useRef()
     const siblingDiv = useRef()
     const [cssClass, setClass] = useState(false)
-    const [onlinefriends, setOnlineFriends] = useState([])
-    const [friends, setFriends] = useState([])
     const [chats, setChats] = useState([])
-    const isMount = useRef(true)
 
     const UserInformationLoad = useSelector((state) => {
         return state.UserInformationLoad.value
@@ -46,66 +39,58 @@ function FooterButton({ bool, online, currentId, socket, setFriendsLength }) {
     }, [cssClass])
 
 
-
-
-
-
-
-
-
     //now get friends
-    useEffect(() => {
-        async function loadFriends() {
-            try {
+    // useEffect(() => {
+    //     async function loadFriends() {
+    //         try {
 
-                // console.log("call start")
-                const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/friends/${currentId}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + localStorage.getItem("uuid")
-
-
-                    }
-
-                })
-                const data = await res.json()
-                // console.log("userdata",{data})
-
-                if (res.status === 200) {
-                    // setFriends(data.friendList)
-                    if (isMount.current) {
-
-                        const value = data.friendList.filter(item => {
-                            return online.some(value => {
-
-                                return item._id === value.adminId
-                            })
-                        })
-                        setFriends(value)
-                        setFriendsLength(value.length)
-                        dispatch({ type: "onlineUsers", payload: value })
-                    }
-
-                }
-                else if (res.status !== 200) {
-                    console.warn("err")
-
-                }
-            } catch (err) {
-                console.warn(err)
+    //             // console.log("call start")
+    //             const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/friends/${currentId}`, {
+    //                 method: "GET",
+    //                 headers: {
+    //                     "Content-Type": "application/json",
+    //                     "Authorization": "Bearer " + localStorage.getItem("uuid")
 
 
-            }
-        }
-        loadFriends()
+    //                 }
 
-        return (() => {
-            isMount.current = false
-        })
+    //             })
+    //             const data = await res.json()
+    //             // console.log("userdata",{data})
 
-    }, [online, currentId])
+    //             if (res.status === 200) {
+    //                 // setFriends(data.friendList)
+    //                 if (isMount.current) {
 
+    //                     const value = data.friendList.filter(item => {
+    //                         return online.some(value => {
+
+    //                             return item._id === value.adminId
+    //                         })
+    //                     })
+    //                     setFriends(value)
+    //                     setFriendsLength(value.length)
+    //                     dispatch({ type: "onlineUsers", payload: value })
+    //                 }
+
+    //             }
+    //             else if (res.status !== 200) {
+    //                 console.warn("err")
+
+    //             }
+    //         } catch (err) {
+    //             console.warn(err)
+
+
+    //         }
+    //     }
+    //     loadFriends()
+
+    //     return (() => {
+    //         isMount.current = false
+    //     })
+
+    // }, [online, currentId])
 
 
 
@@ -143,7 +128,12 @@ function FooterButton({ bool, online, currentId, socket, setFriendsLength }) {
     return (
         <>
             {/* gray-200 */}
-            <main className="main border-1 border-solid border-gray-200 ">
+            <motion.main className="main border-1 border-solid border-gray-200 "
+            // initial={{ opacity: 0, x: 100 }}
+            // animate={{ opacity: 1, x: 0 }}
+            // transition={{ duration: 0.5 }}
+            // exit={{ opacity: 0, x: 100 }}
+            >
                 <header className="_top_chat_header  flex   items-center hover:cursor-pointer     py-1 justify-between ">
                     <section className="_left  "
                         ref={siblingDiv}
@@ -190,7 +180,7 @@ function FooterButton({ bool, online, currentId, socket, setFriendsLength }) {
                 </header>
                 <hr />
                 {
-                    (friends !== undefined && friends.length > 0) ? friends.map((item, index) => {
+                    (onlinefriends !== undefined && onlinefriends.length > 0) ? onlinefriends.map((item, index) => {
                         return (
                             <>
                                 <NavLink to={`/messages?q=${item._id}`}>
@@ -220,7 +210,7 @@ function FooterButton({ bool, online, currentId, socket, setFriendsLength }) {
 
 
 
-            </main>
+            </motion.main>
 
 
 

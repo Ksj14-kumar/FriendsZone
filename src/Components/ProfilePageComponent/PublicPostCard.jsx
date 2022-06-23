@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PostCard from './PostCard';
 import { useDispatch, useSelector } from 'react-redux'
-import axios from 'axios';
-
 import InfiniteScroll from "react-infinite-scroll-component"
 import Spinner from 'react-spinkit'
 import { useParams } from 'react-router-dom';
@@ -22,16 +20,7 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal })
     // setPostArray(state.GetAllPosts)
     return state.GetAllPosts
   })
-  const Notification = useSelector((state) => {
-    // console.log("all comment load here", state)
-    // setPostArray(state.GetAllPosts)
-    return state.Notification
-  })
-  // GetAllComments
-  const GetAllComments = useSelector((state) => {
-    // setPostArray(state.GetAllPosts)
-    return state.GetAllComments
-  })
+
 
 
   //now load all the notification
@@ -74,7 +63,7 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal })
       }
     }
     loadPosts()
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     async function totalComment() {
@@ -98,7 +87,7 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal })
       }
     }
     totalComment()
-  }, [])
+  }, [dispatch, _id])
 
 
 
@@ -124,7 +113,7 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal })
       }
     }
     loadNotification()
-  }, [])
+  }, [dispatch,_id])
 
 
 
@@ -141,9 +130,22 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal })
           }
         })
         const res = await userInfo.json()
+        console.log({ res })
         if (userInfo.status === 200) {
           dispatch({ type: "USERINFO_LOAD", payload: res.message })
           dispatch({ type: "BOOK_MARK_POST", payload: res.message.bookMarkPost })
+          // const blobRes = await fetch(res.message.url)
+          // const blobData = await blobRes.blob()
+          // const url = URL.createObjectURL(blobData)
+          // dispatch({ type: "LOADER", payload: false })
+          // dispatch({ type: "uploadImageDataFromServer", payload: url })
+          // // dispatch({ type: "ShowImage", payload: data.url })
+          // dispatch({ type: "OriginalProfileURL", payload: url })
+          // dispatch({ type: "ShowImage", payload: url })
+          // dispatch({ type: "LOADER", payload: false })
+        }
+        else if (userInfo.status !== 200) {
+          // dispatch({ type: "LOADER", payload: false })
         }
       } catch (err) {
         console.warn(err)
@@ -153,13 +155,13 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal })
     }
     userInfoLoad()
 
-  }, [])
+  }, [dispatch])
 
 
 
 
 
-  //=====================LOAD THE BACKGROUND IMAGES=============
+  //=====================LOAD THE BACKGROUND IMAGE from the cloudinaryS=============
   useEffect(() => {
 
     console.log("useEffect 5th load bg image")
@@ -195,14 +197,16 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal })
 
     }
     BackgroundImage()
-  }, [])
+  }, [dispatch])
 
 
-  //====================LOAD PROFILE IMAGES=============
+  //====================LOAD PROFILE IMAGES fromc cloudinary=============
   useEffect(() => {
     console.log("now useEffect 6 load the profile image")
+    console.log("profile Image execute with dispatch")
 
     async function ProfileImages() {
+      let url;
       try {
         dispatch({ type: "LOADER", payload: true })
         const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/profile/image/e9thhvkKqJpnTlYo1sQl/QVbghZqhoSr2Rt5qvNYJ/iKj3RoJojFWmcDo4wTlm/9Olk5vTenhdkjHrdYEWl/`, {
@@ -216,15 +220,20 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal })
           }
         })
         const data = await res.json()
+        console.log("data", { data })
         if (res.status === 200) {
-          const blobRes = await fetch(data.url)
-          const blobData = await blobRes.blob()
-          const url = URL.createObjectURL(blobData)
-
+          if (data.url !== false) {
+            const blobRes = await fetch(data.url)
+            const blobData = await blobRes.blob()
+            url = URL.createObjectURL(blobData)
+            dispatch({ type: "OriginalProfileURL", payload: data.url })
+          }
+          else {
+            url = ""
+            dispatch({ type: "OriginalProfileURL", payload: "" })
+          }
           dispatch({ type: "LOADER", payload: false })
           dispatch({ type: "uploadImageDataFromServer", payload: data })
-          // dispatch({ type: "ShowImage", payload: data.url })
-          dispatch({ type: "OriginalProfileURL", payload: data.url })
           dispatch({ type: "ShowImage", payload: url })
           dispatch({ type: "LOADER", payload: false })
         }
@@ -237,7 +246,7 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal })
       }
     }
     ProfileImages()
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     console.log("load the post length useEffect 7")
@@ -265,6 +274,131 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal })
     getAllPostDataLength()
 
   }, [])
+
+
+  useEffect(() => {
+    async function AllAPI() {
+      dispatch({ type: "LOADER", payload: true })
+      Promise.all([
+        fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/load/all/post/${3}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("uuid")
+          }
+        }),
+
+        fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/all/comment/user/${_id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("uuid")
+          }
+        }),
+        fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/load/all/notification/${_id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("uuid")
+          }
+        }),
+        fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/user/083525p7ljhwmxifts31/l66cbrsuytmj1wujuauz/nqoye5ozdqj89b4s4qoq/ua1iztaxjo4bbmzvd391/3mzqeygnoszlknp90h51/t28uf00khscofxgjwj20/`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("uuid")
+          }
+        }),
+        fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/bg/image/mwQgga2z5KfChXjuF1s0/r6dg0LqqWmCG4W5UQOTa/ftFhzft7YNwT6jb9EVoX/ogvnbpOcPnjgMatu3mtb/JSC2PQZQVlK19QXDbSl1/`, {
+          method: "GET",
+          credentials: 'same-origin',
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Credentials": true,
+            "Authorization": "Bearer " + localStorage.getItem("uuid")
+          }
+        }),
+        fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/profile/image/e9thhvkKqJpnTlYo1sQl/QVbghZqhoSr2Rt5qvNYJ/iKj3RoJojFWmcDo4wTlm/9Olk5vTenhdkjHrdYEWl/`, {
+          method: "GET",
+          credentials: 'same-origin',
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Credentials": true,
+            "Authorization": "Bearer " + localStorage.getItem("uuid")
+          }
+        }),
+        fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/load/all/postlength`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("uuid")
+          }
+        })
+
+      ]).then((res) => {
+        console.log(res)
+        return Promise.all(res.map(i => {
+          return i.json()
+        }))
+      }).then((value) => {
+        console.log(value)
+
+        value.forEach(async (item) => {
+          if (item.post === "post") {
+            dispatch({
+              type: "LOAD_POSTS",
+              payload: item.data
+            })
+          }
+          else if (item.commentLength === "commentLength") {
+            dispatch({ type: "SET_TOTAL_COMMENT", payload: item.data })
+            dispatch({ type: "Get_All_Comments", payload: item.data })
+          }
+          else if (item.noti === "noti") {
+            dispatch({ type: "Send_Notification", payload: item.data })
+          }
+          else if (item.userInfo === "INFO") {
+            dispatch({ type: "USERINFO_LOAD", payload: item.message })
+            dispatch({ type: "BOOK_MARK_POST", payload: item.message.bookMarkPost })
+
+          }
+          else if (item.bgImage === "bgImage") {
+            dispatch({ type: "LOADER", payload: false })
+            dispatch({ type: "uploadImageDataFromServerBackground", payload: item })
+            dispatch({ type: "ShowImageBackground", payload: item.url })
+            dispatch({ type: "LOADER", payload: false })
+
+          }
+          else if (item.profileImage === "profile") {
+            let url;
+            if (item.url !== false) {
+              const blobRes = await fetch(item.url)
+              const blobData = await blobRes.blob()
+              url = URL.createObjectURL(blobData)
+              dispatch({ type: "OriginalProfileURL", payload: item.url })
+            }
+            else {
+              url = ""
+              dispatch({ type: "OriginalProfileURL", payload: "" })
+            }
+            dispatch({ type: "LOADER", payload: false })
+            dispatch({ type: "uploadImageDataFromServer", payload: item })
+            dispatch({ type: "ShowImage", payload: url })
+            dispatch({ type: "LOADER", payload: false })
+          }
+          else if (item.postLength === "postLength") {
+            setLength(item.l)
+          }
+        })
+
+      }).catch(err => {
+        console.log("error occured", err)
+      })
+    }
+    // AllAPI()
+  }, [_id, dispatch])
 
 
 
@@ -328,7 +462,7 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal })
 
 
 
-      <div className={`infinite_scroll  text-center md:ml-[5rem] ml-[2rem] mt-[6rem] ${PostLength === length && "hidden"}`}>
+      {/* <div className={`infinite_scroll  text-center md:ml-[5rem] ml-[2rem] mt-[6rem] ${PostLength === length && "hidden"}`}>
         <InfiniteScroll
           dataLength={PostData.length}
           next={fetchData}
@@ -336,16 +470,8 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal })
           loader={<Spinner name="three-bounce" />}
           className="md:ml-[8rem] ml-[0rem]"
         />
-      </div>
+      </div> */}
     </>
   )
 }
 export default PublicPostCard
-
-
-
-function Hello() {
-  return (
-    <h1>Hii, Mom</h1>
-  )
-}

@@ -5,8 +5,7 @@ import Image from "@material-tailwind/react/Image";
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { format } from "timeago.js";
-import { useEffect, useRef } from "react";
-import { useIsMounted } from "rsuite/esm/utils";
+import { useEffect } from "react";
 
 
 
@@ -25,10 +24,8 @@ const Comment = ({
 }) => {
 
     const [showReplies, setShowReplies] = useState(false)
-    const imgElement = useRef(null);
     const [image, setImage] = useState(null);
     const [GifURL, setGifURL] = useState(null);
-    const isMount = useRef(true)
 
 
 
@@ -41,12 +38,11 @@ const Comment = ({
         activeComment &&
         activeComment.uuid === comment?.uuid &&
         activeComment.type === "replying";
-    const fiveMinutes = 300000;
-    const timePassed = new Date() - new Date(comment?.createdAt) > fiveMinutes;
+    // const fiveMinutes = 300000;
+    // const timePassed = new Date() - new Date(comment?.createdAt) > fiveMinutes;
     // && !timePassed  delete time out
     const canDelete =
         currentUserId === comment?.userId && replies.length === 0;
-    const canLike = currentUserId !== comment?.userId
     const canReply = Boolean(currentUserId);
     // && !timePassed edit time out
     // UserIdForPostComments===currentId
@@ -57,34 +53,38 @@ const Comment = ({
 
 
 
-    useEffect(async () => {
-        if (comment.ImageUrl) {
+    useEffect(() => {
+        async function HandleAsyncchronous() {
 
-            const bres = await fetch(comment.ImageUrl)
-            const blob = await bres.blob()
-            const url = URL.createObjectURL(blob)
-            if (isMount.current) {
-
+            if (comment.ImageUrl) {
+                const bres = await fetch(comment.ImageUrl)
+                const blob = await bres.blob()
+                const url = URL.createObjectURL(blob)
                 setImage(url)
             }
         }
-        return () => {
-            isMount.current = false
-        }
+        // if (isMount.current) {
+
+        // }
+        // if (comment.ImageUrl) {
+
+        // }
+        // return () => {
+        //     isMount.current = false
+        // }
+        HandleAsyncchronous()
     }, [comment?.ImageUrl])
 
-    useEffect(async () => {
-        if (comment.type === "gif") {
-            const res = await fetch(comment.body)
-            const blob = await res.blob()
-            const url = URL.createObjectURL(blob)
-            if (isMount.current) {
+    useEffect(() => {
+        async function HandleAsyncchronous() {
+            if (comment.type === "gif") {
+                const res = await fetch(comment.body)
+                const blob = await res.blob()
+                const url = URL.createObjectURL(blob)
                 setGifURL(url)
             }
-            return () => {
-                isMount.current = false
-            }
         }
+        HandleAsyncchronous()
     }, [comment])
 
 
@@ -101,16 +101,23 @@ const Comment = ({
                 <div className="flex ">
                     <div className={`innerImage w-[2.5rem] h-[2.5rem] rounded-full flex-shrink-0 mds-editor28:w-[1.8rem]mds-editor28:h-[1.8rem] mds-editor6:ml-0 flex md:ml-0 relative`}>
                         {
-                            ImageUrl &&
-                            <Image
-                                // src={ImageUrl}
-                                // src={comment?.ImageUrl}
-                                src={image}
-                                rounded={true}
-                                raised={false}
-                                alt=""
-                                className="w-full h-full flex-shrink-0"
-                            />
+                            ImageUrl ?
+                                <Image
+                                    // src={ImageUrl}
+                                    // UserPhoto
+                                    // src={comment?.ImageUrl}
+                                    src={image}
+                                    rounded={true}
+                                    raised={false}
+                                    alt=""
+                                    className="w-full h-full flex-shrink-0"
+                                /> : <Image
+                                    src={UserPhoto}
+                                    rounded={true}
+                                    raised={false}
+                                    alt=""
+                                    className="w-full h-full flex-shrink-0"
+                                />
                         }
                     </div>
                     <div className="comment-author text-[1.1rem] font-medium mds-editor28:text-[1.2rem] mds-editor6:text-[.9rem] ml-2">{comment.username}</div>

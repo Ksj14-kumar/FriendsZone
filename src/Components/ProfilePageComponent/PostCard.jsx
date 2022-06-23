@@ -1,52 +1,43 @@
-import React, { useDebugValue, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Card from "@material-tailwind/react/Card";
 import CardBody from "@material-tailwind/react/CardBody";
 import CardFooter from "@material-tailwind/react/CardFooter";
 import Button from "@material-tailwind/react/Button";
 import Image from "@material-tailwind/react/Image";
-import Image1 from '../../assets/img/team-4-470x470.png';
-import Avatar from '@mui/material/Avatar';
 import Tooltips from "@material-tailwind/react/Tooltips";
 import TooltipsContent from "@material-tailwind/react/TooltipsContent";
-import emoji from '../../assets/emoji/animated-emoticons-2018-5.gif';
-import emoji2 from '../../assets/emoji/animated-emoticons-2018-25.gif';
-import emoji3 from '../../assets/emoji/animated-emoticons-2018-21.gif';
-import emoji4 from '../../assets/emoji/animated-emoticons-2018-41.gif';
-import emoji5 from '../../assets/emoji/animated-emoticons-2018-8.gif';
+// import emoji from '../../assets/emoji/animated-emoticons-2018-5.gif';
+// import emoji2 from '../../assets/emoji/animated-emoticons-2018-25.gif';
+// import emoji3 from '../../assets/emoji/animated-emoticons-2018-21.gif';
+// import emoji4 from '../../assets/emoji/animated-emoticons-2018-41.gif';
+// import emoji5 from '../../assets/emoji/animated-emoticons-2018-8.gif';
 import { IoEarth } from 'react-icons/io5';
-import { MdAddComment, MdDelete, MdLock, MdOutlineThumbUpAlt, MdVisibilityOff, MdVisibility, MdThumbUpAlt, MdBookmark, MdOutlineLink, MdArrowForward, MdCheck } from 'react-icons/md';
-import { RiShareFill, RiThumbDownFill, RiThumbUpFill } from 'react-icons/ri';
-import { FiChevronRight, FiChevronDown } from 'react-icons/fi';
-import { FaUserAlt, FaUsers, FaHeart } from 'react-icons/fa';
-import { IoMdHeart } from "react-icons/io"
-import { HiUsers } from 'react-icons/hi';
+import { MdAddComment, MdDelete, MdLock, MdOutlineThumbUpAlt, MdVisibilityOff, MdVisibility, MdThumbUpAlt, MdBookmark, MdOutlineLink, MdCheck } from 'react-icons/md';
+import { RiShareFill, RiThumbUpFill } from 'react-icons/ri';
+import { FiChevronRight } from 'react-icons/fi';
+import { FaUserAlt, FaUsers } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux'
 import Popover from "@material-tailwind/react/Popover";
 import PopoverContainer from "@material-tailwind/react/PopoverContainer";
 import PopoverHeader from "@material-tailwind/react/PopoverHeader";
 import PopoverBody from "@material-tailwind/react/PopoverBody";
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import ReadMoreReact from 'read-more-react';
-import axios from 'axios';
 import Comments from './Comments/Comments';
-import OverlayLoader from '../../Loader/BackgrooundImageLoader';
 import { format } from 'timeago.js';
-import { Popover as PopoverReactSuite, Whisper } from 'rsuite';
 import { motion, AnimatePresence } from "framer-motion"
 import ReadMore from './ReadMore';
-import { Error, Success } from '../Toastify';
+import { HiUsers } from "react-icons/hi"
+import { FiChevronDown } from "react-icons/fi"
 import { error } from '../../toastifyMessage/Toast';
 import { success } from '../../toastifyMessage/Toast';
-import Model from './Model';
 import profile from '../../assets/img/download.png'
 import { NavLink } from "react-router-dom"
 // import { createPopper } from "@popperjs/core"
-import { Loader } from 'rsuite';
 import { ThreeDots } from "react-loader-spinner"
-import ReactTooltip from "react-tooltip"
 import { BsArrowLeft } from "react-icons/bs"
 import BookMarkApi from "../../AlLFetchApi/__functionApi"
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import axios from "axios"
 
 
 
@@ -55,7 +46,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserModal, single, name }) {
 
-    const [emojiURL, setEmojiURL] = useState("")
+
     const [commentToggle, setCommentToggle] = useState(false)
     const [commentsLength, setCommentLength] = useState({ length: 0, post_id: "" })
     const [shareLength, setShareLength] = useState(0)
@@ -63,28 +54,21 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
     const [visibilityView, setVisibilityViewEvents] = useState(false)
     const dispatch = useDispatch()
     const buttonRef = useRef()
-    const avatarGroup = useRef()
+
     const deletePost = useRef()
-    const visibilityRef = useRef()
-    const [PostIdForDelete, setPostIdForDelete] = useState()
-    const [VisibilityModal, setVisibilityModal] = useState()
-    const [disabled, setDisabled] = useState(false)
+
     const [deleteLoader, setDeleteLoader] = useState(false)
     const [like, setLike] = useState(false)
-
     const [likeCount, setLikeCount] = useState(null)
-    const [userIds, setUserId] = useState([])
+    // const [userIds, setUserId] = useState([])
     const [bookMarkMove, setMoveBookMark] = useState(null)
-    const [coOrdinate, setCordinate] = useState({ x: "", y: "" })
+    // const [coOrdinate, setCordinate] = useState({ x: "", y: "" })
     const [bookMarkColor, steBookMarkColor] = useState(false)
     const [blobURL, setBlobUrl] = useState("")
     const [mediaURL, setMediaURL] = useState("")
-
     const DeletedPost = useRef()
-    const componentMount = useRef(true)
     const postPopupModal = useRef(null)
     const ImageRef = useRef(null)
-    const popOverEffectForEmoji = useRef(null)
 
 
 
@@ -93,9 +77,10 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
 
 
 
-    const ShowImage = useSelector((state) => {
-        return state.ShowImage.value
-    })
+
+    // const ShowImage = useSelector((state) => {
+    //     return state.ShowImage.value
+    // })
     const UserInformationLoad = useSelector((state) => {
         return state.UserInformationLoad.value
     })
@@ -110,9 +95,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
         return state.getPos
     })
     const { _id, fname, lname, googleId } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "" }
-    function emojiHandle() {
-        dispatch({ type: "ADD_EMOJI_URL", paylaod: emojiURL })
-    }
+
 
 
     function SetCommentSection(e, id) {
@@ -152,18 +135,16 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
 
     useEffect(() => {
         setLikeCount(item.liked.length === 0 ? 0 : item.liked.length)
-    }, [item])
+    }, [item.liked, setLikeCount])
 
     //================================================POST IS BOOKMARKED OR NOT====================
     useEffect(() => {
         const value = UserInformationLoad.bookMarkPost?.length > 0 && UserInformationLoad.bookMarkPost.some((i) => {
-            console.log({ i })
             return i.post_id === item.post_id
         })
         if (value) {
             steBookMarkColor(value)
         }
-        console.log({ value, item, UserInformationLoad })
     }, [item, UserInformationLoad])
 
     //realitime like system
@@ -172,7 +153,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
             data.post_id === item.post_id && setLikeCount(data.likeCount)
             // setLikeCount(data)
         })
-    }, [likeCount])
+    }, [likeCount, socket, item.post_id])
 
 
     //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Change the visibility^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -180,7 +161,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
         console.log("visibilty change function")
 
         try {
-            setDisabled(true)
             const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/visibility/user/post/local/${post_id}`, {
                 method: "PUT",
                 headers: {
@@ -193,7 +173,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
             if (response.status === 200) {
                 success({ message: "Visibility Changed Successfully" })
                 dispatch({ type: "LOAD_POSTS", payload: data.data })
-                setDisabled(false)
             } else if (response.status === 500) {
                 error({ message: "Something went wrong" })
             }
@@ -216,7 +195,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
     useEffect(() => {
         //load the like when user refresh the page and show user which post already liked
         setLike(item.liked.includes(googleId))
-    }, [item.liked, _id])
+    }, [item.liked, _id, googleId])
 
     //function which excute when current user liked it any post
     async function callLikeHnadler(userId, post_id, bgImageUrl, profileImage) {
@@ -246,11 +225,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
 
 
 
-    //visiblity handler
-    async function visibleHandler(con) {
-        console.log("visibility mode old")
-        setVisibilityModal(false)
-    }
+
 
 
     //load all the comment length regarding each post
@@ -272,6 +247,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                 if (response.status === 200) {
 
                     setCommentLength({ length: data.data, post_id: data.post })
+                    setShareLength(0)
                 }
                 else if (response.status !== 200) {
                     setCommentLength({ length: 0, post_id: data.post })
@@ -328,35 +304,43 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
             console.log("hello")
             const { top, left, width, height } = ImageRef.current.getBoundingClientRect()
             const { x, y } = { y: top + height / 2, x: width + left / 2 }
-            setCordinate({ x: x - getPos.x, y: y - getPos.y })
+            // setCordinate({ x: x - getPos.x, y: y - getPos.y })
             console.log(Math.hypot(x - getPos.x, y - getPos.y))
         }
-    }, [ImageRef, item])
+    }, [ImageRef, item, getPos.x, getPos.y])
 
 
 
     //convert original url into the blob url
-    useEffect(async () => {
-        try {
-            const res = await fetch(item.profileImage)
-            const blob = await res.blob()
-            const blobURl = URL.createObjectURL(blob)
-            setBlobUrl(blobURl)
+    useEffect(() => {
+        async function f1() {
+
+
+            try {
+                const res = await fetch(item.profileImage)
+                const blob = await res.blob()
+                const blobURl = URL.createObjectURL(blob)
+                setBlobUrl(blobURl)
+            }
+            catch (err) {
+                console.warn(err)
+            }
         }
-        catch (err) {
-            console.warn(err)
-        }
+        f1()
     }, [item])
 
     //convert the media post url into blob
-    useEffect(async () => {
-        const res = await fetch(item?.image)
-        const blob = await res.blob()
-        const blobURLForPOst = URL.createObjectURL(blob)
-        setMediaURL(blobURLForPOst)
-
-
-    }, [item])
+    useEffect(() => {
+        async function f1() {
+            if (item.image) {
+                const res = await fetch(item?.image)
+                const blob = await res.blob()
+                const blobURLForPOst = URL.createObjectURL(blob)
+                setMediaURL(blobURLForPOst)
+            }
+        }
+        f1()
+    }, [item,])
 
 
 
@@ -449,7 +433,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                             onClick={(e) => {
                                                                 e.preventDefault();
                                                                 DeletePostById(item.post_id, item.userId);
-                                                                setPostIdForDelete(item.post_id);
                                                             }}
                                                         >
                                                             <MdDelete className='text-xl mt-[2px] mr-2' />
@@ -464,7 +447,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
 
                                                             onClick={(e) => {
                                                                 VisibilityChange(item.post_id, item.privacy);
-                                                                setVisibilityModal(true)
 
                                                             }}
 
@@ -505,7 +487,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                 {showPopOver && <motion.div ref={postPopupModal} className="popOverEffect bg-[#fff] absolute right-[4rem] top-[1.2rem] drop-shadow-lg w-[18rem]  px-1 py-4 border border-solid border-[#ececec] rounded-md z-[18]"
                                                     initial={{ opacity: 0, scale: 0 }}
                                                     animate={{ opacity: 1, scale: 1 }}
-                                                    transition={{ duration: 0.2, ease: "easeInOut", type: "tween" }}
+                                                    transition={{ duration: 0, ease: "easeInOut", type: "tween" }}
                                                     exit={{ opacity: 0, scale: 0 }}
                                                 >
                                                     <ul className="list-type-none gap-y-2">
@@ -542,7 +524,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                         }
                                                                                         if (i.name === "Delete Post") {
                                                                                             DeletePostById(item.post_id, item.userId);
-                                                                                            setPostIdForDelete(item.post_id);
                                                                                         }
                                                                                     }}
                                                                                 >
@@ -751,7 +732,11 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                         {
                             item.fileType === "video" ?
                                 (item.image ?
-                                    <iframe className="w-full h-full" src={mediaURL} frameBorder="1" allow="accelerometer;  encrypted-media; gyroscope; picture-in-picture" allowFullScreen ></iframe>
+                                    // <iframe className="w-full h-full" src={mediaURL} frameBorder="1" allow="accelerometer;  encrypted-media; gyroscope; picture-in-picture" allowFullScreen ></iframe>
+                                    <video>
+                                        <source src={mediaURL}>
+                                        </source>
+                                    </video>
                                     : "")
                                 :
                                 (item.image ?
@@ -850,7 +835,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                 className="hover:bg-gray-100 text-gray-500  text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem] "
                                 onClick={() => {
                                     callLikeHnadler(item.userId, item.post_id, item.image, item.profileImage)
-                                    setUserId([item.userId, item.post_id]);
+                                    // setUserId([item.userId, item.post_id]);
                                     setLike(!like)
                                 }}
 
@@ -941,7 +926,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
 
             <Tooltips placement="top" ref={buttonRef} className="ml-[5rem]">
                 <TooltipsContent className="flex justify-center md:justify-between  px-[5px] ">
-                    <section className='emoji-section rounded-[50px] text-black w-[3rem] h-[3rem] sm:w-[3rem] sm:h-[3rem] md:w-[5rem] md:h-[5rem]   mx-[3px] outline outline-offest-1 outline-gray-100 cursor-pointer flex-shrink-0'
+                    {/* <section className='emoji-section rounded-[50px] text-black w-[3rem] h-[3rem] sm:w-[3rem] sm:h-[3rem] md:w-[5rem] md:h-[5rem]   mx-[3px] outline outline-offest-1 outline-gray-100 cursor-pointer flex-shrink-0'
                         onClick={emojiHandle}
                     >
                         <article className='setEmoji w-[3.5] h-[3.5]'>
@@ -996,7 +981,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                 className="w-2rem h-2rem bg-black-800"
                             />
                         </article>
-                    </section>
+                    </section> */}
                 </TooltipsContent>
             </Tooltips>
 

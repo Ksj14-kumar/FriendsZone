@@ -1,20 +1,16 @@
 import Card from '@material-tailwind/react/Card';
 
 import Image from '@material-tailwind/react/Image';
-import NavItem from "@material-tailwind/react/NavItem";
 import Button from '@material-tailwind/react/Button';
-import ProfilePicture from '../assets/img/team-1-800x800.jpg';
 // import Image from "@material-tailwind/react/Image";
-import Thomas from '../assets/img/thomas.jpg';
 import { useDispatch, useSelector } from 'react-redux';
 import { BiUserX } from 'react-icons/bi'
 import { useEffect, useRef, useState } from 'react';
 
 import Tooltips from "@material-tailwind/react/Tooltips";
 import TooltipsContent from "@material-tailwind/react/TooltipsContent";
-import { BrowserRouter, NavLink, Redirect, useHistory, Route, Switch, useLocation, useParams, useRouteMatch } from 'react-router-dom';
+import { BrowserRouter, NavLink, Redirect, Route, Switch, useLocation, useParams, useRouteMatch } from 'react-router-dom';
 import profile from '../assets/img/download.png'
-import { MdAirlineSeatIndividualSuite, MdMessage } from 'react-icons/md'
 import { FaUserPlus, FaFacebookMessenger } from 'react-icons/fa'
 
 import Friends from '../Components/ProfileCardComponents/Friends'
@@ -24,14 +20,8 @@ import Status from '../Components/ProfileCardComponents/Status'
 import Comments from '../Components/ProfileCardComponents/Comments'
 import Icon from '@material-tailwind/react/Icon';
 import UpdateProfile from './UpdateProfile';
-import RoundedSideBar from '../Components/RightSideBar/RoundedSideBar';
-import SliderNews from '../Components/RightSideBar/SliderNews';
-import NewsSection from '../Components/RightSideBar/NewsSection';
-import FriendSuggestion from '../Components/ProfilePageComponent/FriendSuggestion'
-import { IoNavigate } from 'react-icons/io5';
 import UserFeed from '../Components/UserFeed/UserFeed';
 import RightSide from '../Components/UserFeed/RightSide';
-import RightSidebar from '../Components/RightSidebar';
 
 
 
@@ -42,7 +32,7 @@ export default function ProfileCard(props) {
 
     const buttonRef = useRef()
     const dispatch = useDispatch()
-    const [query, setSearchQueary] = useState(null)
+    // const [query, setSearchQueary] = useState(null)
     const { search } = useLocation();
     const params = new URLSearchParams(search);
     const usernameId = useParams().username
@@ -50,7 +40,8 @@ export default function ProfileCard(props) {
     const [connectMessage, setConnectMessage] = useState(null)
     const [AcceptMessage, setAcceptMessage] = useState(false)
     const [acceptorMessage, setAcceptorMessage] = useState(false)
-    const [URLS, setURL] = useState({})
+    const [localProfileURL, setLocalProfileURL] = useState("")
+    const [localBackgroundURL, setLocalBackgroundURL] = useState("")
     const Query = useSelector((state) => {
         return state.Query
 
@@ -63,22 +54,22 @@ export default function ProfileCard(props) {
     //     return state.ShowImage
     // })
 
-    const GetAllPosts = useSelector((state) => {
-        return state.GetAllPosts
-    })
-    const TotalComment = useSelector((state) => {
-        return state.TotalComment
-    })
-    const PostWhichUserSelectedImageORVideo = useSelector((state) => {
-        return state.PostWhichUserSelectedImageORVideo
-    })
-    const { fname, lname, googleId, url, senderrequest, receiverrequest, friends } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "", url: "", senderrequest: [] }
+    // const GetAllPosts = useSelector((state) => {
+    //     return state.GetAllPosts
+    // })
+    // const TotalComment = useSelector((state) => {
+    //     return state.TotalComment
+    // })
+    // const PostWhichUserSelectedImageORVideo = useSelector((state) => {
+    //     return state.PostWhichUserSelectedImageORVideo
+    // })
+    const { fname, lname, googleId, url, friends } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "", url: "", senderrequest: [] }
     const { path } = useRouteMatch()
 
     useEffect(() => {
         params.set("id", Query)
 
-    }, [Query])
+    }, [Query, params])
 
 
     useEffect(() => {
@@ -140,7 +131,7 @@ export default function ProfileCard(props) {
                 }
             })
 
-            const sendFriendRequestResponseData = await sendFriendRequestResponse.json()
+            // const sendFriendRequestResponseData = await sendFriendRequestResponse.json()
             if (sendFriendRequestResponse.status === 200) {
                 // setConnectMessage(sendFriendRequestResponseData.message)
                 // setAcceptMessage(true)
@@ -160,14 +151,14 @@ export default function ProfileCard(props) {
     useEffect(() => {
         const value = UserInformationLoad.senderrequest !== undefined && UserInformationLoad.senderrequest.some(item => item._id === usernameId)
         setConnectMessage(value)
-    }, [usernameId])
+    }, [usernameId, UserInformationLoad])
 
 
 
     useEffect(() => {
         setAcceptMessage((friends !== undefined) && (friends.some(item => item._id === usernameId
         )))
-    }, [usernameId])
+    }, [usernameId, friends])
 
 
     async function cancleFriendRequest() {
@@ -181,7 +172,7 @@ export default function ProfileCard(props) {
 
                 }
             })
-            const cancleFriendRequestResponseData = await cancleFriendRequestResponse.json()
+            // const cancleFriendRequestResponseData = await cancleFriendRequestResponse.json()
             if (cancleFriendRequestResponse.status === 200) {
                 setConnectMessage(false)
                 setAcceptMessage(false)
@@ -197,7 +188,7 @@ export default function ProfileCard(props) {
     }
     useEffect(() => {
         setAcceptorMessage(UserInformationLoad.friends !== undefined && UserInformationLoad.friends.some(item => item._id === usernameId))
-    }, [usernameId])
+    }, [usernameId, UserInformationLoad])
 
 
     //sstore the user search hostory
@@ -219,10 +210,9 @@ export default function ProfileCard(props) {
 
                     }
                 })
-                const data = await res.json()
+                // const data = await res.json()
                 if (res.status === 200) {
-                    {
-                    }
+
                 }
             }
             catch (err) {
@@ -230,19 +220,31 @@ export default function ProfileCard(props) {
             }
         }
         History()
-    }, [usernameId])
+    }, [usernameId, googleId])
 
-    useEffect(async () => {
-        const res = await fetch(userInfo?.BgURL)
-        const res1 = await fetch(userInfo?.ProfileURL)
-        const blob = await res.blob()
-        const blobP = await res1.blob()
-        const bgURL = URL.createObjectURL(blob)
-        const PURL = URL.createObjectURL(blobP)
-        setURL({ BgURL: bgURL, ProfileURL: PURL })
+    useEffect(() => {
+        async function f1() {
+            const res = await fetch(userInfo?.BgURL)
 
-    }, [usernameId])
+            const blob = await res.blob()
+            const bgURL = URL.createObjectURL(blob)
+            setLocalBackgroundURL(bgURL)
+        }
+        f1()
+    }, [usernameId, setLocalProfileURL, userInfo?.BgURL])
 
+    useEffect(() => {
+        async function f1() {
+            const res1 = await fetch(userInfo?.ProfileURL)
+            const blobP = await res1.blob()
+            const PURL = URL.createObjectURL(blobP)
+            setLocalProfileURL(PURL)
+        }
+        f1()
+    }, [usernameId, setLocalProfileURL, userInfo?.ProfileURL])
+
+
+    console.log({ userInfo })
 
     return (
 
@@ -269,7 +271,7 @@ export default function ProfileCard(props) {
                                     ></div> :
                                         (userInfo.BgURL ? <Image
                                             // src={userInfo.BgURL}
-                                            src={URLS.BgURL}
+                                            src={localBackgroundURL}
                                             className="w-full h-full rounded-t-none "
                                             rounded={false}
                                             raised={false}
@@ -294,8 +296,8 @@ export default function ProfileCard(props) {
 
                                         {userInfo.ProfileURL ?
                                             <Image
-                                            // src={userInfo.ProfileURL}
-                                            src={URLS.ProfileURL}
+                                                // src={userInfo.ProfileURL}
+                                                src={localProfileURL}
                                                 rounded={true} raised={true} className="object-cover  outline-3 rounded-full outline-double outline-offset-1 outline-neutral-500 " />
                                             :
                                             <>

@@ -1,30 +1,22 @@
-import { NavLink, Route, Router, useLocation, Switch, useHistory } from 'react-router-dom';
 import Button from '@material-tailwind/react/Button';
 import Icon from '@material-tailwind/react/Icon';
-import NavbarInput from '@material-tailwind/react/NavbarInput';
 import Image from '@material-tailwind/react/Image';
 import Dropdown from '@material-tailwind/react/Dropdown';
 import DropdownItem from '@material-tailwind/react/DropdownItem';
 import userProfile from '../assets/img/download.png'
-import { useContext, useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ImageShow from './ImageShow'
-
-
 import ProfileLoader from '../Loader/ProfileLoader';
 import axios from "axios";
 import Modal from "@material-tailwind/react/Modal";
 import ModalHeader from "@material-tailwind/react/ModalHeader";
 import ModalBody from "@material-tailwind/react/ModalBody";
 import ModalFooter from "@material-tailwind/react/ModalFooter";
-
-
-import { MdDelete, MdUploadFile, MdNotifications, MdError } from 'react-icons/md'
-import { FaLessThanEqual, FaUserFriends } from 'react-icons/fa'
+import { MdDelete, MdNotifications } from 'react-icons/md'
+import { FaUserFriends } from 'react-icons/fa'
 import { BsMessenger } from 'react-icons/bs'
 import { useState } from 'react'
-import img1 from '../assets/img/team-3-800x800.jpg';
-import CircleLoader from '../Loader/CircleLoader';
 import Badge from '@mui/material/Badge';
 import Notification from './Notification/Notification';
 import Popover from "@material-tailwind/react/Popover";
@@ -32,51 +24,20 @@ import PopoverContainer from "@material-tailwind/react/PopoverContainer";
 import PopoverHeader from "@material-tailwind/react/PopoverHeader";
 import PopoverBody from "@material-tailwind/react/PopoverBody";
 import { motion, AnimatePresence } from "framer-motion"
-
 import { success, error } from '../toastifyMessage/Toast';
 import SearchBarTable from '../SearchBarTable';
 import FriendsNoti from './Notification/FriendsNoti';
 import Messages from "./Notification/Messages";
-import AdminRightSideBar from './AdminRightSideBar';
 
 const _id = localStorage.getItem("uuid")
-function useOnClickOutside(ref, handler, setImageValue, setImageValueBackground, dispatch, setProgressMessage, setDeleteMessage) {
-    useEffect(
-        () => {
-            const listener = (event) => {
-                // Do nothing if clicking ref's element or descendent elements
-                if (!ref.current || ref.current.contains(event.target)) {
-                    alert("click outside")
-                    return;
-                }
-                handler(event);
-            };
-            document.addEventListener("mousedown", listener);
-            document.addEventListener("touchstart", listener);
-            return () => {
-                alert("click outside")
-                document.removeEventListener("mousedown", listener);
-                document.removeEventListener("touchstart", listener);
-            };
-        },
-        [ref, handler]
-    );
-}
+
 export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
 
     //ALLS  HOOKS
     const wrapperRef = useRef()
-    const history = useHistory()
     const [showModal, setShowModalCode] = useState(false);
     const [showModalBackground, setShowModalCodeBackground] = useState(false);
-    const [fileinput, setFileInput] = useState();
-    const [fileinputBackground, setFileInputBackground] = useState();
-    const [previewImage, setPreviewImage] = useState()
-    const [progressStatus, setProgressStatus] = useState(0)
-    const [imageValue, setImageValue] = useState("")
-    const [imageValueBackground, setImageValueBackground] = useState("")
     const [progressMessage, setProgressMessage] = useState("")
-    const [progressMessageBackground, setProgressMessageBackground] = useState("")
     const [showNotification, setShowNotification] = useState(false)
     const [uploadLoader, setUploadLoader] = useState(false)
     const [uploadLoaderBackground, setUploadLoaderBackground] = useState(false)
@@ -85,16 +46,11 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     const [disabledButton, setDisabledButton] = useState(false)
     const [disabledButtonBg, setDisabledButtonBg] = useState(false)
     const [userSearchHistory, setUserSearchHistory] = useState([])
-    const [Group, setGroupMessage] = useState([])
     const [Length, SetNotificationLength] = useState(null)
     const [showRightSideBar, setShowRightSideBar] = useState(false)
     const notification = useRef(null)
     const message = useRef(null)
     const friends = useRef(null)
-    const messenger = useRef(null)
-    const profileInput = useRef(null)
-    const SearchFilter = useRef(null)
-    const backgroundInput = useRef(null)
     const ImageRef = useRef(null)
     const disableProfilePostButton = useRef(null)
     const [query, setQuery] = useState("")
@@ -104,26 +60,12 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     const [BgUrl, setBackgroundImageUrl] = useState("")
     const [showSearch, setShowSearch] = useState(false)
     const [friendsRequest, setFriendsRequest] = useState([])
-    const [Noti, setNotification] = useState([])
-    const [NotificationGroup, setNotificationGroup] = useState([])
-    const [friendsMessage, setFriendsMessage] = useState(false)
     const [expandSearch, setExpandSearch] = useState(false)
 
     const dispatch = useDispatch()
-    // useOnClickOutside(wrapperRef, setImageValue, setImageValueBackground, dispatch, setProgressMessage, setDeleteMessage)
-    const location = useLocation().pathname;
     // ==========================================ALL Reducer function==================================
     //UNSELECT THE PROFILR iMAGES
-    const UnselectProfileImage = useSelector((state) => {
-        return state.UnselectProfileImage
-    })
-    // OPEN THE MODAL IN PROFILE CARD
-    const OpenModal = useSelector((state) => {
-        return state.Modal
-    })
-    const UnselectBackgroundImage = useSelector((state) => {
-        return state.UnselectBackgroundImage
-    })
+
     const uploadImageDataFromServer = useSelector((state) => {
         return state.uploadImageDataFrom
     })
@@ -139,9 +81,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     const LoaderRedux = useSelector((state) => {
         return state.LoaderRedux
     })
-    const likeRedux = useSelector((state) => {
-        return state.likeRedux
-    })
+
     const likedUserDatails = useSelector((state) => {
         return state.Notification
     })
@@ -158,7 +98,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         return state.UserInformationLoad.value
     })
 
-    const { fname, lname, college, city, country, position, stream, aboutMe, googleId, senderrequest, receiverrequest } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "", senderrequest: [], receiverrequest: [] }
+    const { receiverrequest } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "", senderrequest: [], receiverrequest: [] }
 
 
 
@@ -166,10 +106,8 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
 
     // console.log({UserInformationLoad})
 
-    let formData;
     //profile image uploader
     function imageUploadHandler(e) {
-        const file = e.target.files[0]
         // if (file.type !== "image/jpeg" || file.type !== "image/png" || file.type !== "image/jpg") {
         //     error("Please upload a valid image")
         //     return
@@ -181,7 +119,6 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         else {
             const file = e.target.files[0]
             // setFileInput(file)
-            const nameOfImage = e.target.value.split("\\")[2]
             //create the image local url
             const URL = window.URL.createObjectURL(file)
             //set the url into state
@@ -189,7 +126,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             const reader = new FileReader();
             reader.readAsDataURL(file)
             reader.onloadend = function () {
-                // setPreviewImage(reader.result)
+
                 dispatch({ type: "SetValueOfPreviewImageProfile", payload: reader.result })
             }
         }
@@ -209,7 +146,6 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             const reader = new FileReader();
             reader.readAsDataURL(file)
             reader.onloadend = function () {
-                // setPreviewImage(reader.result)
                 dispatch({ type: "SetValueOfPreviewImageBg", payload: reader.result })
             }
         }
@@ -225,24 +161,22 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         else {
             // setShowImage(previewImage)
             setUploadLoader(true)
-            // ${process.env.REACT_APP_API_BACKENDURL}
             const serverResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/user/blob/image/9fHtqOJumtxOzmTfLMFT/ETXsG3rHrnx2irUZmefU/njVzxxrEx84ZrUiERB0t/fxXRdJLMKIkzxucTbovy/sO9rLr3E0EuDpjYcawQD/`, {
                 method: "POST",
                 body: JSON.stringify({
                     data:
                         checkUrlExitsProfile.value,
                     url: url,
+                    // url: previewImage,
                     uuid: _id
                 }),
                 headers: {
                     "Content-Type": "application/json",
-                    // "Content-Type": "multipart/form-data",
-                    // "Content-Type": "x-www-form-urlencoded",
-
                     "Authorization": `Bearer ${localStorage.getItem("uuid")}`
                 }
             })
             const ResponseData = await serverResponse.json()
+            console.log({ ResponseData })
             const { status } = serverResponse
             const { message, data } = ResponseData
             if (status === 200) {
@@ -251,6 +185,12 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 //set the base64 url encode value none after submit profile image to server or clear input file field
                 dispatch({ type: "SetValueOfPreviewImageProfile", payload: "" })
                 //dispatch the latest profile image url to the profile image component
+                // const res = await fetch(data.url)
+                // const blobURL = await res.blob()
+                // const blob = URL.createObjectURL(blobURL)
+
+                // dispatch({ type: "OriginalProfileURL", payload: data.url })
+
                 dispatch({ type: "ShowImage", payload: data.url })
                 //set the whole info regrading image from, server and dispatch to 
                 dispatch({ type: "uploadImageDataFromServer", payload: data })
@@ -299,6 +239,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                     data:
                         checkUrlExitsBg.value,
                     url: BgUrl,
+                    // url: previewImage,
                     uuid: _id
                 }),
                 headers: {
@@ -360,22 +301,24 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             setDeleteLoader(true)
             setDisabledButton(true)
             // ${process.env.REACT_APP_API_BACKENDURL}
-            const res = await axios({
-                url: `${process.env.REACT_APP_API_BACKENDURL}/blob/delete/assest/`,
-                data: JSON.stringify({ uploadImageDataFromServer, uuid: _id }),
+            const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/delete/assest/`, {
+                body: JSON.stringify({ uploadImageDataFromServer, uuid: _id }),
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + localStorage.getItem("uuid"),
                 }
             })
+            const responseData = await res.json()
+            console.log({ responseData })
+            console.log(res)
             if (res.status === 200) {
+                dispatch({ type: "ShowImage", payload: "" })
                 setDisabledButton(false)
+                success({ message: "Profile photo removed successfully" })
                 //show the delete message send by server
                 //show the toastify message after successfull delete
-                success({ message: "Profile photo removed successfully" })
                 //set the profile image url none afetr delete the profile photos
-                dispatch({ type: "ShowImage", payload: "" })
                 //set the ShowImage url none after delete the image because when user upload profile photo then excute ternary condition successful upload always active
                 setProgressMessage("")
                 setDeleteLoader(false)
@@ -399,6 +342,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 error({ message: res.data.message })
                 setDeleteLoader(false)
                 setDisabledButton(false)
+                return
 
             }
             // window.alert(res.data.message)
@@ -423,11 +367,10 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 }
             })
             const resData = await res.json()
-            const { message, data } = resData
+            const { message } = resData
             if (res.status === 200) {
                 setDeleteLoader(false)
                 setDisabledButtonBg(false)
-                // setDeleteMessage(res.data.message)
                 //show the toastify message after successfull delete
                 success({ message: message })
                 //set the profile image url none afetr delete the profile photos
@@ -518,8 +461,6 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             // profileInput.current.value = null
 
             if (Aborted === false) {
-                setPreviewImage("")
-                setImageValue("")
                 dispatch({ type: "UNSELECT_PROFILE_IMAGE", payload: "" })
                 dispatch({ type: "UNSELECT_BACKGROUND_IMAGE", payload: "" })
                 dispatch({ type: "SetValueOfPreviewImageProfile", payload: "" })
@@ -536,50 +477,9 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         return () => {
             AbortController1.abort()
         }
-    }, [showModal, showModalBackground])
+    }, [showModal, showModalBackground, dispatch])
 
 
-    //now setup the serach bar when user search the query
-    useEffect(() => {
-        // if (window.innerWidth <= 369) {
-        //     SearchFilter.current.children[0].classList.add("search-bar-mobile")
-        //     notification.current.classList.add("search-msg")
-        //     messenger.current?.classList.add("search-noti")
-        //     if (showSearch === true) {
-        //         notification.current.style.display = "none"
-        //         messenger.current.style.display = "none"
-        //         SearchFilter.current.children[0].classList.add("search-bar-mobile-animation")
-
-        //         SearchFilter.current.children[0].style.width = "110%"
-        //     }
-        //     else if (showSearch === false) {
-        //         SearchFilter.current.children[0].classList.add("search-bar-mobile-down")
-        //         notification.current.style.display = "block"
-        //         // messenger.current.style.display = "block"
-        //         SearchFilter.current.style.width = "100%"
-        //     }
-        // }
-    }, [showSearch])
-
-
-
-
-
-    // useEffect(() => {
-
-    //     socket?.on("getNotification", (data) => {
-    //         setNotification(pre => [...pre, data])
-    //         dispatch({ type: "Send_Notification", payload: Noti })
-    //     })
-    // }, [socket])
-
-
-
-    //now accept and reject friendrequest
-
-    // useEffect(() => {
-    //     setNotificationGroup(UserInformationLoad.friends)
-    // },[])
 
     useEffect(() => {
         const AbortController1 = new AbortController()
@@ -607,7 +507,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
 
                 }
             })
-            const deleteResponseData = await deleteResponse.json()
+            // const deleteResponseData = await deleteResponse.json()
             if (deleteResponse.status === 200) {
                 // success({ message: deleteResponseData.message })
             }
@@ -636,7 +536,6 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             const acceptResponseData = await acceptResponse.json()
             console.log("accepy friends reqeust", acceptResponseData)
             if (acceptResponse.status === 200) {
-                setFriendsMessage(true)
                 // success({ message: acceptResponseData.message })
                 setFriendsRequest(friendsRequest.filter(friend => friend._id !== senderId))
             }
@@ -713,14 +612,6 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     }
 
 
-    // useEffect(() => {
-    //     setGroupMessage([...friendsRequest, ...UserInformationLoad?.message])
-
-    // }, [friendsRequest, UserInformationLoad])
-
-
-    // console.log({friendsRequest})
-
 
 
     useEffect(() => {
@@ -728,15 +619,12 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             const { top, left, width, height } = ImageRef.current.getBoundingClientRect()
             dispatch({ type: "POS_AdminNavBar", payload: { x: left + width / 2, y: top + height / 2 } })
         }
-    }, [ImageRef])
+    }, [ImageRef, dispatch])
 
 
 
     return (
         <>
-            {/* md:ml-64 */}
-            {/* bg-light-blue-500 */}
-            {/* 10000 */}
             <nav className="bg-light-blue-500  py-2 px-3 fixed w-full z-[18] drop-shadow-lg">
                 <div className="container max-w-full mx-auto flex items-center justify-between md:pr-8 md:pl-10 ">
                     <div className="md:hidden">
@@ -772,36 +660,22 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                     </div>
                     <div className="flex  items-center w-full  justify-end ">
                         <div className="flex  relative  w-full justify-end  ">
-                            {/* <div className={`searchFiled   align-baseline mt-[5px]  fixed 
-                            md:right-[22rem] md:w-[38rem] 
-                            mds-editor24:w-[33rem] mds-editor24:right-[18rem] 
-                            mds-editor25:w-[26rem] mds-editor25:right-[18rem] 
-                            mds-editor26:w-[20rem] mds-editor26:right-[18rem]
-                             mds-editor27:w-[17rem] mds-editor27:right-[18rem] 
-                             mds-editor28:w-[17.5rem] 
-                               mds-editor29:left-[5rem]
-                             mds-editor29:cursor-pointer 
-                            ${showSearch ? "fixed w-[29rem] left-[2.7rem] top-[10px]" : "w-[2rem]"}
-                            `}
-                                ref={SearchFilter}
-                            >
-                                <SearchBarTable showSearch={showSearch} setShowSearch={setShowSearch} setQuery={setQuery} setPopOverEffect={setPopOverEffect} query={query} data={userData} userSearchHistory1={userSearchHistory} deleteHistory={deleteHistory} />
-                            </div> */}
+
 
                             <div className="left_side_search flex  flex-[10] md:justify-end justify-start items-center relative">
-                                {/* w-[38rem] */}
+
                                 <motion.div className={`wrap_inout_search w-[38rem] mds-editor31:w-[25rem] mds-editor32:w-[3rem] rounded-full transition-all duration-300 ${expandSearch ? "mds-editor32:w-full" : "mds-editor32:w-[3rem]"}`}
                                 >
                                     <SearchBarTable showSearch={showSearch} setShowSearch={setShowSearch} setQuery={setQuery} setPopOverEffect={setPopOverEffect} query={query} data={userData} userSearchHistory1={userSearchHistory} deleteHistory={deleteHistory} setExpandSearch={setExpandSearch} expandSearch={expandSearch} />
 
                                 </motion.div>
                             </div>
-                            {/* ml-auto */}
+
                             <div className={`group_right_s flex flex-[2]   justify-end  ${expandSearch ? "mds-editor32:hidden" : "block"}`}>
 
                                 <div className={`group_icons flex `}>
 
-                                    {/* //user friends group */}
+                                    \
                                     <section className='friends  flex  ml-[1rem] -mr-[1.5rem] cursor-pointer relative     align-middle mt-[4px] justify-center'
                                         ref={friends}
                                         onClick={() => { }}>
@@ -863,13 +737,12 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                                 className="w-[2.5rem] h-[2.5rem] flex-shrink-0 mr-2"
                                             />
                                             :
-
                                             <Image src={showImage}
                                                 rounded alt="img" className="w-[2.5rem] h-[2.5rem] flex-shrink-0 mr-2" />}
                                     </div>
 
 
-                                    {/* <Dropdown
+                                    <Dropdown
                                         color="transparent"
                                         buttonText={
                                             <div className={`w-11 bg-black rounded-full h-11 text-center d-flex justify-center object-cover ${LoaderRedux && "animate-pulse"}`} style={{
@@ -912,7 +785,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                         </DropdownItem>
 
 
-                                    </Dropdown> */}
+                                    </Dropdown>
                                 </div>
 
                             </div>
@@ -923,18 +796,16 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             </nav >
             <AnimatePresence>
                 {
-                    showRightSideBar &&
-                    <AdminRightSideBar showRightSideBar={showRightSideBar}
-                        setShowRightSideBar={setShowRightSideBar} logout={logout}
-                    />
+                    // showRightSideBar &&
+                    // <AdminRightSideBar showRightSideBar={showRightSideBar}
+                    //     setShowRightSideBar={setShowRightSideBar} logout={logout}
+                    // />
 
 
                 }
             </AnimatePresence>
             {/* //  MAIN BODY OF DASHBOARD */}
-            {/* 
-            <Route exact path="/update_profile">
-            </Route> */}
+
             {/* ==============================profile image=================handler */}
             <Modal size="sm" active={showModal} className="z-[1000]" toggler={() => setShowModalCode(false)}>
                 <div ref={wrapperRef} >
@@ -1154,8 +1025,6 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                             onClick={(e) => {
                                 e.preventDefault()
                                 setShowModalCodeBackground(false)
-                                setPreviewImage("")
-                                setImageValue("")
                                 dispatch({ type: "UNSELECT_PROFILE_IMAGE", payload: "" })
                                 dispatch({ type: "UNSELECT_BACKGROUND_IMAGE", payload: "" })
                                 setProgressMessage("")

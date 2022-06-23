@@ -4,14 +4,13 @@ import FriendSuggestion from '../ProfilePageComponent/FriendSuggestion'
 import PublicPostCard from '../ProfilePageComponent/PublicPostCard'
 import RightSide from './RightSide'
 import { useSelector } from "react-redux"
-import { HiArrowLeft, HiThumbUp, HiHeart } from "react-icons/hi"
-
+import { HiArrowLeft } from "react-icons/hi"
 import { NavLink, useParams, useRouteMatch } from "react-router-dom"
 import ReactUserList from './ReactUserList'
 
 
 
-function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser, FilterUser,setShowLikeUserModal,showLikeUserModal }) {
+function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser, FilterUser, setShowLikeUserModal, showLikeUserModal }) {
     const params = useParams()
     const [Users, setAllUser] = useState([])
     // const [showLikeUserModal, setShowLikeUserModal] = useState({ bool: false, reactUser: [] })
@@ -23,7 +22,6 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
 
 
     useEffect(() => {
-        console.log("all friends")
         async function areFriends() {
             try {
                 const WithoutFriends = AllUser !== undefined && AllUser.filter((item) => {
@@ -38,8 +36,8 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
             }
         }
         areFriends()
-    }, [AllUser])
-    
+    }, [AllUser,UserInformationLoad?.friend])
+
     return (
         <>
             <div className="_wrapper mt-[0rem]   ">
@@ -81,8 +79,8 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
             {/* -mt-[50.3rem] */}
 
 
-            {showLikeUserModal.bool &&
-                <div className="friends_like_modal absolute w-screen h-screen  z-[20] top-0 right-0 flex justify-center md:items-center">
+            {showLikeUserModal?.bool &&
+                <div className="friends_like_modal  fixed  w-screen h-screen  z-[20] top-0 right-0 flex justify-center md:items-center ">
                     <div className="inner_friends_wrapper md:fixed bg-[#fff] md:w-[69%] w-full  flex flex-col px-4 top-[2%] rounded-md drop-shadow-md">
 
                         <>

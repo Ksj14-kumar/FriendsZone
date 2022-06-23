@@ -30,7 +30,7 @@ function useOutsideAlerter(ref, setHistory, setQuery) {
             // Unbind the event listener on clean up
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [ref]);
+    }, [ref, setHistory, setQuery]);
 }
 
 
@@ -52,7 +52,7 @@ function HideSearchBar(searchRef, setExpandSearch) {
             // Unbind the event listener on clean up
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [searchRef]);
+    }, [searchRef, setExpandSearch]);
 
 
 }
@@ -256,7 +256,7 @@ export default SearchBarTable
 function History({ name, url, id, deleteHistory }) {
 
 
-
+    console.log({ url })
     return (
 
         <>

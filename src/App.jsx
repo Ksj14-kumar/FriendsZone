@@ -1,5 +1,5 @@
-import React, { createContext, StrictMode, useEffect, useRef, useState } from 'react'
-import { Switch, Route, Redirect, useHistory, useRouteMatch } from 'react-router-dom'
+import React, { createContext, StrictMode, useEffect, useState } from 'react'
+import { Switch, Route, Redirect, useHistory } from 'react-router-dom'
 import Register from './Components/Register'
 import Login from './Components/Login';
 import Email from './Components/Email';
@@ -10,7 +10,6 @@ import RightSidebar from './Components/RightSidebar';
 import "@material-tailwind/react/tailwind.css";
 import Dashboard from './Pages/Dashboard';
 // import Header1 from './Header1';
-import { useCookies } from 'react-cookie';
 import ProfileCard from './Pages/ProfileCard';
 import { useSelector, useDispatch } from 'react-redux';
 import UpdateProfile from './Pages/UpdateProfile';
@@ -18,16 +17,16 @@ import Sidebar from './Components/Sidebar';
 import UserPosts from './Pages/UserPosts';
 import UserPhotos from './Pages/UserPhotos';
 
-import Channel from './SubscribeChannels/Channel';
+
 import io from "socket.io-client"
 import UserLink from './Components/UserLink';
 import Feed from './Pages/Feed';
+// const Feed = React.lazy(() => import("./Pages/Feed"))
 import AllFriends from './Components/loadAllFriends/AllFriends';
-import Messages from './Components/Messages/Messages';
+
 import UnknowUser from './Pages/UnknowUser';
 import AllNotification from './Pages/AllNotification';
 import ChatSection from "./Pages/ChatSection"
-import SinglePost from './Pages/SinglePost';
 import Setting from "./Pages/AdminRightSideBarPages/Setting"
 import BookMark from "./Pages/AdminRightSideBarPages/BookMark"
 import News from "./Pages/AdminRightSideBarPages/News"
@@ -36,47 +35,28 @@ import Music from "./Pages/AdminRightSideBarPages/Music"
 import UserSinglePost from './Pages/UserSinglePost';
 
 
-
-
 export const Context = createContext()
 
-
-console.log(process.env.REACT_APP_API_BACKENDURL)
 
 
 function App() {
     const [userData, setUserData] = React.useState(null)
     const [socket, setSocket] = useState()
+    const [online, setOnlineUser] = useState([])
     const [showLikeUserModal, setShowLikeUserModal] = useState({ bool: false, reactUser: [] })
     const history = useHistory()
     // const [users, dispatch] = React.useReducer(Reducer, Init)
-    const [cookie, setCookie] = useCookies()
-    const path = useRouteMatch()
-    console.log({ path })
-    const location = window.location
-    console.log({ location })
     const dispatch = useDispatch()
     const users = useSelector((state) => {
         return state.UserStillLogin
     })
-
-
     const UserInformationLoad = useSelector((state) => {
         return state.UserInformationLoad.value
     })
 
 
-
-
-
-    // console.log(typeof localStorage.getItem("uuid"))
-    // console.log(localStorage.getItem("uuid"))
-
-    const _id = localStorage.getItem("uuid")
-    // const { _id } = users.user ? users.user : { _id: "" }
     const getUserData = localStorage.getItem("uuid")
     const user = localStorage.getItem("user")
-    // const {_id}
     useEffect(() => {
         async function loadData() {
             // ${process.env.REACT_APP_API_BACKENDURL}
@@ -120,25 +100,22 @@ function App() {
 
         }
         loadData()
-    }, [])
-
-
-
-
-
-
-
-
-
-
-
+    }, [history, userData])
 
     //trigger when user login your account
     useEffect(() => {
         // process.env.REACT_APP_API_BACKENDURL
         const isHttps = process.env.REACT_APP_API_BACKENDURL.includes("https")
         const value = isHttps ? process.env.REACT_APP_API_BACKENDURL.split("https")[1] : process.env.REACT_APP_API_BACKENDURL.split("http")[1]
-        setSocket(io("ws" + value))
+        setSocket(io("ws" + value, {
+            path: "/collegezone",
+            "withCredentials": true,
+            auth: {
+                token: localStorage.getItem("uuid")
+            },
+
+        }))
+        console.log(process.env.REACT_APP_API_BACKENDURL)
 
 
     }, [])
@@ -146,20 +123,22 @@ function App() {
     //add  new user info to the server by socket when user login
     useEffect(() => {
         socket?.emit("newUser", getUserData)
+        socket?.io.on("error", (err) => {
+            alert("please connect to internet")
+        })
+        socket?.io.on("reconnect", (connect) => {
+            console.log("reconnect successfull" + connect)
+        })
 
     }, [socket, getUserData])
 
 
+    useEffect(() => {
+        socket?.off("onlineUsers").on("onlineUsers", (data) => {
+            setOnlineUser(data)
+        })
 
-
-
-
-
-
-
-
-
-
+    }, [socket])
 
 
     return (
@@ -169,9 +148,7 @@ function App() {
 
                 <div className="left_section">
 
-                    {
-                        getUserData && <Channel />
-                    }
+
                     {
                         // \\userData
                         // (getUserData) && <Sidebar />
@@ -287,7 +264,6 @@ function App() {
 
                             <Route exact path={`/user/single/post/`}>
                                 {
-                                    // <SinglePost user={UserInformationLoad?.googleId} socket={socket} />
                                     <UserSinglePost user={UserInformationLoad?.googleId} socket={socket} setShowLikeUserModal={setShowLikeUserModal} showLikeUserModal={showLikeUserModal} />
                                 }
                             </Route>
@@ -339,7 +315,7 @@ function App() {
                         <abbr title="live User">
                             <div className="right_section  fixed md:top-[95%] top-[94.6%] right-[.5rem] md:w-[5rem] bg-[#6d369a7a] rounded-sm py-[.5rem] md:px-[1rem] px-[1rem]">
 
-                                <RightSidebar socket={socket} />
+                                <RightSidebar socket={socket} online={online} />
 
                             </div>
 

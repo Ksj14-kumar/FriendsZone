@@ -10,21 +10,17 @@ import Icon from "@material-tailwind/react/Icon";
 
 
 import { ImGooglePlus3 } from 'react-icons/im';
-import { MdEmail } from 'react-icons/md';
-import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
 
 import { FaFacebook } from 'react-icons/fa';
 import { FiHome } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
-import { NavLink, useHistory, Redirect } from 'react-router-dom'
-import { useCookies } from 'react-cookie';
+import { NavLink, useHistory } from 'react-router-dom'
 
 // import Header from './'
 import { Context } from '../App';
 import LoginLoader from "../Loader/LoginLoader";
-import { useSelector } from "react-redux";
+
 import { Error } from "./Toastify";
-import TextField from '@mui/material/TextField';
 
 
 export default function Login({ socket }) {
@@ -35,10 +31,7 @@ export default function Login({ socket }) {
 
 
   // const ShowImage = useSelector((state) => { return state.showImage.value })
-  const ShowImageBackground = useSelector((state) => {
-    return state.ShowImageBackground.value
-  })
-  const UserInformationLoad = useSelector((state) => { return state.UserInformationLoad })
+
 
 
 
@@ -98,6 +91,7 @@ export default function Login({ socket }) {
       // ${process.env.REACT_APP_API_BACKENDURL}
       const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/login`, {
         method: "POST",
+        "credentials": "same-origin",
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
@@ -107,9 +101,7 @@ export default function Login({ socket }) {
         // redirect: "follow"
       })
       const status = response.status
-      console.log(response)
       const serverData = await response.json()
-      console.log({ serverData })
       if (status === 200) {
         setLoader(false)
         localStorage.setItem("uuid", serverData.cookie)

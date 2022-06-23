@@ -3,15 +3,14 @@ import CommentForm from "./CommentForm";
 import Comment from "./Comment";
 import { useDispatch } from 'react-redux'
 import Button from "@material-tailwind/react/Button";
-import { BallTriangle, Rings, Oval, ThreeDots, Circles, Puff, Bars } from 'react-loader-spinner'
-import io from "socket.io-client"
+import { BallTriangle } from 'react-loader-spinner'
 
 
 import {
-  getComments as getCommentsApi,
+  // getComments as getCommentsApi,
   createComment as createCommentApi,
-  updateComment as updateCommentApi,
-  deleteComment as deleteCommentApi,
+  // updateComment as updateCommentApi,
+  // deleteComment as deleteCommentApi,
 } from "./api";
 import { AnimatePresence } from "framer-motion";
 
@@ -41,7 +40,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
         (a, b) =>
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       );
-  // text, parentId
   const addComment = async (value, parentId) => {
 
 
@@ -59,9 +57,14 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
       })
       const SaveUserCommentJson = await SaveUserComment.json()
       if (SaveUserComment.status === 200) {
+        // console.log({ SaveUserComment })
         socket?.emit("sendComment", SaveUserCommentJson.data.comment)
         // setBackendComments([...backendComments, SaveUserCommentJson.data.comment]);
         socket?.emit("commentLength", { post_id, commentLength: SaveUserCommentJson.length })
+        socket?.off("getComments").on("getComments", (data) => {
+          console.log({ data })
+          setBackendComments([...backendComments, data])
+        })
         setActiveComment(null);
       }
     }
@@ -129,12 +132,13 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
 
 
   //now get the all commnet using socket,io
-  useEffect(() => {
-    socket?.off("getComments").on("getComments", (data) => {
-      data.post_id === post_id && setBackendComments([...backendComments, data])
-
-    })
-  }, [socket, backendComments])
+  // useEffect(() => {
+  //   socket?.off("getComments").on("getComments", (data) => {
+  //     console.log({ data })
+  //     setBackendComments([...backendComments, data])
+  //     // data.post_id === post_id && 
+  //   })
+  // }, [socket, backendComments, setCommentLength, setBackendComments, post_id])
 
   // ======================GET COMMENT LENGTH===================================
   useEffect(() => {
@@ -143,8 +147,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
         setCommentLength({ length: data.commentLength, post_id: data.post_id })
       }
     })
-
-  }, [socket, backendComments])
+  }, [socket, backendComments, post_id, setCommentLength])
 
   useEffect(() => {
 
@@ -193,7 +196,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
     // getCommentsApi().then((data) => {
     //   setBackendComments(data);
     // });
-  }, [post_id]);
+  }, [post_id, UserIdForPostComments]);
 
 
 
@@ -262,7 +265,11 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
   }
 
 
-  // console.log({ backendComments, rootComments })
+  // console.log({ commentToggle })
+  // console.log({ rootComments })
+  // console.log({ backendComments })
+  console.log({ backendComments })
+
 
   return (
     <div className="comments">

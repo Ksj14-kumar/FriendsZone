@@ -1,17 +1,12 @@
 
-
-import React from 'react'
-
 function ShowImage(state = { value: "" }, action = {}) {
-
-
-
     switch (action.type) {
         case "ShowImage":
-            return {
-                value: action.payload
+            if (action.payload) {
+                return {
+                    value: action.payload
+                }
             }
-
 
         default:
             return state
@@ -20,10 +15,6 @@ function ShowImage(state = { value: "" }, action = {}) {
 }
 
 function ShowImageBackground(state = { value: "" }, action = {}) {
-
-
-
-
     switch (action.type) {
         case "ShowImageBackground":
             return {
@@ -37,6 +28,6 @@ function ShowImageBackground(state = { value: "" }, action = {}) {
 
 }
 
-export {ShowImageBackground}
+export { ShowImageBackground }
 
 export default ShowImage

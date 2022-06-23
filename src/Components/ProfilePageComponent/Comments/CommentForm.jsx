@@ -1,16 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import Button from "@material-tailwind/react/Button";
-import Textarea from "@material-tailwind/react/Textarea";
-import Input from "@material-tailwind/react/Input";
+
+
 import { BsFillEmojiSmileFill } from 'react-icons/bs';
 import Icon from "@material-tailwind/react/Icon";
-import Picker, { SKIN_TONE_MEDIUM_DARK } from 'emoji-picker-react';
-import Tooltips from "@material-tailwind/react/Tooltips";
-import TooltipsContent from "@material-tailwind/react/TooltipsContent";
+import Picker from 'emoji-picker-react';
 import { AiOutlineGif } from "react-icons/ai"
 import { BiSticker } from "react-icons/bi"
 import { Route, NavLink, Switch, BrowserRouter } from "react-router-dom";
-import { Grid } from '@giphy/react-components'
 import { GiphyFetch } from '@giphy/js-fetch-api'
 import Image from "@material-tailwind/react/Image";
 
@@ -37,22 +34,12 @@ const CommentForm = ({
     const [text, setText] = useState(initialText);
     const buttonRef = useRef()
     const textRef = useRef()
-    const isMount = useRef(true)
-    const [emojiModal, setEmojiModal] = useState(false);
-    const [chosenEmoji, setChosenEmoji] = useState(null);
     const [renderComponent, setComponent] = useState(false)
     const [emojiContainer, setShowEmojicontenor] = useState(false)
     const [selectGIF, setSelectGif] = useState("")
     const [selectStickers, setStickers] = useState("")
 
-    const { pathname } = window.location
-
-
-
-
     const isTextareaDisabled = text.length === 0;  // if text is empty, disable textarea
-
-
 
     const onSubmitHandler = (e) => {
         console.log("hello")
@@ -68,7 +55,6 @@ const CommentForm = ({
     const onEmojiClick = (event, emojiObject) => {
         event.preventDefault()
         setText((pre) => pre + emojiObject.emoji)
-        setChosenEmoji(emojiObject);
     };
 
 
@@ -104,7 +90,7 @@ const CommentForm = ({
             }, [2000])
         }
 
-    }, [selectGIF])
+    }, [selectGIF, handleSubmit])
 
 
     useEffect(() => {
@@ -115,7 +101,7 @@ const CommentForm = ({
             }, [2000])
         }
 
-    }, [selectStickers])
+    }, [selectStickers, handleSubmit])
 
     return (
         <>
@@ -250,7 +236,7 @@ const CommentForm = ({
                                 e.preventDefault()
                                 onSubmitHandler(e)
                                 if (submitLabel === "Comment") {
-                                    setCommentToggle(true)
+                                    // setCommentToggle(false)
                                 }
                             }}
                         >
@@ -313,8 +299,7 @@ export default CommentForm;
 function EmojiComponent({ setComponent, onEmojiClick }) {
     useEffect(() => {
         setComponent(true)
-
-    }, [])
+    }, [setComponent])
     return (
         <>
             <Picker onEmojiClick={onEmojiClick}
@@ -364,21 +349,30 @@ function GifComponent({ setComponent, setSelectGif, commentReplyName, setShowEmo
     }
     useEffect(() => {
         setComponent(true)
+    }, [setComponent])
+
+    useEffect(() => {
+        async function f1() {
+            const Gif = await gf.search("tranding")
+            setTranding({ trandingList: Gif.data, tranding: true })
+        }
+        f1()
     }, [])
 
-    useEffect(async () => {
-        const Gif = await gf.search("tranding")
-        setTranding({ trandingList: Gif.data, tranding: true })
+    useEffect(() => {
+        async function f1() {
+            const Gif = await gf.search("love")
+            setLove(Gif.data)
+        }
+        f1()
     }, [])
 
-    useEffect(async () => {
-        const Gif = await gf.search("love")
-        setLove(Gif.data)
-    }, [])
-
-    useEffect(async () => {
-        const Gif = await gf.search("family")
-        setFamily(Gif.data)
+    useEffect(() => {
+        async function f1() {
+            const Gif = await gf.search("family")
+            setFamily(Gif.data)
+        }
+        f1()
     }, [])
 
 
@@ -575,11 +569,14 @@ function StickerComponent({ setComponent, commentReplyName, setShowEmojicontenor
     }
 
 
-    useEffect(async () => {
-        setComponent(true)
-        const GIfStickers = await gf.search("Sticker")
-        setStickes(GIfStickers.data)
-    }, [emojiContainer])
+    useEffect(() => {
+        async function f1() {
+            setComponent(true)
+            const GIfStickers = await gf.search("Sticker")
+            setStickes(GIfStickers.data)
+        }
+        f1()
+    }, [emojiContainer, setComponent, setStickes])
 
     console.log({ Stickers })
     return (
@@ -659,11 +656,13 @@ function GifShowComponent({ i }) {
 
 function TrandingGif() {
     const [tranding, setTranding] = useState([])
-    useEffect(async () => {
-        const Gif = await gf.search("tranding")
-        setTranding(Gif.data)
-
-    }, [])
+    useEffect(() => {
+        async function f1() {
+            const Gif = await gf.search("tranding")
+            setTranding(Gif.data)
+        }
+        f1()
+    }, [setTranding])
     return (
         <>
             {
@@ -692,10 +691,12 @@ function TrandingGif() {
 
 function LoveGif() {
     const [love, setLove] = useState([])
-    useEffect(async () => {
-        const Gif = await gf.search("tranding")
-        setLove(Gif.data)
-
+    useEffect(() => {
+        async function f1() {
+            const Gif = await gf.search("tranding")
+            setLove(Gif.data)
+        }
+        f1()
     }, [])
     return (
         <>

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import Card from "@material-tailwind/react/Card";
 import CardBody from "@material-tailwind/react/CardBody";
 import CardFooter from "@material-tailwind/react/CardFooter";
@@ -11,6 +11,7 @@ import ModalHeader from "@material-tailwind/react/ModalHeader";
 import ModalBody from "@material-tailwind/react/ModalBody";
 import ModalFooter from "@material-tailwind/react/ModalFooter";
 import ProfileLoader from '../../Loader/ProfileLoader';
+import DefaultProfile from "../../assets/img/download.png"
 
 import Icon from "@material-tailwind/react/Icon";
 import ProgressBar from '../ProgressBar';
@@ -18,7 +19,7 @@ import SelectedImageShowWithURL from './SelectedImageShowWithURL';
 import Picker, { SKIN_TONE_MEDIUM_DARK } from 'emoji-picker-react';
 import { BsFillEmojiSmileFill } from 'react-icons/bs';
 import { MdAddToPhotos, MdRssFeed } from 'react-icons/md';
-import { RiVideoAddFill, RiVideoUploadFill } from 'react-icons/ri';
+import { RiVideoAddFill } from 'react-icons/ri';
 import { v4 as uuidv4 } from 'uuid';
 import { error, success } from "../../toastifyMessage/Toast"
 import Tooltips from "@material-tailwind/react/Tooltips";
@@ -48,12 +49,11 @@ function useOutsideAlerter(ref, setTextAreaValue, dispatch, setUrlOfImageUpload,
             // Unbind the event listener on clean up
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [ref]);
+    }, [ref, setPostLoader]);
 }
 function AddPost() {
     //all state start
     const wrapperref = React.useRef()
-    const buttonRef = React.useRef()
     const [showModal, setShowModalCode] = React.useState(false);
     const [showModalVideo, setShowModalCodeVideo] = React.useState(false);
     const [showModalPhoto, setShowModalCodePhoto] = React.useState(false);
@@ -61,11 +61,9 @@ function AddPost() {
     const [emojiModal, setEmojiModal] = React.useState(false);
     const [textareaValue, setTextAreaValue] = React.useState("")
     const [ImageUrl, setUrlOfImageUpload] = React.useState("")
-    const [inputValue, setInputValue] = React.useState("")
     const [PrivateOrPublic, setPrivateOrPublic] = React.useState("public")
     const [userPost, setPost] = React.useState("")
     const [ImageAsUrl, setImageAsUrl] = React.useState("")
-    const [chosenEmoji, setChosenEmoji] = React.useState(null);
     const [fileType, setFileType] = React.useState(null);
     const [SelectedFile, setFile] = React.useState(null);
     const [groupDisable, setDisabledGroup] = React.useState(false);
@@ -73,7 +71,6 @@ function AddPost() {
     const [photosDisable, setDisabledPhotos] = React.useState(false);
     const [textDisable, setDisabledText] = React.useState(false);
     const [postLoader, setPostLoader] = React.useState(false)
-    const inputRef = React.useRef()
     const photosRef = React.useRef()
     const videoRef = React.useRef()
     const rssRef = React.useRef()
@@ -82,9 +79,7 @@ function AddPost() {
     const VideoModelRef = React.useRef()
     //all reducer start from here
     const dispatch = useDispatch()
-    const ShowImageBackground = useSelector((state) => {
-        return state.ShowImageBackground.value
-    })
+
     const DispatchProfileImage = useSelector((state) => {
         return state.ShowImage.value
     })
@@ -95,8 +90,10 @@ function AddPost() {
     const UnselectPostImage = useSelector((state) => {
         return state.UnselectPostImage.value
     })
-    const UserStillLogin = useSelector((state) => {
-        return state.UserStillLogin.user
+
+
+    const loader = useSelector((state) => {
+        return state.LoaderRedux
     })
 
     const OriginalProfileURL = useSelector((state) => {
@@ -105,11 +102,10 @@ function AddPost() {
     // OriginalProfileURL
     // const {_id}= UserStillLogin
     const _id = localStorage.getItem("uuid")
-    const { fname, lname, college, city, country, position, stream, aboutMe } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "" }
+    const { fname, lname } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "" }
     const name = `What is your in mind Today ? ${fname ? fname.toLowerCase() : "NA"}`
     const name1 = `Say Something About your post if.  👀   ${fname ? fname.toLowerCase() : "NA"}`
     const name2 = `Say Something About your video if.   ${fname ? fname.toLowerCase() : "NA"}`
-    let subtitle;
 
     let signal;
     let controller = new AbortController()
@@ -259,7 +255,6 @@ function AddPost() {
     const progressMessageBackground = ""
     const onEmojiClick = (event, emojiObject) => {
         setTextAreaValue((pre) => pre + emojiObject.emoji)
-        setChosenEmoji(emojiObject);
     };
     //Upload the post---------------------------------------To the server-------------
     async function SubmitPost(e) {
@@ -268,19 +263,11 @@ function AddPost() {
             return
         }
         else {
-            // console.log("user image url is", userPost)
-            // ImageAsUrl
-            // 
+
             setDisabledGroup(true)
             setDisabledPhotos(true)
-
             setDisabledText(true)
             setDisabledVideo(true)
-
-            // _id + 
-            // /local/url/
-            // /users/post/
-            // ${process.env.REACT_APP_API_BACKENDURL}
             setPostLoader(true)
             setDisabledGroup(true)
             const SaveUserPostIntoDb = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/local/url/`, {
@@ -311,7 +298,6 @@ function AddPost() {
             // const SaveUserPostIntoDbJson = await SaveUserPostIntoDb.json()
             if (SaveUserPostIntoDb.status === 200) {
                 success({ message: "posted successfully" })
-                // Pusher.logToConsole = true
                 setDisabledGroup(false)
                 setDisabledPhotos(false)
                 setDisabledText(false)
@@ -326,7 +312,7 @@ function AddPost() {
                     type: "LOAD_POSTS",
                     payload: SaveUserPostIntoDbJson.data
                 })
-                window.location.reload()
+                // window.location.reload()
 
 
             }
@@ -385,31 +371,36 @@ function AddPost() {
             controller.abort()
 
         }
-    }, [showModalPhoto, showModal, showModalVideo, showModalText])
+    }, [showModalPhoto, showModal, showModalVideo, showModalText,dispatch])
     //============================================MODAL FOR Photos===================
     return (
         <>
             <div className="post-card flex justify-around relative">
                 {/* ===================POST CARD PAGE ========================*/}
                 <Card className="inner-post-card  shadow-lg h-[12rem]">
-                    {/* <CardHeader color="lightBlue" size="lg">
-                <H5 color="white">Login</H5>
-            </CardHeader> */}
+
                     <CardBody>
                         <div className="flex justify-center ">
                             <H6 color="gray" >Create Post</H6>
                         </div>
                         <div className="inner-body  flex mds-editor7:-ml-[.5rem] ">
                             {/* d9d9d9 */}
-                            <div className={`card-post-image bg-[#d9d9d9] w-[4rem] h-[4rem] rounded-full flex-shrink-0 mds-editor7:w-[3rem] mds-editor7:h-[3rem] ${!DispatchProfileImage && "animate-pulse"}`}>
+                            <div className={`card-post-image bg-[#d9d9d9] w-[4rem] h-[4rem] rounded-full flex-shrink-0 mds-editor7:w-[3rem] mds-editor7:h-[3rem] ${loader && "animate-pulse"}`}>
                                 {
-                                    DispatchProfileImage ? <Image
+
+                                    DispatchProfileImage !== "" ? <Image
                                         src={DispatchProfileImage}
                                         rounded={true}
                                         raised={false}
                                         alt=""
                                         className="w-full h-full"
-                                    /> : ""
+                                    /> : <Image
+                                        src={DefaultProfile}
+                                        rounded={true}
+                                        raised={false}
+                                        alt=""
+                                        className="w-full h-full"
+                                    />
                                 }
                             </div>
                             <div className="post-text-container  ml-[1rem]    mr-[3rem] relative flex w-full flex-wrap items-stretch  mb-3 mds-editor7:mb-2">
@@ -527,13 +518,21 @@ function AddPost() {
                                     card-post-image-modal w-[3rem]  h-[3rem] rounded-full flex-shrink-0
                                     
                                     '>
-                                                <Image
+
+
+                                                {DispatchProfileImage !== "" ? <Image
                                                     src={DispatchProfileImage}
                                                     rounded={true}
                                                     raised={false}
-                                                    alt="Rounded Image"
+                                                    alt=""
                                                     className="w-full h-full"
-                                                />
+                                                /> : <Image
+                                                    src={DefaultProfile}
+                                                    rounded={true}
+                                                    raised={false}
+                                                    alt=""
+                                                    className="w-full h-full"
+                                                />}
                                             </article>
                                             <article className=' public-name-article ml-[.5rem] -mt-[.4rem]'>
                                                 <article className='text-black text-xl'>
@@ -705,13 +704,19 @@ function AddPost() {
                                     card-post-image-modal w-[3rem]  h-[3rem] rounded-full flex-shrink-0
                                     
                                     '>
-                                        <Image
+                                        {DispatchProfileImage !== "" ? <Image
                                             src={DispatchProfileImage}
                                             rounded={true}
                                             raised={false}
-                                            alt="Rounded Image"
+                                            alt=""
                                             className="w-full h-full"
-                                        />
+                                        /> : <Image
+                                            src={DefaultProfile}
+                                            rounded={true}
+                                            raised={false}
+                                            alt=""
+                                            className="w-full h-full"
+                                        />}
                                     </article>
                                     <article className=' public-name-article ml-[.5rem] -mt-[.4rem]'>
                                         <article className='text-black text-xl'>
@@ -868,13 +873,19 @@ function AddPost() {
                                     card-post-image-modal w-[3rem]  h-[3rem] rounded-full flex-shrink-0
                                     
                                     '>
-                                        <Image
+                                        {DispatchProfileImage !== "" ? <Image
                                             src={DispatchProfileImage}
                                             rounded={true}
                                             raised={false}
-                                            alt="Rounded Image"
+                                            alt=""
                                             className="w-full h-full"
-                                        />
+                                        /> : <Image
+                                            src={DefaultProfile}
+                                            rounded={true}
+                                            raised={false}
+                                            alt=""
+                                            className="w-full h-full"
+                                        />}
                                     </article>
                                     <article className=' public-name-article ml-[.5rem] -mt-[.4rem]'>
                                         <article className='text-black text-xl'>
@@ -1035,13 +1046,19 @@ function AddPost() {
                                     card-post-image-modal w-[3rem]  h-[3rem] rounded-full flex-shrink-0
                                     
                                     '>
-                                        <Image
+                                        {DispatchProfileImage !== "" ? <Image
                                             src={DispatchProfileImage}
                                             rounded={true}
                                             raised={false}
-                                            alt="Rounded Image"
+                                            alt=""
                                             className="w-full h-full"
-                                        />
+                                        /> : <Image
+                                            src={DefaultProfile}
+                                            rounded={true}
+                                            raised={false}
+                                            alt=""
+                                            className="w-full h-full"
+                                        />}
                                     </article>
                                     <article className=' public-name-article ml-[.5rem] -mt-[.4rem]'>
                                         <article className='text-black text-xl'>

@@ -4,11 +4,9 @@ import query from "query-string"
 import Apis from "../AlLFetchApi/__functionApi"
 import CardBody from '@material-tailwind/react/CardBody'
 import Card from '@material-tailwind/react/Card'
-import { BallTriangle, ThreeDots, ThreeCircles } from "react-loader-spinner"
-import { useSelector } from "react-redux"
-import { HiArrowLeft, HiThumbUp, HiHeart } from "react-icons/hi"
-
-import { NavLink, useParams, useRouteMatch } from "react-router-dom"
+import { ThreeCircles } from "react-loader-spinner"
+import { HiArrowLeft } from "react-icons/hi"
+import { NavLink, useRouteMatch } from "react-router-dom"
 import RightSide from '../Components/UserFeed/RightSide'
 import ReactUserList from "../Components/UserFeed/ReactUserList"
 

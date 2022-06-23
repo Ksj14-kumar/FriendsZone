@@ -15,11 +15,13 @@ import { motion, AnimatePresence } from "framer-motion"
 
 
 // , setCurrentChat, currentChats
-function RightSidebar({ socket, currentUser, currentId, setCurrentChat1, currentChats1 }) {
-    const [friends, setFriendsLength] = useState(null)
+function RightSidebar({ socket, currentUser, currentId, setCurrentChat1, currentChats1, online }) {
     const [bottomUsers, ShowBottomUsers] = useState(false)
     const dispatch = useDispatch()
-    const [onlineUser, setOnlineUser] = useState([])
+    const [NumberOfFriendsOnline, setFriendsLength] = useState([])
+    const [onlinefriends, setOnlineFriends] = useState([])
+    // const [chats, setChats] = useState([])
+    const isMount = useRef(true)
     const componentMount = useRef(true)
 
 
@@ -33,7 +35,7 @@ function RightSidebar({ socket, currentUser, currentId, setCurrentChat1, current
     // useEffect(() => {
     //     setCurrentChat1(currentChats)
 
-    // },[currentChats])
+    // },[currentChats])S
     // dropdown props
     const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
     const btnDropdownRef = React.createRef();
@@ -56,19 +58,18 @@ function RightSidebar({ socket, currentUser, currentId, setCurrentChat1, current
         const Aborted = AbortController1.signal.aborted
 
 
-        
-            socket?.emit("login", localStorage.getItem("uuid"))
-            socket?.on("onlineUsers", (data) => {
-                
-                if (Aborted === false) {
-                setOnlineUser(data)
-                // dispatch({ type: "onlineUsers", payload: value })
+        // socket?.emit("login", localStorage.getItem("uuid"))
+        // socket?.off("onlineUsers").on("onlineUsers", (data) => {
 
-            }
-            })
+        //     if (Aborted === false) {
+        //         setOnlineUser(data)
+        //         // dispatch({ type: "onlineUsers", payload: value })
 
-            socket?.on("userExist", (data) => {
-            })
+        //     }
+        // })
+
+        socket?.on("userExist", (data) => {
+        })
         return () => {
             AbortController1.abort()
         }
@@ -76,8 +77,52 @@ function RightSidebar({ socket, currentUser, currentId, setCurrentChat1, current
     }, [socket, UserInformationLoad])
 
 
-    // console.log({ onlineUser, friends })
-    // console.log({ currentChats })
+
+
+    //set all online user list
+    useEffect(() => {
+        async function loadFriends() {
+            try {
+
+                // console.log("call start")
+                const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/friends/${currentId}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("uuid")
+                    }
+                })
+                const data = await res.json()
+                // console.log("userdata",{data})
+                if (res.status === 200) {
+                    // setFriends(data.friendList)
+                    if (isMount.current) {
+                        const value = data.friendList.filter(item => {
+                            return online.some(value => {
+                                return item._id === value.adminId
+                            })
+                        })
+                        setOnlineFriends(value)
+                        setFriendsLength(value.length)
+                        dispatch({ type: "onlineUsers", payload: value })
+                    }
+                }
+                else if (res.status !== 200) {
+                    console.warn("err")
+                }
+            } catch (err) {
+                console.warn(err)
+            }
+        }
+        loadFriends()
+        return (() => {
+            isMount.current = false
+        })
+    }, [])
+
+
+
+    console.log({ online })
 
 
 
@@ -109,7 +154,7 @@ function RightSidebar({ socket, currentUser, currentId, setCurrentChat1, current
                     ref={btnDropdownRef}
                 >
                     <BiWifi className="text-3xl text-[#FF008E]" />
-                    <span className='text-[1rem] md:text-[1rem] text-bold  text-black bg-green-300 py-0 px-[6px] rounded-lg mt-[3px]  ml-[7px] '>{friends}</span>
+                    <span className='text-[1rem] md:text-[1rem] text-bold  text-black bg-green-300 py-0 px-[6px] rounded-lg mt-[3px]  ml-[7px] '>{NumberOfFriendsOnline}</span>
                 </button>
                 <AnimatePresence>
                     {bottomUsers && (
@@ -125,7 +170,7 @@ function RightSidebar({ socket, currentUser, currentId, setCurrentChat1, current
                             transition={{ duration: 0.5 }}
                             exit={{ opacity: 0, x: 100 }}
                         >
-                            <FooterButton bool={dropdownPopoverShow} online={onlineUser} currentId={UserInformationLoad?.googleId} socket={socket} setCurrentChat={setCurrentChat1} currentChats={currentChats1} setFriendsLength={setFriendsLength} />
+                            <FooterButton bool={dropdownPopoverShow} onlinefriends={onlinefriends} currentId={UserInformationLoad?.googleId} socket={socket} setCurrentChat={setCurrentChat1} currentChats={currentChats1} NumberOfFriendsOnline={NumberOfFriendsOnline} />
 
 
 
