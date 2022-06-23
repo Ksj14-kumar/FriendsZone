@@ -106,7 +106,7 @@ function App() {
     useEffect(() => {
         // process.env.REACT_APP_API_BACKENDURL
         const isHttps = process.env.REACT_APP_API_BACKENDURL
-        setSocket(io("ws" + isHttps, {
+        setSocket(io(isHttps, {
             path: "/collegezone",
             "withCredentials": true,
             auth: {
