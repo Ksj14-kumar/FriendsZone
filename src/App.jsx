@@ -105,9 +105,8 @@ function App() {
     //trigger when user login your account
     useEffect(() => {
         // process.env.REACT_APP_API_BACKENDURL
-        const isHttps = process.env.REACT_APP_API_BACKENDURL.includes("https")
-        const value = isHttps ? process.env.REACT_APP_API_BACKENDURL.split("https")[1] : process.env.REACT_APP_API_BACKENDURL.split("http")[1]
-        setSocket(io("ws" + value, {
+        const isHttps = process.env.REACT_APP_API_BACKENDURL
+        setSocket(io("ws" + isHttps, {
             path: "/collegezone",
             "withCredentials": true,
             auth: {
