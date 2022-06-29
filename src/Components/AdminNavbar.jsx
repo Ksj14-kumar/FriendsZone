@@ -28,6 +28,9 @@ import { success, error } from '../toastifyMessage/Toast';
 import SearchBarTable from '../SearchBarTable';
 import FriendsNoti from './Notification/FriendsNoti';
 import Messages from "./Notification/Messages";
+import AdminRightSideBar from "./AdminRightSideBar"
+import FriendsNotification from './AdminNavbarComponents/FriendsNotification';
+import AllTypeOfNotificationAdminNavbar from './AdminNavbarComponents/AllTypeOfNotificationAdminNavbar';
 
 const _id = localStorage.getItem("uuid")
 
@@ -50,6 +53,8 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     const [showRightSideBar, setShowRightSideBar] = useState(false)
     const notification = useRef(null)
     const message = useRef(null)
+    const AllTypeNitification = useRef(null)
+    const clickOutSideFriendsNoti = useRef(null)
     const friends = useRef(null)
     const ImageRef = useRef(null)
     const disableProfilePostButton = useRef(null)
@@ -61,6 +66,12 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     const [showSearch, setShowSearch] = useState(false)
     const [friendsRequest, setFriendsRequest] = useState([])
     const [expandSearch, setExpandSearch] = useState(false)
+    const [messageAftetAcceptRequest, setMessageAfterRequestAccept] = useState([])
+    const [acceptRequest, setAcceptRequest] = useState(false)
+    const [receivedRequest, setReceivedRequest] = useState([])
+    const [friendModalNotification, setFriendModalNotification] = useState(false)
+    const [AllNotificationSet,setAllNotification]= useState([])
+
 
     const dispatch = useDispatch()
     // ==========================================ALL Reducer function==================================
@@ -92,19 +103,24 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         return state.checkUrlExitsProfile
     })
 
-
-
     const UserInformationLoad = useSelector((state) => {
         return state.UserInformationLoad.value
     })
 
-    const { receiverrequest } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "", senderrequest: [], receiverrequest: [] }
+    const { receiverrequest, AllNotification    } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "", senderrequest: [], receiverrequest: [],AllNotification:[] }
 
 
 
 
 
     // console.log({UserInformationLoad})
+
+
+
+    useEffect(() => {
+        setReceivedRequest(receiverrequest?.length === 0 ? [] : receiverrequest)
+        setAllNotification(AllNotification?.length===0?[]:AllNotification)
+    }, [UserInformationLoad])
 
     //profile image uploader
     function imageUploadHandler(e) {
@@ -254,11 +270,21 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             const { message, data } = ResponseData
             if (status === 200) {
                 //show the message after successfull upload
+                let backgroundURL;
+
+                if (data.url) {
+                    const res = await fetch(data.url)
+                    const blob = await res.blob()
+                    backgroundURL = URL.createObjectURL(blob)
+                }
+                else {
+                    backgroundURL = ""
+                }
                 success({ message: message })
                 //set the base64 url encode value none after submit profile image to server or clear input file field
                 dispatch({ type: "SetValueOfPreviewImageBg", payload: "" })
                 //dispatch the latest profile image url to the profile image component
-                dispatch({ type: "ShowImageBackground", payload: data.url })
+                dispatch({ type: "ShowImageBackground", payload: backgroundURL })
                 //set the whole info regrading image from, server and dispatch to 
                 dispatch({ type: "uploadImageDataFromServerBackground", payload: data })
                 setProgressMessage(message)
@@ -427,71 +453,51 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         }
 
     }
-    //search the query from the server
+    // search the query from the server
     useEffect(() => {
-        const AbortController1 = new AbortController()
-        const Aborted = AbortController1.signal.aborted
-
         try {
             const search = async () => {
-                // ${process.env.REACT_APP_API_BACKENDURL}
                 const res = await axios.get(`${process.env.REACT_APP_API_BACKENDURL}/blob/search?q=${query}`, {
                     headers: {
                         "Authorization": "Bearer " + localStorage.getItem("uuid")
                     }
                 })
-                if (Aborted === false) {
-                    setUserData(res.data)  //notice that we can not use await keyword inside here
-                }
+
+                setUserData(res.data)  //notice that we can not use await keyword inside here
+
             }
             search()
         }
         catch (err) {
             console.warn(err)
         }
-        return () => {
-            AbortController1.abort()
-        }
+
     }, [query])
 
     useEffect(() => {
-        const AbortController1 = new AbortController()
-        const Aborted = AbortController1.signal.aborted
         if (wrapperRef.current.contains(document.activeElement) === false) {
-            // profileInput.current.value = null
 
-            if (Aborted === false) {
-                dispatch({ type: "UNSELECT_PROFILE_IMAGE", payload: "" })
-                dispatch({ type: "UNSELECT_BACKGROUND_IMAGE", payload: "" })
-                dispatch({ type: "SetValueOfPreviewImageProfile", payload: "" })
-                dispatch({ type: "SetValueOfPreviewImageBg", payload: "" })
-                setProgressMessage("")
-                setUploadLoader(false)
-                setDisabledButton(false)
-                setDeleteLoader(false)
-                setDisabledButtonBg(false)
-                setDisabledButton(false)
-                setUploadLoaderBackground(false)
-            }
+            dispatch({ type: "UNSELECT_PROFILE_IMAGE", payload: "" })
+            dispatch({ type: "UNSELECT_BACKGROUND_IMAGE", payload: "" })
+            dispatch({ type: "SetValueOfPreviewImageProfile", payload: "" })
+            dispatch({ type: "SetValueOfPreviewImageBg", payload: "" })
+            setProgressMessage("")
+            setUploadLoader(false)
+            setDisabledButton(false)
+            setDeleteLoader(false)
+            setDisabledButtonBg(false)
+            setDisabledButton(false)
+            setUploadLoaderBackground(false)
+
         }
-        return () => {
-            AbortController1.abort()
-        }
-    }, [showModal, showModalBackground, dispatch])
+
+    }, [showModal, showModalBackground])
 
 
 
     useEffect(() => {
-        const AbortController1 = new AbortController()
-        const Aborted = AbortController1.signal.aborted
-        if (Aborted === false) {
-            setFriendsRequest(receiverrequest)
-        }
-        // setNotificationGroup((pre)=>[...pre,receiverrequest])
-        return () => {
-            AbortController1.abort()
-        }
-    }, [receiverrequest])
+        setFriendsRequest(receiverrequest)
+    }, [])
 
 
     async function DeleteFriendRequest(senderId) {
@@ -522,11 +528,11 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
 
 
     //accecpt the friend request
-    async function AcceptFriendRequest(senderId, name) {
+    async function AcceptFriendRequest(senderId, name, url) {
         try {
             const acceptResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/acceptfriend/request`, {
                 method: "POST",
-                body: JSON.stringify({ senderId, name }),
+                body: JSON.stringify({ senderId, name, url }),
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + localStorage.getItem("uuid")
@@ -536,8 +542,13 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             const acceptResponseData = await acceptResponse.json()
             console.log("accepy friends reqeust", acceptResponseData)
             if (acceptResponse.status === 200) {
+                console.log(acceptResponseData)
+                const array = receivedRequest.filter(friend => { return friend._id !== senderId })
+                setReceivedRequest(array)
+                setAcceptRequest(true)
+                setMessageAfterRequestAccept(acceptResponseData.Users)
                 // success({ message: acceptResponseData.message })
-                setFriendsRequest(friendsRequest.filter(friend => friend._id !== senderId))
+                // setFriendsRequest(friendsRequest.filter(friend => friend._id !== senderId))
             }
             else if (acceptResponse.status !== 200) {
                 // error({ message: acceptResponseData.message })
@@ -549,8 +560,6 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     }
 
     useEffect(() => {
-        const AbortController1 = new AbortController()
-        const Aborted = AbortController1.signal.aborted
         async function loadHistory() {
             try {
                 const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/history/user/history/fetch`, {
@@ -565,26 +574,23 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 const resData = await res.json()
                 const data = resData.data
                 if (res.status === 200) {
-                    if (Aborted === false) {
-                        setUserSearchHistory(data?.history)
-                    }
+                    // if (Aborted === false) {
+                    setUserSearchHistory(data?.history)
+                    // }
                 }
                 else if (res.status !== 200) {
                     console.log(data)
+
                     //not load hisory
                 }
             }
             catch (err) {
-                console.warn(err)
+                // console.warn(err)
 
             }
 
         }
         loadHistory()
-
-        return () => {
-            AbortController1.abort()
-        }
 
     }, [])
 
@@ -612,17 +618,47 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     }
 
 
-
-
     useEffect(() => {
         if (ImageRef.current) {
             const { top, left, width, height } = ImageRef.current.getBoundingClientRect()
             dispatch({ type: "POS_AdminNavBar", payload: { x: left + width / 2, y: top + height / 2 } })
         }
-    }, [ImageRef, dispatch])
+    }, [ImageRef])
+
+    // ======================================CLICK OUTSIDE THE clickOutSideFriendsNotification==========
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (clickOutSideFriendsNoti.current && !clickOutSideFriendsNoti.current.contains(event.target)) {
+                setFriendModalNotification(false)
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [clickOutSideFriendsNoti])
 
 
 
+    // ==============================================CLICK OUTSIDE OF ALL TYPE NOTIFICATIONS=======================
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (AllTypeNitification.current && !AllTypeNitification.current.contains(event.target)) {
+                setShowNotification(false)
+
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [AllTypeNitification])
+
+
+
+
+    console.log({ receivedRequest })
+    console.log({ UserInformationLoad })
     return (
         <>
             <nav className="bg-light-blue-500  py-2 px-3 fixed w-full z-[18] drop-shadow-lg">
@@ -672,64 +708,72 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                             </div>
 
                             <div className={`group_right_s flex flex-[2]   justify-end  ${expandSearch ? "mds-editor32:hidden" : "block"}`}>
-
                                 <div className={`group_icons flex `}>
-
-                                    \
-                                    <section className='friends  flex  ml-[1rem] -mr-[1.5rem] cursor-pointer relative     align-middle mt-[4px] justify-center'
-                                        ref={friends}
-                                        onClick={() => { }}>
-                                        <FaUserFriends className='text-[2rem] self-center text-[#270082]' />
-                                        <article className='  absolute right-2 -top-2 mds-editor8:-top-3'>
-
+                                    <section className='friends  flex  ml-[1rem] -mr-[1.5rem]  relative     align-middle mt-[4px] justify-center '
+                                        ref={clickOutSideFriendsNoti}
+                                        onClick={() => {
+                                            setFriendModalNotification(true)
+                                        }}>
+                                        <FaUserFriends className='text-[2rem] self-center text-[#270082] cursor-pointer' />
+                                        <article className='  absolute right-2 -top-2 mds-editor8:-top-3 cursor-pointer'>
                                             {
-                                                (friendsRequest !== undefined && friendsRequest.length > 0) &&
+                                                // (friendsRequest !== undefined && friendsRequest.length > 0) &&
 
-                                                <Badge badgeContent={friendsRequest.length} showZero color="success" max={20}>
+                                                // <Badge badgeContent={friendsRequest.length} showZero color="success" max={20}>
 
+                                                // </Badge>
+                                                (receiverrequest !== undefined && receiverrequest.length > 0) &&
+                                                <Badge badgeContent={receiverrequest.length} showZero color="red" max={20}>
                                                 </Badge>
                                             }
-
                                         </article>
+                                        <AnimatePresence>
+                                            {friendModalNotification && <FriendsNotification
+                                                receivedRequest={receivedRequest} AcceptFriendRequest={AcceptFriendRequest} DeleteFriendRequest={DeleteFriendRequest} messageAftetAcceptRequest={messageAftetAcceptRequest}
+                                            />}
+                                        </AnimatePresence>
                                     </section>
 
 
 
-                                    {/* //userSerach the data from server */}
-                                    <section className='notification  flex  ml-[3rem] cursor-pointer relative  align-middle mt-[4px] justify-center'
-                                        onClick={() => setShowNotification(!showNotification)}
-                                        ref={notification}>
-                                        <MdNotifications className='text-[2rem] self-center text-[#270082]' />
-                                        <article className=' bg-red-500 absolute right-2 -top-2 mds-editor8:-top-3'>
-                                            {
-                                                <Badge badgeContent={Length} showZero color="secondary" max={20}>
 
+                                    <section className='notification  flex  ml-[3rem]  relative  align-middle mt-[4px] justify-center'
+                                        onClick={() => setShowNotification(true)}
+                                        ref={AllTypeNitification}
+                                    >
+                                        <MdNotifications className='text-[2rem] self-center text-[#270082] cursor-pointer' />
+                                        <article className=' bg-red-500 absolute right-2 -top-2 mds-editor8:-top-3 cursor-pointer'>
+                                            {
+                                                <Badge badgeContent={AllNotificationSet?.length} showZero color="secondary" max={20}>
                                                 </Badge>
                                             }
-
                                         </article>
+                                        <AnimatePresence>
+                                            {
+                                                showNotification &&
+                                                <AllTypeOfNotificationAdminNavbar AllNotification={AllNotificationSet}/>
+                                            }
+                                        </AnimatePresence>
                                     </section>
+
                                     <section className='messenger  flex ml-[1.8rem] cursor-pointer   relative mt-[3px]'
                                         ref={message}>
                                         <BsMessenger className='text-[1.6rem] self-center  text-[#270082]' />
-                                        {/* -mt-[2.5rem] ml-[1.5rem] */}
                                         <article className='absolute right-1 -top-2 mds-editor8:-top-3 '>
                                             {
                                                 UserInformationLoad?.message &&
                                                 <Badge badgeContent={UserInformationLoad?.message.length} color="primary" max={20} >
-
                                                 </Badge>
                                             }
                                         </article>
                                     </section>
                                 </div>
                                 <div className="mr-2 ml-6  relative ">
-                                    <div className={`img cursor-pointer flex-shrink-0 w-[2.5rem] h-[2.5rem] mr-3 md:mr-0 bg-[#d5d5d5] border border-solid border-[#f1f0f0] rounded-full ${LoaderRedux && "animate-pulse"}`}
+                                    <div className={`img cursor-pointer flex-shrink-0 w-[2.5rem] h-[2.5rem] mr-3 md:mr-0 bg-[#d5d5d5]  border-solid border-[#f1f0f0] rounded-full ${LoaderRedux && "animate-pulse"}`}
                                         onClick={() => {
                                             setShowRightSideBar(!showRightSideBar)
                                         }}
                                         ref={ImageRef}
-
                                     >
                                         {LoaderRedux ? "" : !showImage ?
                                             <Image src={userProfile}
@@ -740,9 +784,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                             <Image src={showImage}
                                                 rounded alt="img" className="w-[2.5rem] h-[2.5rem] flex-shrink-0 mr-2" />}
                                     </div>
-
-
-                                    <Dropdown
+                                    {/* <Dropdown
                                         color="transparent"
                                         buttonText={
                                             <div className={`w-11 bg-black rounded-full h-11 text-center d-flex justify-center object-cover ${LoaderRedux && "animate-pulse"}`} style={{
@@ -785,27 +827,26 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                         </DropdownItem>
 
 
-                                    </Dropdown>
+                                    </Dropdown> */}
                                 </div>
 
                             </div>
                         </div>
-
                     </div>
                 </div>
             </nav >
-            <AnimatePresence>
-                {
-                    // showRightSideBar &&
-                    // <AdminRightSideBar showRightSideBar={showRightSideBar}
-                    //     setShowRightSideBar={setShowRightSideBar} logout={logout}
-                    // />
-
-
-                }
-            </AnimatePresence>
+            {
+                UserInformationLoad !== null &&
+                <AnimatePresence>
+                    {
+                        showRightSideBar &&
+                        <AdminRightSideBar showRightSideBar={showRightSideBar}
+                            setShowRightSideBar={setShowRightSideBar} logout={logout}
+                        />
+                    }
+                </AnimatePresence>
+            }
             {/* //  MAIN BODY OF DASHBOARD */}
-
             {/* ==============================profile image=================handler */}
             <Modal size="sm" active={showModal} className="z-[1000]" toggler={() => setShowModalCode(false)}>
                 <div ref={wrapperRef} >
@@ -1053,7 +1094,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             </Modal>
             {/* <ToastContainer /> */}
             {/* ==========================NOTIFICATION======================= */}
-            <Popover placement="bottom" ref={notification}>
+            {/* <Popover placement="bottom" ref={notification}>
                 <PopoverContainer>
                     <PopoverHeader>Notifications</PopoverHeader>
                     <PopoverBody>
@@ -1074,38 +1115,91 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
 
             <Popover placement="bottom" ref={friends}>
                 <PopoverContainer>
-                    <PopoverHeader>{friendsRequest !== undefined && friendsRequest.length > 0 ? "Friends Notification" : "No Notification: "}</PopoverHeader>
-                    <PopoverBody>
-                        {
-                            // friendsRequest
+                    <PopoverHeader className="bg-red-200">{receivedRequest !== undefined && receivedRequest.length > 0 ? "Friends Notification" : "No Notification: "}</PopoverHeader>
+                    <PopoverBody className=" px-0">
+                        <div className="wrap w-full">
+                            {
+                                // friendsRequest
+                                receivedRequest !== undefined &&
+                                receivedRequest.length > 0 && (
+                                    receivedRequest.map((item) => {
+                                        console.log({ item })
+                                        return (
+                                            <>
+                                                <FriendsNoti
+                                                    SenderRequestId={item._id}
+                                                    name={item.name}
+                                                    url={item.url}
+                                                    type={item.type}
+                                                    acceptRequest={acceptRequest}
+
+                                                    AcceptFriendRequest={AcceptFriendRequest}
+                                                    setAcceptRequest={setAcceptRequest}
+                                                    messageAftetAcceptRequest={messageAftetAcceptRequest}
+
+                                                    DeleteFriendRequest={
+                                                        DeleteFriendRequest
+                                                    } />
+                                            </>
+                                        )
+
+                                    }))
+                            }
 
 
-                            friendsRequest !== undefined &&
+                            <section className='w-full bg-green-500 my-0'>
+                                {
+                                    // messageAftetAcceptRequest.length && messageAftetAcceptRequest.map((item) => {
+                                    //     return (
+                                    //         <>
+                                    //             <MessageAfterFriendRequestAccept item={item} />
+                                    //         </>
+                                    //     )
+                                    // })
+                                    [1, 2, 3, 4].map((item) => {
+                                        return (
+                                            <>
+                                                <MessageAfterFriendRequestAccept item={item} />
+                                            </>
+                                        )
+                                    })
+                                }
+                            </section>
 
-                            friendsRequest.length > 0 && (
-                                friendsRequest.map((item) => {
-                                    console.log({ item })
-                                    return (
-                                        <>
-                                            <FriendsNoti
-                                                currentUser={item._id}
-                                                name={item.name}
-                                                url={item.url}
-                                                type={item.type}
+                        </div>
 
-                                                AcceptFriendRequest={AcceptFriendRequest}
 
-                                                DeleteFriendRequest={
-                                                    DeleteFriendRequest
-                                                } />
-                                        </>
-                                    )
 
-                                }))
-                        }
+                    </PopoverBody>
+                    <PopoverBody className="bg-blue-600">
                     </PopoverBody>
                 </PopoverContainer>
-            </Popover>
+            </Popover> */}
         </>
     );
 }
+
+
+
+
+
+// function MessageAfterFriendRequestAccept({ item }) {
+//     return (
+//         <>
+//             <div className="wrapper  px-1">
+//                 {/* <p className='flex cursor-pointer hover:bg-[#dadada] rounded-md py-1 w-full'>
+//                     <Image src={item.url}
+//                         rounded={true}
+//                         className="md:w-[2.7rem] w-[2rem] md:h-[2.7rem] h-[2rem]"
+//                     />
+//                     <p className='ml-1 truncate'>
+//                         <span className='text-[1.1rem] font-semibold'>{item.name}</span>, and you are connected
+//                     </p>
+//                 </p> */}
+//                 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Rem dolores ducimus culpa temporibus sit. Officia numquam eius laborum dignissimos quia?
+//             </div>
+
+
+//         </>
+//     )
+// }

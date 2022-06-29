@@ -4,7 +4,7 @@ import Comment from "./Comment";
 import { useDispatch } from 'react-redux'
 import Button from "@material-tailwind/react/Button";
 import { BallTriangle } from 'react-loader-spinner'
-
+import Axios from "axios"
 
 import {
   // getComments as getCommentsApi,
@@ -14,15 +14,13 @@ import {
 } from "./api";
 import { AnimatePresence } from "framer-motion";
 
-const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, currentUserName, UserIdForPostComments, post_id, setCommentLength, socket, setCommentToggle }) => {
+const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, currentUserName, UserIdForPostComments, post_id, setCommentLength, socket, setCommentToggle, commentsLength, setLike, setLikeCount, item }) => {
 
-  // console.log({ post_id, UserIdForPostComments })
-  // console.log({ commentsUrl, commentToggle, currentUserId, ImageUrl, currentUserName, UserIdForPostComments, post_id })
-  // window.alert("hello world")
 
   const [Length, setLength] = useState(0)
   const [commentLoader, setCommentLoader] = useState(false)
   const isMount = useRef(true)
+  const isMount1 = useState(true)
   const dispatch = useDispatch()
   const [backendComments, setBackendComments] = useState([]);
   const [activeComment, setActiveComment] = useState(null);
@@ -40,32 +38,69 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
         (a, b) =>
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       );
-  const addComment = async (value, parentId) => {
+  const addComment = async (value, parentId, replyParentId = "") => {
 
 
     //this is Old Method
     // const comment = await createCommentApi(text, parentId, UserIdForPostComments, currentUserId, currentUserName, ImageUrl, post_id)
     const comment = await createCommentApi(value, parentId, UserIdForPostComments, currentUserId, currentUserName, ImageUrl, post_id)
+    console.log({ comment })
+    // return
     try {
-      const SaveUserComment = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/post/comment/save/`, {
-        method: "POST",
-        body: JSON.stringify({ comment, uuid: localStorage.getItem('uuid') }),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem("uuid")}`,
-        }
-      })
-      const SaveUserCommentJson = await SaveUserComment.json()
-      if (SaveUserComment.status === 200) {
-        // console.log({ SaveUserComment })
-        socket?.emit("sendComment", SaveUserCommentJson.data.comment)
-        // setBackendComments([...backendComments, SaveUserCommentJson.data.comment]);
-        socket?.emit("commentLength", { post_id, commentLength: SaveUserCommentJson.length })
+      if (socket.connected) {
+        socket?.emit("sendComment", { comment: [comment, ...backendComments], post_id })
+        socket?.emit("commentLength", { post_id, commentLength: [comment, ...backendComments,].length })
         socket?.off("getComments").on("getComments", (data) => {
-          console.log({ data })
-          setBackendComments([...backendComments, data])
+          if (data.post_id === post_id) {
+            console.log("comments", { data })
+            console.log({ backendComments })
+            // [data.comment, ...backendComments,]
+            setBackendComments(data.comment)
+          }
         })
-        setActiveComment(null);
+        await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/post/comment/save/`, {
+          method: "POST",
+          body: JSON.stringify({ comment, uuid: localStorage.getItem('uuid') }),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("uuid")}`,
+          }
+        })
+
+        // api/v1/user/comment/post/:postId
+        await Axios({
+          method: "PUT",
+          url: `${process.env.REACT_APP_API_BACKENDURL}/blob/api/v1/user/comment/post/${post_id}`,
+          data: JSON.stringify({ comment, commentBy: currentUserId, parentId, replyParentId }),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("uuid")}`,
+          }
+        })
+      }
+      else {
+        const SaveUserComment = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/post/comment/save/`, {
+          method: "POST",
+          body: JSON.stringify({ comment, uuid: localStorage.getItem('uuid') }),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("uuid")}`,
+          }
+        })
+        await Axios({
+          method: "PUT",
+          url: `${process.env.REACT_APP_API_BACKENDURL}/blob/api/v1/user/comment/post/${post_id}`,
+          data: JSON.stringify({ comment, commentBy: currentUserId, parentId, replyParentId }),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("uuid")}`,
+          }
+        })
+        const SaveUserCommentJson = await SaveUserComment.json()
+        if (SaveUserComment.status === 200) {
+          setBackendComments([...backendComments, SaveUserCommentJson.data.comment]);
+          setActiveComment(null);
+        }
       }
     }
     catch (err) {
@@ -79,7 +114,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
 
   //update the comment
   const updateComment = async (text, commentId) => {
-    console.log({ text, commentId })
+    // console.log({ text, commentId })
     // return
 
     try {
@@ -118,10 +153,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
         const DeleteResponseData = await deleteResponse.json()
         if (deleteResponse.status === 200) {
           setBackendComments(DeleteResponseData.data);
-
-
         }
-
       }
     }
     catch (err) {
@@ -142,99 +174,57 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
 
   // ======================GET COMMENT LENGTH===================================
   useEffect(() => {
-    socket?.on("getCommentLength", (data) => {
-      if (data.post_id === post_id) {
-        setCommentLength({ length: data.commentLength, post_id: data.post_id })
-      }
-    })
-  }, [socket, backendComments, post_id, setCommentLength])
+    if (socket.connected) {
+      socket.on("getCommentLength", (data) => {
+        if (data.post_id === post_id) {
+          setCommentLength({ length: data.commentLength, post_id: data.post_id })
+        }
+      })
+    }
+    else {
+      setCommentLength({ length: backendComments.length, post_id: post_id })
+    }
+  }, [socket, backendComments])
+
 
   useEffect(() => {
-
     //load the all comments from backend
     async function loadComment() {
       try {
         setCommentLoader(true)
-
         const commentResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/root/load/all/comments/${post_id}/${UserIdForPostComments}/`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${localStorage.getItem("uuid")}`
-
           }
         })
-
         const commentData = await commentResponse.json()
         if (commentResponse.status === 200) {
           if (isMount.current) {
-
-            setBackendComments(commentData.data)
-            setLength(commentData.length)
-            setCommentLoader(false)
+            if (post_id === commentData.post_id) {
+              setLength(commentData.length)
+              setBackendComments(commentData.data)
+              setCommentLoader(false)
+            }
           }
-
         }
         else if (commentResponse.status !== 200) {
           setCommentLoader(false)
-
         }
-
       }
       catch (err) {
         console.warn(err)
       }
-
-
-
     }
     loadComment()
     return (() => {
+      // setCommentToggle(false)
+      // setBackendComments([])
       isMount.current = false
     })
-
-    // getCommentsApi().then((data) => {
-    //   setBackendComments(data);
-    // });
   }, [post_id, UserIdForPostComments]);
 
-
-
-
-  //load all total comment of user
-  // useEffect(() => {
-  //   async function totalComment() {
-  //     try {
-  //       setCommentLoader(true)
-  //       const totalCommentResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/all/comment/user/`, {
-  //         method: "GET",
-
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           "Authorization": `Bearer ${localStorage.getItem("uuid")}`
-
-  //         }
-  //       })
-  //       const totalCommentData = await totalCommentResponse.json()
-  //       if (totalCommentResponse.status === 200) {
-  //         if (isMount.current) {
-  //           setCommentLoader(false)
-  //           dispatch({ type: "SET_TOTAL_COMMENT", payload: totalCommentData.data })
-  //         }
-  //       }
-
-  //     }
-  //     catch (err) {
-  //       console.warn(err)
-
-  //     }
-
-  //   }
-  //   totalComment()
-  //   return (() => {
-  //     isMount.current = false
-  //   })
-  // }, [post_id])
 
 
   function loadMoreComment() {
@@ -246,35 +236,65 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${localStorage.getItem("uuid")}`
-
           }
         })
         const commentData = await commentResponse.json()
         if (commentResponse.status === 200) {
           setBackendComments(commentData.data)
-
         }
-
       }
       catch (err) {
         console.warn(err)
       }
     }
     loadComment()
-
   }
+
+  useEffect(() => {
+
+    async function NumberOfComments() {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/number/comment/length`, {
+          method: "POST",
+          body: JSON.stringify({ post_id: post_id }),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("uuid")
+          }
+        })
+        const data = await response.json()
+        // if (isMount1.current) {
+
+        // if (isMountCommentLength.current) {
+        if (response.status === 200) {
+          setCommentLength({ length: data.data, post_id: data.post })
+          // setShareLength(0)
+        }
+        else if (response.status !== 200) {
+          setCommentLength({ length: 0, post_id: data.post })
+        }
+        // }
+      } catch (error) {
+        console.warn(error)
+      }
+    }
+    NumberOfComments()
+    // return () => {
+    //   //   // setCommentLength(0)
+    //   //   // setShareLength(0)
+    //   // isMount1.current = false
+    // }
+  }, [post_id])
 
 
   // console.log({ commentToggle })
   // console.log({ rootComments })
   // console.log({ backendComments })
-  console.log({ backendComments })
+  // console.log({ backendComments })
 
 
   return (
     <div className="comments">
-      {/* <h3 className="comments-title">Comments</h3> */}
-      {/* <div className="comment-form-title">Write comment</div> */}
       <CommentForm submitLabel="Comment" handleSubmit={addComment} commentToggle={commentToggle} backendComments={backendComments} setCommentToggle={setCommentToggle} />
       <div className={`comments-container mb-[1.5rem]  ${commentLoader && "w-full  mb-[2rem]"}`}>
         {/* commentLoader ? <CommentLodaer /> : */}
@@ -295,8 +315,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
               ImageUrl={rootComment.ImageUrl}
               // ImageUrl={ImageUrl}
               currentUserName={currentUserName}
-
-
             />
           ))}
         </AnimatePresence >

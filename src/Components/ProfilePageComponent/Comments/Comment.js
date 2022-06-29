@@ -261,7 +261,7 @@ const Comment = ({
                             submitLabel="Reply"
                             commentReplyName={comment.username}
                             handleSubmit={(value) => {
-                                addComment(value, replyId)
+                                addComment(value, replyId, comment.userId)
                                 // console.log({ text })
                             }}
                         />

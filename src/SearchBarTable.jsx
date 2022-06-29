@@ -94,7 +94,7 @@ function SearchBarTable({ showSearch, setShowSearch, setPopOverEffect, setQuery,
              mds-editor14:w-[28rem] mds-editor15:w-[23rem] mds-editor16:w-[18rem] mds-editor17:w-[12rem] mds-editor18:w-[3rem] mds-editor18:h-[3rem] mds-editor18:rounded-full 
              4px-4 pt-[2px] drop-shadow-xl flex-shrink-0 */}
 
-            <main className={` `}
+            <main className={`bg-[#fff] `}
                 onBlur={() => {
                     // setHistory(false)
                     setShowSearch(false)

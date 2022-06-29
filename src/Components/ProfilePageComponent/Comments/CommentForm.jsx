@@ -36,8 +36,7 @@ const CommentForm = ({
     const textRef = useRef()
     const [renderComponent, setComponent] = useState(false)
     const [emojiContainer, setShowEmojicontenor] = useState(false)
-    const [selectGIF, setSelectGif] = useState("")
-    const [selectStickers, setStickers] = useState("")
+
 
     const isTextareaDisabled = text.length === 0;  // if text is empty, disable textarea
 
@@ -71,43 +70,38 @@ const CommentForm = ({
     // console.log({ commentReplyId })
     useEffect(() => {
         commentReplyName && setText(`@${commentReplyName}\t`)
-        textRef.current.focus()
+        // commentReplyName&&  textRef.current.focus()
     }, [commentReplyName])
 
 
 
-    useEffect(() => {
-        textRef.current.focus()
-    }, [])
+    // useEffect(() => {
+    //     textRef.current.focus()
+    // }, [])
+
+
+    function sendGiF(value) {
+        handleSubmit(value)
+        return
+    }
+
+    function sendStickers(value) {
+        handleSubmit(value)
+        return
+    }
 
 
 
-    useEffect(() => {
-        if (selectGIF.length > 0) {
-            handleSubmit({ value: selectGIF, type: "gif" });
-            setTimeout(() => {
-                setSelectGif("")
-            }, [2000])
-        }
-
-    }, [selectGIF, handleSubmit])
 
 
-    useEffect(() => {
-        if (selectStickers.length > 0) {
-            handleSubmit({ value: selectStickers, type: "gif" });
-            setTimeout(() => {
-                setStickers("")
-            }, [2000])
-        }
 
-    }, [selectStickers, handleSubmit])
+
+
 
     return (
         <>
             <BrowserRouter>
                 <div className={`md:mr-10 md:ml-[1rem] px-1 ${commentReplyName && "mt-2"}`} id="comment_area_section">
-                    {/* ${text?.length ? (text.includes("@") ? ("underline font-bold") : ("")) : ("")}` */}
                     <div className="textArea"
                     // dangerouslySetInnerHTML={{ __html: text }}
                     >
@@ -158,24 +152,18 @@ const CommentForm = ({
                                         {
                                             name: "Sticker",
                                             icon: <BiSticker className="text-[1.7rem] text-[#297cef] mr-2" />
-
                                         }
-
                                     ].map((i, index) => {
                                         return (
                                             <>
-
                                                 <NavLink to={`${i.name === "Emoji" ? ("/emojiPicker/comment") : (i.name === "GIF" ? "/gif/comment" : (i.name === "Sticker" && "/sticker/comments"))}`}
                                                     activeStyle={{
                                                         borderBottom: "2px solid red",
-
                                                     }}
                                                     style={{
                                                         width: "100%"
                                                     }}
-
                                                 >
-                                                    {/* border-b-[2px] border-b-solid border-b-[#0e18da] */}
                                                     <div className="w-full"
                                                         key={index}
                                                     >
@@ -208,10 +196,10 @@ const CommentForm = ({
                                     <EmojiComponent setComponent={setComponent} onEmojiClick={onEmojiClick} />
                                 </Route>
                                 <Route exact path="/gif/comment">
-                                    <GifComponent setComponent={setComponent} setSelectGif={setSelectGif} commentReplyName={commentReplyName} setShowEmojicontenor={setShowEmojicontenor} />
+                                    <GifComponent setComponent={setComponent} sendGiF={sendGiF} commentReplyName={commentReplyName} setShowEmojicontenor={setShowEmojicontenor} />
                                 </Route>
                                 <Route exact path="/sticker/comments">
-                                    <StickerComponent setComponent={setComponent} commentReplyName={commentReplyName} setShowEmojicontenor={setShowEmojicontenor} setStickers={setStickers} emojiContainer={emojiContainer} />
+                                    <StickerComponent setComponent={setComponent} commentReplyName={commentReplyName} setShowEmojicontenor={setShowEmojicontenor} emojiContainer={emojiContainer} sendStickers={sendStickers} />
                                 </Route>
 
                             </Switch>
@@ -243,13 +231,7 @@ const CommentForm = ({
                             {submitLabel}
                         </Button>
                         {hasCancelButton && (
-                            // <button
-                            //     type="button"
-                            //     className="comment-form-button comment-form-cancel-button"
-                            //     onClick={handleCancel}
-                            // >
-                            //     Cancel
-                            // </button>
+
 
 
                             <Button
@@ -323,7 +305,7 @@ function EmojiComponent({ setComponent, onEmojiClick }) {
     )
 }
 
-function GifComponent({ setComponent, setSelectGif, commentReplyName, setShowEmojicontenor }) {
+function GifComponent({ setComponent, commentReplyName, setShowEmojicontenor, sendGiF }) {
     const [GifList, setGifList] = useState([])
     const [tranding, setTranding] = useState({ tranding: null, trandingList: [] })
     const [love, setLove] = useState([])
@@ -439,7 +421,8 @@ function GifComponent({ setComponent, setSelectGif, commentReplyName, setShowEmo
                                 <>
                                     <div className="image flex w-[18rem] cursor-pointer" key={index}
                                         onClick={() => {
-                                            setSelectGif(i.images.original.url)
+                                            sendGiF({ value: i.images.original.url, type: "gif" })
+                                            // setSelectGif(i.images.original.url)
                                             if (!commentReplyName) {
                                                 setShowEmojicontenor(false)
 
@@ -466,7 +449,9 @@ function GifComponent({ setComponent, setSelectGif, commentReplyName, setShowEmo
                                             <>
                                                 <div className="image flex w-[18rem] cursor-pointer" key={index}
                                                     onClick={() => {
-                                                        setSelectGif(i.images.original.url)
+                                                        // setSelectGif(i.images.original.url)
+                                                        sendGiF({ value: i.images.original.url, type: "gif" })
+
                                                         if (!commentReplyName) {
                                                             setShowEmojicontenor(false)
 
@@ -494,7 +479,9 @@ function GifComponent({ setComponent, setSelectGif, commentReplyName, setShowEmo
                                             <>
                                                 <div className="image flex w-[18rem] cursor-pointer" key={index}
                                                     onClick={() => {
-                                                        setSelectGif(i.images.original.url)
+                                                        // setSelectGif(i.images.original.url)
+                                                        sendGiF({ value: i.images.original.url, type: "gif" })
+
                                                         if (!commentReplyName) {
                                                             setShowEmojicontenor(false)
 
@@ -522,7 +509,9 @@ function GifComponent({ setComponent, setSelectGif, commentReplyName, setShowEmo
                                                 <>
                                                     <div className="image flex w-[18rem] cursor-pointer" key={index}
                                                         onClick={() => {
-                                                            setSelectGif(i.images.original.url)
+                                                            // setSelectGif(i.images.original.url)
+                                                            sendGiF({ value: i.images.original.url, type: "gif" })
+
                                                             if (!commentReplyName) {
                                                                 setShowEmojicontenor(false)
                                                             }
@@ -556,7 +545,7 @@ function GifComponent({ setComponent, setSelectGif, commentReplyName, setShowEmo
     )
 }
 
-function StickerComponent({ setComponent, commentReplyName, setShowEmojicontenor, setStickers, emojiContainer }) {
+function StickerComponent({ setComponent, commentReplyName, setShowEmojicontenor, emojiContainer, sendStickers }) {
     const [Stickers, setStickes] = useState([])
 
 
@@ -578,7 +567,7 @@ function StickerComponent({ setComponent, commentReplyName, setShowEmojicontenor
         f1()
     }, [emojiContainer, setComponent, setStickes])
 
-    console.log({ Stickers })
+
     return (
         <>
             <div className="sticker_component w-full flex flex-col">
@@ -599,7 +588,8 @@ function StickerComponent({ setComponent, commentReplyName, setShowEmojicontenor
                                 <>
                                     <div className="image flex md:w-[14rem] cursor-pointer" key={index}
                                         onClick={() => {
-                                            setStickers(i.images.original.url)
+                                            // setStickers(i.images.original.url)
+                                            sendStickers({ value: i.images.original.url, type: "gif" })
                                             setShowEmojicontenor(false)
                                             if (!commentReplyName) {
 

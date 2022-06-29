@@ -121,7 +121,7 @@ export default function Login({ socket }) {
         })
       }
       else if (status !== 200) {
-        error({ message: serverData.message })
+        error({ message: "Opps, Something error occure" })
         setLoader(false)
       }
       else if (status === 500) {

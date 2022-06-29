@@ -111,18 +111,18 @@ function RightSidebar({ socket, currentUser, currentId, setCurrentChat1, current
                     console.warn("err")
                 }
             } catch (err) {
-                console.warn(err)
+                // console.warn(err)
             }
         }
         loadFriends()
         return (() => {
             isMount.current = false
         })
-    }, [])
+    }, [dispatch, currentId])
 
 
 
-    console.log({ online })
+    // console.log({ online })
 
 
 

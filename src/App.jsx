@@ -1,5 +1,5 @@
-import React, { createContext, StrictMode, useEffect, useState } from 'react'
-import { Switch, Route, Redirect, useHistory } from 'react-router-dom'
+import React, { createContext, StrictMode, useEffect, useState, Suspense } from 'react'
+import { Switch, Route, Redirect, useHistory, useLocation } from 'react-router-dom'
 import Register from './Components/Register'
 import Login from './Components/Login';
 import Email from './Components/Email';
@@ -21,7 +21,6 @@ import UserPhotos from './Pages/UserPhotos';
 import io from "socket.io-client"
 import UserLink from './Components/UserLink';
 import Feed from './Pages/Feed';
-// const Feed = React.lazy(() => import("./Pages/Feed"))
 import AllFriends from './Components/loadAllFriends/AllFriends';
 
 import UnknowUser from './Pages/UnknowUser';
@@ -33,6 +32,31 @@ import News from "./Pages/AdminRightSideBarPages/News"
 import ThemeMode from "./Pages/AdminRightSideBarPages/ThemeMode"
 import Music from "./Pages/AdminRightSideBarPages/Music"
 import UserSinglePost from './Pages/UserSinglePost';
+import { AnimatePresence } from "framer-motion"
+// const Feed = React.lazy(() => require("./Pages/Feed"))
+
+console.log(process.env.REACT_APP_TRANSPORT)
+
+
+const object = {
+    path: process.env.REACT_APP_PATH,
+    withCredentials: true,
+    auth: {
+        token: localStorage.getItem("uuid")
+    },
+    transports: ["websocket", "polling"],
+    autoConnect: true,
+    reconnection: false,
+
+    // reconnectionAttempts: "Infinity",
+    // reconnectionDelay: 1000,
+    // reconnectionDelayMax: 5000,
+    // pingTimeout: 5000,
+    // pingInterval: 5000,
+}
+
+
+// const socket = io(process.env.REACT_APP_API_BACKENDURL, object)
 
 
 export const Context = createContext()
@@ -47,6 +71,7 @@ function App() {
     const history = useHistory()
     // const [users, dispatch] = React.useReducer(Reducer, Init)
     const dispatch = useDispatch()
+    const location = useLocation()
     const users = useSelector((state) => {
         return state.UserStillLogin
     })
@@ -95,28 +120,21 @@ function App() {
 
             }
             catch (err) {
-                console.warn(err)
+                // console.warn(err)
             }
 
         }
         loadData()
     }, [history, userData])
 
-    //trigger when user login your account
+    // //trigger when user login your account
     useEffect(() => {
-        // process.env.REACT_APP_API_BACKENDURL
         const isHttps = process.env.REACT_APP_API_BACKENDURL
-        setSocket(io(isHttps, {
-            path: "/collegezone",
-            "withCredentials": true,
-            auth: {
-                token: localStorage.getItem("uuid")
-            },
-
-        }))
-        console.log(process.env.REACT_APP_API_BACKENDURL)
-
-
+        setSocket(io(isHttps, object))
+        socket?.on("connect_error", (err) => {
+            console.log(err)
+            console.log("connection error")
+        })
     }, [])
 
     //add  new user info to the server by socket when user login
@@ -129,7 +147,7 @@ function App() {
             console.log("reconnect successfull" + connect)
         })
 
-    }, [socket, getUserData])
+    }, [getUserData])
 
 
     useEffect(() => {
@@ -137,7 +155,16 @@ function App() {
             setOnlineUser(data)
         })
 
-    }, [socket])
+    }, [online])
+
+
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
+
+
+
+
 
 
     return (
@@ -145,7 +172,8 @@ function App() {
         <StrictMode>
             <Context.Provider value={{ users, dispatch }}>
 
-                <div className="left_section">
+
+                <div className="left_section" >
 
 
                     {
@@ -157,47 +185,55 @@ function App() {
                 <>
                     {/* 000B49 */}
                     <div className=' bg-cover app_class'>
-                        <Switch >
-                            <Route exact path="/" >
-                                {
-                                    (getUserData && user) ?
-                                        <Feed socket={socket} setShowLikeUserModal={setShowLikeUserModal} showLikeUserModal={showLikeUserModal} />
-                                        : <Header />
-                                }
-                            </Route>
-                            <Route exact path="/register">
-                                {
-                                    (getUserData && user)
-                                        // && ?
-                                        ?
-                                        <Redirect to={"/"} /> :
-                                        <Register />
-                                }
-                            </Route>
-                            <Route exact path="/login">
-                                {
-                                    (getUserData && user)
-                                        //  &&
-                                        ? <Redirect to={"/"} /> :
-                                        <Login socket={socket} />
+                        <AnimatePresence>
 
-                                }
-                            </Route>
-                            <Route exact path="/forget" component={Email} />
-                            <Route exact path="/dashboard">
-                                {
-                                    (getUserData && user) &&
-                                    <Dashboard users={getUserData} socket={socket} />
-                                    // : <Redirect to="/" />
-                                }
-                            </Route>
-                            <Route exact path='/profile/:username'>
-                                {
-                                    <ProfileCard getUserData={getUserData} socket={socket} />
-                                }
-                            </Route>
+                            <Switch location={location} key={location.key}>
 
-                            {/* <Route exact path='/profile/:username/:name'>
+
+                                <Route exact path="/" >
+                                    {
+                                        (getUserData && user) ?
+                                            <Feed socket={socket} setShowLikeUserModal={setShowLikeUserModal} showLikeUserModal={showLikeUserModal} />
+                                            : <Header />
+                                    }
+                                </Route>
+                                <Route exact path="/register">
+                                    {
+                                        (getUserData && user)
+                                            // && ?
+                                            ?
+                                            <Redirect to={"/"} /> :
+                                            <Register />
+                                    }
+                                </Route>
+                                <Route exact path="/login">
+                                    {
+                                        (getUserData && user)
+                                            //  &&
+                                            ? <Redirect to={"/"} /> :
+                                            <Login socket={socket} />
+
+                                    }
+                                </Route>
+                                <Route exact path="/forget" component={Email} />
+                                <Route exact path="/dashboard">
+                                    {
+                                        (getUserData && user) &&
+                                        <Dashboard users={getUserData} socket={socket} />
+                                        // : <Redirect to="/" />
+                                    }
+                                </Route>
+                                <Route exact path='/profile/:username'>
+                                    {
+                                        <ProfileCard
+                                            getUserData={getUserData}
+                                            socket={socket}
+                                            setShowLikeUserModal={setShowLikeUserModal}
+                                            showLikeUserModal={showLikeUserModal} />
+                                    }
+                                </Route>
+
+                                {/* <Route exact path='/profile/:username/:name'>
                                 {
                                     (getUserData && user) ? <ProfileCard getUserData={getUserData} socket={socket} />
                                         : <Redirect to="/login" />
@@ -205,108 +241,110 @@ function App() {
                             </Route> */}
 
 
-                            <Route exact path='/unknownuser'>
-                                {
-                                    <UnknowUser getUserData={getUserData} socket={socket} />
-                                }
-                            </Route>
+                                <Route exact path='/unknownuser'>
+                                    {
+                                        <UnknowUser getUserData={getUserData} socket={socket} />
+                                    }
+                                </Route>
 
-                            <Route exact path="/update_profile">
-                                {
-                                    <UpdateProfile getUserData={getUserData} socket={socket} />
-                                }
-                            </Route>
-                            <Route exact path="/user/posts">
-                                {
-                                    <UserPosts user={getUserData} socket={socket} />
-                                }
-                            </Route>
-                            <Route exact path="/user/photos">
-                                {
-                                    <UserPhotos user={getUserData} socket={socket} />
-                                }
-                            </Route>
-
-
-                            <Route exact path="/user/links">
-                                {
-                                    <UserLink user={getUserData} socket={socket} />
-                                }
-                            </Route>
-
-                            <Route exact path="/load/friends/">
-                                {
-                                    <AllFriends user={getUserData} socket={socket} />
-                                }
-                            </Route>
+                                <Route exact path="/update_profile">
+                                    {
+                                        <UpdateProfile getUserData={getUserData} socket={socket} />
+                                    }
+                                </Route>
+                                <Route exact path="/user/posts">
+                                    {
+                                        <UserPosts user={getUserData} socket={socket} />
+                                    }
+                                </Route>
+                                <Route exact path="/user/photos">
+                                    {
+                                        <UserPhotos user={getUserData} socket={socket} />
+                                    }
+                                </Route>
 
 
+                                <Route exact path="/user/links">
+                                    {
+                                        <UserLink user={getUserData} socket={socket} />
+                                    }
+                                </Route>
 
-                            <Route exact path="/messages">
-                                {/* {
+                                <Route exact path="/load/friends/">
+                                    {
+                                        <AllFriends user={getUserData} socket={socket} />
+                                    }
+                                </Route>
+
+
+
+                                <Route exact path="/messages">
+                                    {/* {
                                     (getUserData && user) ? <Messages user={UserInformationLoad?.googleId} socket={socket} />
                                         : <Redirect to="/login" />
 
                                 } */}
-                                {
-                                    <ChatSection user={UserInformationLoad?.googleId} socket={socket} setSocket={setSocket} />
-                                }
-                            </Route>
+                                    {
+                                        <ChatSection user={UserInformationLoad?.googleId} socket={socket} />
+                                    }
+                                </Route>
 
 
-                            <Route exact path="/all/notification/:id">
-                                {
-                                    <AllNotification user={UserInformationLoad?.googleId} socket={socket} />
-                                }
-                            </Route>
+                                <Route exact path="/all/notification/:id">
+                                    {
+                                        <AllNotification user={UserInformationLoad?.googleId} socket={socket} />
+                                    }
+                                </Route>
 
 
-                            <Route exact path={`/user/single/post/`}>
-                                {
-                                    <UserSinglePost user={UserInformationLoad?.googleId} socket={socket} setShowLikeUserModal={setShowLikeUserModal} showLikeUserModal={showLikeUserModal} />
-                                }
-                            </Route>
+                                <Route exact path={`/user/single/post/`}>
+                                    {
+                                        <UserSinglePost user={UserInformationLoad?.googleId} socket={socket} setShowLikeUserModal={setShowLikeUserModal} showLikeUserModal={showLikeUserModal} />
+                                    }
+                                </Route>
 
 
-                            {/* ==============================================RIGHTSIDE BAR PAGES===================================== */}
-                            <Route exact path="/blog/:name/setting">
-                                {
-                                    <Setting socket={socket} />
-                                }
-                            </Route>
+                                {/* ==============================================RIGHTSIDE BAR PAGES===================================== */}
+                                <Route exact path="/blog/:name/setting">
+                                    {
+                                        <Setting socket={socket} />
+                                    }
+                                </Route>
 
-                            <Route exact path="/blog/:name/bookmark">
-                                {
-                                    <BookMark socket={socket} />
-                                }
-                            </Route>
-
-
-                            <Route exact path="/blog/:name/songs-accessbility">
-                                {
-                                    <Music socket={socket} />
-                                }
-                            </Route>
-                            <Route exact path="/blog/:name/themeMode">
-                                {
-                                    <ThemeMode socket={socket} />
-                                }
-                            </Route>
-
-                            <Route exact path="/blog/:name/news">
-                                {
-                                    <News socket={socket} />
-                                }
-                            </Route>
+                                <Route exact path="/blog/:name/bookmark">
+                                    {
+                                        <BookMark socket={socket} />
+                                    }
+                                </Route>
 
 
+                                <Route exact path="/blog/:name/songs-accessbility">
+                                    {
+                                        <Music socket={socket} />
+                                    }
+                                </Route>
+                                <Route exact path="/blog/:name/themeMode">
+                                    {
+                                        <ThemeMode socket={socket} />
+                                    }
+                                </Route>
 
+                                <Route exact path="/blog/:name/news">
+                                    {
+                                        <News socket={socket} />
+                                    }
+                                </Route>
 
 
 
 
 
-                        </Switch>
+
+
+
+                            </Switch>
+                        </AnimatePresence>
+
                     </div >
 
                     {

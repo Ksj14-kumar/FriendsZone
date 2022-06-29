@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Photos from "../../assets/img/team-2-800x800.jpg"
+import Photos from "../../assets/img/download.png"
 import Image from '@material-tailwind/react/Image'
 import Button from '@material-tailwind/react/Button'
 import { FaFacebookMessenger, FaUserPlus } from "react-icons/fa"
@@ -104,7 +104,11 @@ function ReactUserList({ reactUser }) {
 
                     <div className="user_react_logo flex-[8] flex  items-center cursor-pointer">
                         <div className="image_wrappe  w-[3rem] h-[3rem] rounded-full relative flex-shrink-0">
-                            <Image src={userInfo?.image && userInfo.image} className="w-full h-full flex-shrink-0 rounded-full" rounded={true} />
+                            {
+                                userInfo.image ?
+                                    <Image src={userInfo?.image && userInfo.image} className="w-full h-full flex-shrink-0 rounded-full" rounded={true} /> :
+                                    <Image src={Photos} className="w-full h-full flex-shrink-0 rounded-full" rounded={true} />
+                            }
                             <p className='absolute top-[1.5rem] text-[1rem] -right-[3px] rounded-full bg-blue-400 text-[#fff] p-1'>
                                 <HiThumbUp />
                             </p>
@@ -118,48 +122,48 @@ function ReactUserList({ reactUser }) {
                     {
                         userInfo.isFriends === false ?
                             (
-                                UserInformationLoad?.googleId !== reactUser ? 
-                                (<div className="send_request">
-                                    <Button
-                                        color="purple"
-                                        buttonType="filled"
-                                        size="sm"
-                                        rounded={false}
-                                        block={false}
-                                        iconOnly={false}
-                                        // disabled={}
-                                        ripple="light"
-                                        className="normal-case tracking-wider font-light text-lg mds-editor28:py-1 mds-editor28:px-3"
-                                        onClick={
-                                            () => {
-                                                sendFriendRequest(userInfo.name.split(" ")[0], userInfo.name.split(" ")[1], reactUser, userInfo?.image, connectMessage)
-                                                setConnectMessage(!connectMessage)
-                                            }
-                                        }
-                                    >
-                                        <Icon name={<FaUserPlus className='text-[1.3rem]' />} className="mr-2" />
-                                        {
-                                            connectMessage ? "Request Sent" : "Connect"
-                                        }
-                                    </Button>
-                                </div>) :
-                                 (
-                                    <NavLink to={`${UserInformationLoad?.googleId !== reactUser ? `/messages?q=${reactUser}` : ""}`}>
+                                UserInformationLoad?.googleId !== reactUser ?
+                                    (<div className="send_request">
                                         <Button
-                                            color="lightBlue"
+                                            color="purple"
                                             buttonType="filled"
                                             size="sm"
                                             rounded={false}
                                             block={false}
                                             iconOnly={false}
+                                            // disabled={}
                                             ripple="light"
                                             className="normal-case tracking-wider font-light text-lg mds-editor28:py-1 mds-editor28:px-3"
+                                            onClick={
+                                                () => {
+                                                    sendFriendRequest(userInfo.name.split(" ")[0], userInfo.name.split(" ")[1], reactUser, userInfo?.image, connectMessage)
+                                                    setConnectMessage(!connectMessage)
+                                                }
+                                            }
                                         >
-                                            <Icon name={<FaFacebookMessenger />} className="mr-2" />
-                                            Message
+                                            <Icon name={<FaUserPlus className='text-[1.3rem]' />} className="mr-2" />
+                                            {
+                                                connectMessage ? "Request Sent" : "Connect"
+                                            }
                                         </Button>
-                                    </NavLink>
-                                )
+                                    </div>) :
+                                    (
+                                        <NavLink to={`${UserInformationLoad?.googleId !== reactUser ? `/messages?q=${reactUser}` : ""}`}>
+                                            <Button
+                                                color="lightBlue"
+                                                buttonType="filled"
+                                                size="sm"
+                                                rounded={false}
+                                                block={false}
+                                                iconOnly={false}
+                                                ripple="light"
+                                                className="normal-case tracking-wider font-light text-lg mds-editor28:py-1 mds-editor28:px-3"
+                                            >
+                                                <Icon name={<FaFacebookMessenger />} className="mr-2" />
+                                                Message
+                                            </Button>
+                                        </NavLink>
+                                    )
                             ) :
                             (
                                 <div className="message">

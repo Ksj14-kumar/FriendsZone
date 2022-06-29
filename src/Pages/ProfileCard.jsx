@@ -47,8 +47,14 @@ export default function ProfileCard(props) {
 
     })
     const UserInformationLoad = useSelector((state) => {
+        console.log(state)
         return state.UserInformationLoad.value
     })
+
+    const BgImage = useSelector((state) => {
+        return state.ShowImageBackground.value
+    })
+
 
     // const DispatchProfileImage = useSelector((state) => {
     //     return state.ShowImage
@@ -111,6 +117,8 @@ export default function ProfileCard(props) {
     // useEffect(() => {
     async function sendFriendRequest() {
         try {
+
+            // props.socket?.emit("sendFriendRequest", { senderURL, senderName: fname + " " + lname, anotherUserId: usernameId, currentUser: googleId, receiverUrl: userInfo.ProfileURL })
             const sendFriendRequestResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/sendfriendrequest/`, {
                 method: "POST",
                 body: JSON.stringify({
@@ -224,27 +232,37 @@ export default function ProfileCard(props) {
 
     useEffect(() => {
         async function f1() {
-            const res = await fetch(userInfo?.BgURL)
-
-            const blob = await res.blob()
-            const bgURL = URL.createObjectURL(blob)
-            setLocalBackgroundURL(bgURL)
+            if (userInfo?.BgURL) {
+                const res = await fetch(userInfo.BgURL)
+                const blob = await res.blob()
+                const bgURL = URL.createObjectURL(blob)
+                setLocalBackgroundURL(bgURL)
+            }
+            else {
+                setLocalBackgroundURL("")
+            }
         }
         f1()
     }, [usernameId, setLocalProfileURL, userInfo?.BgURL])
 
     useEffect(() => {
         async function f1() {
-            const res1 = await fetch(userInfo?.ProfileURL)
-            const blobP = await res1.blob()
-            const PURL = URL.createObjectURL(blobP)
-            setLocalProfileURL(PURL)
+            if (userInfo?.ProfileURL) {
+                const res1 = await fetch(userInfo.ProfileURL)
+                const blobP = await res1.blob()
+                const PURL = URL.createObjectURL(blobP)
+                setLocalProfileURL(PURL)
+            }
+            else {
+                setLocalProfileURL("")
+            }
         }
         f1()
+
     }, [usernameId, setLocalProfileURL, userInfo?.ProfileURL])
 
 
-    console.log({ userInfo })
+
 
     return (
 
@@ -252,8 +270,7 @@ export default function ProfileCard(props) {
             {/* <div className='con'> */}
             {/* <AdminNavbar /> */}
             <div className="make_two_section md:flex md:justify-between relative">
-                {/* md:ml-[.5rem] */}
-                {/* md:mr-[22rem] md:w-[81rem] md:ml-[0rem] */}
+
                 <div className="profile_card-container  w-full">
                     <div className="profile_wrapper flex  flex-col items-center">
 
@@ -261,7 +278,7 @@ export default function ProfileCard(props) {
                             <div className="bg-profile-background bg-cover bg-center absolute top-[3.7rem] w-full h-full flex flex-shrink-0  ">
                                 {
                                     loadUserProfileInfo ? <div
-                                        // src={userInfo.BgURL}
+                                        src={BgImage}
                                         className="w-full h-full rounded-t-none bg-[#b9b8b8b5] animate-pulse rounded-b-sm"
                                         rounded={false}
                                         raised={false}
@@ -535,7 +552,7 @@ export default function ProfileCard(props) {
 
                     </div>
 
-                    <UserFeed PostWhichUserSelectedImageORVideo={Object.keys(userInfo).length > 0 && userInfo.getUserPost} socket={props.socket} threeDot={Object.keys(userInfo).length > 0 && userInfo.ShowDot} />
+                    <UserFeed PostWhichUserSelectedImageORVideo={Object.keys(userInfo).length > 0 && userInfo.getUserPost} socket={props.socket} threeDot={Object.keys(userInfo).length > 0 && userInfo.ShowDot} setShowLikeUserModal={props.setShowLikeUserModal} showLikeUserModal={props.showLikeUserModal} />
 
 
 

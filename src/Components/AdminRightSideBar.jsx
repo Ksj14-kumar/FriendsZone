@@ -15,7 +15,7 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout }) {
         return state.UserInformationLoad.value
     })
 
-    const fullName = UserInformationLoad?.fname + " " + UserInformationLoad.lname
+    const fullName = UserInformationLoad?.fname + " " + UserInformationLoad?.lname
 
 
 

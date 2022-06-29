@@ -51,7 +51,7 @@ function useOutsideAlerter(ref, setTextAreaValue, dispatch, setUrlOfImageUpload,
         };
     }, [ref, setPostLoader]);
 }
-function AddPost() {
+function AddPost({ setAllPosts, socket }) {
     //all state start
     const wrapperref = React.useRef()
     const [showModal, setShowModalCode] = React.useState(false);
@@ -270,7 +270,9 @@ function AddPost() {
             setDisabledVideo(true)
             setPostLoader(true)
             setDisabledGroup(true)
-            const SaveUserPostIntoDb = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/local/url/`, {
+            // /api/v1/_user/single/post/
+            // local/url/
+            const SaveUserPostIntoDb = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/api/v1/_user/single/post/`, {
                 method: "POST",
                 signal: signal,
                 body: JSON.stringify({
@@ -308,10 +310,28 @@ function AddPost() {
                 setTextAreaValue("")
                 setFileType("")
                 setTextAreaValue("")
-                dispatch({
-                    type: "LOAD_POSTS",
-                    payload: SaveUserPostIntoDbJson.data
+                setPost("")
+
+                //==========================================SEND ALL POSTS USING REDUX =================
+                // dispatch({
+                //     type: "LOAD_POSTS",
+                //     payload: SaveUserPostIntoDbJson.data
+                // })
+
+                //SEND POST USING SOCKET.IO 
+                // if (socket.connected) {
+                //     // SaveUserPostIntoDbJson.data
+
+                //     socket?.emit("Send_Posts", SaveUserPostIntoDbJson.data)
+                // }
+                // else {
+                setAllPosts((prev) => {
+
+                    return prev ? [SaveUserPostIntoDbJson.data, ...prev] : [SaveUserPostIntoDbJson.data]
                 })
+                // }
+
+
                 // window.location.reload()
 
 
@@ -324,20 +344,22 @@ function AddPost() {
                 setDisabledText(false)
                 setDisabledVideo(false)
                 setPostLoader(false)
+                setPost("")
             }
             else if (SaveUserPostIntoDb.status !== 200 && SaveUserPostIntoDb.status !== 500) {
+                setPost("")
                 // Error({ message: "This Post is Already exit.." })
 
-                inputFileRef.current.value = ""
-                videoRef.current.value = ""
-                textRef.current.value = ""
-                photosRef.current.value = ""
-                setTextAreaValue("")
-                setPostLoader(false)
-                setFile(inputFileRef.current.value)
-                setFile(photosRef.current.value)
-                setFile(videoRef.current.value)
-                setFile(textRef.current.value)
+                // inputFileRef.current.value = ""
+                // videoRef.current.value = ""
+                // textRef.current.value = ""
+                // photosRef.current.value = ""
+                // setTextAreaValue("")
+                // setPostLoader(false)
+                // setFile(inputFileRef.current.value)
+                // setFile(photosRef.current.value)
+                // setFile(videoRef.current.value)
+                // setFile(textRef.current.value)
                 setDisabledGroup(false)
                 setDisabledPhotos(false)
 
@@ -371,7 +393,7 @@ function AddPost() {
             controller.abort()
 
         }
-    }, [showModalPhoto, showModal, showModalVideo, showModalText,dispatch])
+    }, [showModalPhoto, showModal, showModalVideo, showModalText, dispatch])
     //============================================MODAL FOR Photos===================
     return (
         <>
@@ -385,7 +407,7 @@ function AddPost() {
                         </div>
                         <div className="inner-body  flex mds-editor7:-ml-[.5rem] ">
                             {/* d9d9d9 */}
-                            <div className={`card-post-image bg-[#d9d9d9] w-[4rem] h-[4rem] rounded-full flex-shrink-0 mds-editor7:w-[3rem] mds-editor7:h-[3rem] ${loader && "animate-pulse"}`}>
+                            <div className={`card-post-image bg-[#d9d9d9] w-[4rem] h-[4rem] rounded-full flex-shrink-0 mds-editor7:w-[3rem] mds-editor7:h-[3rem] ${loader ? "animate-pulse" : ""}`}>
                                 {
 
                                     DispatchProfileImage !== "" ? <Image

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import UserFeed from '../Components/UserFeed/UserFeed'
+import { motion } from "framer-motion"
 
-
-function Feed({ socket,setShowLikeUserModal,showLikeUserModal  }) {
+function Feed({ socket, setShowLikeUserModal, showLikeUserModal }) {
     const dispatch = useDispatch()
     const [AllUser, setAllUser] = useState([])
     const [suggestionFriends, setSuggestionFriends] = useState([])
@@ -83,13 +83,27 @@ function Feed({ socket,setShowLikeUserModal,showLikeUserModal  }) {
     }, [])
 
 
+
+
+
+
+
     async function FilterUser(id) {
         setAllUser(AllUser.filter(user => user._id !== id))
     }
 
     return (
-        <UserFeed PostWhichUserSelectedImageORVideo={PostWhichUserSelectedImageORVideo} socket={socket} AllUser={suggestionFriends} FilterUser={FilterUser} showLikeUserModal={showLikeUserModal} setShowLikeUserModal={setShowLikeUserModal} />
+        <>
+            {/* <motion.div className="animat"
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ ease: "easeInOut", delay: .1 }}
+            > */}
 
+            <UserFeed PostWhichUserSelectedImageORVideo={PostWhichUserSelectedImageORVideo} socket={socket} AllUser={suggestionFriends} FilterUser={FilterUser} showLikeUserModal={showLikeUserModal} setShowLikeUserModal={setShowLikeUserModal} />
+            {/* </motion.div> */}
+
+        </>
     )
 }
 

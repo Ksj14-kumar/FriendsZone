@@ -53,7 +53,7 @@ import GroupMessageBox from "../Components/ChatSectionComponent/GroupMessageBox"
 
 
 
-function ChatSection({ user, socket, setSocket }) {
+function ChatSection({ user, socket }) {
   const [bool, setBool] = useState(false)
   const [overlayObject, setOverlayObject] = useState({ url: "", type: "", bool: false })
 
@@ -154,7 +154,6 @@ function ChatSection({ user, socket, setSocket }) {
 
 
   useEffect(() => {
-    // setSocket(io.connect("ws://localhost:5000/"))
     socket?.on('getMessage', (message) => {
       console.log({ message })
       setArrivalMessages(message)
