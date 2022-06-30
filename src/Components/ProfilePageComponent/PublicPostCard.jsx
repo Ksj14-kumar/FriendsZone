@@ -79,7 +79,7 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal, s
       }
     }
     loadPosts()
-  }, [dispatch])
+  }, [])
 
   useEffect(() => {
     async function totalComment() {
@@ -103,7 +103,7 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal, s
       }
     }
     totalComment()
-  }, [dispatch, _id])
+  }, [ _id])
 
 
 
@@ -129,7 +129,7 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal, s
       }
     }
     loadNotification()
-  }, [dispatch, _id])
+  }, [ _id])
 
 
 
@@ -170,7 +170,7 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal, s
     }
     userInfoLoad()
 
-  }, [dispatch])
+  }, [])
 
 
 
@@ -221,7 +221,7 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal, s
 
     }
     BackgroundImage()
-  }, [dispatch])
+  }, [])
 
 
   //====================LOAD PROFILE IMAGES fromc cloudinary=============
@@ -270,7 +270,7 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal, s
       }
     }
     ProfileImages()
-  }, [dispatch])
+  }, [])
 
   useEffect(() => {
     console.log("load the post length useEffect 7")

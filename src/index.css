@@ -1477,7 +1477,42 @@ border-top-radius:0;
 
 
 
+#allNotification::-webkit-scrollbar{
+    width:.7rem;
+    background-color:#dbdbdb;
+}
+#allNotification::-webkit-scrollbar-track{
+    width:inherit;
+    background-color:#dbdbdb;
+}
 
+#allNotification::-webkit-scrollbar-thumb{
+    width:.1rem;
+    padding:0 .5rem;
+    border-radius:2px;
+    border:1.5px solid #2D46B9;
+    outline-offset:3px;
+    background-color:#1e3163;
+}
+
+
+#friendsNoti::-webkit-scrollbar{
+    width:.7rem;
+    background-color:#dbdbdb;
+}
+#friendsNoti::-webkit-scrollbar-track{
+    width:inherit;
+    background-color:#dbdbdb;
+}
+
+#friendsNoti::-webkit-scrollbar-thumb{
+    width:.1rem;
+    padding:0 .5rem;
+    border-radius:2px;
+    border:1.5px solid #2D46B9;
+    outline-offset:3px;
+    background-color:#1e3163;
+}
 
 
 

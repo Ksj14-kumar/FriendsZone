@@ -70,7 +70,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     const [acceptRequest, setAcceptRequest] = useState(false)
     const [receivedRequest, setReceivedRequest] = useState([])
     const [friendModalNotification, setFriendModalNotification] = useState(false)
-    const [AllNotificationSet,setAllNotification]= useState([])
+    const [AllNotificationSet, setAllNotification] = useState([])
 
 
     const dispatch = useDispatch()
@@ -107,7 +107,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         return state.UserInformationLoad.value
     })
 
-    const { receiverrequest, AllNotification    } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "", senderrequest: [], receiverrequest: [],AllNotification:[] }
+    const { receiverrequest, AllNotification } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "", senderrequest: [], receiverrequest: [], AllNotification: [] }
 
 
 
@@ -119,8 +119,23 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
 
     useEffect(() => {
         setReceivedRequest(receiverrequest?.length === 0 ? [] : receiverrequest)
-        setAllNotification(AllNotification?.length===0?[]:AllNotification)
+
+
+        setAllNotification(AllNotification?.length === 0 ? [] : AllNotification?.sort((a, b) => {
+            return b.time - a.time
+        }))
     }, [UserInformationLoad])
+
+
+    useEffect(() => {
+        console.log({ AllNotificationSet })
+        socket?.off("getNotificationAllType")?.on("getNotificationAllType", (data) => {
+            console.log(data)
+            AllNotificationSet !== undefined && setAllNotification([data, ...AllNotificationSet])
+        }
+        )
+
+    }, [socket])
 
     //profile image uploader
     function imageUploadHandler(e) {
@@ -712,7 +727,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                     <section className='friends  flex  ml-[1rem] -mr-[1.5rem]  relative     align-middle mt-[4px] justify-center '
                                         ref={clickOutSideFriendsNoti}
                                         onClick={() => {
-                                            setFriendModalNotification(true)
+                                            setFriendModalNotification(!friendModalNotification)
                                         }}>
                                         <FaUserFriends className='text-[2rem] self-center text-[#270082] cursor-pointer' />
                                         <article className='  absolute right-2 -top-2 mds-editor8:-top-3 cursor-pointer'>
@@ -738,20 +753,23 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
 
 
                                     <section className='notification  flex  ml-[3rem]  relative  align-middle mt-[4px] justify-center'
-                                        onClick={() => setShowNotification(true)}
+                                        onClick={() => setShowNotification(!showNotification)}
                                         ref={AllTypeNitification}
                                     >
                                         <MdNotifications className='text-[2rem] self-center text-[#270082] cursor-pointer' />
                                         <article className=' bg-red-500 absolute right-2 -top-2 mds-editor8:-top-3 cursor-pointer'>
                                             {
-                                                <Badge badgeContent={AllNotificationSet?.length} showZero color="secondary" max={20}>
+                                                <Badge badgeContent={AllNotificationSet?.length && AllNotificationSet.filter((item) => {
+                                                    return item.read === false
+                                                }).length
+                                                } color="secondary" max={20}>
                                                 </Badge>
                                             }
                                         </article>
                                         <AnimatePresence>
                                             {
                                                 showNotification &&
-                                                <AllTypeOfNotificationAdminNavbar AllNotification={AllNotificationSet}/>
+                                                <AllTypeOfNotificationAdminNavbar AllNotification={AllNotificationSet} setAllNotification={setAllNotification} />
                                             }
                                         </AnimatePresence>
                                     </section>

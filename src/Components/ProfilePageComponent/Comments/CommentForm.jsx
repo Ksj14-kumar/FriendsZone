@@ -41,7 +41,6 @@ const CommentForm = ({
     const isTextareaDisabled = text.length === 0;  // if text is empty, disable textarea
 
     const onSubmitHandler = (e) => {
-        console.log("hello")
         e.preventDefault()
         textRef.current.focus()
         if (text.length > 0) {

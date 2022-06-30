@@ -6,23 +6,15 @@ import { motion } from "framer-motion"
 function FriendsNotification({ receivedRequest, AcceptFriendRequest, DeleteFriendRequest, messageAftetAcceptRequest }) {
 
 
-
-
-
-
-
-
-
-
-
     return (
-        <motion.div className="group_friends_modal_Notification fixed bg-[#ffffff] w-[27rem] top-[4rem] right-[5rem] rounded-md drop-shadow-xl p-4 px-2 pt-2"
+        <motion.div className={`group_friends_modal_Notification fixed bg-[#ffffff] w-[27rem] mds-editor36:w-[19rem]  top-[4rem] right-[1rem] rounded-md drop-shadow-xl p-4 px-2 pt-2 ${receivedRequest.length > 5 ? "max-h-[27rem]" : "rounded-md"} overflow-x-hidden overflow-y-auto`}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
+            id="friendsNoti"
         >
-            <header className='py-2  w-full rounded-md px-1 text-[1.2rem] font-serif tracking-wider truncate'>Friend Notifications</header>
+            <header className='py-2  w-full rounded-md px-1 text-[1.2rem] font-serif tracking-wider truncate select-none'>Friend Notifications</header>
             <hr className='mb-1 bg-[#ececec]' />
             <main className="body">
                 {

@@ -43,21 +43,24 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
 
     //this is Old Method
     // const comment = await createCommentApi(text, parentId, UserIdForPostComments, currentUserId, currentUserName, ImageUrl, post_id)
-    const comment = await createCommentApi(value, parentId, UserIdForPostComments, currentUserId, currentUserName, ImageUrl, post_id)
-    console.log({ comment })
+
     // return
+    console.log(socket.connected)
     try {
+      const comment = await createCommentApi(value, parentId, UserIdForPostComments, currentUserId, currentUserName, ImageUrl, post_id)
+      console.log({ comment })
       if (socket.connected) {
+        console.log(socket.connected)
+        socket.emit("sendNotificationAllType", { comment, commentBy: currentUserId, parentId, replyParentId })
         socket?.emit("sendComment", { comment: [comment, ...backendComments], post_id })
         socket?.emit("commentLength", { post_id, commentLength: [comment, ...backendComments,].length })
+
         socket?.off("getComments").on("getComments", (data) => {
           if (data.post_id === post_id) {
-            console.log("comments", { data })
-            console.log({ backendComments })
-            // [data.comment, ...backendComments,]
             setBackendComments(data.comment)
           }
         })
+
         await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/post/comment/save/`, {
           method: "POST",
           body: JSON.stringify({ comment, uuid: localStorage.getItem('uuid') }),

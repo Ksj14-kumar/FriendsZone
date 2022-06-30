@@ -46,22 +46,15 @@ const object = {
     },
     transports: ["websocket", "polling"],
     autoConnect: true,
-    reconnection: false,
-
+    reconnection: true,
     // reconnectionAttempts: "Infinity",
-    // reconnectionDelay: 1000,
-    // reconnectionDelayMax: 5000,
+    reconnectionDelay: 1000,
+    reconnectionDelayMax: 5000,
     // pingTimeout: 5000,
     // pingInterval: 5000,
 }
-
-
 // const socket = io(process.env.REACT_APP_API_BACKENDURL, object)
-
-
 export const Context = createContext()
-
-
 
 function App() {
     const [userData, setUserData] = React.useState(null)

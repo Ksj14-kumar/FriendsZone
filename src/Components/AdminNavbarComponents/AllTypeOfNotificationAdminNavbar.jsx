@@ -5,17 +5,43 @@ import { NavLink } from "react-router-dom"
 import Photos from "../../assets/img/download.png"
 import { HiThumbUp } from "react-icons/hi"
 import { FaCommentAlt } from "react-icons/fa"
-function AllTypeOfNotificationAdminNavbar({ AllNotification }) {
+import Axios from 'axios'
+function AllTypeOfNotificationAdminNavbar({ AllNotification, setAllNotification }) {
+
+
+    useEffect(() => {
+        async function changeReadReadNotification() {
+            console.log("changeReadReadNotification")
+            try {
+                const value = await Axios({
+                    url: `${process.env.REACT_APP_API_BACKENDURL}/blob/api/v1/_user/notifications/all/type`,
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("uuid"),
+                    }
+                })
+                setAllNotification(value.data.value?.sort((a, b) => {
+                    return b.time - a.time
+                }))
+            }
+            catch (err) {
+
+            }
+        }
+        changeReadReadNotification()
+    }, [])
     return (
-        <motion.div className="group_friends_modal_Notification fixed bg-[#ffffff] md:w-[23rem] w-[26rem] mds-editor36:w-[20rem] mds-editor36:right-[.5rem] top-[4rem] right-[2rem] rounded-md drop-shadow-xl p-4 px-2 pt-2"
+        <motion.div className={`group_friends_modal_Notification fixed bg-[#ffffff] md:w-[23rem] w-[26rem] mds-editor36:w-[20rem] mds-editor36:right-[.5rem] top-[4rem] md:top-[4rem] right-[2rem] rounded-md drop-shadow-xl p-4 px-0 pt-2 overflow-x-hidden z-[20] ${AllNotification.length > 5 ? "max-h-[27rem]" : "rounded-md"} overflow-y-auto overflow-x-hidden`}
             initial={{ opacity: 0, y: -10 }
             }
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
+            id="allNotification"
         >
             <header className='py-2  w-full rounded-md px-1 text-[1.2rem] font-serif tracking-wider truncate'>Notifications</header>
-            <hr className={`bg-[#e9e9e9] ${AllNoti?.length ? "hidden" : "flex"}`} />
+            <hr className={`bg-[#e9e9e9] ${AllNotification?.length ? "hidden" : "flex"}`} />
             <main className="body mt-2">
                 {AllNotification.map((notification, index) => {
                     return (
@@ -34,11 +60,10 @@ export default AllTypeOfNotificationAdminNavbar;
 
 
 function AllNoti({ notification }) {
-    console.log({ notification })
     const [blobPost, setPostImage] = useState("")
     const [loading, setLoading] = useState(false)
-
-
+    const [blobURL, setBlobUrl] = useState("")
+    const [profileImageLoading, setProfileImageLoading] = useState(false)
 
     useEffect(() => {
         async function loadPostImage() {
@@ -66,6 +91,26 @@ function AllNoti({ notification }) {
         }
         loadPostImage()
     }, [notification])
+
+
+    useEffect(() => {
+        async function loadProfileImage() {
+            try {
+                if (notification.userPorfile) {
+                    setProfileImageLoading(true)
+                    const res = await fetch(notification.userPorfile)
+                    const blob = await res.blob()
+                    setBlobUrl(URL.createObjectURL(blob))
+                    setProfileImageLoading(false)
+                }
+            }
+            catch (err) {
+                // console.log(err)
+            }
+        }
+        loadProfileImage()
+    }, [notification])
+
     return (
         <>
             {
@@ -73,7 +118,7 @@ function AllNoti({ notification }) {
                     (
                         <>
                             <hr className="bg-[#dfdede]" />
-                            <div className="like_wrapper flex justify-evenly mt-1">
+                            <div className="like_wrapper flex justify-evenly mt-1 px-2 py-1">
                                 <NavLink to={`/profile/${notification.userLikedId}`}>
                                     <div className="Image_wrapper flex-shrink-0 w-[2.6rem] h-[2.6rem]">
                                         {
@@ -125,40 +170,58 @@ function AllNoti({ notification }) {
                             (
 
                                 <NavLink to={`${notification.post_url}`}>
-                                    <hr className="bg-[#dfdede]" />
+                                    <hr className="bg-[#c5c3c3]" />
 
-                                    <div className="comment_wrapper mb-2 flex w-full mt-1">
-                                        <div className="container02 flex items-center justify-evenly  w-full">
-                                            {notification.UserProfile ? <Image
-                                                src={notification.UserProfile}
-                                                rounded={true}
-                                                className="rounded-full flex-shrink-0 w-[2.6rem] h-[2.6rem]"
-                                            /> :
-                                                <Image
-                                                    src={Photos}
+                                    <div className={`comment_wrapper mb-0 flex w-full mt-1  px-2 py-1 ${notification.read === false && "bg-[#d5d5d5]"}`}>
+                                        <div className="container02 flex justify-between  w-full">
+                                            <div className="image flex flex-[2]  flex-shrink-0">
+
+                                                {notification.UserProfile ? <Image
+                                                    src={notification.userPorfile}
                                                     rounded={true}
                                                     className="rounded-full flex-shrink-0 w-[2.6rem] h-[2.6rem]"
-                                                />
-                                            }
-                                            <p className={`md:flex items-center  flex-wrap px-2 justify-center ${notification.body ? "flex-col" : "flex"}`}>
-                                                <span className="text-[1rem] font-serif tracking-wider md:flex  mr-2 font-semibold mds-editor36:text-[1rem]">{notification.name}</span>
-                                                <p className="md:text-[1rem] text-[1rem]  mb-1 flex justify-center">{notification.body}</p>
+                                                /> :
+                                                    <Image
+                                                        src={Photos}
+                                                        rounded={true}
+                                                        className="rounded-full flex-shrink-0 w-[2.6rem] h-[2.6rem]"
+                                                    />
+                                                }
+                                            </div>
+                                            <p className={`md:flex items-center  flex-[6] flex-wrap px-2 justify-center ${notification.body ? "flex-col" : "flex"}`}>
+                                                <span className="text-[1rem] font-serif tracking-wider md:flex  mr-2 font-semibold mds-editor36:text-[1rem] flex justify-center">{notification.name}</span>
+                                                <p className="md:text-[1rem] text-[1rem]  mb-1 flex justify-center">
+                                                    {notification.messageType === "text" ? (notification.body?.length > 20 ? notification.body.substring(0, 21) + "..." : notification.body) : (
+                                                        notification.messageType === "gif" &&
+                                                        <>
+                                                            <Image
+                                                                src={notification.body}
+                                                                rounded={true}
+                                                                className="rounded-md flex-shrink-0 w-full"
+                                                            />
+                                                        </>
+                                                    )
+                                                    }
+                                                </p>
                                                 <p className="text-[1rem] font-serif  tracking-wider break-all mds-editor36:text-[.9rem]">Comment your post</p>
                                             </p>
-                                            <div className="icons flex items-center justify-center w-[3rem]">
-                                                <FaCommentAlt className="text-[1.5rem] text-[#0e1178] mr-[1px]" />
-                                            </div>
-                                            <div className="post_image_  flex-shrink-0 ">
-                                                {loading ?
-                                                    <>
-                                                        <div className="w-[2.9rem] h-[2.9rem] bg-[#dfdfdf] animate-pulse">
-                                                        </div>
-                                                    </> :
-                                                    <Image
-                                                        src={blobPost}
-                                                        rounded={false}
-                                                        className="flex-shrink-0 w-[2.9rem] h-[2.9rem]"
-                                                    />}
+                                            <div className="icons_wrappe flex items-center flex-[2] justify-end mr-[3px]">
+
+                                                <div className="icons flex items-center justify-center w-[2rem]">
+                                                    <FaCommentAlt className="text-[1.5rem] text-[#0e1178] mr-[1px]" />
+                                                </div>
+                                                <div className="post_image_  flex-shrink-0 ">
+                                                    {loading ?
+                                                        <>
+                                                            <div className="w-[2.9rem] h-[2.9rem] bg-[#dfdfdf] animate-pulse">
+                                                            </div>
+                                                        </> :
+                                                        <Image
+                                                            src={blobPost}
+                                                            rounded={false}
+                                                            className="flex-shrink-0 w-[2.9rem] h-[2.9rem]"
+                                                        />}
+                                                </div>
                                             </div>
                                         </div>
 
@@ -169,39 +232,46 @@ function AllNoti({ notification }) {
                             ) :
                             (
                                 <NavLink to={`${notification.post_url}`}>
-                                    <hr className="bg-[#fff]" />
-                                    <div className="comment_wrapper mb-2 flex mt-1">
-                                        <div className="container0 flex  justify-evenly">
-                                            {notification.UserProfile ? <Image
-                                                src={notification.UserProfile}
-                                                rounded={true}
-                                                className="rounded-full flex-shrink-0 w-[2.6rem] h-[2.6rem]"
-                                            /> :
-                                                <Image
-                                                    src={Photos}
+                                    <hr className="bg-[#dfdede]" />
+
+                                    <div className={`comment_wrapper mb-0 flex w-full mt-1  px-2 py-1 ${notification.read === false && "bg-[#c5c3c3]"}`}>
+                                        <div className="container02 flex justify-between  w-full">
+                                            <div className="image flex flex-[2]  flex-shrink-0">
+
+                                                {notification.UserProfile ? <Image
+                                                    src={notification.userPorfile}
                                                     rounded={true}
                                                     className="rounded-full flex-shrink-0 w-[2.6rem] h-[2.6rem]"
-                                                />
-                                            }
-                                            <p className={`md:flex items-center  flex-wrap px-2 justify-center ${notification.body ? "flex-col" : "flex"}`}>
-                                                <span className='text-[1rem] font-serif tracking-wider md:flex  mr-2 font-semibold mds-editor36:text-[1rem]'>{notification.name}</span>
-                                                <p className="md:text-[1rem] text-[1rem] mb-1 flex justify-center break-all">{notification.body}</p>
-                                                <p className="text-[1rem] font-serif  tracking-wider break-all mds-editor36:text-[.9rem]">reply your comment on post</p>
-                                            </p>
-                                            <div className="icons flex  justify-center w-[3rem] mr-[1px]">
-                                                <FaCommentAlt className=" text-[1.5rem] text-[#0e1178]" />
-                                            </div>
-                                            <div className="post_image_  flex flex-shrink-0">
-                                                {loading ?
-                                                    <>
-                                                        <div className="w-[2.9rem] h-[2.9rem] bg-[#dfdfdf] animate-pulse">
-                                                        </div>
-                                                    </> :
+                                                /> :
                                                     <Image
-                                                        src={blobPost}
-                                                        rounded={false}
-                                                        className="flex-shrink-0 w-[2.9rem] h-[2.9rem]"
-                                                    />}
+                                                        src={Photos}
+                                                        rounded={true}
+                                                        className="rounded-full flex-shrink-0 w-[2.6rem] h-[2.6rem]"
+                                                    />
+                                                }
+                                            </div>
+                                            <p className={`md:flex items-center  flex-[6] flex-wrap px-2 justify-center ${notification.body ? "flex-col" : "flex"}`}>
+                                                <span className="text-[1rem] font-serif tracking-wider md:flex  mr-2 font-semibold mds-editor36:text-[1rem] flex justify-center">{notification.name}</span>
+                                                <p className="md:text-[1rem] text-[1rem]  mb-1 flex justify-center">{notification.body?.length > 20 ? notification.body.substring(0, 21) + "..." : notification.body}</p>
+                                                <p className="text-[1rem] font-serif  tracking-wider break-all mds-editor36:text-[.9rem]">reply your comment</p>
+                                            </p>
+                                            <div className="icons_wrappe flex items-center flex-[2] justify-end mr-[3px]">
+
+                                                <div className="icons flex items-center justify-center w-[2rem]">
+                                                    <FaCommentAlt className="text-[1.5rem] text-[#0e1178] mr-[1px]" />
+                                                </div>
+                                                <div className="post_image_  flex-shrink-0 ">
+                                                    {loading ?
+                                                        <>
+                                                            <div className="w-[2.9rem] h-[2.9rem] bg-[#dfdfdf] animate-pulse">
+                                                            </div>
+                                                        </> :
+                                                        <Image
+                                                            src={blobPost}
+                                                            rounded={false}
+                                                            className="flex-shrink-0 w-[2.9rem] h-[2.9rem]"
+                                                        />}
+                                                </div>
                                             </div>
                                         </div>
 
