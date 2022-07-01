@@ -1,27 +1,44 @@
 import Button from '@material-tailwind/react/Button';
 import Image from '@material-tailwind/react/Image';
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import { NavLink } from 'react-router-dom';
 import { motion } from "framer-motion"
-function FriendsNotification({ receivedRequest, AcceptFriendRequest, DeleteFriendRequest, messageAftetAcceptRequest }) {
+import Axios from "axios"
+import Photos from "../../assets/img/download.png"
+function FriendsNotification({ receivedRequest, AcceptFriendRequest, DeleteFriendRequest, messageAftetAcceptRequest, __id__, setReceivedRequest }) {
 
 
+    useEffect(() => {
+        const updateStatus = async () => {
+            const value = await Axios({
+                url: `${process.env.REACT_APP_API_BACKENDURL}/blob//api/v1/_user/notifications/friends/type/${__id__}`,
+                method: "PUT",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("uuid")}`,
+                    "Content-Type": "application/json"
+                }
+            })
+            console.log({ value })
+            setReceivedRequest(value.data.receiverrequest)
+        }
+        updateStatus()
+    }, [])
     return (
-        <motion.div className={`group_friends_modal_Notification fixed bg-[#ffffff] w-[27rem] mds-editor36:w-[19rem]  top-[4rem] right-[1rem] rounded-md drop-shadow-xl p-4 px-2 pt-2 ${receivedRequest.length > 5 ? "max-h-[27rem]" : "rounded-md"} overflow-x-hidden overflow-y-auto`}
+        <motion.div className={`group_friends_modal_Notification fixed bg-[#ffffff] w-[27rem] mds-editor36:w-full  top-[4rem] right-[1rem] mds-editor36:right-0 rounded-md drop-shadow-xl p-4 px-2 pt-2 ${receivedRequest?.length > 5 ? "max-h-[27rem]" : "rounded-md"} overflow-x-hidden overflow-y-auto`}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.1 }}
             id="friendsNoti"
         >
-            <header className='py-2  w-full rounded-md px-1 text-[1.2rem] font-serif tracking-wider truncate select-none'>Friend Notifications</header>
+            <header className='py-2  w-full rounded-md px-1 text-[1.2rem] font-serif tracking-wider truncate select-none mds-editor36:text-center'>Friend Notifications</header>
             <hr className='mb-1 bg-[#ececec]' />
             <main className="body">
                 {
-                    receivedRequest !== undefined ? receivedRequest.map((item) => {
+                    receivedRequest !== undefined ? receivedRequest.map((item, index) => {
                         return (
                             <>
-                                <LoadFriendsNoti item={item} AcceptFriendRequest={AcceptFriendRequest} DeleteFriendRequest={DeleteFriendRequest} />
+                                <LoadFriendsNoti item={item} AcceptFriendRequest={AcceptFriendRequest} DeleteFriendRequest={DeleteFriendRequest} key={index} />
                             </>
                         )
                     }) :
@@ -32,14 +49,20 @@ function FriendsNotification({ receivedRequest, AcceptFriendRequest, DeleteFrien
                 }
 
                 {
-                    messageAftetAcceptRequest.length > 0 && <p className='flex cursor-pointer hover:bg-[#dadada] rounded-md py-1 w-full'>
-                        <NavLink to={`/profile/${messageAftetAcceptRequest[0].senderId}`}>
-
+                    messageAftetAcceptRequest?.length > 0 && <p className='flex cursor-pointer hover:bg-[#dadada] rounded-md py-1 w-full'>
+                        <NavLink to={`/profile/${messageAftetAcceptRequest[0].senderId}`}
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                paddingLeft: "1rem",
+                            }}
+                        >
                             <Image src={messageAftetAcceptRequest[0].url}
                                 rounded={true}
-                                className="md:w-[2.9rem] w-[2rem] md:h-[2.9rem] h-[2rem]"
+                                className="md:w-[2.9rem] w-[2.7rem] md:h-[2.9rem] h-[2.7rem]"
                             />
-                            <p className='ml-1 truncate md:text-[1.4rem] items-center'>
+                            <p className=' truncate md:text-[1.4rem] items-center ml-2'>
                                 <span className='text-[1.1rem] md:text-[1.4rem] font-semibold'>{messageAftetAcceptRequest[0].name}</span> and you, connected
                             </p>
                         </NavLink>
@@ -63,21 +86,32 @@ function LoadFriendsNoti({ item, AcceptFriendRequest, DeleteFriendRequest }) {
     return (
         <>
             <section className={`flex flex-col hover:bg-[#cfcfcf71]  rounded-md py-[.5rem] transition-all duration-100 `}>
-
-
                 <>
                     <div className="image_group flex justify-around">
-                        <div className="center flex justify-center items-center mr-[10px] ml-[6px] truncate">
+                        <div className="center flex justify-center items-center mr-[10px] ml-[6px] truncate py-2">
                             <NavLink to={`/profile/${item._id}`}>
                                 <p className='md:text-[1.2rem] font-bold tracking-wider cursor-pointer truncate'>{item.name}</p>
                             </NavLink>
                             <p className='md:text-[1rem] font-light ml-[.3rem] flex truncate tracking-wider font-serif'>want to connect with you</p>
                         </div>
-                        <NavLink to={`/profile/${item._id}`}>
-                            <div className="left md:w-[2.7rem] w-[2rem] md:h-[2.7rem] h-[2rem] cursor-pointer flex-shrink-0 mr-[8px] ">
-                                <Image src={item.url}
-                                    rounded={true}
-                                />
+                        <NavLink to={`/profile/${item._id}`}
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}
+                        >
+                            <div className="left md:w-[2.7rem] w-[2rem] md:h-[2.7rem] h-[2rem] cursor-pointer flex-shrink-0 mr-[8px]">
+                                {
+                                    item.url ? <Image src={item.url}
+                                        rounded={true}
+                                        className="flex-shrink-0  md:w-[2.7rem] w-[2.7rem] md:h-[2.7rem] h-[2.7rem]"
+                                    /> :
+                                        <Image src={Photos}
+                                            rounded={true}
+                                            className="flex-shrink-0  md:w-[2.7rem] w-[2rem] md:h-[2.7rem] h-[2rem]"
+                                        />
+                                }
                             </div>
                         </NavLink>
                     </div>

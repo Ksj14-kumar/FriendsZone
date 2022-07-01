@@ -9,6 +9,9 @@ import Axios from 'axios'
 function AllTypeOfNotificationAdminNavbar({ AllNotification, setAllNotification }) {
 
 
+
+    console.log({ AllNotification })
+
     useEffect(() => {
         async function changeReadReadNotification() {
             console.log("changeReadReadNotification")
@@ -32,18 +35,18 @@ function AllTypeOfNotificationAdminNavbar({ AllNotification, setAllNotification 
         changeReadReadNotification()
     }, [])
     return (
-        <motion.div className={`group_friends_modal_Notification fixed bg-[#ffffff] md:w-[23rem] w-[26rem] mds-editor36:w-[20rem] mds-editor36:right-[.5rem] top-[4rem] md:top-[4rem] right-[2rem] rounded-md drop-shadow-xl p-4 px-0 pt-2 overflow-x-hidden z-[20] ${AllNotification.length > 5 ? "max-h-[27rem]" : "rounded-md"} overflow-y-auto overflow-x-hidden`}
+        <motion.div className={`group_friends_modal_Notification fixed bg-[#ffffff] md:w-[28rem] w-[26rem] mds-editor36:w-full mds-editor36:right-0 top-[4rem] md:top-[4rem] right-[2rem] rounded-md drop-shadow-xl p-4 px-0 pt-2 overflow-x-hidden z-[20] ${AllNotification?.length > 5 ? "max-h-[32rem]" : "rounded-md"} overflow-y-auto overflow-x-hidden`}
             initial={{ opacity: 0, y: -10 }
             }
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.1 }}
             id="allNotification"
         >
-            <header className='py-2  w-full rounded-md px-1 text-[1.2rem] font-serif tracking-wider truncate'>Notifications</header>
+            <header className='py-2  w-full rounded-md px-1 text-[1.2rem] font-serif tracking-wider truncate mds-editor36:text-center md:pl-2'>Notifications</header>
             <hr className={`bg-[#e9e9e9] ${AllNotification?.length ? "hidden" : "flex"}`} />
             <main className="body mt-2">
-                {AllNotification.map((notification, index) => {
+                {AllNotification?.map((notification, index) => {
                     return (
                         <>
                             <AllNoti notification={notification} key={index} />
@@ -118,7 +121,7 @@ function AllNoti({ notification }) {
                     (
                         <>
                             <hr className="bg-[#dfdede]" />
-                            <div className="like_wrapper flex justify-evenly mt-1 px-2 py-1">
+                            <div className="like_wrapper flex justify-evenly mt-1 px-2 py-1 hover:bg-[#dbdbdb]">
                                 <NavLink to={`/profile/${notification.userLikedId}`}>
                                     <div className="Image_wrapper flex-shrink-0 w-[2.6rem] h-[2.6rem]">
                                         {
@@ -172,7 +175,7 @@ function AllNoti({ notification }) {
                                 <NavLink to={`${notification.post_url}`}>
                                     <hr className="bg-[#c5c3c3]" />
 
-                                    <div className={`comment_wrapper mb-0 flex w-full mt-1  px-2 py-1 ${notification.read === false && "bg-[#d5d5d5]"}`}>
+                                    <div className={`comment_wrapper mb-0 flex w-full mt-1  px-2 py-1 ${notification.read === false && "bg-[#d5d5d5]"} hover:bg-[#dbdbdb]`}>
                                         <div className="container02 flex justify-between  w-full">
                                             <div className="image flex flex-[2]  flex-shrink-0">
 
@@ -234,7 +237,7 @@ function AllNoti({ notification }) {
                                 <NavLink to={`${notification.post_url}`}>
                                     <hr className="bg-[#dfdede]" />
 
-                                    <div className={`comment_wrapper mb-0 flex w-full mt-1  px-2 py-1 ${notification.read === false && "bg-[#c5c3c3]"}`}>
+                                    <div className={`comment_wrapper mb-0 flex w-full mt-1  px-2 py-1 ${notification.read === false && "bg-[#c5c3c3]"} hover:bg-[#dbdbdb]`}>
                                         <div className="container02 flex justify-between  w-full">
                                             <div className="image flex flex-[2]  flex-shrink-0">
 

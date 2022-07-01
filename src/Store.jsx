@@ -22,6 +22,7 @@ import ActiveStatus from "./Redux/Chats/ActiveStatus";
 import BookMark from "./Redux/BookMarkPosts"
 import getPos from "./Redux/GetPosition"
 import OriginalProfileURL from "./Redux/OriginalProfileUrl"
+import UnreadMessageNotification from "./Redux/UnreadMessageNotification"
 
 const rootReducer = combineReducers({
     imageReducer: ImageReducer,
@@ -54,7 +55,8 @@ const rootReducer = combineReducers({
     ActiveStatus,
     getPos,
     BookMark,
-    OriginalProfileURL
+    OriginalProfileURL,
+    UnreadMessageNotification
 
 
 

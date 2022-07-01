@@ -70,11 +70,9 @@ function SelectMultipleImage({ setImageFileSelector, setImageGroupURl, imageGrou
     // console.log(imagelocalUrl)
     return (
         <>
-            <div className="select-multiple-image absolute h-screen w-screen bg-[#4a4949] z-[19] overflow-x-hidden" id="imageSelectOverlay">
+            <div className="select-multiple-image absolute h-screen w-screen bg-[#4a4949] z-[22] overflow-x-hidden" id="imageSelectOverlay">
                 <div className="_inner flex flex-col">
-
                     <div className="  text-white text-[2.2rem] flex justify-end">
-
                         <button
                             onClick={() => {
                                 setImageFileSelector(false)

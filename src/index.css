@@ -920,7 +920,7 @@ height:calc(100vh - 1rem)
 
 @media (max-width: 768px) {
     .chat_section_message_area{
-        height:calc(100vh - 9rem)
+        height:calc(100vh - 0rem)
 
     }
 }
@@ -1516,10 +1516,36 @@ border-top-radius:0;
 
 
 
+#MessagesNotication::-webkit-scrollbar{
+    width:.7rem;
+    background-color:#dbdbdb;
+}
+#MessagesNotication::-webkit-scrollbar-track{
+    width:inherit;
+    background-color:#dbdbdb;
+}
+
+#MessagesNotication::-webkit-scrollbar-thumb{
+    width:.1rem;
+    padding:0 .5rem;
+    border-radius:2px;
+    border:1.5px solid #2D46B9;
+    outline-offset:3px;
+    background-color:#1e3163;
+}
 
 
 
-
+.friend_message{
+background:#3f0364;
+/*g-[#3f0364]  rounded-bl-[0]*/
+border-bottom-left-radius: 0px;
+}
+.my_class_message{
+background:#005555;
+/*bg-[#005555]   rounded-br-[0]*/
+border-bottom-right-radius: 0px;
+}
 
 
 

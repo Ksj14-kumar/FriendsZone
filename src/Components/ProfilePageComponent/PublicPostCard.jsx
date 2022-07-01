@@ -103,7 +103,7 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal, s
       }
     }
     totalComment()
-  }, [ _id])
+  }, [])
 
 
 
@@ -129,7 +129,7 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal, s
       }
     }
     loadNotification()
-  }, [ _id])
+  }, [])
 
 
 
@@ -422,7 +422,29 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal, s
       })
     }
     // AllAPI()
-  }, [_id, dispatch])
+  }, [])
+
+  //get all unread messages for the current user
+  useEffect(() => {
+    const getUnreadMessages = async () => {
+      try {
+
+        const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/load/all/unread/message/${_id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("uuid")
+          }
+        })
+        const data = await res.json()
+        console.log("yunsread message", data)
+        dispatch({ type: "SET_UNREAD_MESSAGES", payload: data.empty })
+      }
+      catch (err) {
+      }
+    }
+    getUnreadMessages()
+  }, [])
 
 
 

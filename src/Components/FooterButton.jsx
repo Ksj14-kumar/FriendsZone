@@ -119,64 +119,34 @@ function FooterButton({ bool, onlinefriends, currentId, socket, NumberOfFriendsO
 
     }
 
-
-    // console.log({ friends, online });
-
-
     //HOW TO HANDLE USER NAME WHEN IT IS LARGE CHARACTER
 
     return (
         <>
-            {/* gray-200 */}
-            <motion.main className="main border-1 border-solid border-gray-200 "
-            // initial={{ opacity: 0, x: 100 }}
-            // animate={{ opacity: 1, x: 0 }}
-            // transition={{ duration: 0.5 }}
-            // exit={{ opacity: 0, x: 100 }}
+            <motion.main className="main border-1 border-solid border-gray-200"
             >
-                <header className="_top_chat_header  flex   items-center hover:cursor-pointer     py-1 justify-between ">
+                <header className="_top_chat_header  flex   items-center hover:cursor-pointer  py-1 justify-between ">
                     <section className="_left  "
                         ref={siblingDiv}
                     >
-
                         <p className='text-lg text-black ml-4 mds-editor7:text-sm font-serif tracking-wider'>Active</p>
                     </section>
-
                     <section className="_right relative  -px-4 mr-10 flex"
                         onFocus={() => {
-                            // alert("hello world")
                         }}
                     >
                         <div className="container_search flex  items-center relative  w-0"
-                            // onBlur={() => {
-                            //     setClass(false)
-                            // }}
+
                             ref={targetDiv}
                         >
                             <input type="text" placeholder="Search..." id="search_friend_live" className='h-[2rem] focus:outline-none rounded-full indent-2 caret-[#d5309e] focus:border-1  w-full pr-[2rem] text-center focus:border-2 focus:border-solid focus:border-[#ffffff] font-serif tracking-wider '
-                            // onFocus={
-                            //     setClass(true)
-                            // }
                             />
-                            {/* <Button
-                                color=""
-                                rounded={true}
-                                size="sm"
-                                className="fixed right-0  text-black   mr-[3rem] bg-[#ffffff]"
-                                onClick={() => {
-                                    setClass(!cssClass)
-                                }}
-                            >
-                                <Icon name={<MdSearch className='text-[1.8rem] text-[#b1b0b0] font-serif ' />} />
-                            </Button> */}
+                            
                         </div>
                         <div>
                             {/* //add something */}
                         </div>
-
-
                     </section>
-
                 </header>
                 <hr />
                 {
@@ -184,14 +154,6 @@ function FooterButton({ bool, onlinefriends, currentId, socket, NumberOfFriendsO
                         return (
                             <>
                                 <NavLink to={`/messages?q=${item._id}`}>
-                                    {/* <div className="con" onClick={(e) => {
-                                    handleClick(item)
-                                   
-                                }}
-                                    key={index}
-                                > */}
-
-
                                     <LiveUser value={item} />
                                     {/* </div> */}
                                 </NavLink>

@@ -1,20 +1,19 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from '@material-tailwind/react/Image';
 import { MdLocationOn, MdSearch, MdLocalPhone } from 'react-icons/md';
 import { IoIosVideocam } from 'react-icons/io';
 
 import img from '../../../assets/img/team-2-800x800.jpg';
 import Photo from "../../../assets/img/download.png"
-function MessageChatHeader({ chatHeader, setVideoOverlay, q, RoomData, setRoomChatHeader, RoomChatHeader, groupMessageLoader }) {
+function MessageChatHeader({ chatHeader, setVideoOverlay, q, RoomData, setRoomChatHeader, RoomChatHeader, groupMessageLoader, SingleChatLoader }) {
     const [bool, setBool] = useState(false)
 
 
 
-    const fullName = chatHeader?.fname + "" + chatHeader?.lname
-
+    // console.log({ SingleChatLoader })
     return (
         <div>
-            <header className={`top_header   top flex justify-between bg-[#d6d6d6]  py-2  drop-shadow-lg   mds-editor23:w-full w-full ${q.length === 9 ? "cursor-pointer" : ""}`}
+            <header className={`top_header   top flex justify-between bg-[#d6d6d6]    drop-shadow-lg   mds-editor23:w-full w-full py-3 md:py-2 ${q.length === 9 ? "cursor-pointer" : ""}`}
                 disabled={q.length === 9 ? true : false}
 
             >
@@ -26,46 +25,38 @@ function MessageChatHeader({ chatHeader, setVideoOverlay, q, RoomData, setRoomCh
 
                     }}
                 >
-                    <div className="top_left_header w-[2.5rem] h-[2.5rem] flex-shrink-0 cursor-pointer">
+                    <div className="top_left_header w-[2.8rem] h-[2.84rem] flex-shrink-0 cursor-pointer relative ">
                         {
                             q.length !== 9 ? (chatHeader.url ?
-                                <Image
-                                    src={chatHeader.url}
-                                    rounded={true}
-                                    raised={false}
-                                    alt=""
-                                    className="flex-shrink-0 w-full h-full"
-                                /> :
+                                <ChangeURL url={chatHeader.url} />
+                                :
                                 <Image
                                     src={Photo}
                                     rounded={true}
                                     raised={false}
                                     alt=""
-                                />) : (RoomData.url ? <Image
-                                    src={RoomData.url}
-                                    rounded={true}
-                                    raised={false}
-                                    alt=""
-                                    className="flex-shrink-0 w-full h-full"
-                                /> : (
-                                    <Image
-                                        src={Photo}
-                                        rounded={true}
-                                        raised={false}
-                                        alt=""
-                                        className="flex-shrink-0 w-full h-full"
-                                    />
+                                />) : (RoomData.url ?
+                                    <ChangeURL url={RoomData.url} />
+                                    : (
+                                        <Image
+                                            src={Photo}
+                                            rounded={true}
+                                            raised={false}
+                                            alt=""
+                                            className="flex-shrink-0 w-full h-full"
+                                        />
 
-                                ))
+                                    ))
                         }
 
+                        <div className="div bg-[#20fa08] h-[.7rem] w-[.7rem] rounded-full absolute top-[24px] right-0 animate-pulse"></div>
                     </div>
 
                     <div className="top_center_header ml-[1rem] cursor-pointer  flex flex-col ">
 
-                        <p className='text-[1.2-rem] tracking-wider text-[#1a1919] truncate'>{
+                        <p className='text-[1.2-rem] tracking-wider font-medium font-serif text-[#1a1919] truncate'>{
 
-                            q.length !== 9 ? (fullName.length > 16 ? fullName.substring(0, 16) + "..." : fullName) : RoomData?.RoomName
+                            SingleChatLoader ? "" : (q.length !== 9 ? chatHeader !== undefined && chatHeader.fname + " " + chatHeader.lname : RoomData !== undefined ? RoomData.RoomName : "")
 
                         }
                             <br />
@@ -80,17 +71,18 @@ function MessageChatHeader({ chatHeader, setVideoOverlay, q, RoomData, setRoomCh
                     </div>
                 </div>
                 {
-                    q && <div className="right_top_header  mr-[2rem]   flex justify-between">
-                        <div className="video mr-[15px] bg-[#cac8c800] flex items-center px-2 py-[3px] rounded-full cursor-pointer hover:bg-[#fffefe] transition-all delay-100 hover:text-black"
+                    q &&
+                    <div className="right_top_header  mr-[2rem]   flex justify-between  w-[10rem] px-2 items-center">
+                        <div className="video bg-[#fff] w-[2.7rem] h-[2.7rem] rounded-full flex justify-center items-center cursor-pointer"
                             onClick={(e) => {
                                 setVideoOverlay(true)
 
                             }}
                         >
-                            <IoIosVideocam className="video_icon text-[1.8rem]  text-black" />
+                            <IoIosVideocam className="video_icon text-[1.8rem]  text-[#111363] hover:text-[#166a0b]" />
                         </div>
-                        <div className="audio mr-[15px] bg-[#dfdede08] flex items-center px-3 rounded-full hover:bg-[#ffffff]   cursor-pointer">
-                            <MdLocalPhone className="audio_icon text-[1.5rem] text-black" />
+                        <div className="audio bg-[#fff] w-[2.7rem] h-[2.7rem] rounded-full flex justify-center items-center cursor-pointer hover:text-[#166a0b]">
+                            <MdLocalPhone className="audio_icon text-[1.5rem] text-[#0f147c] hover:text-[#166a0b] " />
                         </div>
 
                     </div>
@@ -103,4 +95,45 @@ function MessageChatHeader({ chatHeader, setVideoOverlay, q, RoomData, setRoomCh
     )
 }
 
-export default MessageChatHeader
+export default MessageChatHeader;
+
+function ChangeURL({ url }) {
+    const [blob, setBlob] = useState("")
+    const [loader, setLoader] = useState(false)
+
+
+
+    useEffect(() => {
+        async function loadImage() {
+            setLoader(true)
+            const res = await fetch(url)
+            const blobData = await res.blob()
+            setBlob(URL.createObjectURL(blobData))
+            setLoader(false)
+        }
+        loadImage()
+    }, [url])
+    return (
+        <>
+            {
+                loader ? (
+                    <div className="image_conta flex-shrink-0 w-full h-full bg-[#640303] animate-pulse rounded-full">
+
+                    </div>
+
+                ) : (
+                    <Image
+                        src={blob}
+                        rounded={true}
+                        raised={false}
+                        alt=""
+                        className="flex-shrink-0 w-full h-full"
+                    />
+
+
+                )
+            }
+
+        </>
+    )
+}

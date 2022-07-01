@@ -161,7 +161,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
 
     //realitime like system
     useEffect(() => {
-        console.log("mounting")
         // if (isMount.current) {
         if (socket.connected) {
             socket.on("getLikeCount", (data) => {
@@ -224,7 +223,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
 
     //function which excute when current user liked it any post
     async function callLikeHnadler(userId, post_id, bgImageUrl, profileImage) {
-        console.log("set like call")
         try {
             const result = await axios.put(`${process.env.REACT_APP_API_BACKENDURL}/blob/user/like/${post_id}`, {
                 likedBy: googleId,
@@ -309,15 +307,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
         };
     }, [postPopupModal])
 
-    useEffect(() => {
 
-        if (ImageRef.current) {
-            const { top, left, width, height } = ImageRef.current.getBoundingClientRect()
-            const { x, y } = { y: top + height / 2, x: width + left / 2 }
-            // setCordinate({ x: x - getPos.x, y: y - getPos.y })
-            // console.log(Math.hypot(x - getPos.x, y - getPos.y))
-        }
-    }, [ImageRef, item, getPos.x, getPos.y])
 
 
 
@@ -331,8 +321,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
 
 
     useEffect(() => {
-        // window.alert("hello")
-        // console.log("window scroll", window.scrollY())
         document.getElementById("root").scrollTo(0, 0)
         if (location.path === "/") {
             window.scrollTo(0, 0)
@@ -340,26 +328,13 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
 
     }, [item])
 
-
-
-    // console.log({ item })
-
-    // console.log(postBlobURL)
-    // console.log({ blobURL })
-
-
-
-    // console.log(item.profileImage)
-    // console.log({ loadingPost, loadingPostSecond })
     return (
         <>
+            <div className={`post-card flex justify-around w-full mb-2 rounded-md md:w-[42rem] drop-shadow-sm ${loadingPost && loadingPostSecond ? "mb-[3rem] md:w-screen md:ml-[2rem] md:mr-[2rem] h-[30rem]" : ""}`}>
 
-
-            <div className={`post-card flex justify-around w-full mb-2 rounded-md md:w-[42rem] drop-shadow-sm ${loadingPost && loadingPostSecond ? "mb-[3rem] w-[22rem] h-[30rem]" : ""}`}>
-
-                <Card className={`post p-0  ${loadingPost && loadingPostSecond ? "bg-[#dedede]" : ""}`}>
+                <Card className={`post p-0   ${single === "single" && name ? " mds-editor28:rounded-t-none" : "rounded-xl"}     ${loadingPost && loadingPostSecond ? "bg-[#dedede]" : ""}`}>
                     <CardBody className={` ${loadingPost && loadingPostSecond ? " bg-[#dcdcdc]" : ""}`} >
-                        <div className={`back_to_hone  flex mb-3 w-full items-center  ${single === "single" && name ? "flex" : "hidden"} ${loadingPost && loadingPostSecond ? "bg-[#]" : ""}`}>
+                        <div className={`back_to_hone  flex mb-3 w-full items-center  ${single === "single" && name ? "flex mds-editor28:rounded-t-none" : "hidden"} ${loadingPost && loadingPostSecond ? "bg-[#]" : ""}`}>
                             <NavLink
                                 to={"/"}
                             >
@@ -1289,9 +1264,7 @@ function LoadProfileImage({ url, setLoadingPost, image }) {
 
             }
         }
-
         loadProfileImage1()
-
         return () => {
             isMount.current = false
             setURL("")
@@ -1300,7 +1273,6 @@ function LoadProfileImage({ url, setLoadingPost, image }) {
         }
     }, [url])
 
-    // console.log({ blobURL })
     return (
         <>
             {loaded ? (
@@ -1385,46 +1357,36 @@ function LoadPostContentVideo({ url, setLoadingPostSecond }) {
 
 
 function LoadPostContentImage({ url, setLoadingPostSecond }) {
-
     const [blobData, setPostBlobUrl] = useState("")
     const [load, setLoad] = useState(false)
     const isMount = useRef(true)
     useEffect(() => {
 
         async function loadFiles() {
-            // setLoad(true)
             try {
                 setLoadingPostSecond(true)
+                setLoad(true)
+
                 const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/api/v1/_user/posts/`, {
                     method: "GET",
                     headers: {
-                        // "Content-Type":"application/json",
                         "Authorization": "Bearer " + localStorage.getItem("uuid"),
                         "post": url
                     }
                 })
                 const blob = await res.blob()
                 if (res.status === 200) {
-                    // if (isMount.current) {
-
                     setPostBlobUrl(URL.createObjectURL(blob))
                     setLoadingPostSecond(false)
-                    // setLoad(false)
-                    // }
+                    setLoad(false)
                 }
             }
             catch (err) {
                 setLoadingPostSecond(false)
-
                 return
             }
         }
         loadFiles()
-        // return () => {
-        //     isMount.current = false
-        //     // setPostBlobUrl("")
-        //     // setLoadingPostSecond(false)
-        // }
     }, [url])
     return (
         <>

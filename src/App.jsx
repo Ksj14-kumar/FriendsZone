@@ -343,7 +343,7 @@ function App() {
                     {
                         (getUserData && user) &&
                         <abbr title="live User">
-                            <div className="right_section  fixed md:top-[95%] top-[94.6%] right-[.5rem] md:w-[5rem] bg-[#6d369a7a] rounded-sm py-[.5rem] md:px-[1rem] px-[1rem]">
+                            <div className="right_section  fixed md:top-[95%] top-[94.6%] right-[.5rem] md:w-[5rem] bg-[#6d369a7a] rounded-sm py-[.5rem] md:px-[1rem] px-[1rem] z-[999]">
 
                                 <RightSidebar socket={socket} online={online} />
 

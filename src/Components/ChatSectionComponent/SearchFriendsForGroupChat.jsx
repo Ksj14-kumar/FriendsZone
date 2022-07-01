@@ -83,7 +83,7 @@ function SearchFriendsForGroupChat({ setModalForFriends, RoomData, setGroupMembe
                 initial={{ opacity: 0, scale: 0, originX: 0, originY: 0 }}
                 animate={{ opacity: 1, scale: 1, originX: 0, originY: 0 }}
                 transition={{ duration: 0.2, type: "tween", rotate: 360 }}
-                className="w-screen h-screen absolute z-[17]   flex justify-center" id="searchUserForGroup">
+                className="w-screen h-screen absolute z-[18]   flex justify-center" id="searchUserForGroup">
                 <div className="wrap inner  md:w-[50%] w-[95%] py-4 mt-[1rem] mb-[1rem] overflow-hidden " id="searchFriendsforGroup">
                     <header className="foo flex justify-end w-full">
                         <button className="text-[1.5rem] px-[1rem] py-[.5rem] bg-red-700 text-white rounded-lg mb-2 -mt-[.5rem] mr-[.5rem] focus:outline-none"

@@ -17,9 +17,6 @@ function FriendsNoti({ SenderRequestId, name, AcceptFriendRequest, DeleteFriendR
 
     return (
         <section className={`flex flex-col hover:bg-[#cfcfcf71]  rounded-md py-[.5rem] transition-all duration-100 `}>
-
-
-
             {
                 <>
                     <div className="image_group flex justify-around">

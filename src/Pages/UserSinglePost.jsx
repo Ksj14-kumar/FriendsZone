@@ -55,7 +55,7 @@ function UserSinglePost({ socket, setShowLikeUserModal, showLikeUserModal }) {
     return (
         <>
 
-            <div className="single_post_container w-full  flex justify-center mt-[5rem] ">
+            <div className="single_post_container w-full  flex justify-center mt-[5rem] mds-editor28:absolute mds-editor28:-top-[70px] mds-editor28:z-[20]">
                 {
                     !loading ? (post.length > 0 && post.map((item, index) => {
                         return (

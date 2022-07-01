@@ -36,7 +36,7 @@ function GroupMessageBox({ groupMessages, currentId }) {
     console.log({ groupMessages })
     return (
         <>
-            <div className="container_fro_group_messages  w-full overflow-y-auto"
+            <div className="container_fro_group_messages  w-full overflow-y-auto z-[21]"
 
             >
                 {

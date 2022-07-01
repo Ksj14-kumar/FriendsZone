@@ -31,6 +31,7 @@ import Messages from "./Notification/Messages";
 import AdminRightSideBar from "./AdminRightSideBar"
 import FriendsNotification from './AdminNavbarComponents/FriendsNotification';
 import AllTypeOfNotificationAdminNavbar from './AdminNavbarComponents/AllTypeOfNotificationAdminNavbar';
+import MessagesNotifications from './AdminNavbarComponents/MessagesNotifications';
 
 const _id = localStorage.getItem("uuid")
 
@@ -52,7 +53,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     const [Length, SetNotificationLength] = useState(null)
     const [showRightSideBar, setShowRightSideBar] = useState(false)
     const notification = useRef(null)
-    const message = useRef(null)
+    const messenger = useRef(null)
     const AllTypeNitification = useRef(null)
     const clickOutSideFriendsNoti = useRef(null)
     const friends = useRef(null)
@@ -71,6 +72,8 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     const [receivedRequest, setReceivedRequest] = useState([])
     const [friendModalNotification, setFriendModalNotification] = useState(false)
     const [AllNotificationSet, setAllNotification] = useState([])
+    const [messengerComponent, setMessengerComponent] = useState(false)
+    const [messageNotification, setMessagesNotification] = useState([])
 
 
     const dispatch = useDispatch()
@@ -106,29 +109,37 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     const UserInformationLoad = useSelector((state) => {
         return state.UserInformationLoad.value
     })
+    const UnreadMessageNotification = useSelector((state) => {
+        return state.UnreadMessageNotification
+    })
 
     const { receiverrequest, AllNotification } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "", senderrequest: [], receiverrequest: [], AllNotification: [] }
 
 
+    console.log({ UnreadMessageNotification })
 
 
-
-    // console.log({UserInformationLoad})
 
 
 
     useEffect(() => {
-        setReceivedRequest(receiverrequest?.length === 0 ? [] : receiverrequest)
-
+        setReceivedRequest(receiverrequest?.length === 0 ? [] : receiverrequest?.sort((a, b) => {
+            return b.time - a.time
+        }))
 
         setAllNotification(AllNotification?.length === 0 ? [] : AllNotification?.sort((a, b) => {
             return b.time - a.time
         }))
+
+        if (UserInformationLoad.message?.length > 0 || UnreadMessageNotification?.length > 0) {
+            const value1 = UserInformationLoad.message?.length ? UserInformationLoad.message : []
+            const value2 = UnreadMessageNotification?.length ? UnreadMessageNotification : []
+            setMessagesNotification([...value1, ...value2])
+        }
     }, [UserInformationLoad])
 
 
     useEffect(() => {
-        console.log({ AllNotificationSet })
         socket?.off("getNotificationAllType")?.on("getNotificationAllType", (data) => {
             console.log(data)
             AllNotificationSet !== undefined && setAllNotification([data, ...AllNotificationSet])
@@ -207,7 +218,6 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 }
             })
             const ResponseData = await serverResponse.json()
-            console.log({ ResponseData })
             const { status } = serverResponse
             const { message, data } = ResponseData
             if (status === 200) {
@@ -351,8 +361,6 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 }
             })
             const responseData = await res.json()
-            console.log({ responseData })
-            console.log(res)
             if (res.status === 200) {
                 dispatch({ type: "ShowImage", payload: "" })
                 setDisabledButton(false)
@@ -508,36 +516,20 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
 
     }, [showModal, showModalBackground])
 
-
-
-    useEffect(() => {
-        setFriendsRequest(receiverrequest)
-    }, [])
-
-
     async function DeleteFriendRequest(senderId) {
         try {
-            setFriendsRequest(friendsRequest.filter(friend => friend._id !== senderId))
-            // setNotificationGroup(NotificationGroup.filter(friend => friend._id !== senderId))
-            const deleteResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/deletefriend/request`, {
+            setReceivedRequest(receiverrequest.filter(friend => friend._id !== senderId))
+            await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/deletefriend/request`, {
                 method: "DELETE",
                 body: JSON.stringify({ senderId }),
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + localStorage.getItem("uuid")
-
                 }
             })
-            // const deleteResponseData = await deleteResponse.json()
-            if (deleteResponse.status === 200) {
-                // success({ message: deleteResponseData.message })
-            }
-            else if (deleteResponse.status !== 200) {
-                // error({ message: deleteResponseData.message })
-            }
+
         }
         catch (err) {
-            console.warn(err)
         }
     }
 
@@ -551,7 +543,6 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + localStorage.getItem("uuid")
-
                 }
             })
             const acceptResponseData = await acceptResponse.json()
@@ -570,7 +561,6 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             }
         }
         catch (err) {
-            console.warn(err)
         }
     }
 
@@ -652,9 +642,20 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [clickOutSideFriendsNoti])
+    // messengerComponent
 
-
-
+    // ======================================CLICK OUTSIDE THE the messenger component==========
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (messenger.current && !messenger.current.contains(event.target)) {
+                setMessengerComponent(false)
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [messenger])
     // ==============================================CLICK OUTSIDE OF ALL TYPE NOTIFICATIONS=======================
     useEffect(() => {
         function handleClickOutside(event) {
@@ -669,11 +670,9 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         };
     }, [AllTypeNitification])
 
+    console.log({ messageNotification })
 
 
-
-    console.log({ receivedRequest })
-    console.log({ UserInformationLoad })
     return (
         <>
             <nav className="bg-light-blue-500  py-2 px-3 fixed w-full z-[18] drop-shadow-lg">
@@ -713,8 +712,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                         <div className="flex  relative  w-full justify-end  ">
 
 
-                            <div className="left_side_search flex  flex-[10] md:justify-end justify-start items-center relative">
-
+                            <div className="left_side_search flex  flex-[8] md:justify-end justify-start items-center relative md:mr-[3rem]">
                                 <motion.div className={`wrap_inout_search w-[38rem] mds-editor31:w-[25rem] mds-editor32:w-[3rem] rounded-full transition-all duration-300 ${expandSearch ? "mds-editor32:w-full" : "mds-editor32:w-[3rem]"}`}
                                 >
                                     <SearchBarTable showSearch={showSearch} setShowSearch={setShowSearch} setQuery={setQuery} setPopOverEffect={setPopOverEffect} query={query} data={userData} userSearchHistory1={userSearchHistory} deleteHistory={deleteHistory} setExpandSearch={setExpandSearch} expandSearch={expandSearch} />
@@ -723,46 +721,41 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                             </div>
 
                             <div className={`group_right_s flex flex-[2]   justify-end  ${expandSearch ? "mds-editor32:hidden" : "block"}`}>
-                                <div className={`group_icons flex `}>
-                                    <section className='friends  flex  ml-[1rem] -mr-[1.5rem]  relative     align-middle mt-[4px] justify-center '
+                                <div className={`group_icons flex md:w-full w-[12rem]   justify-around items-center  gap-x-2`}>
+                                    <section className={`friends  flex    
+                                    relative     align-middle justify-center   flex-shrink-0 rounded-full px-[.5rem] py-[.5rem] bg-[#fff]   ${friendModalNotification && " bg-[#bfbfbf]"}`}
                                         ref={clickOutSideFriendsNoti}
                                         onClick={() => {
-                                            setFriendModalNotification(!friendModalNotification)
+                                            setFriendModalNotification(true)
                                         }}>
-                                        <FaUserFriends className='text-[2rem] self-center text-[#270082] cursor-pointer' />
+                                        <FaUserFriends className={`text-[2rem] self-center text-[#270082] cursor-pointer mds-editor28:text-[1.7rem] ${friendModalNotification && "text-[#ef1e1e]"}`} />
                                         <article className='  absolute right-2 -top-2 mds-editor8:-top-3 cursor-pointer'>
                                             {
-                                                // (friendsRequest !== undefined && friendsRequest.length > 0) &&
 
-                                                // <Badge badgeContent={friendsRequest.length} showZero color="success" max={20}>
-
-                                                // </Badge>
                                                 (receiverrequest !== undefined && receiverrequest.length > 0) &&
-                                                <Badge badgeContent={receiverrequest.length} showZero color="red" max={20}>
+                                                <Badge badgeContent={receiverrequest.filter((item) => { return item.read === false }).length} color="error" max={20}>
                                                 </Badge>
                                             }
                                         </article>
                                         <AnimatePresence>
                                             {friendModalNotification && <FriendsNotification
                                                 receivedRequest={receivedRequest} AcceptFriendRequest={AcceptFriendRequest} DeleteFriendRequest={DeleteFriendRequest} messageAftetAcceptRequest={messageAftetAcceptRequest}
+                                                __id__={UserInformationLoad?._id}
+                                                setReceivedRequest={setReceivedRequest}
                                             />}
                                         </AnimatePresence>
                                     </section>
-
-
-
-
-                                    <section className='notification  flex  ml-[3rem]  relative  align-middle mt-[4px] justify-center'
-                                        onClick={() => setShowNotification(!showNotification)}
+                                    <section className={`notification  flex  relative   align-middle flex-shrink-0 justify-center rounded-full px-[.5rem] py-[.5rem] bg-[#fff] ${showNotification ? "bg-[#bfbfbf] " : ""}`}
+                                        onClick={() => setShowNotification(true)}
                                         ref={AllTypeNitification}
                                     >
-                                        <MdNotifications className='text-[2rem] self-center text-[#270082] cursor-pointer' />
+                                        <MdNotifications className={`text-[2rem] self-center text-[#270082] cursor-pointer mds-editor28:text-[1.7rem] ${showNotification && "text-[#ef1e1e]"}`} />
                                         <article className=' bg-red-500 absolute right-2 -top-2 mds-editor8:-top-3 cursor-pointer'>
                                             {
                                                 <Badge badgeContent={AllNotificationSet?.length && AllNotificationSet.filter((item) => {
                                                     return item.read === false
                                                 }).length
-                                                } color="secondary" max={20}>
+                                                } color="error" max={20}>
                                                 </Badge>
                                             }
                                         </article>
@@ -774,20 +767,32 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                         </AnimatePresence>
                                     </section>
 
-                                    <section className='messenger  flex ml-[1.8rem] cursor-pointer   relative mt-[3px]'
-                                        ref={message}>
-                                        <BsMessenger className='text-[1.6rem] self-center  text-[#270082]' />
-                                        <article className='absolute right-1 -top-2 mds-editor8:-top-3 '>
+                                    <section className={`
+                                    messenger  flex    relative px-[.7rem] py-[.7rem] rounded-full flex-shrink-0 bg-[#fff] ${messengerComponent && "bg-[#bfbfbf] "} `}
+                                        ref={messenger}
+                                        onClick={() => {
+                                            setMessengerComponent(true)
+                                        }}
+                                    >
+                                        <BsMessenger className={`text-[1.6rem] self-center cursor-pointer  text-[#270082] mds-editor28:text-[1.3rem] ${messengerComponent && "text-[#ef1e1e]"}`} />
+                                        <article className='absolute right-1 -top-2 mds-editor8:-top-3 cursor-pointer '>
                                             {
+                                                // UnreadMessageNotification
+                                                // UserInformationLoad?.message.length + UnreadMessageNotification[0]?.messageLength ? UserInformationLoad?.message.length + UnreadMessageNotification[0]?.messageLength : ""
                                                 UserInformationLoad?.message &&
-                                                <Badge badgeContent={UserInformationLoad?.message.length} color="primary" max={20} >
+                                                <Badge badgeContent={messageNotification?.length} color="error" max={20} >
                                                 </Badge>
                                             }
                                         </article>
+                                        {messengerComponent &&
+                                            // messageNotification
+                                            // UserInformationLoad?.message
+                                            <MessagesNotifications messageList={messageNotification} setMessengerComponent={setMessengerComponent} />
+                                        }
                                     </section>
                                 </div>
-                                <div className="mr-2 ml-6  relative ">
-                                    <div className={`img cursor-pointer flex-shrink-0 w-[2.5rem] h-[2.5rem] mr-3 md:mr-0 bg-[#d5d5d5]  border-solid border-[#f1f0f0] rounded-full ${LoaderRedux && "animate-pulse"}`}
+                                <div className=" flex  justify-center items-center  relative w-[4rem] h-[3rem] ">
+                                    <div className={`img cursor-pointer flex-shrink-0 w-[3rem] h-full  md:mr-0 bg-[#d5d5d5]  border-solid border-[#f1f0f0] rounded-full ml-3 ${LoaderRedux && "animate-pulse"}`}
                                         onClick={() => {
                                             setShowRightSideBar(!showRightSideBar)
                                         }}
@@ -796,11 +801,11 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                         {LoaderRedux ? "" : !showImage ?
                                             <Image src={userProfile}
                                                 rounded alt="img"
-                                                className="w-[2.5rem] h-[2.5rem] flex-shrink-0 mr-2"
+                                                className="w-full h-full flex-shrink-0"
                                             />
                                             :
                                             <Image src={showImage}
-                                                rounded alt="img" className="w-[2.5rem] h-[2.5rem] flex-shrink-0 mr-2" />}
+                                                rounded alt="img" className="w-full h-full flex-shrink-0 " />}
                                     </div>
                                     {/* <Dropdown
                                         color="transparent"

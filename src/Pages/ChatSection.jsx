@@ -98,6 +98,7 @@ function ChatSection({ user, socket }) {
   const [groupMessageLoader, setGroupMessageLoader] = useState(false)
   const [arrivalGroupMessages, setArrivalGroupMessages] = useState(null)
   const [imageSentLoader, setImageSentLoader] = useState(false)
+  const [SingleChatLoader, setSingleUserChatLoader] = useState(false)
 
   const history = useHistory()
   const params = useParams()
@@ -169,7 +170,6 @@ function ChatSection({ user, socket }) {
     })
   }, [textMessage])
 
-  console.log({ arrivalGroupMessages })
 
 
 
@@ -580,8 +580,6 @@ function ChatSection({ user, socket }) {
           }
 
         })
-
-
         const resData = await res.json()
         if (res.status === 200) {
           setMessageLoader(false)
@@ -613,7 +611,6 @@ function ChatSection({ user, socket }) {
           headers: {
             "Authorization": `Bearer ${localStorage.getItem("uuid")}`
           }
-
         })
         if (resData.status === 200) {
           setLoader(false)
@@ -623,26 +620,23 @@ function ChatSection({ user, socket }) {
           setLoader(false)
           setConvertionUsersList([])
 
-
         }
       }
       catch (err) {
         console.warn(err)
-
       }
     }
     q.length > 9 && getAllConversation()
-
-
-  }, [user, socket, q])
+  }, [])
+  // user, socket
 
 
   //getuser details
 
   useEffect(() => {
-
     async function get_Friends_users_Details() {
       try {
+        setSingleUserChatLoader(true)
         const resData = await Instance.get(`/api/v1/users/${q}`, {
           headers: {
             "Authorization": `Bearer ${localStorage.getItem("uuid")}`
@@ -652,9 +646,13 @@ function ChatSection({ user, socket }) {
 
         if (resData.status === 200) {
           setChatHeader({ ...resData.data })
+          setSingleUserChatLoader(false)
+
         }
         else if (resData.status !== 200) {
           setChatHeader({})
+          setSingleUserChatLoader(false)
+
 
         }
       }
@@ -663,7 +661,6 @@ function ChatSection({ user, socket }) {
       }
     }
     q.length > 9 && get_Friends_users_Details()
-
   }, [q])
 
 
@@ -717,47 +714,39 @@ function ChatSection({ user, socket }) {
   }, [videoOverlay])
 
   //update the unread message to read message
-  useEffect(() => {
-    async function Update() {
-      try {
-
-        const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/update/message/seen/status`, {
-          method: "POST",
-          body: JSON.stringify({
-            friendId: q,
-            currentUser: user,
-            docId: docID
-          }),
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + localStorage.getItem("uuid")
-          }
-        })
-
-        const UpdateResponse = await res.json()
-        if (res.status === 200) {
-          const filterUnreadMessages = UpdateResponse.result.messages.length && UpdateResponse.result.messages.filter(message => {
-            return message.senderId !== user && message.seen === false
-          })
-          setUnseenMessage(filterUnreadMessages.length)
-          // setBool(false)
-        }
-        else if (res.status !== 200) {
-
-
-          // setBool(true)
-        }
-
-
-      } catch (err) {
-        console.warn(err)
-
-      }
-
-
-    }
-    q.length > 9 && Update()
-  }, [q, socket, docID])
+  // useEffect(() => {
+  //   async function Update() {
+  //     try {
+  //       const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/update/message/seen/status`, {
+  //         method: "POST",
+  //         body: JSON.stringify({
+  //           friendId: q,
+  //           currentUser: user,
+  //           docId: docID
+  //         }),
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           "Authorization": "Bearer " + localStorage.getItem("uuid")
+  //         }
+  //       })
+  //       const UpdateResponse = await res.json()
+  //       console.log({ UpdateResponse })
+  //       if (res.status === 200) {
+  //         const filterUnreadMessages = UpdateResponse.result.messages.length && UpdateResponse.result.messages.filter(message => {
+  //           return message.senderId !== user && message.seen === false
+  //         })
+  //         // setUnseenMessage(filterUnreadMessages.length)
+  //         // setBool(false)
+  //       }
+  //       else if (res.status !== 200) {
+  //         // setBool(true)
+  //       }
+  //     } catch (err) {
+  //       console.warn(err)
+  //     }
+  //   }
+  //   q.length > 9 && Update()
+  // }, [q, socket, docID])
 
 
   //now get the Rooms messages  from server
@@ -853,7 +842,6 @@ function ChatSection({ user, socket }) {
 
 
   // console.log({ groupMessages })
-  console.log({ imageSentLoader })
   return (
     <>
 
@@ -884,14 +872,14 @@ function ChatSection({ user, socket }) {
 
         {/* ======================================LEFT SIDE OF CHAT SECTION=================================== */}
 
-        {liveFriends !== undefined && liveFriends.length > 0 && <aside id="live_top_users" className=" md:hidden mt-[4.2rem] flex w-full   fixed bg-[#d0d0d0] ">
+        {/* {liveFriends !== undefined && liveFriends.length > 0 && <aside id="live_top_users" className=" md:hidden mt-[4.2rem] flex w-full   fixed bg-[#d0d0d0] ">
           <ChatUSerSwiper liveFriends={liveFriends} />
 
-        </aside>}
-        <hr className="block md:hidden" />
+        </aside>} */}
+        {/* <hr className="block md:hidden" /> */}
 
-        <div className={`'text-center md:mt-[5rem] ${liveFriends !== undefined && liveFriends.length > 0 && "mds-editor23:mt-[7.5rem]"} ${liveFriends !== undefined && liveFriends.length > 0 ? "mt-[7rem]" : "mt-[5rem] "}   fixed   md:left-[18rem] mds-editor23:w-full md:w-[85rem]  flex h-full rounded-sm   flex-wrap  
-        md:mr-[5rem]    justify-center`} id='chat_container'>
+        <div className={`'text-center md:mt-[5rem]     fixed   md:left-[18rem] mds-editor23:w-full md:w-[85rem]  flex h-full rounded-sm   flex-wrap  
+        md:mr-[5rem]    justify-center z-[18] md:z-[0]`} id='chat_container'>
           {/* md:flex-[3] lg:flex-[2]  */}
           <aside className="left_section md:flex-[3]  bg-[#dbdbdb] relative rounded-sm  md:block hidden" id="left_chat_section">
             {/* <div class="form-control toogle_theme -mb-[10px]">
@@ -935,6 +923,7 @@ function ChatSection({ user, socket }) {
                 )
                   : (converzationList.length > 0 ? (
                     converzationList.map((conversation, index) => {
+                      console.log({ conversation })
                       return (
                         <RecentlyChatUser key={index} user={conversation} currentUser={user} setChatHeader={setChatHeader} userId={q} unseenMessage={unseenMessage} setRoomChatHeader={setRoomChatHeader} />
                       )
@@ -950,7 +939,7 @@ function ChatSection({ user, socket }) {
 
           {/* ============================================== CENTER SECTION CHAT SECTION================ */}
           {/* md:flex-[7] */}
-          <aside className="chat_section_message_area md:flex-[7]  flex flex-col overflow-y-auto flex-1  relative  " id={`${q.length === 9 && "chat_section_group"}`}>
+          <aside className="chat_section_message_area md:flex-[7]  flex flex-col overflow-y-auto flex-1  relative  w-screen " id={`${q.length === 9 && "chat_section_group"} `}>
 
             {
               RoomChatHeader && <RoomChatInfo setRoomChatHeader={setRoomChatHeader} RoomData={RoomData} setRoomData={setRoomData} setModalForFriends={setModalForFriends} groupMembers={groupMembers} setGroupMembers={setGroupMembers} />
@@ -959,9 +948,9 @@ function ChatSection({ user, socket }) {
             {!RoomChatHeader && (
 
               <>
-                <MessageChatHeader chatHeader={chatHeader} setVideoOverlay={setVideoOverlay} q={q} RoomData={RoomData} setRoomChatHeader={setRoomChatHeader} RoomChatHeader={RoomChatHeader} groupMessageLoader={groupMessageLoader} />
+                <MessageChatHeader chatHeader={chatHeader} setVideoOverlay={setVideoOverlay} q={q} RoomData={RoomData} setRoomChatHeader={setRoomChatHeader} RoomChatHeader={RoomChatHeader} groupMessageLoader={groupMessageLoader} SingleChatLoader={SingleChatLoader} />
 
-                <div className="center_message  flex-[8] overflow-y-auto w-full overflow-x-hidden" >
+                <div className="center_message  flex-[8] overflow-y-auto w-full overflow-x-hidden bg-[#f5f5f5]" id="center_message" >
                   {
                     messageLoader ? <MessageLoader /> :
                       (q?.length === 24 && currentChat.length ?
@@ -990,10 +979,7 @@ function ChatSection({ user, socket }) {
 
 
                 <hr className="bg-[#c9c9c9] h-1" />
-                {/* {
-  stickerDrawer && <StickerComponent />
-} */}
-                {footerModal === false ? <footer className={`bottom_footer  flex-[1] px-4 flex items-center ${stickerDrawer ? "hidden" : "block"}`}>
+                {footerModal === false ? <footer className={`bottom_footer  flex-[1] px-4 flex  ${stickerDrawer ? "hidden" : "block"}`}>
                   <div className="wrap flex items-center w-full relative">
                     <div className="emoji_button  -ml-[.3rem] mds-editor6:-ml-[1rem]">
                       <button className="text-[1.5rem] px-2 ml-[0] focus:outline-none rounded-full hover:bg-[#cdcbcb] py-2 mds-editor6:py-2 mds-editor6:text-[1rem]"
@@ -1007,7 +993,7 @@ function ChatSection({ user, socket }) {
                         <BsFillEmojiSmileFill className="text-[1.8rem] mds-editor6:text-[1.3rem] text-[#efad2a]" />
                       </button>
                     </div>
-                    {/* <textarea class="textarea textarea-secondary" placeholder="Bio"></textarea> */}
+
                     <textarea
                       ref={textarea}
                       className={`text-area  w-full indent-2 textarea textarea-bordered   text-lg font-serif tracking-wider   overflow-hidden resize-none`} placeholder="write message..."
@@ -1036,13 +1022,10 @@ function ChatSection({ user, socket }) {
 
                     ></textarea>
 
-                    {/* <Error isError={err} text='need length longer than 0 for input' />
-  {results && <TextList gifs={results} />} */}
-
                     {
                       textMessage.length > 0 ? "" :
                         <div className="button_group flex absolute  right-[1.5rem]">
-                          {/* Attacked the file to  */}
+
                           <button className="text-[1.5rem] px-2 focus:outline-none rounded-full hover:bg-[#cdcbcb] py-2"
                             disabled={q ? false : true}
                             ref={Files}
@@ -1052,12 +1035,9 @@ function ChatSection({ user, socket }) {
                           >
                             <ImAttachment className="text-[1.8rem] mds-editor6:text-[1.3rem]" />
                           </button>
-                          {/* Take the image from users camera */}
-
                           <button className=" text-[1.5rem]  focus:outline-none px-2  rounded-full hover:bg-[#cdcbcb] "
                             disabled={q ? false : true}
                             ref={Video}
-
                             onClick={() => {
                               setImageFileSelector(true)
                             }}
@@ -1155,7 +1135,7 @@ function NoUserLive() {
 function NoChat() {
   return (
     <>
-      <p className="text-[1.5rem] tracking-wider select-none text-[#adadad]">No Recently Chats</p>
+      <p className="text-[1.5rem] tracking-wider select-none text-[#adadad] justify-center flex">No Recently Chats</p>
     </>
   )
 }
