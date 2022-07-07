@@ -11,114 +11,56 @@ import Tooltips from "@material-tailwind/react/Tooltips";
 import TooltipsContent from "@material-tailwind/react/TooltipsContent";
 import { useSelector } from "react-redux"
 import Axios from "axios"
+import { RiShareForwardFill, RiArrowUpSLine } from "react-icons/ri"
+import query from "query-string"
+import { MdDelete } from "react-icons/md"
+import ForwardMessagesComponent from '../ForwardMessagesComponent'
 const defaultProps = {
     loop: true,
     autoplay: true,
     animationData: TypingIndicator
 }
 
-function MessageBox({ message, own, friendId, upload, socket, setBool, setOverlayObject, isTyping, sendMessageLoader, textMessage, messageId, docID }) {
+function MessageBox({ message, own, friendId, upload, socket, setBool, setOverlayObject, isTyping, sendMessageLoader, textMessage, messageId, docID, deleteMessage }) {
     const scrollRef = useRef(null)
-    const IsActive = useSelector(state => {
-        return state.ActiveStatus
-    })
-
-
-
-
-
-
+    const query1 = query.parse(window.location.search)
+    const [forwardComponent, setShowForwardComponent] = useState(false)
+    const [takeWholeMessageForforward, setWholeMessage] = useState({})
 
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: "auto" });
     }, [message, friendId]);
-    // console.log(messageId)
 
+    useEffect(() => {
+        async function Update() {
+            //update messages when user open message box for partivular user
+            try {
+                const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/update/message/seen/status`, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        friendId: query1.q,
+                        currentUser: own,
+                        docId: docID
+                    }),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("uuid")
+                    }
+                })
+            } catch (err) {
+            }
+        }
+        query1.q && Update()
+    }, [message, friendId, own, docID])
 
-
-
-    // useEffect(() => {
-    //     const extract_Friends_users = user?.conversations.filter(conversation => {
-    //         return conversation !== own
-    //     })
-
-
-    //     async function get_Friends_users_Details() {
-    //         try {
-    //             const resData = await Instance.get(`/api/v1/users/${extract_Friends_users}`)
-    //             // console.log({ resData: resData })
-
-    //             if (resData.status === 200) {
-    //                 setFriends_users_Details({ ...resData.data })
-    //             }
-    //             else if (resData.status !== 200) {
-    //                 setFriends_users_Details({})
-    //             }
-
-    //         }
-
-
-    //         catch (err) {
-    //             console.warn(err)
-
-    //         }
-
-    //     }
-
-    //     get_Friends_users_Details()
-    // }, [user, own, message, friendId]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // useEffect(() => {
-    //     async function Update() {
-    //         try {
-    //             console.log("clickhfkjdshfkdhfdkjfhdsfhdskfhdsfkjshfsdkjhfkdsfhskfhsdkjfhsdkfhjsdk")
-    //             const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/update/message/seen/status`, {
-    //                 method: "POST",
-    //                 body: JSON.stringify({
-    //                     friendId: friendId,
-    //                     currentUser: own,
-    //                     docId: docID
-    //                 }),
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                     "Authorization": "Bearer " + localStorage.getItem("uuid")
-    //                 }
-    //             })
-
-    //             const UpdateResponse = await res.json()
-    //             // console.log({ UpdateResponse })
-    //             if (res.status === 200) {
-    //                 // setBool(false)
-    //                 //set the number of unread messages to 0
-    //             }
-    //             else if (res.status !== 200) {
-    //                 // setBool(true)
-    //             }
-    //         } catch (err) {
-    //             console.warn(err)
-    //         }
-    //     }
-    //     // IsActive === true &&
-    //     Update()
-    // }, [message, friendId, own, docID])
 
 
     return (
         <>
+            {
+
+                forwardComponent && <ForwardMessagesComponent setShowForwardComponent={setShowForwardComponent} own={own} takeWholeMessageForforward={takeWholeMessageForforward} setWholeMessage={setWholeMessage} />
+            }
             {
                 message !== undefined ? message.map((text, index) => {
                     return (
@@ -126,13 +68,21 @@ function MessageBox({ message, own, friendId, upload, socket, setBool, setOverla
                             <div
                                 className={`box  flex z-[21]  w-full ${text.senderId !== friendId ? "justify-end items-end" : "justify-start items-start"} flex-col`}
                                 ref={scrollRef}
-                                key={text.messageID}
+                                key={index}
                             >
-                                <div className={`wrap flex items-center  w-[90%]  ${text.senderId !== friendId ? "justify-end items-end" : "justify-start items-start"} ${own && "mr-[0rem] mb-2"}`}>
+                                <div className={`wrap flex items-center  w-[90%]   ${text.senderId !== friendId ? " justify-end items-end  " : "justify-end items-end flex-row-reverse"} ${own && "mr-[0rem] mb-2"}`}>
                                     {/* {
                                         messageId.includes(text.messageID) && <NotUpload />
                                     } */}
-                                    <motion.div className={`left_message_box cursor-pointer overflow-hidden  max-w-[80%]  mt-[.8rem] $  ml-[.5rem] rounded-[13px]  p-2 ${text.senderId === friendId ? "friend_message" : "my_class_message"}  ${own && "mr-[.5rem] mb-2"}`}
+                                    <div className="forward bg-[#d3d3d391] p-2 md:p-[.25rem] rounded-full cursor-pointer hover:bg-[#989898] transition-all delay-150 hover:text-[#fff]"
+                                        onClick={() => {
+                                            setWholeMessage(text)
+                                            setShowForwardComponent(true)
+                                        }}
+                                    >
+                                        <RiShareForwardFill className="text-[1.2rem] md:text-[1.4rem] hover:text-[#fff]" />
+                                    </div>
+                                    <motion.div className={`left_message_box  overflow-hidden  max-w-[80%]  mt-[.8rem] $  ml-[.5rem] rounded-[13px]  p-2 ${text.senderId === friendId ? "friend_message" : "my_class_message"}  ${own && "mr-[.5rem] mb-2"}`}
                                         initial={{ opacity: 0, x: text.senderId !== friendId ? 10 : -200 }}
                                         animate={{
                                             opacity: 1,
@@ -144,47 +94,42 @@ function MessageBox({ message, own, friendId, upload, socket, setBool, setOverla
                                             ease: "easeInOut",
                                             type: "tween"
                                         }}
+
                                     >
+                                        <div className="options  bg-[#005555] mb-1 flex justify-start rounded-md"
+                                        >
+                                            {text.forwarded && <p className='text-[1rem] text-[#fff] font-thin flex items-center tracking-wider italic  flex-[6]'>
+                                                <RiShareForwardFill className="text-[1rem]  hover:text-[#fff] mr-1" />
+                                                forwarded
+
+                                            </p>}
+                                            {/* <div className="show_options  flex-[6] flex justify-end relative">
+                                                {showUpArrow && <RiArrowUpSLine className="text-[2.9rem] text-[#c8c8c8] absolute -top-[12px] " />}
+                                            </div> */}
+                                        </div>
                                         {
                                             text.type === "text" ? (
-                                                <p className="break-words  text-[#ffffff] font-serif text-lg">{text.message}</p>
+                                                <p className="break-words  text-[#ffffff] font-serif text-lg ">{text.message}</p>
                                             ) : (
                                                 text.type === "image" ? (
-                                                    <Image src={text.message}
-                                                        rounded={false}
-                                                        className="cursor-pointer w-[24rem]"
-                                                        onClick={() => {
-                                                            setBool(true)
-                                                            setOverlayObject({
-                                                                type: "image", url: text.message, bool: true,
-                                                                MessageId: text.messageID
-                                                            })
+                                                    <SkeltonLoadingWhileMediaDownload text={text} setBool={setBool} setOverlayObject={setOverlayObject} friendId={friendId} currentId={own} />
 
-                                                        }}
-                                                    />
                                                 ) :
                                                     (
                                                         text.type === "video" ?
                                                             (
                                                                 <>
-                                                                    {upload === false && <MdWarning />}
-                                                                    <video width="100%" height="100%" controls
-                                                                        className="cursor-pointer -mr-[2rem] w-[24rem]"
-                                                                    // onClick={() => {
-
-                                                                    //     setBool(true)
-                                                                    //     setOverlayObject({ type: "video", url: text.message, bool: true })
-
-                                                                    // }}
-                                                                    >
-                                                                        <source src={text.message} type="video/mp4" />
-                                                                    </video>
-
+                                                                    {
+                                                                        // upload === false &&
+                                                                        <>
+                                                                            <MdWarning />
+                                                                            <SkeltonVideoLoading text={text.message} friendId={friendId} currentId={own} />
+                                                                        </>
+                                                                    }
                                                                 </>
                                                             ) : (
                                                                 text.type === "audio" ?
-                                                                    <audio controls className="cursor-pointer -mr-[2rem]" src={text.message}>
-                                                                    </audio>
+                                                                    <SkeltonAudio text={text.message} friendId={friendId} currentId={own} />
                                                                     : text.type === "GIF" &&
                                                                     <Image src={text.message}
                                                                         rounded={false}
@@ -200,8 +145,19 @@ function MessageBox({ message, own, friendId, upload, socket, setBool, setOverla
                                                             ))
                                             )
                                         }
-                                        <p className="mt-2 text-right  text-lg text-white">{format(text.time)}
-                                        </p>
+                                        <section className="mt-2 text-right  text-lg text-white  flex justify-end items-center">
+                                            <p className='mr-4'>
+                                                {format(text.time)}
+
+                                            </p>
+                                            {text.senderId !== friendId && <p className='mr-1'>
+                                                <MdDelete className='text-[1.7rem] text-[#e4e4e4] cursor-pointer'
+                                                    onClick={() => {
+                                                        deleteMessage(text)
+                                                    }}
+                                                />
+                                            </p>}
+                                        </section>
                                     </motion.div>
 
                                 </div>
@@ -258,9 +214,159 @@ function NotUpload() {
             <Tooltips placement="top" ref={uploadFile}>
                 <TooltipsContent className="text-black">not upload, try again</TooltipsContent>
             </Tooltips>
+        </>
+    )
+}
 
 
+function SkeltonLoadingWhileMediaDownload({ text, setBool, setOverlayObject, friendId, currentId }) {
+    const [loading, setLoading] = useState(false)
+    const [blob, setBlob] = useState("")
+    useEffect(() => {
+        async function laodMediaFile() {
+            try {
+                setLoading(true)
+                const response = await Axios({
+                    url: `${process.env.REACT_APP_API_BACKENDURL}/api/v1/users/chats/single`,
+                    method: "GET",
+                    responseType: "blob",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("uuid"),
+                        filePath: text.message,
+                        friendId: friendId,
+                        roomId: "",
+                        currentId: currentId,
+                    }
+                })
+                const file = response.data
+                const Url = URL.createObjectURL(file)
+                setBlob(Url)
+                setLoading(false)
 
+            } catch (err) {
+                setLoading(false)
+
+            }
+
+        }
+
+        laodMediaFile()
+    }, [text])
+    return (
+        <>
+            {
+                loading ?
+                    <div className="flex justify-center items-center bg-[#bfbfbf] w-[24rem] h-[27rem]">
+                    </div> :
+                    <Image src={blob}
+                        rounded={false}
+                        className="cursor-pointer w-[24rem]"
+                        onClick={() => {
+                            setBool(true)
+                            setOverlayObject({
+                                type: "image", url: blob, bool: true,
+                                MessageId: text.messageID
+                            })
+                        }}
+                    />
+            }
+
+        </>
+    )
+}
+
+function SkeltonVideoLoading({ text, friendId, currentId }) {
+    const [loading, setLoading] = useState(false)
+    const [blob, setBlob] = useState("")
+    useEffect(() => {
+        async function laodMediaFile() {
+            try {
+                setLoading(true)
+                const response = await Axios({
+                    url: `${process.env.REACT_APP_API_BACKENDURL}/api/v1/users/chats/single`,
+                    method: "GET",
+                    responseType: "blob",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("uuid"),
+                        filePath: text,
+                        friendId: friendId,
+                        roomId: "",
+                        currentId: currentId,
+                    }
+                })
+                const file = response.data
+                const Url = URL.createObjectURL(file)
+                setBlob(Url)
+                setLoading(false)
+            } catch (err) {
+                setLoading(false)
+            }
+        }
+        laodMediaFile()
+    }, [text])
+    return (
+        <>
+            {
+                loading ?
+                    <div className="flex justify-center items-center bg-[#bfbfbf] w-[24rem] h-[27rem]">
+                    </div> :
+                    <video width="100%" height="100%" controls
+                        className="cursor-pointer -mr-[2rem] w-[24rem]"
+                    // onClick={() => {
+                    //     setBool(true)
+                    //     setOverlayObject({ type: "video", url: text.message, bool: true })
+                    // }}
+                    >
+                        <source src={blob} type="video/mp4" />
+                    </video>
+            }
+
+        </>
+    )
+}
+
+
+function SkeltonAudio({ text, friendId, currentId }) {
+    const [loading, setLoading] = useState(false)
+    const [blob, setBlob] = useState("")
+    useEffect(() => {
+        async function laodMediaFile() {
+            try {
+                setLoading(true)
+                const response = await Axios({
+                    url: `${process.env.REACT_APP_API_BACKENDURL}/api/v1/users/chats/single`,
+                    method: "GET",
+                    responseType: "blob",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("uuid"),
+                        filePath: text,
+                        friendId: friendId,
+                        roomId: "",
+                        currentId: currentId,
+                    }
+                })
+                const file = response.data
+                const Url = URL.createObjectURL(file)
+                setBlob(Url)
+                setLoading(false)
+            } catch (err) {
+                setLoading(false)
+            }
+        }
+        laodMediaFile()
+    }, [text])
+    return (
+        <>
+            {
+                loading ?
+                    <div className="flex justify-center items-center bg-[#bfbfbf] w-[24rem] h-[27rem]">
+                    </div> :
+                    <audio controls className="cursor-pointer -mr-[2rem]" src={blob}>
+                    </audio>
+            }
 
         </>
     )

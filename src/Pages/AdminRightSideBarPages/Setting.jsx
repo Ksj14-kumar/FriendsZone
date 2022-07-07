@@ -6,4 +6,4 @@ function Setting() {
     )
 }
 
-export default Setting
+export default Setting = React.memo(Setting)

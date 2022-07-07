@@ -17,4 +17,4 @@ function UserPosts() {
     )
 }
 
-export default UserPosts;
+export default UserPosts= React.memo(UserPosts);

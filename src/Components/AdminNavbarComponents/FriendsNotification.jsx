@@ -5,7 +5,9 @@ import { NavLink } from 'react-router-dom';
 import { motion } from "framer-motion"
 import Axios from "axios"
 import Photos from "../../assets/img/download.png"
-function FriendsNotification({ receivedRequest, AcceptFriendRequest, DeleteFriendRequest, messageAftetAcceptRequest, __id__, setReceivedRequest }) {
+import LoadFriendsNoti from './LoadFriendsNoti';
+function FriendsNotification({ receivedRequest, AcceptFriendRequest, DeleteFriendRequest, messageAftetAcceptRequest, __id__, setReceivedRequest, theme }) {
+
 
 
     useEffect(() => {
@@ -18,38 +20,38 @@ function FriendsNotification({ receivedRequest, AcceptFriendRequest, DeleteFrien
                     "Content-Type": "application/json"
                 }
             })
-            console.log({ value })
             setReceivedRequest(value.data.receiverrequest)
         }
         updateStatus()
     }, [])
     return (
-        <motion.div className={`group_friends_modal_Notification fixed bg-[#ffffff] w-[27rem] mds-editor36:w-full  top-[4rem] right-[1rem] mds-editor36:right-0 rounded-md drop-shadow-xl p-4 px-2 pt-2 ${receivedRequest?.length > 5 ? "max-h-[27rem]" : "rounded-md"} overflow-x-hidden overflow-y-auto`}
+        <motion.div className={`group_friends_modal_Notification fixed ${theme ? "bg-[#0b0b0b] border border-solid border-[#5e5e5e]" : "bg-[#ffffff]"} w-[27rem] mds-editor36:w-full  top-[4rem] right-[1rem] mds-editor36:right-0 rounded-md drop-shadow-xl p-4 px-2 pt-2 ${receivedRequest?.length > 5 ? "max-h-[27rem]" : "rounded-md"} overflow-x-hidden overflow-y-auto`}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.1 }}
             id="friendsNoti"
         >
-            <header className='py-2  w-full rounded-md px-1 text-[1.2rem] font-serif tracking-wider truncate select-none mds-editor36:text-center'>Friend Notifications</header>
-            <hr className='mb-1 bg-[#ececec]' />
+            <header className={`py-2  w-full rounded-md px-1 text-[1.2rem] font-serif tracking-wider truncate select-none mds-editor36:text-center ${theme ? "text-[#fff]" : "text-[#000]"}`}>Friend Notifications</header>
+            <hr className={`mb-1  ${theme ? "bg-[#0f0f0f]" : "bg-[#ececec]"}`} />
+
             <main className="body">
                 {
                     receivedRequest !== undefined ? receivedRequest.map((item, index) => {
                         return (
                             <>
-                                <LoadFriendsNoti item={item} AcceptFriendRequest={AcceptFriendRequest} DeleteFriendRequest={DeleteFriendRequest} key={index} />
+                                <LoadFriendsNoti item={item} AcceptFriendRequest={AcceptFriendRequest} DeleteFriendRequest={DeleteFriendRequest} key={index} theme={theme} />
                             </>
                         )
                     }) :
                         <>
-                            <p className='text-center text-[1.3rem] tracking-wider font-serif'>No, notifications</p>
+                            <p className={`text-center text-[1.3rem] tracking-wider font-serif ${theme ? "text-[#fff]" : "text-[#030303]"}`}>No, notifications</p>
 
                         </>
                 }
 
                 {
-                    messageAftetAcceptRequest?.length > 0 && <p className='flex cursor-pointer hover:bg-[#dadada] rounded-md py-1 w-full'>
+                    messageAftetAcceptRequest?.length > 0 && <p className={`flex cursor-pointer  rounded-md py-1 w-full ${theme ? "hover:bg-[#595959]" : "hover:bg-[#dadada]"}`}>
                         <NavLink to={`/profile/${messageAftetAcceptRequest[0].senderId}`}
                             style={{
                                 display: "flex",
@@ -58,105 +60,25 @@ function FriendsNotification({ receivedRequest, AcceptFriendRequest, DeleteFrien
                                 paddingLeft: "1rem",
                             }}
                         >
-                            <Image src={messageAftetAcceptRequest[0].url}
+                            {messageAftetAcceptRequest[0].url ? <Image src={messageAftetAcceptRequest[0].url}
                                 rounded={true}
-                                className="md:w-[2.9rem] w-[2.7rem] md:h-[2.9rem] h-[2.7rem]"
-                            />
-                            <p className=' truncate md:text-[1.4rem] items-center ml-2'>
-                                <span className='text-[1.1rem] md:text-[1.4rem] font-semibold'>{messageAftetAcceptRequest[0].name}</span> and you, connected
+                                className={`md:w-[2.9rem] w-[2.7rem] md:h-[2.9rem] h-[2.7rem] ${theme ? "outline outline-2 outline-offset-2 outline-[#fff] outline-solid" : ""}`}
+                            /> : <Image src={Photos}
+                                rounded={true}
+                                className={`md:w-[2.9rem] w-[2.7rem] md:h-[2.9rem] h-[2.7rem] ${theme ? "outline outline-2 outline-offset-2 outline-[#fff] outline-solid" : ""}`}
+                            />}
+                            <p className=' truncate md:text-[1.4rem] flex flex-wrap items-center ml-3'>
+                                <p className={`text-[1.1rem] md:text-[1.4rem] font-semibold truncate ${theme ? "text-[#fff]" : "text-[#040404]"}`}>{messageAftetAcceptRequest[0].name}</p>
+                                <p className={`ml-[7px] ${theme ? "text-[#fff]" : "text-[#060606]"}`}>and you, connected</p>
                             </p>
                         </NavLink>
                     </p>
                 }
 
             </main>
-            {/* <footer className="foo">
-                This is footer
 
-            </footer> */}
         </motion.div>
     )
 }
 
-export default FriendsNotification;
-
-function LoadFriendsNoti({ item, AcceptFriendRequest, DeleteFriendRequest }) {
-    console.log({ item })
-    // console.log({ AcceptFriendRequest })
-    return (
-        <>
-            <section className={`flex flex-col hover:bg-[#cfcfcf71]  rounded-md py-[.5rem] transition-all duration-100 `}>
-                <>
-                    <div className="image_group flex justify-around">
-                        <div className="center flex justify-center items-center mr-[10px] ml-[6px] truncate py-2">
-                            <NavLink to={`/profile/${item._id}`}>
-                                <p className='md:text-[1.2rem] font-bold tracking-wider cursor-pointer truncate'>{item.name}</p>
-                            </NavLink>
-                            <p className='md:text-[1rem] font-light ml-[.3rem] flex truncate tracking-wider font-serif'>want to connect with you</p>
-                        </div>
-                        <NavLink to={`/profile/${item._id}`}
-                            style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                            }}
-                        >
-                            <div className="left md:w-[2.7rem] w-[2rem] md:h-[2.7rem] h-[2rem] cursor-pointer flex-shrink-0 mr-[8px]">
-                                {
-                                    item.url ? <Image src={item.url}
-                                        rounded={true}
-                                        className="flex-shrink-0  md:w-[2.7rem] w-[2.7rem] md:h-[2.7rem] h-[2.7rem]"
-                                    /> :
-                                        <Image src={Photos}
-                                            rounded={true}
-                                            className="flex-shrink-0  md:w-[2.7rem] w-[2rem] md:h-[2.7rem] h-[2rem]"
-                                        />
-                                }
-                            </div>
-                        </NavLink>
-                    </div>
-                    <div className="btn-group flex justify-center ">
-                        <Button
-                            color="deepPurple"
-                            buttonType="link"
-                            size="sm"
-                            rounded={false}
-                            block={false}
-                            iconOnly={false}
-                            ripple="dark"
-                            onClick={(e) => {
-                                e.preventDefault()
-                                AcceptFriendRequest(item._id, item.name, item.url)
-                                // setAcceptRequest(true)
-                            }}
-                        >
-                            Accept
-                        </Button>
-                        <Button
-                            color="red"
-                            buttonType="link"
-                            size="sm"
-                            rounded={false}
-                            block={false}
-                            iconOnly={false}
-                            ripple="dark"
-                            onClick={(e) => {
-                                e.preventDefault()
-                                DeleteFriendRequest(item._id)
-                            }}
-                        >
-                            Cancle
-                        </Button>
-                    </div>
-                </>
-
-
-            </section>
-
-
-
-
-
-        </>
-    )
-}
+export default FriendsNotification = React.memo(FriendsNotification);

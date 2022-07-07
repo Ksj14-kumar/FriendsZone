@@ -29,7 +29,6 @@ function CreateRoom({ q, setRooms, Rooms, setRoomChatHeader }) {
             else {
                 setCreateRoomLoader(true)
                 const RoomId = Math.floor(Math.random() * 1000000000)
-                // setRoomList([...RoomList, { RoomId, RoomName, admin: UserInformationLoad._id + RoomId, type: room }])
                 try {
 
                     const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/room/create`, {
@@ -96,7 +95,7 @@ function CreateRoom({ q, setRooms, Rooms, setRoomChatHeader }) {
 
                 <div className="input_fields bg-[#d1d0d0] w-[19.5rem] -ml-[1rem] px-[.4rem] py-[.5rem]">
 
-                    <input type="text" placeholder="Room Name" className="input_room w-[18.7rem]  h-[3.1rem] focus:outline-none indent-3 my-[.2rem] rounded-md font-serif text-[1.1rem] pr-3"
+                    <input type="text" placeholder="create room..." className="input_room w-[18.7rem]  h-[3.1rem] focus:outline-none indent-3 my-[.2rem] rounded-md font-serif text-[1.1rem] pr-3"
 
                         value={RoomName}
                         onChange={(e) => {
@@ -105,7 +104,6 @@ function CreateRoom({ q, setRooms, Rooms, setRoomChatHeader }) {
                     />
                 </div>
                 <motion.div
-                    // ${RoomName.length > 0 ? "visible" : "hidden"}`
                     initial={{ opacity: 0, y: "-2rem" }}
                     animate={{ opacity: 1, y: "0rem" }}
                     transition={{ duration: .5 }}
@@ -122,17 +120,17 @@ function CreateRoom({ q, setRooms, Rooms, setRoomChatHeader }) {
             {/* D6D6D6 */}
             <div className={`rooms_list bg-[#D6D6D6] h-full  relative   ${RoomName.length > 0 ? "top-[11.2rem]" : "top-[8rem]"}`} id="room_center">
                 {
-                    RoomList.length > 0 && RoomList.map((item) => {
+                    RoomList.length > 0 && RoomList.map((item, index) => {
                         return (
                             <>
                                 <NavLink to={`/messages?q=${item.RoomId}`}
+                                key={index}
 
                                 >
                                     <div className={`rooms flex justify-start px-[.6rem] py-[.4rem] relative cursor-pointer ${q === item.RoomId ? "bg-[#de0000]" : ""}`}
                                         onClick={() => {
                                             setRoomChatHeader(false)
                                         }}
-                                        key={item.RoomId}
                                     >
 
 
@@ -161,4 +159,4 @@ function CreateRoom({ q, setRooms, Rooms, setRoomChatHeader }) {
     )
 }
 
-export default CreateRoom;
+export default CreateRoom = React.memo(CreateRoom);

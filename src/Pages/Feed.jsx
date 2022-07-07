@@ -9,11 +9,11 @@ function Feed({ socket, setShowLikeUserModal, showLikeUserModal }) {
     const [suggestionFriends, setSuggestionFriends] = useState([])
 
 
-    const UserInformationLoad = useSelector((state) => {
-        return state.UserInformationLoad.value
-    })
-    const PostWhichUserSelectedImageORVideo = useSelector((state) => {
-        return state.PostWhichUserSelectedImageORVideo
+    const { UserInformationLoad, PostWhichUserSelectedImageORVideo } = useSelector((state) => {
+        return {
+            UserInformationLoad: state.UserInformationLoad.value,
+            PostWhichUserSelectedImageORVideo: state.PostWhichUserSelectedImageORVideo
+        }
     })
 
 
@@ -26,6 +26,8 @@ function Feed({ socket, setShowLikeUserModal, showLikeUserModal }) {
             dispatch({ type: "onlineUsers", payload: data })
         })
     }, [])
+
+    
 
     useEffect(() => {
         async function getAllUser() {
@@ -107,4 +109,4 @@ function Feed({ socket, setShowLikeUserModal, showLikeUserModal }) {
     )
 }
 
-export default Feed
+export default Feed = React.memo(Feed)

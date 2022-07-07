@@ -23,8 +23,6 @@ function SelectMultipleImage({ setImageFileSelector, setImageGroupURl, imageGrou
     function SelectFiles(e) {
         e.preventDefault()
         const Files = e.target.files[0]
-        console.log(Files)
-        // console.log(Files.type.split("/")[0])
         if (Files.type === "image/png" || Files.type === "image/jpeg" || Files.type === "image/jpg" || Files.type === "image/gif" || Files.type === "image/webp" || Files.type === "image/svg+xml" || Files.type === "video/mp4" || Files.type === "video/webm" || Files.type === "video/ogg" || Files.type === "audio/mp3" || Files.type === "audio/ogg" || Files.type === "audio/wav" || Files.type === "audio/mpeg") {
             if (Files.size <= 35651584) {
                 const Url = URL.createObjectURL(Files)
@@ -66,8 +64,6 @@ function SelectMultipleImage({ setImageFileSelector, setImageGroupURl, imageGrou
 
 
 
-    console.log(imageGroupURl)
-    // console.log(imagelocalUrl)
     return (
         <>
             <div className="select-multiple-image absolute h-screen w-screen bg-[#4a4949] z-[22] overflow-x-hidden" id="imageSelectOverlay">
@@ -126,7 +122,6 @@ function SelectMultipleImage({ setImageFileSelector, setImageGroupURl, imageGrou
                                         SelectFiles(e)
                                     }}
                                 />
-                                {/* </label> */}
                             </abbr>
                             {imagelocalUrl.length > 0 && <abbr title="Send">
                                 <p className="btn text-[5rem] text-white flex justify-center items-center w-[15rem] h-[6rem] -pt-[2px] rounded shadow-md cursor-pointer p-0 mds-editor8:w-[4rem] mds-editor8:h-[4rem] mds-editor8:text-[4rem] mt-2" id="sendButton"

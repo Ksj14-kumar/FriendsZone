@@ -23,6 +23,7 @@ import BookMark from "./Redux/BookMarkPosts"
 import getPos from "./Redux/GetPosition"
 import OriginalProfileURL from "./Redux/OriginalProfileUrl"
 import UnreadMessageNotification from "./Redux/UnreadMessageNotification"
+import Theme from "./Redux/Theme"
 
 const rootReducer = combineReducers({
     imageReducer: ImageReducer,
@@ -56,7 +57,8 @@ const rootReducer = combineReducers({
     getPos,
     BookMark,
     OriginalProfileURL,
-    UnreadMessageNotification
+    UnreadMessageNotification,
+    Theme
 
 
 

@@ -52,7 +52,7 @@ function AllNotification() {
                                 <>
                                     <div className="inner_container bg-[#fff] flex w-[26rem] py-[.5rem] justify-between items-center rounded-md px-2 drop-shadow-md mt-[8px] mb-[8px] mds-editor19:w-full flex-wrap"  >
 
-                                        <NavLink to={`/profile/${item.likedBy}` }>
+                                        <NavLink to={`/profile/${item.likedBy}`}>
                                             <section className="left w-[3rem] h-[3rem] flex-shrink-0 cursor-pointer">
                                                 {
                                                     item.url ?
@@ -62,7 +62,7 @@ function AllNotification() {
                                                             raised={false}
                                                             alt="img"
                                                             className="h-full w-full"
-                                                        
+
                                                         /> : <Image
                                                             src={img}
                                                             rounded={true}
@@ -104,4 +104,4 @@ function AllNotification() {
     )
 }
 
-export default AllNotification
+export default AllNotification = React.memo(AllNotification)

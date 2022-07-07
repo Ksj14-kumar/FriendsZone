@@ -162,6 +162,7 @@ const CommentForm = ({
                                                     style={{
                                                         width: "100%"
                                                     }}
+                                                    key={index}
                                                 >
                                                     <div className="w-full"
                                                         key={index}

@@ -1,37 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react'
-import RecentlyChatUser from '../Components/ChatSectionComponent/LeftSideChatSectionComponent/RecentlyChatUser'
-import AdminMessage from '../Components/Messages/AdminMessage'
-import ChatHeader from '../Components/Messages/ChatHeader'
-import FriendsList from '../Components/Messages/FriendsList'
 import Image from '@material-tailwind/react/Image';
-import { MdLocationOn, MdSearch, MdLocalPhone, MdCollectionsBookmark } from 'react-icons/md';
-import { IoIosVideocam } from 'react-icons/io';
 import { useParams, useHistory, useLocation } from "react-router-dom"
-import img from '../assets/img/team-2-800x800.jpg';
 import MessageChatHeader from '../Components/ChatSectionComponent/CenterChatSection/MessageChatHeader'
 import MessageBox from '../Components/ChatSectionComponent/CenterChatSection/MessageBox'
 import { IoIosSend } from "react-icons/io"
 import { AiOutlineGif } from "react-icons/ai"
 import { ImAttachment } from "react-icons/im"
 import { MdImage } from "react-icons/md"
-import { AiFillFile } from "react-icons/ai"
-import { BiSticker } from "react-icons/bi"
 import { IoChatbubblesSharp } from "react-icons/io5"
-import RightSideLiveUser from '../Components/ChatSectionComponent/RightSideChatSectionComponent/RightSideLiveUser'
 import { NavLink } from 'react-router-dom'
-import { useSelector, useDispatch } from "react-redux"
+import { useSelector } from "react-redux"
 import Instance from "../Config/Instance"
-import { BallTriangle, Rings, Oval, ThreeDots, Circles, Puff, Bars } from 'react-loader-spinner'
-import TextList from '../Components/ChatSectionComponent/Gippy/TextList'
-import { GiphyFetch } from '@giphy/js-fetch-api'
-
-import GeeyMenuButton from '../Components/ChatSectionComponent/GeeyMenuButton'
-import { success, error } from "../toastifyMessage/Toast"
+import { Puff } from 'react-loader-spinner'
+import { error } from "../toastifyMessage/Toast"
 import Tooltips from "@material-tailwind/react/Tooltips";
 import TooltipsContent from "@material-tailwind/react/TooltipsContent";
-import io from "socket.io-client"
 import OverlayEffexct from '../Components/ChatSectionComponent/OverlayEffexct'
-import ChatUSerSwiper from '../Components/Messages/ChatUSerSwiper'
 import Photo from "../assets/img/download.png"
 import { motion } from 'framer-motion'
 import VideoOverlay from '../Components/ChatSectionComponent/VideoOverlay'
@@ -40,12 +24,13 @@ import { BsFillEmojiSmileFill } from 'react-icons/bs';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import SelectMultipleImage from '../Components/ChatSectionComponent/SelectMultipleImage'
 import ModalForGif from '../Components/ChatSectionComponent/ModalForGif'
-import Sticker from "../assets/Stickers/sticker.png"
-import StickerComponent from '../Components/ChatSectionComponent/StickerComponent'
 import CreateRoom from '../Components/ChatSectionComponent/CreateRoom'
 import RoomChatInfo from '../Components/ChatSectionComponent/RoomChatInfo'
 import SearchFriendsForGroupChat from '../Components/ChatSectionComponent/SearchFriendsForGroupChat'
 import GroupMessageBox from "../Components/ChatSectionComponent/GroupMessageBox"
+import SimpleLeft from '../Components/ChatSectionComponent/SimpleLeft'
+import { Error } from '../Components/Toastify';
+import Axios from "axios"
 
 
 
@@ -56,7 +41,6 @@ import GroupMessageBox from "../Components/ChatSectionComponent/GroupMessageBox"
 function ChatSection({ user, socket }) {
   const [bool, setBool] = useState(false)
   const [overlayObject, setOverlayObject] = useState({ url: "", type: "", bool: false })
-
   const [textMessage, setTextMessage] = useState('')
   const [currentChat, setcurrentChat] = useState([])
   const [arivalMessage, setArrivalMessages] = useState(null)
@@ -82,7 +66,6 @@ function ChatSection({ user, socket }) {
   const [messageLoader, setMessageLoader] = useState(false)
   const [messageId, setMessageId] = useState([])
   const [imageGroupURl, setImageGroupURl] = useState([])
-
   const [ImageSelector, setImageFileSelector] = useState(false)
   const [selectedGif, setSelectedGif] = useState([])
   const [docID, setID] = useState(null)
@@ -99,39 +82,30 @@ function ChatSection({ user, socket }) {
   const [arrivalGroupMessages, setArrivalGroupMessages] = useState(null)
   const [imageSentLoader, setImageSentLoader] = useState(false)
   const [SingleChatLoader, setSingleUserChatLoader] = useState(false)
+  const [blockUser, setBlokedUser] = useState(false)
+  const [searchQuery, setQuery] = useState("")
 
   const history = useHistory()
   const params = useParams()
   const Video = useRef()
   const Files = useRef()
   const textarea = useRef()
-
-
-
-
   let timeout = undefined;
-
   const { search } = useLocation()
   const query = new URLSearchParams(search);
   const q = query.get("q")
-
   const liveFriends = useSelector((state) => {
     return state.OnlineUsers
   })
   const UserInformationLoad = useSelector((state) => {
     return state.UserInformationLoad.value
   })
-
-
-
-
   //now post message to api for Rooms
   useEffect(() => {
     async function GetAllRooms() {
       try {
         const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/rooms/getAllRooms`, {
           method: "GET",
-
           headers: {
             "Authorization": `Bearer ${localStorage.getItem("uuid")}`,
             "roomAdmin": UserInformationLoad?._id,
@@ -148,44 +122,27 @@ function ChatSection({ user, socket }) {
       catch (err) {
         console.warn(err)
       }
-
     }
     GetAllRooms()
   }, [])
-
-
   useEffect(() => {
     socket?.on('getMessage', (message) => {
-      console.log({ message })
       setArrivalMessages(message)
     })
-
     socket?.on('getGroupMessage', (message) => {
-      // setGroupMessages(message)
-      console.log("group Message", message)
       setArrivalGroupMessages(message)
     })
     socket?.on("display", (data) => {
       setIsTyping(data.typing)
     })
   }, [textMessage])
-
-
-
-
   async function SelectImage(e) {
-    // const { data } = await giphy.search('gifs', { q: textMessage, limit: 10 })
     const file = e.target.files[0]
     if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/jpg" || file.type === "image/gif" || file.type === "image/webp" || file.type === "image/svg+xml" || file.type === "video/mp4" || file.type === "video/webm" || file.type === "video/ogg") {
-      // 67,108,864
-      // 35651584
       if (file.size <= 35651584) {
-
-
         const ImageUrl = URL.createObjectURL(file)
         setTextMessage(ImageUrl)
         setFileType(file.type.split("/")[[0]])
-        // setFile(file)
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onloadend = () => {
@@ -202,8 +159,6 @@ function ChatSection({ user, socket }) {
       return
     }
   }
-
-
   //now check the user enter Room id is valid or not
   useEffect(() => {
     async function CheckRoomId() {
@@ -217,7 +172,6 @@ function ChatSection({ user, socket }) {
         })
         const resData = await res.json()
         if (res.status === 200) {
-          // return
         }
         else if (res.status === 404) {
           history.push("/")
@@ -231,36 +185,22 @@ function ChatSection({ user, socket }) {
         console.log(err)
       }
     }
-    q.length === 9 && CheckRoomId()
+    q?.length === 9 && CheckRoomId()
   }, [q])
-
-
-
-
-
-
-
-
   //send message to the server
   async function SendMessage(e) {
-    // console.log(selectedGif, "selected files")
-    // e.preventDefault()
     const MessageId = Math.floor(Math.random() * 1000000)
-
     if (textMessage.length === 0) {
       setErr(true)
     }
     setImageSentLoader(true)
-
-    if (q.length === 9) {
+    if (q?.length === 9) {
       const MessageGroupId = Math.floor(Math.random() * 100000000)
-      //now check the user is memeber of this group or not
       const isMember = await groupMembers.some((member) => {
         return member._id === UserInformationLoad?._id
       })
       if (isMember) {
         try {
-
           if (textMessage) {
             socket.emit("sendGroupMessage", {
               receiverId: UserInformationLoad?.googleId,
@@ -273,7 +213,6 @@ function ChatSection({ user, socket }) {
               time: Date.now(),
               type: "text",
             })
-
             const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/group/message/save`, {
               method: "POST",
               body: JSON.stringify({
@@ -289,7 +228,6 @@ function ChatSection({ user, socket }) {
               headers: {
                 "Authorization": `Bearer ${localStorage.getItem("uuid")}`,
                 "Content-Type": "application/json",
-
               }
             })
             const data = await res.json()
@@ -297,16 +235,16 @@ function ChatSection({ user, socket }) {
               setGroupMessages(data.result.RoomMessages)
               setTextMessage("")
             }
+            else if(res.status===455){
+              error({message:"can't not send message, you blocked this user"})
+            }
             else if (res.status !== 200) {
               error({ message: "not send", pos: "top-right" })
             }
           }
-
           else if (selectedGif.length > 0) {
             const value = currentChat !== undefined ? currentChat : ""
-            // setcurrentChat([...value, ...selectedGif])
             try {
-
               selectedGif.forEach(async (gif) => {
                 const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/group/message/save`, {
                   method: "POST",
@@ -329,6 +267,9 @@ function ChatSection({ user, socket }) {
                 if (res.status === 200) {
                   setGroupMessages(data.result.RoomMessages)
                 }
+                else if(res.status===455){
+                  error({message:"can't not send message, you blocked this user"})
+                }
                 else if (res.status !== 200) {
                   error({ message: "not send", pos: "top-right" })
                 }
@@ -338,9 +279,7 @@ function ChatSection({ user, socket }) {
               console.warn(err)
             }
           }
-
           else if (imageGroupURl.length > 0) {
-            // console.log({ imageGroupURl })
             setImageSentLoader(true)
             imageGroupURl.forEach(async (img) => {
               const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/group/message/save`, {
@@ -358,14 +297,15 @@ function ChatSection({ user, socket }) {
                 headers: {
                   "Authorization": `Bearer ${localStorage.getItem("uuid")}`,
                   "Content-Type": "application/json",
-
                 }
               })
               const data = await res.json()
               if (res.status === 200) {
                 setImageSentLoader(false)
                 setGroupMessages(data.result.RoomMessages)
-
+              }
+              else if(res.status===455){
+                error({message:"can't not send message, you blocked this user"})
               }
               else if (res.status !== 200) {
                 setImageSentLoader(false)
@@ -375,26 +315,18 @@ function ChatSection({ user, socket }) {
           }
         } catch (err) {
           console.warn(err)
-
         }
       }
-
       return
     }
-
-    //send the Gif
     if (selectedGif.length > 0) {
       const value = currentChat !== undefined ? currentChat : ""
-      // setcurrentChat([...value, ...selectedGif])
       selectedGif.forEach(async (gif) => {
         socket.emit("sendMessage", {
           ...gif,
           receiverId: q
         })
-
-
         const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/messages/send`, {
-          // Instance.post
           method: "POST",
           body: JSON.stringify(
             {
@@ -405,18 +337,14 @@ function ChatSection({ user, socket }) {
               messageID: gif.messageID,
               seen: false,
               time: gif.time
-
             }),
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${localStorage.getItem("uuid")}`
           }
         })
-
         const resData = await res.json()
         if (res.status === 200) {
-          // setMessageId([...messageId, item.messageID])
-          // setImageGroupURl([])
           setcurrentChat([...resData.result.messages])
           setSelectedGif([])
         }
@@ -424,21 +352,16 @@ function ChatSection({ user, socket }) {
           setMessageId([...messageId, res.messageId])
           setSentMessageLoader("not")
           setUploadLoaderMessage(false)
-
         }
-
-
-
+        else if(res.status===455){
+          error({message:"can't not send message, you blocked this user"})
+        }
       })
-
     }
-
     //send the group images to users
     if (imageGroupURl.length > 0) {
       const value = currentChat !== undefined ? currentChat : ""
       // setcurrentChat([...value, ...imageGroupURl])
-
-
       setImageSentLoader(true)
       imageGroupURl.forEach(async (item) => {
         try {
@@ -447,7 +370,6 @@ function ChatSection({ user, socket }) {
             receiverId: q
           })
           const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/messages/send`, {
-            // Instance.post
             method: "POST",
             body: JSON.stringify(
               {
@@ -459,14 +381,12 @@ function ChatSection({ user, socket }) {
                 seen: false,
                 time: item.time,
                 base: item.base64URl
-
               }),
             headers: {
               "Content-Type": "application/json",
               "Authorization": `Bearer ${localStorage.getItem("uuid")}`
             }
           })
-
           const resData = await res.json()
           if (res.status === 200) {
             // setMessageId([...messageId, item.messageID])
@@ -474,41 +394,35 @@ function ChatSection({ user, socket }) {
             setImageGroupURl([])
             setImageSentLoader(false)
           }
+          else if(res.status===455){
+            error({message:"can't not send message, you blocked this user"})
+          }
           else if (res.status !== 200) {
             setMessageId([...messageId, res.messageId])
             setSentMessageLoader("not")
             setUploadLoaderMessage(false)
             setImageSentLoader(false)
             error({ message: "not send", pos: "top-right" })
-
           }
         }
         catch (err) {
           console.warn(err)
         }
-
-
       })
       setImageSentLoader(false)
     }
-
-
     //send the text messsage to the user
     if (textMessage.trim().length > 0) {
-
       try {
         socket.emit("sendMessage", {
           message: textMessage,
           senderId: user,
           receiverId: q,
-
           time: Date.now(),
           type: fileType,
           messageID: MessageId
         })
-
         const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/messages/send`, {
-          // Instance.post
           method: "POST",
           body: JSON.stringify(
             {
@@ -519,16 +433,13 @@ function ChatSection({ user, socket }) {
               type: fileType,
               messageID: MessageId,
               seen: false,
-
             }),
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${localStorage.getItem("uuid")}`
           }
-
         },
         )
-
         const resData = await res.json()
         if (res.status === 200) {
           setcurrentChat([...resData.result.messages])
@@ -536,9 +447,12 @@ function ChatSection({ user, socket }) {
           setTextMessageBase64("")
           setTextMessage("")
         }
+        else if(res.status===455){
+          error({message:"can't not send message, you blocked this user"})
+        }
         else if (res.status === 500) {
           setMessageId([...messageId, resData.messageId])
-          setSentMessageLoader("not")
+
           setUploadLoaderMessage(false)
           textMessage.includes("blob:http://") && (setTextMessageBase64("") || setTextMessage(""))
           error({ message: "not send", pos: "top-right" })
@@ -549,27 +463,20 @@ function ChatSection({ user, socket }) {
           setUploadLoaderMessage(false)
           error({ message: "not send", pos: "top-right" })
         }
-
-
       }
       catch (err) {
         console.warn(err)
       }
     }
   }
-
-
   async function ChatMessageFunction(e) {
     setTextMessage(e.target.value)
     setFileType("text")
   }
 
-
-
   //getMessages
   useEffect(() => {
     async function getMessages() {
-      // alert("click outside")
       try {
         setMessageLoader(true)
         const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/messages/get/${user}/${q}`, {
@@ -578,7 +485,6 @@ function ChatSection({ user, socket }) {
           headers: {
             "Authorization": `Bearer ${localStorage.getItem("uuid")}`
           }
-
         })
         const resData = await res.json()
         if (res.status === 200) {
@@ -612,9 +518,11 @@ function ChatSection({ user, socket }) {
             "Authorization": `Bearer ${localStorage.getItem("uuid")}`
           }
         })
+        console.log({ resData })
         if (resData.status === 200) {
           setLoader(false)
           setConvertionUsersList(resData.data)
+          setBlokedUser(resData.data[0].block)
         }
         else if (resData.status !== 200) {
           setLoader(false)
@@ -623,16 +531,12 @@ function ChatSection({ user, socket }) {
         }
       }
       catch (err) {
-        console.warn(err)
       }
     }
     q.length > 9 && getAllConversation()
   }, [])
   // user, socket
-
-
   //getuser details
-
   useEffect(() => {
     async function get_Friends_users_Details() {
       try {
@@ -641,43 +545,29 @@ function ChatSection({ user, socket }) {
           headers: {
             "Authorization": `Bearer ${localStorage.getItem("uuid")}`
           }
-
         })
-
         if (resData.status === 200) {
           setChatHeader({ ...resData.data })
           setSingleUserChatLoader(false)
-
         }
         else if (resData.status !== 200) {
           setChatHeader({})
           setSingleUserChatLoader(false)
-
-
         }
       }
       catch (err) {
         console.warn(err)
       }
     }
-    q.length > 9 && get_Friends_users_Details()
+    q?.length > 9 && get_Friends_users_Details()
   }, [q])
-
-
   useEffect(() => {
     arivalMessage && setcurrentChat([...currentChat, arivalMessage])
-
   }, [arivalMessage])
-
-
   function typingTimeout() {
-    // setTyping(false)
     setTyping(false)
     socket.emit('typing', { id: q, typing: false })
-
   }
-
-
   //search friends for send message 
   async function SearchFriend(e) {
     try {
@@ -685,70 +575,26 @@ function ChatSection({ user, socket }) {
       const resData = await Instance.post(`/api/v1/users/search/q?q=${e.target.value}`, {
         "limit": 10,
         id: user
-
       }, {
         headers: {
           "Authorization": `Bearer ${localStorage.getItem("uuid")}`
         }
       })
-
       if (resData.status === 200) {
         setSearchFriends(resData.data)
-
       }
       else if (resData.status !== 200) {
         setSearchFriends([])
-
       }
-
     } catch (err) {
       console.warn(err)
     }
   }
-
-
   useEffect(() => {
     socket?.on("sendRing", (data) => {
       setCallerDetails(data)
     })
   }, [videoOverlay])
-
-  //update the unread message to read message
-  // useEffect(() => {
-  //   async function Update() {
-  //     try {
-  //       const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/update/message/seen/status`, {
-  //         method: "POST",
-  //         body: JSON.stringify({
-  //           friendId: q,
-  //           currentUser: user,
-  //           docId: docID
-  //         }),
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           "Authorization": "Bearer " + localStorage.getItem("uuid")
-  //         }
-  //       })
-  //       const UpdateResponse = await res.json()
-  //       console.log({ UpdateResponse })
-  //       if (res.status === 200) {
-  //         const filterUnreadMessages = UpdateResponse.result.messages.length && UpdateResponse.result.messages.filter(message => {
-  //           return message.senderId !== user && message.seen === false
-  //         })
-  //         // setUnseenMessage(filterUnreadMessages.length)
-  //         // setBool(false)
-  //       }
-  //       else if (res.status !== 200) {
-  //         // setBool(true)
-  //       }
-  //     } catch (err) {
-  //       console.warn(err)
-  //     }
-  //   }
-  //   q.length > 9 && Update()
-  // }, [q, socket, docID])
-
-
   //now get the Rooms messages  from server
   useEffect(() => {
     async function getGroupMembers() {
@@ -759,29 +605,21 @@ function ChatSection({ user, socket }) {
             "Authorization": `Bearer ${localStorage.getItem("uuid")}`
           }
         })
-
         const resData = await res.json()
         console.log("group members", resData)
-
         if (res.status === 200) {
           setRoomData(resData)
           setGroupMembers(resData.RoomMembers)
-          // setGroupMembers(resData.result.RoomMembers)
-
         }
         else if (res.status !== 200) {
         }
-
       }
       catch (err) {
         console.warn(err)
       }
     }
-    q.length === 9 && getGroupMembers()
-
+    q?.length === 9 && getGroupMembers()
   }, [q])
-
-
   useEffect(() => {
     async function getRoomsMessages() {
       try {
@@ -792,115 +630,131 @@ function ChatSection({ user, socket }) {
             "Authorization": `Bearer ${localStorage.getItem("uuid")}`
           }
         })
-
         const resData = await res.json()
         console.log("group messages", resData)
         if (res.status === 200) {
           setGroupMessageLoader(false)
           setGroupMessages(resData.result)
-
         }
         else if (res.status !== 200) {
           setGroupMessageLoader(false)
-
         }
-
       }
       catch (err) {
         console.warn(err)
       }
     }
-    q.length === 9 && getRoomsMessages()
-
+    q?.length === 9 && getRoomsMessages()
   }, [q])
-
-
   useEffect(() => {
     arrivalGroupMessages && setGroupMessages([...groupMessages, arrivalGroupMessages])
-
   }, [arrivalGroupMessages])
-
-
-
-
   useEffect(() => {
     if (textarea.current) {
       textarea.current.style.height = "0px";
       const scrollHeight = textarea.current.scrollHeight;
       textarea.current.style.height = scrollHeight + "px";
-
     }
   }, [textMessage])
 
 
+  //search messages on the search field values
+  useEffect(() => {
+    const filterMessages = currentChat.filter((item) => {
+      return item.message?.toLowerCase()?.includes(searchQuery.toLowerCase())
+    })
+  }, [searchQuery])
+
+  //delete the message
+  async function deleteMessage(value) {
+    try {
+      socket?.emit("deleteMessage", { value, friendId: q, currentId: user })
+
+      setcurrentChat(currentChat.filter(item => item._id !== value._id))
+      const res = await Axios({
+        url: `${process.env.REACT_APP_API_BACKENDURL}/api/v1/delete/message`,
+        method: "DELETE",
+        data: { value, currentId: user, friendId: q },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("uuid")}`
+        }
+      })
+    }
+    catch (err) {
+      error({ message: "Not Delete, try again", pos: "top-right" })
+    }
+  }
+
+  //get delete message using socket
+  useEffect(() => {
+    socket?.on("deleteMessage", (data) => {
+      // console.log(data)
+      setcurrentChat(currentChat.filter((item => item._id !== data.value._id)))
+    })
+  }, [socket, currentChat])
 
 
+  //unblocked and block user 
+  useEffect(() => {
+    try {
+      (async function () {
+        const res = await Axios({
+          url: `${process.env.REACT_APP_API_BACKENDURL}/api/v1/block/user`,
+          method: "PUT",
+          data: { currentId: user, friendId: q, blockUser },
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("uuid")}`
+
+          }
+        })
+
+      })()
+    } catch (err) {
+    }
+  }, [blockUser])
 
 
-
-
-
-
-  // console.log({ groupMessages })
   return (
     <>
-
       {
         Modal && <ModalForGif setSelectedGif={setSelectedGif} selectedGif={selectedGif} senderId={user} setModal={setModal} sendMessage={SendMessage} />
       }
       {
         bool &&
         <OverlayEffexct setBool={setBool} overlayObject={overlayObject} setOverlayObject={setOverlayObject} bool={bool} AllImages={AllImages} />
-
       }
-
       {
         callerDetails ? (<VideoOverlay videoOverlay={videoOverlay} setVideoOverlay={setVideoOverlay} socket={socket} anotherUserId={q} />) : videoOverlay && <VideoOverlay videoOverlay={videoOverlay} setVideoOverlay={setVideoOverlay} socket={socket} anotherUserId={q} />
       }
       {
         ImageSelector && <SelectMultipleImage setImageFileSelector={setImageFileSelector} setImageGroupURl={setImageGroupURl} imageGroupURl={imageGroupURl} senderId={user} SendMessage={SendMessage} imageSentLoader={imageSentLoader} />
       }
-
       {
         ModalForFriends && <SearchFriendsForGroupChat setModalForFriends={setModalForFriends} RoomData={RoomData} setGroupMembers={setGroupMembers} />
       }
-
-
       <div className="top_container flex justify-center  mds-editor23:w-full mds-editor23:block" id='top_chat_container '>
-
-
-
         {/* ======================================LEFT SIDE OF CHAT SECTION=================================== */}
-
         {/* {liveFriends !== undefined && liveFriends.length > 0 && <aside id="live_top_users" className=" md:hidden mt-[4.2rem] flex w-full   fixed bg-[#d0d0d0] ">
           <ChatUSerSwiper liveFriends={liveFriends} />
-
         </aside>} */}
         {/* <hr className="block md:hidden" /> */}
-
         <div className={`'text-center md:mt-[5rem]     fixed   md:left-[18rem] mds-editor23:w-full md:w-[85rem]  flex h-full rounded-sm   flex-wrap  
         md:mr-[5rem]    justify-center z-[18] md:z-[0]`} id='chat_container'>
-          {/* md:flex-[3] lg:flex-[2]  */}
           <aside className="left_section md:flex-[3]  bg-[#dbdbdb] relative rounded-sm  md:block hidden" id="left_chat_section">
-            {/* <div class="form-control toogle_theme -mb-[10px]">
-                <input type="checkbox" className="w-[10px] rounded-xl "/>
-            </div> */}
             <div className="top_search py-[1.2rem] px-[1rem] flex drop-shadow-sm">
-
               <input type="text" placeholder="Search" className="search_input  rounded-md py-[.7rem] outline-none focus:outline-none indent-4 tracking-wider font-serif w-full pr-[3.5rem]"
                 onChange={
                   SearchFriend
                 }
                 onFocus={() => { setSearchBool(true) }}
-
               />
               <button className="search_icon absolute top-[19px] right-[27px] text-[1.5rem] focus:outline-none">
                 <i className="fas fa-search text-[1.5rem] text-[#cacaca]"></i>
               </button>
-
             </div>
             <hr className="bg-[#dfdfdf]" />
-
             <div className="bottom_users  py-[.4rem] overflow-y-auto ">
               {
                 (searchBool && searchInputValue.length > 0) ? (
@@ -909,100 +763,70 @@ function ChatSection({ user, socket }) {
                       searchfriends.length > 0 ? searchfriends.map((user, index) => {
                         return (
                           <SearchFriendsForMessage userD={user}
-
                             setSearchBool={
                               setSearchBool
                             }
-
                           />
                         )
-
                       }) : <NoUserForMessageSend />
                     }
                   </div>
                 )
-                  : (converzationList.length > 0 ? (
-                    converzationList.map((conversation, index) => {
-                      console.log({ conversation })
-                      return (
-                        <RecentlyChatUser key={index} user={conversation} currentUser={user} setChatHeader={setChatHeader} userId={q} unseenMessage={unseenMessage} setRoomChatHeader={setRoomChatHeader} />
-                      )
-                    })
+                  :
+                  (converzationList.length > 0 ? (
+                    <SimpleLeft converzationList={converzationList} current={user} setChatHeader={setChatHeader} socket={socket} />
                   ) : (
                     <NoChat />
                   ))
               }
             </div>
           </aside>
-
-
-
           {/* ============================================== CENTER SECTION CHAT SECTION================ */}
-          {/* md:flex-[7] */}
-          <aside className="chat_section_message_area md:flex-[7]  flex flex-col overflow-y-auto flex-1  relative  w-screen " id={`${q.length === 9 && "chat_section_group"} `}>
-
+          <aside className="chat_section_message_area md:flex-[7]  flex flex-col overflow-y-auto flex-1  relative  w-screen " id={`${q?.length === 9 && "chat_section_group"} `}>
             {
               RoomChatHeader && <RoomChatInfo setRoomChatHeader={setRoomChatHeader} RoomData={RoomData} setRoomData={setRoomData} setModalForFriends={setModalForFriends} groupMembers={groupMembers} setGroupMembers={setGroupMembers} />
             }
-
             {!RoomChatHeader && (
-
               <>
-                <MessageChatHeader chatHeader={chatHeader} setVideoOverlay={setVideoOverlay} q={q} RoomData={RoomData} setRoomChatHeader={setRoomChatHeader} RoomChatHeader={RoomChatHeader} groupMessageLoader={groupMessageLoader} SingleChatLoader={SingleChatLoader} />
-
+                <MessageChatHeader chatHeader={chatHeader} setVideoOverlay={setVideoOverlay} q={q} RoomData={RoomData} setRoomChatHeader={setRoomChatHeader} RoomChatHeader={RoomChatHeader} groupMessageLoader={groupMessageLoader} SingleChatLoader={SingleChatLoader} setQuery={setQuery} own={user} socket={socket}
+                  setBlokedUser={setBlokedUser}
+                  blockUser={blockUser}
+                />
                 <div className="center_message  flex-[8] overflow-y-auto w-full overflow-x-hidden bg-[#f5f5f5]" id="center_message" >
                   {
                     messageLoader ? <MessageLoader /> :
                       (q?.length === 24 && currentChat.length ?
                         <MessageBox
-
-                          message={currentChat} own={user} upload={uploadLoaderMessage} friendId={q} socket={socket} setBool={setBool} setOverlayObject={setOverlayObject} isTyping={isTyping} sendMessageLoader={sendMessageLoader} textMessage={textMessage} messageId={messageId} docID={docID} /> : (q.length === 9 && (
+                          message={currentChat} own={user} upload={uploadLoaderMessage} friendId={q} socket={socket} setBool={setBool} setOverlayObject={setOverlayObject} isTyping={isTyping} sendMessageLoader={sendMessageLoader} textMessage={textMessage} messageId={messageId} docID={docID} deleteMessage={deleteMessage} /> : (q?.length === 9 && (
                             groupMessageLoader ? <MessageLoader /> :
                               groupMessages.length > 0 ?
-
                                 <GroupMessageBox groupMessages={groupMessages} currentId={UserInformationLoad?._id} /> : <NoChatHere />
-
-
-
                           )
-
                         ))
-
-
                   }
-                  {/* (<NoChatHere q={q} />) */}
                 </div>
                 {
                   btnGroup && <ButtonGroup setModal={setModal} setStickerDrawer={setStickerDrawer} setButtonGroup={setButtonGroup} />
                 }
-
-
-
                 <hr className="bg-[#c9c9c9] h-1" />
                 {footerModal === false ? <footer className={`bottom_footer  flex-[1] px-4 flex  ${stickerDrawer ? "hidden" : "block"}`}>
                   <div className="wrap flex items-center w-full relative">
                     <div className="emoji_button  -ml-[.3rem] mds-editor6:-ml-[1rem]">
                       <button className="text-[1.5rem] px-2 ml-[0] focus:outline-none rounded-full hover:bg-[#cdcbcb] py-2 mds-editor6:py-2 mds-editor6:text-[1rem]"
-
-                        disabled={q ? false : true}
+                        disabled={blockUser ? true : messageLoader ? true : q ? false : true}
                         onClick={(e) => {
                           setFooterModal(true)
                         }}
-
                       >
                         <BsFillEmojiSmileFill className="text-[1.8rem] mds-editor6:text-[1.3rem] text-[#efad2a]" />
                       </button>
                     </div>
-
                     <textarea
                       ref={textarea}
                       className={`text-area  w-full indent-2 textarea textarea-bordered   text-lg font-serif tracking-wider   overflow-hidden resize-none`} placeholder="write message..."
-                      disabled={q ? false : true}
-
-
+                      disabled={blockUser ? true : messageLoader ? true : q ? false : true}
                       value={textMessage}
                       onChange={ChatMessageFunction}
-
                       onKeyPress={(e) => {
                         if (e.key === 'Enter') {
                           SendMessage()
@@ -1019,15 +843,12 @@ function ChatSection({ user, socket }) {
                           // SendMessage()
                         }
                       }}
-
                     ></textarea>
-
                     {
                       textMessage.length > 0 ? "" :
                         <div className="button_group flex absolute  right-[1.5rem]">
-
                           <button className="text-[1.5rem] px-2 focus:outline-none rounded-full hover:bg-[#cdcbcb] py-2"
-                            disabled={q ? false : true}
+                            disabled={blockUser ? true : messageLoader ? true : q ? false : true}
                             ref={Files}
                             onClick={() => {
                               setButtonGroup(!btnGroup)
@@ -1036,7 +857,7 @@ function ChatSection({ user, socket }) {
                             <ImAttachment className="text-[1.8rem] mds-editor6:text-[1.3rem]" />
                           </button>
                           <button className=" text-[1.5rem]  focus:outline-none px-2  rounded-full hover:bg-[#cdcbcb] "
-                            disabled={q ? false : true}
+                            disabled={blockUser ? true : messageLoader ? true : q ? false : true}
                             ref={Video}
                             onClick={() => {
                               setImageFileSelector(true)
@@ -1044,81 +865,36 @@ function ChatSection({ user, socket }) {
                           >
                             <label htmlFor="image" className="cursor-pointer">
                               <MdImage className="text-[1.8rem] cursor-pointer mds-editor6:text-[1.3rem]" />
-                              {/* <input type="file" name="" id="image" className="hidden"
-
-          accept="image/*, video/*"
-          
-          onChange={
-            SelectImage
-          }
-        /> */}
                             </label>
                           </button>
-
-                          {/* send the file to user  */}
                           <button className=" text-[1.5rem]  focus:outline-none p-2 rounded-full hover:bg-[#cdcbcb]"
-                            disabled={q ? false : true}
+                            disabled={blockUser ? true : messageLoader ? true : q ? false : true}
                             onClick={(e) => {
                               SendMessage(e)
                             }}
-
                           >
                             <IoIosSend className="text-[1.8rem] mds-editor6:text-[1.3rem]" />
                           </button>
-
                         </div>
                     }
-
                   </div>
                 </footer> : <FooterModal setFooterModal={setFooterModal} setTextMessage={setTextMessage} textMessage={textMessage} SendMessage={SendMessage} ChatMessageFunction={ChatMessageFunction} setTyping={setTyping} timeout={timeout} id={q} typingTimeout={typingTimeout} socket={socket} />}
-
               </>
             )}
-
           </aside>
-
-
-
           {/* =======================================HIDE THE LIVE USER RIGHT SIDE CHAT SECTION================ */}
-
-          {/* <aside className="live_user_from flex-[3]  border border-solid border-[#c6c6c6] rounded-r-md md:block hidden overflow-y-auto" id="live_users">
-
-            <h1 className="text-xl font-serif tracking-wider p-[.85rem] bg-[#d4d4d4]">live friends</h1>
-            {
-
-
-              (liveFriends !== undefined && liveFriends.length) ? liveFriends.map((friend) => {
-                return <RightSideLiveUser friend={friend} />
-              }) : <NoUserLive />
-            }
-          </aside> */}
-
-          {/* create a Room User
-           */}
-          {/* md:flex-[3] lg:flex-[2]  */}
           <aside className="live_user_from md:flex-[3] border border-solid border-[#c6c6c6] rounded-r-md md:block hidden overflow-y-auto relative" id="live_users">
-
-
             <div className="wrapper_rooms bg-[#dfdfdf] relative  w-[19.5rem]">
               <CreateRoom q={q} setRooms={setRooms} Rooms={Rooms} setRoomChatHeader={setRoomChatHeader} />
-
-
             </div>
           </aside>
         </div>
-        {/* <Tooltips placement="top" ref={Video}>
-          <TooltipsContent className="text-black">Video / Image</TooltipsContent>
-        </Tooltips>
-        <Tooltips placement="top" ref={Files}>
-          <TooltipsContent className="text-black">Add Some Files</TooltipsContent>
-        </Tooltips> */}
       </div>
     </>
-
   )
 }
 
-export default ChatSection
+export default ChatSection = React.memo(ChatSection)
 
 
 
@@ -1153,44 +929,9 @@ function ButtonGroup({ setModal, setStickerDrawer, setButtonGroup }) {
   const docFile = useRef()
   const Stickers = useRef()
   const Gif = useRef()
-
   return (
     <>
-
       <div className="btn_group  absolute  bottom-[5rem] right-[7rem] flex flex-col gap-y-1">
-        {/* <motion.button
-          initial={{ x: -800 }}
-          animate={{ x: 0 }}
-          transition={{ duration: 0.2, type: "tween" }}
-
-          className="focus:outline-none rounded-full w-[3.8rem] h-[3.8rem] bg-[#cd049a] text-center text-white border-2 border-solid flex justify-center items-center  border-white"
-          ref={docFile}
-        >
-
-          <AiFillFile className="text-[2rem] text-[#fff] font-serif" />
-        </motion.button> */}
-
-
-
-        {/* <motion.button
-          initial={{ x: -800 }}
-          animate={{ x: 0 }}
-          transition={{ duration: 0.2, type: "tween" }}
-          ref={Stickers}
-          className="focus:outline-none rounded-full w-[3.8rem] h-[3.8rem] bg-[#2E0249] text-center text-white border-2 border-solid flex justify-center items-center  border-white p-2"
-          onClick={() => {
-            setStickerDrawer(true)
-          }}
-        >
-          <Image
-            src={Sticker}
-            rounded={true}
-            className="text-white bg-white"
-          />
-        </motion.button> */}
-
-
-
         <motion.button
           initial={{ x: -800 }}
           animate={{ x: 0 }}
@@ -1204,16 +945,13 @@ function ButtonGroup({ setModal, setStickerDrawer, setButtonGroup }) {
         >
           <AiOutlineGif className="text-[2rem]" />
         </motion.button>
-
         <Tooltips placement="left" ref={docFile}>
           <TooltipsContent className="text-black">
             <p className="text-[1.2rem] font-serif tracking-wider">
               File
             </p>
-
           </TooltipsContent>
         </Tooltips>
-
         <Tooltips placement="left" ref={Gif}>
           <TooltipsContent className="text-black">
             <p className="text-[1.2rem] font-serif tracking-wider">
@@ -1221,7 +959,6 @@ function ButtonGroup({ setModal, setStickerDrawer, setButtonGroup }) {
             </p>
           </TooltipsContent>
         </Tooltips>
-
         <Tooltips placement="left" ref={Stickers}>
           <TooltipsContent className="text-black">
             <p className="text-[1.2rem] font-serif tracking-wider">
@@ -1229,10 +966,7 @@ function ButtonGroup({ setModal, setStickerDrawer, setButtonGroup }) {
             </p>
           </TooltipsContent>
         </Tooltips>
-
       </div>
-
-
     </>
   )
 }
@@ -1241,57 +975,43 @@ function ButtonGroup({ setModal, setStickerDrawer, setButtonGroup }) {
 function SearchFriendsForMessage({ userD, setSearchBool }) {
   return (
     <>
-
       <NavLink to={`/messages?q=${userD._id}`}
         activeStyle={{
           // backgroundColor: "#F32424",
-
         }}
         isActive={(match, location) => {
           return location.pathname === `/messages/${userD._id}`
-
         }}
       >
         <div className={`top   mb-[.2rem] py-[.2rem] `}
-
           onClick={(e) => {
             // setChatHeader(userD)
             setSearchBool(false)
-
           }}
-
         >
           <div className="inner_div mx-[.5rem] bg-[#b0afaf]  flex  items-center rounded-md py-[.1rem] cursor-pointer mb-[0rem] hover:bg-[#161D6F] hover:text-white">
-
-
             <section className="image  flex-shrink-0 flex flex-[3] items-center justify-center mx-auto cursor-pointer">
               <div className="image_inner w-[2.6rem] h-[2.6rem] flex rounded-full   ">
                 {
-
                   userD.url ?
                     <Image src={userD.url} className="rounded-full flex-shrink-0 w-full h-full" rounded={true} />
                     :
                     <Image src={Photo} className="rounded-full flex-shrink-0 w-full h-full" rounded={true} />
                 }
               </div>
-
             </section>
             <section className="name flex-[7] truncate flex justify-start">
               <p className="text-lg font-serif tracking-wider px-1 truncate">{
                 userD.name.length > 16 ? userD.name.slice(0, 15) + "...." : userD.name
               }</p>
             </section>
-            <section className="message_number flex-[2]  mr-[.8rem] rounded-full flex items-center justify-center ">
+            {/* <section className="message_number flex-[2]  mr-[.8rem] rounded-full flex items-center justify-center ">
               <p className="text-[#fff] text-lg  rounded-full bg-[#570A57] 
       px-[.7rem] py-[.1rem]" >5</p>
-
-            </section>
-
+            </section> */}
           </div >
-
         </div>
       </NavLink>
-
     </>
   )
 }
@@ -1317,16 +1037,11 @@ function FooterModal({ setFooterModal, setTextMessage, textMessage, SendMessage,
     else {
       setTextMessage(emojiObject.emoji)
     }
-
-
   }
   return (
     <>
       <motion.div
-
-
         className="wrapper_footer">
-
         <footer className="bottom_footer  flex-[1] px-4 flex items-center">
           <div className="wrap flex items-center w-full relative">
             <div className="emoji_button  -ml-[.3rem] mds-editor6:-ml-[1rem]">
@@ -1334,17 +1049,13 @@ function FooterModal({ setFooterModal, setTextMessage, textMessage, SendMessage,
                 onClick={(e) => {
                   setFooterModal(false)
                 }}
-
               >
                 <AiOutlineArrowLeft className="text-[1.8rem] mds-editor6:text-[1.3rem] text-[#101010]" />
               </button>
-
             </div>
-            <textarea class="textarea textarea-bordered w-full indent-0  pr-[8.5rem] text-lg font-serif tracking-wider  resize-none min-h-[.8rem]" placeholder="write message..."
-
+            <textarea className="textarea textarea-bordered w-full indent-0  pr-[8.5rem] text-lg font-serif tracking-wider  resize-none min-h-[.8rem]" placeholder="write message..."
               value={textMessage}
               onChange={ChatMessageFunction}
-
               onKeyPress={(e) => {
                 if (e.key === 'Enter') {
                   SendMessage()
@@ -1361,7 +1072,6 @@ function FooterModal({ setFooterModal, setTextMessage, textMessage, SendMessage,
                   // SendMessage()
                 }
               }}
-
             ></textarea>
             {/* <Error isError={err} text='need length longer than 0 for input' />
               {results && <TextList gifs={results} />} */}
@@ -1375,13 +1085,11 @@ function FooterModal({ setFooterModal, setTextMessage, textMessage, SendMessage,
                 <ImAttachment className="text-[1.8rem] mds-editor6:text-[1.3rem]" />
               </button>
               {/* Take the image from users camera */}
-
               <button className=" text-[1.5rem]  focus:outline-none px-2  rounded-full hover:bg-[#cdcbcb] cursor-pointer"
               >
                 <label htmlFor="image" className="cursor-pointer">
                   <MdImage className="text-[1.8rem] cursor-pointer mds-editor6:text-[1.3rem]" />
                   <input type="file" name="" id="image" className="hidden"
-
                     accept="image/*, video/*"
                   // onChange={
                   //   SelectImage
@@ -1389,17 +1097,14 @@ function FooterModal({ setFooterModal, setTextMessage, textMessage, SendMessage,
                   />
                 </label>
               </button>
-
               {/* send the file to user  */}
               <button className=" text-[1.5rem]  focus:outline-none p-2 rounded-full hover:bg-[#cdcbcb]"
                 onClick={(e) => {
                   SendMessage(e)
                 }}
-
               >
                 <IoIosSend className="text-[1.8rem] mds-editor6:text-[1.3rem]" />
               </button>
-
             </div>
           </div>
         </footer>
@@ -1413,15 +1118,9 @@ function FooterModal({ setFooterModal, setTextMessage, textMessage, SendMessage,
               ".emoji-picker-react.emoji-categories": {
                 backgroundColor: 'blue',
               }
-
-
-
             }} />
-
         </div>
-
       </motion.div>
-
     </>
   )
 }
@@ -1431,9 +1130,7 @@ function MessageLoader() {
   return (<>
     <p className="w-full h-full  flex justify-center items-center">
       <Puff color="#827397" height={80} width={80} />
-
     </p>
-
   </>)
 }
 
@@ -1446,7 +1143,6 @@ function NoChatHere({ q }) {
         <p className="text-[2rem] text-[#959393] select-none">{
           !q ? "No Chat Here, select user for conversation." : "Start conversation"
         }</p>
-
       </div>
     </>
   )

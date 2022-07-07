@@ -61,7 +61,7 @@ function HideSearchBar(searchRef, setExpandSearch) {
 
 
 
-function SearchBarTable({ showSearch, setShowSearch, setPopOverEffect, setQuery, query, data, userSearchHistory1, deleteHistory, setExpandSearch, expandSearch }) {
+function SearchBarTable({ showSearch, setShowSearch, setPopOverEffect, setQuery, query, data, userSearchHistory1, deleteHistory, setExpandSearch, expandSearch,theme }) {
     const [history, setHistory] = useState(false)
     // const [history, setHistory] = useState(false)
 
@@ -94,7 +94,7 @@ function SearchBarTable({ showSearch, setShowSearch, setPopOverEffect, setQuery,
              mds-editor14:w-[28rem] mds-editor15:w-[23rem] mds-editor16:w-[18rem] mds-editor17:w-[12rem] mds-editor18:w-[3rem] mds-editor18:h-[3rem] mds-editor18:rounded-full 
              4px-4 pt-[2px] drop-shadow-xl flex-shrink-0 */}
 
-            <main className={`bg-[#fff] `}
+            <main className={` ${theme?"bg-[#000]":"bg-[#fff]"} `}
                 onBlur={() => {
                     // setHistory(false)
                     setShowSearch(false)
@@ -102,7 +102,7 @@ function SearchBarTable({ showSearch, setShowSearch, setPopOverEffect, setQuery,
                 }}
                 ref={ref}
             >
-                <div className="_top_search_bar flex   bg-[#fff] rounded-lg flex-col  mds-editor18:w-full relative"
+                <div className={`_top_search_bar flex   ${theme?"bg-[#000]":"bg-[#fff]"} rounded-lg flex-col  mds-editor18:w-full relative`}
                     ref={searchRef}
                 >
                     <div className="search_container  w-full"
@@ -112,17 +112,16 @@ function SearchBarTable({ showSearch, setShowSearch, setPopOverEffect, setQuery,
 
                     >
                         <p className="flex justify-start items-center relative mds-editor32:cursor-pointer">
-                            <MdSearch className={`absolute mt-[30px] text-[#9d9c9c]  mds-editor32:text-[2rem] ml-3 text-[2rem]`} />
+                            <MdSearch className={`absolute mt-[30px]  ${theme?"text-[#ffffff]":"text-[#9d9c9c]"}  mds-editor32:text-[2rem] ml-3 text-[2rem]`} />
                         </p>
                         {/* ${userSearchHistory === false ? "" : "rounded-b-none  mds-editor18:hidden"} */}
-                        <input type="search" className={`w-full h-[2.3rem] focus:outline-none rounded-lg  indent-12   ${(history && userSearchHistory1?.length > 0) || query.length > 0 ? "rounded-b-none" : "rounded-b-lg"}  ${expandSearch ? "mds-editor32:pl-[0rem]" : ""}`}
+                        <input type="search" className={`w-full h-[2.3rem] focus:outline-none rounded-lg  indent-12 ${theme?"bg-[#4f4f4f] text-[#fff]":"bg-[#fff] text-[#060606]"}   ${(history && userSearchHistory1?.length > 0) || query.length > 0 ? "rounded-b-none" : "rounded-b-lg"}  ${expandSearch ? "mds-editor32:pl-[0rem]" : ""}`}
                             onFocus={() => {
                                 if (window.innerWidth <= 463) {
                                     setShowSearch(false)
                                 }
                                 setHistory(true)
                             }}
-
                             onChange={
                                 (e) => {
                                     setHistory(false)
@@ -134,14 +133,14 @@ function SearchBarTable({ showSearch, setShowSearch, setPopOverEffect, setQuery,
 
                     {/* //USER SEARTCH HISTORY  */}
 
-                    <div className="search_hi  absolute w-full top-[28px] bg-[#fff] rounded-b-lg">
+                    <div className={`search_hi  absolute w-full top-[28px]  rounded-b-lg ${theme?"bg-[#050505]":"bg-[#fff]"}`}>
 
                         {
                             history &&
                             (userSearchHistory1 !== undefined &&
                                 userSearchHistory1.map((item) => {
                                     return (
-                                        <History name={item.name} url={item.url} id={item.searchUserId} deleteHistory={deleteHistory} />
+                                        <History name={item.name} url={item.url} id={item.searchUserId} deleteHistory={deleteHistory} theme={theme} />
                                     )
                                 })
                             )
@@ -153,7 +152,7 @@ function SearchBarTable({ showSearch, setShowSearch, setPopOverEffect, setQuery,
 
 
                     {/* //user search data */}
-                    <div className="quesr_Search absolute w-full top-[28px] bg-[#fff] rounded-b-lg">
+                    <div className={`quesr_Search absolute w-full top-[28px]  rounded-b-lg ${theme?"bg-[#090909]":"bg-[#fff]"}`}>
 
                         {
                             query.length > 0 && (
@@ -165,7 +164,7 @@ function SearchBarTable({ showSearch, setShowSearch, setPopOverEffect, setQuery,
                                             <NavLink
                                                 to={`/profile/${item.googleId}`}
                                             >
-                                                <div className={`first-letter:first-letter:search_history_data flex  justify-between transition-all hover:bg-[#d0d0d0b2] rounded-lg mx-1 mt-[2px] mb-[6px]  duration-75 cursor-pointer`}
+                                                <div className={`first-letter:first-letter:search_history_data flex  justify-between transition-all ${theme?"hover:bg-[#9c9c9cb2]":"hover:bg-[#d0d0d0b2]"}  rounded-lg mx-1 mt-[2px] mb-[6px]  duration-75 cursor-pointer`}
 
                                                 >
                                                     <div className="wrap_image_name flex  flex-1 p-1 items-center">
@@ -189,7 +188,7 @@ function SearchBarTable({ showSearch, setShowSearch, setPopOverEffect, setQuery,
 
                                                         </div>
                                                         <div className="name_container ml-4">
-                                                            <p className='post-screen1:text-[1.2rem] mds-editor14:text-[1rem] mds-editor17:text-[1rem] flex truncate'>{item.fname + " " + item.lname}</p>
+                                                            <p className={`post-screen1:text-[1.2rem] mds-editor14:text-[1rem] mds-editor17:text-[1rem] flex truncate ${theme?"text-[#fff]":"text-[#090909]"}`}>{item.fname + " " + item.lname}</p>
                                                         </div>
                                                     </div>
                                                     {/* <div className="remover_history  px-5 flex items-center">
@@ -218,14 +217,14 @@ function SearchBarTable({ showSearch, setShowSearch, setPopOverEffect, setQuery,
                                 <NavLink to={`/load/friends/`} >
 
                                     <Button
-                                        color="gray"
+                                        color=""
                                         buttonType="link"
                                         size="regular"
                                         rounded={false}
                                         block={false}
                                         iconOnly={false}
                                         ripple="dark"
-                                        className="lowercase"
+                                        className={`lowercase ${theme?"text-[#fff]":"text-[#000]"}`}
                                     >
                                         load more friend
                                     </Button>
@@ -253,7 +252,7 @@ function SearchBarTable({ showSearch, setShowSearch, setPopOverEffect, setQuery,
 export default SearchBarTable
 
 
-function History({ name, url, id, deleteHistory }) {
+function History({ name, url, id, deleteHistory,theme }) {
 
 
     console.log({ url })
@@ -262,13 +261,13 @@ function History({ name, url, id, deleteHistory }) {
         <>
 
             <div className="">
-                <div className={`first-letter:first-letter:search_history_data justify-between flex  transition-all hover:bg-[#d0d0d0b2] rounded-lg mx-1 mt-[2px] mb-[6px]  duration-75 cursor-pointer  relative z-[15]`}>
+                <div className={`first-letter:first-letter:search_history_data justify-between flex  transition-all  ${theme?"hover:bg-[#9c9c9cb2]":"hover:bg-[#d0d0d0b2]"} rounded-lg mx-1 mt-[2px] mb-[6px]  duration-75 cursor-pointer  relative z-[15]`}>
                     <NavLink to={`/profile/${id}`}>
                         <div className="wrap_image_name flex  flex-1 p-1 items-center ">
 
 
                             <div className="searchIcon ml-3 hover:text-[#a0a0a0]">
-                                <MdHistory className='text-[2rem] text-[#b3b3b3]   mr-[1rem]' />
+                                <MdHistory className={`text-[2rem] ${theme?"text-[#fdfdfd]":"text-[#b3b3b3]"}   mr-[1rem]`}/>
                             </div>
 
                             <div className="image_containerrounded-[50px] flex-shrink-0">
@@ -290,7 +289,7 @@ function History({ name, url, id, deleteHistory }) {
 
                             </div>
                             <div className="name_container ml-4">
-                                <p className='post-screen1:text-[1.2rem] mds-editor14:text-[1rem] mds-editor17:text-[1rem] flex truncate'>{name}</p>
+                                <p className={`post-screen1:text-[1.2rem] mds-editor14:text-[1rem] mds-editor17:text-[1rem] flex truncate ${theme?"text-[#fff]":"text-[#0a0a0a]"}`}>{name}</p>
                             </div>
 
 

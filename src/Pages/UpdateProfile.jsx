@@ -19,4 +19,4 @@ function UpdateProfile() {
     )
 }
 
-export default UpdateProfile;
+export default UpdateProfile = React.memo(UpdateProfile);

@@ -1552,6 +1552,27 @@ border-bottom-right-radius: 0px;
 
 
 
+#forwardMessageOverflowUserList::-webkit-scrollbar{
+    width:.7rem;
+    background-color:#dbdbdb;
+}
+#forwardMessageOverflowUserList::-webkit-scrollbar-track{
+    width:inherit;
+    background-color:#dbdbdb;
+}
+
+#forwardMessageOverflowUserList::-webkit-scrollbar-thumb{
+    width:.1rem;
+    padding:0 .5rem;
+    border-radius:2px;
+    border:1.5px solid #2D46B9;
+    outline-offset:3px;
+    background-color:#1e3163;
+}
+
+
+
+
 
 
 

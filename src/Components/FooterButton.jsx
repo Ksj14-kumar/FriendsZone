@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 import LiveUser from './chatSection/LiveUser';
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-function FooterButton({ bool, onlinefriends, currentId, socket, NumberOfFriendsOnline }) {
+function FooterButton({ bool, onlinefriends}) {
     const dispatch = useDispatch()
     const targetDiv = useRef()
     const siblingDiv = useRef()
@@ -16,10 +16,6 @@ function FooterButton({ bool, onlinefriends, currentId, socket, NumberOfFriendsO
     const UserInformationLoad = useSelector((state) => {
         return state.UserInformationLoad.value
     })
-
-    // console.log({chats, currentChats})
-
-
 
     useEffect(() => {
         if (cssClass === true) {
@@ -34,63 +30,10 @@ function FooterButton({ bool, onlinefriends, currentId, socket, NumberOfFriendsO
 
         }
 
-
-
     }, [cssClass])
 
 
-    //now get friends
-    // useEffect(() => {
-    //     async function loadFriends() {
-    //         try {
-
-    //             // console.log("call start")
-    //             const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/friends/${currentId}`, {
-    //                 method: "GET",
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                     "Authorization": "Bearer " + localStorage.getItem("uuid")
-
-
-    //                 }
-
-    //             })
-    //             const data = await res.json()
-    //             // console.log("userdata",{data})
-
-    //             if (res.status === 200) {
-    //                 // setFriends(data.friendList)
-    //                 if (isMount.current) {
-
-    //                     const value = data.friendList.filter(item => {
-    //                         return online.some(value => {
-
-    //                             return item._id === value.adminId
-    //                         })
-    //                     })
-    //                     setFriends(value)
-    //                     setFriendsLength(value.length)
-    //                     dispatch({ type: "onlineUsers", payload: value })
-    //                 }
-
-    //             }
-    //             else if (res.status !== 200) {
-    //                 console.warn("err")
-
-    //             }
-    //         } catch (err) {
-    //             console.warn(err)
-
-
-    //         }
-    //     }
-    //     loadFriends()
-
-    //     return (() => {
-    //         isMount.current = false
-    //     })
-
-    // }, [online, currentId])
+    
 
 
 
@@ -119,7 +62,6 @@ function FooterButton({ bool, onlinefriends, currentId, socket, NumberOfFriendsO
 
     }
 
-    //HOW TO HANDLE USER NAME WHEN IT IS LARGE CHARACTER
 
     return (
         <>
@@ -155,7 +97,6 @@ function FooterButton({ bool, onlinefriends, currentId, socket, NumberOfFriendsO
                             <>
                                 <NavLink to={`/messages?q=${item._id}`}>
                                     <LiveUser value={item} />
-                                    {/* </div> */}
                                 </NavLink>
                             </>
 
@@ -169,13 +110,7 @@ function FooterButton({ bool, onlinefriends, currentId, socket, NumberOfFriendsO
                 {/* <footer className="_footer flex justify-between items-center bg-[#92929294] rounded-sm py-1 mt-1">
                     <p className='text-[1.5rem] text-black'>Group+</p>
                 </footer> */}
-
-
-
             </motion.main>
-
-
-
         </>
     )
 }

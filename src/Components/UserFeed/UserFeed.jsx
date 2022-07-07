@@ -211,7 +211,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
     )
 }
 
-export default UserFeed;
+export default UserFeed = React.memo(UserFeed);
 
 
 

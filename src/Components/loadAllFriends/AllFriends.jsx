@@ -11,6 +11,8 @@ function AllFriends({ user, socket }) {
     const [loader, setLoader] = useState(false)
 
 
+    console.log("All  Friends Are Loading")
+
     const UserInformationLoad = useSelector((state) => {
         return state.UserInformationLoad.value
     })
@@ -44,13 +46,8 @@ function AllFriends({ user, socket }) {
 
     }, [])
 
-
-    // console.log({ loadFriends })
-    //send friends request
-
     async function sendFriendRequest(Recieverfname, Recieverlname, RecieverId, RecieverUrl, connectMessage) {
 
-        // console.log(Recieverfname, Recieverlname, RecieverId, RecieverUrl, connectMessage);
 
         const sendFriendRequestResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/sendfriendrequest/`, {
             method: "POST",

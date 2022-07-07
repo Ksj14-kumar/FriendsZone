@@ -6,4 +6,4 @@ function Music() {
     )
 }
 
-export default Music
+export default Music = React.memo(Music)

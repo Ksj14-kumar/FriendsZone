@@ -25,15 +25,6 @@ function UserSinglePost({ socket, setShowLikeUserModal, showLikeUserModal }) {
 
                 setLoading(true)
                 const res = await Apis.CopyPostLinkApi({ auther: params.auther, post: params.post })
-                // const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/api/v1/_user/single/post/${params.post}/`, {
-                //     method: "POST",
-                //     body: JSON.stringify(params),
-
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //         'Authorization': `Bearer ${localStorage.getItem('uuid')}`
-                //     }
-                // })
                 if (res.status === 200) {
                     const data = await res.json()
                     setPost(data.data)
@@ -162,4 +153,4 @@ function UserSinglePost({ socket, setShowLikeUserModal, showLikeUserModal }) {
     )
 }
 
-export default UserSinglePost
+export default UserSinglePost=React.memo(UserSinglePost)

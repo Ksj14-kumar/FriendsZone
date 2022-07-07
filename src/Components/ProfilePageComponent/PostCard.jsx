@@ -44,9 +44,7 @@ import axios from "axios"
 
 
 
-function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserModal, single, name, setAllPosts }) {
-
-
+function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserModal, single, name, setAllPosts,bookMark }) {
     const [commentToggle, setCommentToggle] = useState(false)
     const [commentsLength, setCommentLength] = useState({ length: 0, post_id: "" })
     const [shareLength, setShareLength] = useState(0)
@@ -58,9 +56,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
     const dispatch = useDispatch()
     const buttonRef = useRef()
     const location = useLocation()
-
     const deletePost = useRef()
-
     const [deleteLoader, setDeleteLoader] = useState(false)
     const [like, setLike] = useState(false)
     const [likeCount, setLikeCount] = useState(null)
@@ -76,15 +72,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
     const isMount = useRef(true)
     const isLikeCountMount = useRef(true)
     const isMountCommentLength = useRef(true)
-
-
-
-
-
-
-
-
-
     // const ShowImage = useSelector((state) => {
     //     return state.ShowImage.value
     // })
@@ -94,20 +81,11 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
     const OriginalProfileURL = useSelector((state) => {
         return state.OriginalProfileURL
     })
-
-
-
     const getPos = useSelector((state) => {
         // console.log({ state })
         return state.getPos
     })
     const { _id, fname, lname, googleId } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "" }
-
-
-
-
-
-
     function SetCommentSection(e, id) {
         if (id) {
             setCommentToggle(!commentToggle)
@@ -141,15 +119,10 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
         } catch (err) {
             console.warn(err)
         }
-
     }
-
-
-
     //================================================POST IS BOOKMARKED OR NOT====================
     useEffect(() => {
         // if (UserInformationLoad?.bookMarkPost) {
-
         const value = UserInformationLoad?.bookMarkPost?.length > 0 && UserInformationLoad.bookMarkPost.some((i) => {
             return i.post_id === item.post_id
         })
@@ -158,7 +131,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
         }
         // }
     }, [item, UserInformationLoad])
-
     //realitime like system
     useEffect(() => {
         // if (isMount.current) {
@@ -170,13 +142,9 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                 // setLikeCount(data)
             })
         }
-
     }, [likeCount])
-
-
     //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Change the visibility^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     async function VisibilityChange(post_id, visibility) {
-
         try {
             const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/visibility/user/post/local/${post_id}`, {
                 method: "PUT",
@@ -198,29 +166,15 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
             console.warn(err)
         }
     }
-
-
-
-
-
-
-
-
-
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^>>>> SEND THE REACTION TO Specific I  ID<<<<<<<<<<^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
     useEffect(() => {
         //load the like when user refresh the page and show user which post already liked
         setLike(item.liked.includes(googleId))
     }, [item.liked, _id, googleId])
-
     // ========================================================SET THE LIKE COUNT NUMBER ====================================
-
     useEffect(() => {
         setLikeCount(item.liked.length === 0 ? 0 : item.liked.length)
     }, [item.liked])
-
     //function which excute when current user liked it any post
     async function callLikeHnadler(userId, post_id, bgImageUrl, profileImage) {
         try {
@@ -232,9 +186,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                     "Authorization": "Bearer " + localStorage.getItem("uuid")
                 }
             })
-
             await axios({
-
                 url: `${process.env.REACT_APP_API_BACKENDURL}/blob/api/v1/user/liked/post/${post_id}`,
                 method: "PUT",
                 data: JSON.stringify(
@@ -266,14 +218,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
             like ? setLikeCount(likeCount - 1) : setLikeCount(likeCount + 1)
         }
     }
-
-
-
-
-
-
-
-
     // ===========================================ADDING THE BOOK MARK POST=================================
     async function addBookMarkPostFunction(item) {
         try {
@@ -289,8 +233,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
             console.warn(err)
         }
     }
-
-
     useEffect(() => {
         function handleClickOutside(event) {
             if (postPopupModal.current && !postPopupModal.current.contains(event.target)) {
@@ -306,32 +248,21 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [postPopupModal])
-
-
-
-
-
     useEffect(() => {
         if (item.image === "") {
             setLoadingPostSecond(false)
             setLoadingPost(false)
         }
-
     }, [item.image])
-
-
     useEffect(() => {
         document.getElementById("root").scrollTo(0, 0)
         if (location.path === "/") {
             window.scrollTo(0, 0)
         }
-
     }, [item])
-
     return (
         <>
-            <div className={`post-card flex justify-around w-full mb-2 rounded-md md:w-[42rem] drop-shadow-sm ${loadingPost && loadingPostSecond ? "mb-[3rem] md:w-screen md:ml-[2rem] md:mr-[2rem] h-[30rem]" : ""}`}>
-
+            <div className={`post-card flex justify-around w-full mb-2 rounded-md ${bookMark?"w-[25rem] ":"md:w-[42rem]"}  drop-shadow-sm ${loadingPost && loadingPostSecond ? "mb-[3rem] w-screen md:w-full md:ml-[2rem] md:mr-[2rem] h-[30rem]" : ""}`}>
                 <Card className={`post p-0   ${single === "single" && name ? " mds-editor28:rounded-t-none" : "rounded-xl"}     ${loadingPost && loadingPostSecond ? "bg-[#dedede]" : ""}`}>
                     <CardBody className={` ${loadingPost && loadingPostSecond ? " bg-[#dcdcdc]" : ""}`} >
                         <div className={`back_to_hone  flex mb-3 w-full items-center  ${single === "single" && name ? "flex mds-editor28:rounded-t-none" : "hidden"} ${loadingPost && loadingPostSecond ? "bg-[#]" : ""}`}>
@@ -354,15 +285,11 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                 <main className={`flex  join-of-name-select-option post  ${loadingPost && loadingPostSecond ? " flex flex-[11] w-full bg-[#] animate-pulse" : ""} `}>
                                     <article className=' card-post-image-modal w-[3rem]  h-[3rem] rounded-full flex-shrink-0 po '>
                                         {
-
                                             item.profileImage ?
                                                 (
-
                                                     <>
-
                                                         <LoadProfileImage url={item.profileImage} setLoadingPost={setLoadingPost} image={item.image} />
                                                     </>
-
                                                 ) : <Image
                                                     src={profile}
                                                     rounded={true}
@@ -376,7 +303,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                         <article className={`text-black text-xl ${loadingPost && loadingPostSecond ? "bg-[#8f8f8f] h-[15px]  rounded-md" : ""}`}>
                                             {loadingPost && loadingPostSecond ? "" : (item.username ? item.username : "NA")}
                                         </article>
-
                                         <article className={`flex  ${loadingPost && loadingPostSecond ? "bg-[#8f8f8f] h-[15px] mt-2 mb-[3px] animate-pulse w-full rounded-md" : " "}`}>
                                             {loadingPost && loadingPostSecond ? "" : (format(item.createdAt))}
                                             {
@@ -389,18 +315,15 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                     </article>
                                 </main>
                             </NavLink>
-
                             {
                                 (threeDot === true) ?
                                     (<>
                                         <section className=" flex justify-center align-middle" ref={deletePost}
-
                                         >
                                             {/* <button className=' focus:border-0 border-0 focus:outline-0 outline-none -mt-2 '>
                                                 <BsThreeDotsVertical className='text-[1.5rem]' />
                                             </button> */}
                                             {loadingPost && loadingPostSecond ? "" : <button className=' focus:border-0 border-0 focus:outline-0 outline-none -mt-2 '
-
                                                 onClick={(e) => {
                                                     e.preventDefault();
                                                     setShowPopOver(true)
@@ -408,11 +331,8 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                             >
                                                 <BsThreeDotsVertical className='text-[1.5rem]' />
                                             </button>}
-
-
                                         </section>
                                         <AnimatePresence>
-
                                             {showPopOver && <motion.div ref={postPopupModal} className="popOverEffect bg-[#fff] absolute right-[4rem] top-[1.2rem] drop-shadow-lg w-[18rem]  px-1 py-4 border border-solid border-[#ececec] rounded-md z-[18]"
                                                 initial={{ opacity: 0, scale: 0 }}
                                                 animate={{ opacity: 1, scale: 1 }}
@@ -420,9 +340,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                 exit={{ opacity: 0, scale: 0 }}
                                             >
                                                 <ul className="list-type-none gap-y-2">
-
                                                     {
-
                                                         item.userId === googleId ?
                                                             [
                                                                 // { icon: <MdBookmark className="text-[1.8rem] text-[#999999]" />, name: "BookMark" },
@@ -430,26 +348,19 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                 { icon: <MdOutlineLink className="text-[1.8rem] text-[#999999]" />, name: "Copy link" },
                                                                 { icon: <MdDelete className="text-[1.8rem] text-[#999999]" />, name: "Delete Post" }
                                                             ].map((i) => {
-
                                                                 return (
                                                                     <>
-
-
-
                                                                         <CopyToClipboard text={i.name === "Copy link" && process.env.REACT_APP_API_FRONTEND + item.post_url}
                                                                             onCopy={(result) => {
                                                                                 if (result) {
                                                                                     success({ message: "Link Copied Successfully", pos: "bottom-center" })
                                                                                 }
                                                                             }}
-
                                                                         >
-
                                                                             <li className="post_related_api  py-2 cursor-pointer   rounded-md gap-x-1  pl-2  mb-1 hover:bg-[#cdcdcd92]"
                                                                                 onClick={(e) => {
                                                                                     if (i.name === "Visibility") {
                                                                                         setVisibilityViewEvents(!visibilityView)
-
                                                                                     }
                                                                                     if (i.name === "Delete Post") {
                                                                                         DeletePostById(item.post_id, item.userId);
@@ -457,8 +368,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                 }}
                                                                             >
                                                                                 <div className={`wra flex items-center ${deleteLoader && "justify-center"}`}>
-
-
                                                                                     {i.name === "Delete Post" && deleteLoader ? <LoaderForPostOperation /> :
                                                                                         <>
                                                                                             <p className='text-[1.5rem] flex-1'>
@@ -474,21 +383,16 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                     {i.name === "Visibility" && <p className="flex-[1] text-[#6a6a6a] font-sans tracking-wider text-[1.3rem]">
                                                                                         {
                                                                                             !visibilityView ? (
-
                                                                                                 <FiChevronRight className="text-[1.8rem] text-[#999999]" />
                                                                                             )
                                                                                                 : (
                                                                                                     <FiChevronDown className="text-[1.8rem] text-[#999999]" />
-
                                                                                                 )
                                                                                         }
                                                                                     </p>}
-
                                                                                 </div>
                                                                             </li>
-
                                                                         </CopyToClipboard>
-
                                                                         {
                                                                             i.name === "Visibility" && visibilityView && <motion.ul className=" ml-8 mt-1">
                                                                                 {
@@ -505,7 +409,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                         return (
                                                                                             <>
                                                                                                 <li className={`inner_list_items py-1 flex  pl-2 items-center hover:bg-[#9d9d9dc6] rounded-md mr-2 cursor-pointer ${item.privacy === i.name && "cursor-not-allowed"}`}
-
                                                                                                     onClick={(e) => {
                                                                                                         e.preventDefault()
                                                                                                         if (item.privacy === i.name) {
@@ -517,10 +420,8 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                                     }}
                                                                                                 >
                                                                                                     <div className="wrap flex flex-[11] items-center">
-
                                                                                                         <p className='flex-1'>
                                                                                                             {i.icon}
-
                                                                                                         </p>
                                                                                                         <p className="flex-[11] text-[1.4rem] text-[#6a6a6a] ml-2">{i.name}</p>
                                                                                                     </div>
@@ -533,31 +434,22 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                                         }
                                                                                                     </div>
                                                                                                 </li>
-
-
                                                                                             </>
-
                                                                                         )
                                                                                     })
                                                                                 }
                                                                             </motion.ul>
                                                                         }
-
                                                                     </>
-
                                                                 )
                                                             }) : (
-
                                                                 [
                                                                     { icon: <MdOutlineLink className="text-[1.8rem] text-[#999999]" />, name: "Copy link" },
                                                                     { icon: <MdBookmark className={`text-[1.8rem]  ${bookMarkColor ? "text-red-700" : "text-[#999999]"}`} />, name: "BookMark" },
-
                                                                 ].map((i) => {
-
                                                                     return (
                                                                         <>
                                                                             <>
-
                                                                                 <CopyToClipboard text={i.name === "Copy link" && process.env.REACT_APP_API_FRONTEND + item.post_url}
                                                                                     onCopy={(result) => {
                                                                                         if (result) {
@@ -565,7 +457,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                         }
                                                                                     }}
                                                                                 >
-
                                                                                     <li className="post_related_api  py-2 cursor-pointer   rounded-md gap-x-1  pl-2  mb-1 hover:bg-[#cdcdcd92] flex"
                                                                                         onClick={(e) => {
                                                                                             e.preventDefault()
@@ -573,15 +464,12 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                                 setMoveBookMark(!bookMarkMove)
                                                                                                 steBookMarkColor(!bookMarkColor)
                                                                                                 addBookMarkPostFunction(item)
-
                                                                                                 // dispatch({ type: "ADD_BookMark_Post", payload: item })
                                                                                             }
                                                                                         }}
                                                                                         key={index}
                                                                                         ref={ImageRef}
-
                                                                                     >
-
                                                                                         <AnimatePresence>
                                                                                             {
                                                                                                 i.name === "BookMark" &&
@@ -610,8 +498,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                             }
                                                                                         </AnimatePresence>
                                                                                         <div className={`wra flex items-center`}>
-
-
                                                                                             <p className='text-[1.5rem] flex-1'>
                                                                                                 {
                                                                                                     i.icon
@@ -621,35 +507,22 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                                 {i.name}
                                                                                             </p>
                                                                                         </div>
-
-
                                                                                     </li>
-
                                                                                 </CopyToClipboard>
-
                                                                             </>
                                                                         </>
-
                                                                     )
                                                                 })
                                                             )
-
-
                                                     }
-
-
                                                 </ul>
-
                                             </motion.div>}
                                         </AnimatePresence>
                                     </>
-
-
                                     ) : (
                                         <>
                                             <section className={` flex align-middle  justify-center  ${loadingPost && loadingPostSecond ? "flex-[1]bg-red-300" : ""}`} ref={deletePost} >
                                                 {loadingPost && loadingPostSecond ? "" : <button className=' focus:border-0 border-0 focus:outline-0 outline-none -mt-2 '
-
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         setShowPopOver(true)
@@ -658,9 +531,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                     <BsThreeDotsVertical className='text-[1.5rem]' />
                                                 </button>}
                                             </section>
-
                                             <AnimatePresence>
-
                                                 {showPopOver && <motion.div ref={postPopupModal} className="popOverEffect bg-[#fff] absolute right-[4rem] top-[1.2rem] drop-shadow-lg w-[18rem]  px-1 py-4 border border-solid border-[#ececec] rounded-md z-[18]"
                                                     initial={{ opacity: 0, scale: 0 }}
                                                     animate={{ opacity: 1, scale: 1 }}
@@ -668,9 +539,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                     exit={{ opacity: 0, scale: 0 }}
                                                 >
                                                     <ul className="list-type-none gap-y-2">
-
                                                         {
-
                                                             item.userId === googleId ?
                                                                 [
                                                                     // { icon: <MdBookmark className="text-[1.8rem] text-[#999999]" />, name: "BookMark" },
@@ -678,26 +547,19 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                     { icon: <MdOutlineLink className="text-[1.8rem] text-[#999999]" />, name: "Copy link" },
                                                                     { icon: <MdDelete className="text-[1.8rem] text-[#999999]" />, name: "Delete Post" }
                                                                 ].map((i) => {
-
                                                                     return (
                                                                         <>
-
-
-
                                                                             <CopyToClipboard text={i.name === "Copy link" && process.env.REACT_APP_API_FRONTEND + item.post_url}
                                                                                 onCopy={(result) => {
                                                                                     if (result) {
                                                                                         success({ message: "Link Copied Successfully", pos: "bottom-center" })
                                                                                     }
                                                                                 }}
-
                                                                             >
-
                                                                                 <li className="post_related_api  py-2 cursor-pointer   rounded-md gap-x-1  pl-2  mb-1 hover:bg-[#cdcdcd92]"
                                                                                     onClick={(e) => {
                                                                                         if (i.name === "Visibility") {
                                                                                             setVisibilityViewEvents(!visibilityView)
-
                                                                                         }
                                                                                         if (i.name === "Delete Post") {
                                                                                             DeletePostById(item.post_id, item.userId);
@@ -705,8 +567,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                     }}
                                                                                 >
                                                                                     <div className={`wra flex items-center ${deleteLoader && "justify-center"}`}>
-
-
                                                                                         {i.name === "Delete Post" && deleteLoader ? <LoaderForPostOperation /> :
                                                                                             <>
                                                                                                 <p className='text-[1.5rem] flex-1'>
@@ -722,21 +582,16 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                         {i.name === "Visibility" && <p className="flex-[1] text-[#6a6a6a] font-sans tracking-wider text-[1.3rem]">
                                                                                             {
                                                                                                 !visibilityView ? (
-
                                                                                                     <FiChevronRight className="text-[1.8rem] text-[#999999]" />
                                                                                                 )
                                                                                                     : (
                                                                                                         <FiChevronDown className="text-[1.8rem] text-[#999999]" />
-
                                                                                                     )
                                                                                             }
                                                                                         </p>}
-
                                                                                     </div>
                                                                                 </li>
-
                                                                             </CopyToClipboard>
-
                                                                             {
                                                                                 i.name === "Visibility" && visibilityView && <motion.ul className=" ml-8 mt-1">
                                                                                     {
@@ -753,7 +608,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                             return (
                                                                                                 <>
                                                                                                     <li className={`inner_list_items py-1 flex  pl-2 items-center hover:bg-[#9d9d9dc6] rounded-md mr-2 cursor-pointer ${item.privacy === i.name && "cursor-not-allowed"}`}
-
                                                                                                         onClick={(e) => {
                                                                                                             e.preventDefault()
                                                                                                             if (item.privacy === i.name) {
@@ -765,10 +619,8 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                                         }}
                                                                                                     >
                                                                                                         <div className="wrap flex flex-[11] items-center">
-
                                                                                                             <p className='flex-1'>
                                                                                                                 {i.icon}
-
                                                                                                             </p>
                                                                                                             <p className="flex-[11] text-[1.4rem] text-[#6a6a6a] ml-2">{i.name}</p>
                                                                                                         </div>
@@ -781,31 +633,22 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                                             }
                                                                                                         </div>
                                                                                                     </li>
-
-
                                                                                                 </>
-
                                                                                             )
                                                                                         })
                                                                                     }
                                                                                 </motion.ul>
                                                                             }
-
                                                                         </>
-
                                                                     )
                                                                 }) : (
-
                                                                     [
                                                                         { icon: <MdOutlineLink className="text-[1.8rem] text-[#999999]" />, name: "Copy link" },
                                                                         { icon: <MdBookmark className={`text-[1.8rem]  ${bookMarkColor ? "text-red-700" : "text-[#999999]"}`} />, name: "BookMark" },
-
                                                                     ].map((i) => {
-
                                                                         return (
                                                                             <>
                                                                                 <>
-
                                                                                     <CopyToClipboard text={i.name === "Copy link" && process.env.REACT_APP_API_FRONTEND + item.post_url}
                                                                                         onCopy={(result) => {
                                                                                             if (result) {
@@ -813,7 +656,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                             }
                                                                                         }}
                                                                                     >
-
                                                                                         <li className="post_related_api  py-2 cursor-pointer   rounded-md gap-x-1  pl-2  mb-1 hover:bg-[#cdcdcd92] flex"
                                                                                             onClick={(e) => {
                                                                                                 e.preventDefault()
@@ -821,15 +663,12 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                                     setMoveBookMark(!bookMarkMove)
                                                                                                     steBookMarkColor(!bookMarkColor)
                                                                                                     addBookMarkPostFunction(item)
-
                                                                                                     // dispatch({ type: "ADD_BookMark_Post", payload: item })
                                                                                                 }
                                                                                             }}
                                                                                             key={index}
                                                                                             ref={ImageRef}
-
                                                                                         >
-
                                                                                             <AnimatePresence>
                                                                                                 {
                                                                                                     i.name === "BookMark" &&
@@ -858,8 +697,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                                 }
                                                                                             </AnimatePresence>
                                                                                             <div className={`wra flex items-center`}>
-
-
                                                                                                 <p className='text-[1.5rem] flex-1'>
                                                                                                     {
                                                                                                         i.icon
@@ -869,25 +706,15 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                                     {i.name}
                                                                                                 </p>
                                                                                             </div>
-
-
                                                                                         </li>
-
                                                                                     </CopyToClipboard>
-
                                                                                 </>
                                                                             </>
-
                                                                         )
                                                                     })
                                                                 )
-
-
                                                         }
-
-
                                                     </ul>
-
                                                 </motion.div>}
                                             </AnimatePresence>
                                         </>
@@ -897,10 +724,8 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                         <section className='text-caption ml-2  mt-[2rem]   px-[1rem]  text-[1.3rem] md:text-lg '
                         >
                             {
-
                                 loadingPost && loadingPostSecond ? "" : <ReadMore children={item.text} className='cursor-pointer' />
                             }
-
                         </section>
                     </CardBody>
                     <section className={`image section   relative w-full   ${loadingPost && loadingPostSecond ? "mt-0 h-[15rem]" : "mt-[.8rem]"}`}>
@@ -919,25 +744,19 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                     <hr className={loadingPost && loadingPostSecond ? "" : "bg-grey-200 mt-[2px]"} />
                     <CardFooter className="like and dislike section flex justify-start py-0  mb-[.8rem] px-0">
                         <main className={`main_section flex  w-full  -mb-[8px] ${loadingPost && loadingPostSecond ? "bg-[#dedede]" : ""} `}>
-
                             <section className='like_love  flex-[10]  cursor-pointer'
                                 onClick={() => {
                                     setShowLikeUserModal({ bool: true, reactUser: item.liked })
-
                                 }}
                             >
                                 <p className="text-[1.3rem] flex items-center w-full ">
                                     <div className="wrape text-[1.3rem] font-light  ml-[2px] md:ml-[2px] flex  items-center relative justify-between w-full">
-
                                         {loadingPost && loadingPostSecond ? (<div className="co thump rounded-[50px] p-[2.5px] bg-[#8f8f8f] ml-6 border border-solid border-[#efeded] cursor-pointer flex absolute z-[1] w-[2.5rem] mt-[30px] animate-pulse h-[2.5rem]">
-
-
                                         </div>) :
                                             <div className="thump rounded-[50px] p-[2.5px] bg-blue-500 ml-6 border border-solid border-[#efeded] cursor-pointer flex absolute z-[1]">
                                                 <MdThumbUpAlt className='text-white' />
                                             </div>}
                                         {loadingPost && loadingPostSecond ? "" : <p className="like count ml-[4rem]">
-
                                             <span className='mr-[3px] '>
                                                 {
                                                     formatnumber(likeCount)
@@ -948,11 +767,8 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                 </p>
                             </section>
                             <div className="wraper_of_comment_and_share flex justify-around flex-[2]  md:mr-4 mr-3 md:pr-0">
-
                                 {loadingPost && loadingPostSecond ? (
                                     <div className="bg-[#8f8f8f] w-[5rem] rounded-sm h-[2rem] animate-pulse mr-[8px]">
-
-
                                     </div>
                                 ) : <section className="comments">
                                     <p className='text-[1.2rem] font-light cursor-pointer underline truncate'
@@ -965,34 +781,19 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                         item.post_id === commentsLength.post_id && formatnumber(commentsLength.length)
                                     }
                                         </span></p>
-
                                 </section>}
                                 {loadingPost && loadingPostSecond ? (
                                     <div className="bg-[#8f8f8f] w-[5rem] rounded-sm h-[2rem] animate-pulse">
-
-
                                     </div>
                                 ) : <section className="share  md:ml-[1rem]">
                                     <p className='text-[1.2rem] font-light cursor-pointer underline truncate mds-editor20:ml-[10px] before:
                                  '>share <span>{shareLength}</span></p>
-
                                 </section>}
                             </div>
-
                         </main>
-
                     </CardFooter>
-
-
-
-
-
-
-
                     <hr className='mb-[.2rem]' />
-
                     <CardFooter className={`flex justify-between -mt-[1rem] mx-[0rem]mds-editor10:justify-center ${loadingPost && loadingPostSecond ? "bg-[#dedede]" : ""}`}>
-
                         <section className='mds-editor10:text-[.6rem]'
                             // data-for={item.post_id}
                             id="like"
@@ -1007,7 +808,8 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                     block={false}
                                     iconOnly={false}
                                     ripple="none"
-                                    className="hover:bg-gray-100 text-gray-500  text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem] bg-[#a6a6a6] h-[2.5rem] animate-pulse"
+                                    // bookMark
+                                    className={`hover:bg-gray-100 text-gray-500  text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem] bg-[#a6a6a6] h-[2.5rem] animate-pulse ${bookMark?"px-[1rem] h-[2rem] text-[1.5rem]":""}`}
                                 >
                                 </Button>
                             ) : <Button
@@ -1018,22 +820,18 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                 block={false}
                                 iconOnly={false}
                                 ripple="none"
-                                className="hover:bg-gray-100 text-gray-500  text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem] "
+                                className={`hover:bg-gray-100 text-gray-500   ${bookMark?"px-[1.3rem] h-[3rem] text-[1.5rem]":"text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem]"}`}
                                 onClick={() => {
                                     callLikeHnadler(item.userId, item.post_id, item.image, item.profileImage)
                                     // setUserId([item.userId, item.post_id]);
                                     setLike(!like)
                                 }}
-
                             >
-
                                 {
-                                    like ? <RiThumbUpFill className='text-[2rem] md:text-[2rem] text-blue-600' /> : <MdOutlineThumbUpAlt className="text-[2rem] md:text-[2rem] hover:text-blue-500" />
+                                    like ? <RiThumbUpFill className={` text-blue-600 ${bookMark?"text-[1.5rem]":"text-[2rem] md:text-[2rem]"}`} /> : <MdOutlineThumbUpAlt className="text-[2rem] md:text-[2rem] hover:text-blue-500" />
                                 }
-
                             </Button>}
                         </section>
-
                         <section>
                             {loadingPost && loadingPostSecond ? (
                                 <Button
@@ -1045,10 +843,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                     iconOnly={false}
                                     ripple="none"
                                     className="hover:bg-gray-100 text-gray-500  text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem] bg-[#a6a6a6] h-[2.5rem] animate-pulse"
-
                                 >
-
-
                                 </Button>
                             ) : <Button
                                 color="lightBlue"
@@ -1058,7 +853,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                 block={false}
                                 iconOnly={false}
                                 ripple="none"
-                                className="hover:bg-gray-100 text-gray-500  text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem]"
+                                className={`hover:bg-gray-100 text-gray-500  ${bookMark?"px-[1.3rem] h-[3rem] text-[1.2rem]":"text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem]"}`}
                                 onClick={
                                     (e) => {
                                         SetCommentSection(e, item.post_id)
@@ -1066,8 +861,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                 }
                             >
                                 <MdAddComment className="text-[2rem]" />
-
-
                             </Button>}
                         </section>
                         <section>
@@ -1081,7 +874,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                     iconOnly={false}
                                     ripple="none"
                                     className="hover:bg-gray-100 text-gray-500  text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem] bg-[#a6a6a6] h-[2.5rem] animate-pulse"
-
                                 >
                                 </Button>
                             ) : <Button
@@ -1092,26 +884,17 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                 block={false}
                                 iconOnly={false}
                                 ripple="none"
-                                className="hover:bg-gray-100 text-gray-500  text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem]"
+                                className={`hover:bg-gray-100 text-gray-500  ${bookMark?"px-[1.3rem] h-[3rem] text-[1.5rem]":"text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem]"}`}
                                 onClick={() => {
                                     callLikeHnadler(item.userId, item.post_id, "share")
                                 }}
                             >
-                                <RiShareFill className="text-[2rem]" />
+                                <RiShareFill className={`${bookMark?"text-[1.5rem]":"text-[2rem]"}`} />
                             </Button>}
                         </section>
                     </CardFooter>
-
-
-
-
-
-
-
-
                     <hr className='-mt-[.8rem]' />
                     {loadingPost && loadingPostSecond ? "" : <section className={`comment-section  mt-2 `}>
-
                         {
                             UserInformationLoad !== undefined &&
                             <Comments
@@ -1131,16 +914,11 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                             />
                         }
                     </section>}
-
-
                 </Card>
             </div >
-
-
             {
                 // VisibilityModal && <Model visible={VisibilityModal} visibilityHandle={visibleHandler} setPrivacyToServer={VisibilityChange} privacy={item.privacy} post_id={item.post_id} disabled={disabled} />
             }
-
             <Tooltips Tooltips placement="top" ref={buttonRef} className="ml-[5rem]" >
                 <TooltipsContent className="flex justify-center md:justify-between  px-[5px] ">
                     {/* <section className='emoji-section rounded-[50px] text-black w-[3rem] h-[3rem] sm:w-[3rem] sm:h-[3rem] md:w-[5rem] md:h-[5rem]   mx-[3px] outline outline-offest-1 outline-gray-100 cursor-pointer flex-shrink-0'
@@ -1201,12 +979,10 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                     </section> */}
                 </TooltipsContent>
             </Tooltips>
-
-
         </>
     )
 }
-export default PostCard
+export default PostCard = React.memo(PostCard)
 
 
 
@@ -1217,7 +993,6 @@ function LoaderForPostOperation() {
     return (
         <>
             <ThreeDots color="#00BFFF" height={25} width={25} />
-
         </>
     )
 }
@@ -1227,12 +1002,10 @@ function formatnumber(number) {
     var unitlist = ["", "K", "M", "G"];
     let sign = Math.sign(number);
     let unit = 0;
-
     while (Math.abs(number) > 1000) {
         unit = unit + 1;
         number = Math.floor(Math.abs(number) / 100) / 10;
     }
-
     return sign * Math.abs(number) + unitlist[unit]
 }
 
@@ -1252,7 +1025,6 @@ function LoadProfileImage({ url, setLoadingPost, image }) {
                 const res = await fetch(url)
                 const blob = await res.blob()
                 if (isMount.current) {
-
                     setURL(URL.createObjectURL(blob))
                     setLoaded(false)
                     setLoadingPost(false)
@@ -1261,7 +1033,6 @@ function LoadProfileImage({ url, setLoadingPost, image }) {
             catch (err) {
                 setLoaded(false)
                 setLoadingPost(false)
-
             }
         }
         loadProfileImage1()
@@ -1272,7 +1043,6 @@ function LoadProfileImage({ url, setLoadingPost, image }) {
             setLoadingPost(false)
         }
     }, [url])
-
     return (
         <>
             {loaded ? (
@@ -1283,7 +1053,6 @@ function LoadProfileImage({ url, setLoadingPost, image }) {
                 rounded={true}
                 raised={false}
                 alt=""
-
                 className="w-full h-full rounded-full"
             />}
         </>
@@ -1330,29 +1099,23 @@ function LoadPostContentVideo({ url, setLoadingPostSecond }) {
     }, [url])
     return (
         <>
-
             {
                 load ? (
                     <>
-
                         <div className="inner bg-[#cbcbcb] w-full h-[25rem] animate-pulse">
-
                         </div>
                     </>
                 ) : (
                     <>
-
                         <video controls>
                             <source src={blobData} type="video/mp4" />
                             Your browser does not support the video tag.
                         </video>
-
                     </>
                 )
             }
         </>
     )
-
 }
 
 
@@ -1361,12 +1124,10 @@ function LoadPostContentImage({ url, setLoadingPostSecond }) {
     const [load, setLoad] = useState(false)
     const isMount = useRef(true)
     useEffect(() => {
-
         async function loadFiles() {
             try {
                 setLoadingPostSecond(true)
                 setLoad(true)
-
                 const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/api/v1/_user/posts/`, {
                     method: "GET",
                     headers: {
@@ -1394,11 +1155,9 @@ function LoadPostContentImage({ url, setLoadingPostSecond }) {
                 load ? (
                     <>
                         <div className="inner bg-[#c9c8c8]  h-[25rem] w-full animate-pulse">
-
                         </div>
                     </>
                 ) :
-
                     (
                         <>
                             <Image
@@ -1412,23 +1171,7 @@ function LoadPostContentImage({ url, setLoadingPostSecond }) {
             }
         </>
     )
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 {/* <Popover placement="auto" ref={deletePost}>
 <PopoverContainer>
     <PopoverHeader>
@@ -1448,22 +1191,17 @@ function LoadPostContentImage({ url, setLoadingPostSecond }) {
                     Delete Post
                 </p>
             </section>
-
             <section
                 className='px-6 py-2 hover:bg-red-800 hover:rounded-lg hover:text-white flex   cursor-pointer align-baseline '
-
                 onClick={(e) => {
                     VisibilityChange(item.post_id, item.privacy);
-
                 }}
-
             >
                 {
                     item.privacy === "public" ?
                         <MdVisibility className='text-xl mt-[2px] mr-2' /> :
                         <MdVisibilityOff className='text-xl mt-[2px] mr-2' />
                 }
-
                 <p
                     className='cursor-pointer flex text-[1rem] '
                 >Visibility</p>

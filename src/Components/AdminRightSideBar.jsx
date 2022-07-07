@@ -6,7 +6,7 @@ import { GiNewspaper } from "react-icons/gi"
 import { BsFillBookmarkFill } from "react-icons/bs"
 import AllLinks from '../Pages/AdminRightSideBarPages/AllLinks'
 import { useSelector } from 'react-redux'
-import {NavLink} from "react-router-dom"
+import { NavLink } from "react-router-dom"
 
 function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout }) {
     const [bool, setBool] = useState(true)
@@ -126,4 +126,4 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout }) {
     )
 }
 
-export default AdminRightSideBar
+export default AdminRightSideBar = React.memo(AdminRightSideBar)

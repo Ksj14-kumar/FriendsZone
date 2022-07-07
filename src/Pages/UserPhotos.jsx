@@ -15,4 +15,4 @@ function UserPhotos() {
     )
 }
 
-export default UserPhotos
+export default UserPhotos = React.memo(UserPhotos)

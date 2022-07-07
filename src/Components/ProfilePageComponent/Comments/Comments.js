@@ -45,12 +45,9 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
     // const comment = await createCommentApi(text, parentId, UserIdForPostComments, currentUserId, currentUserName, ImageUrl, post_id)
 
     // return
-    console.log(socket.connected)
     try {
       const comment = await createCommentApi(value, parentId, UserIdForPostComments, currentUserId, currentUserName, ImageUrl, post_id)
-      console.log({ comment })
-      if (socket.connected) {
-        console.log(socket.connected)
+      if (socket?.connected) {
         socket.emit("sendNotificationAllType", { comment, commentBy: currentUserId, parentId, replyParentId })
         socket?.emit("sendComment", { comment: [comment, ...backendComments], post_id })
         socket?.emit("commentLength", { post_id, commentLength: [comment, ...backendComments,].length })

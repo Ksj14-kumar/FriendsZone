@@ -44,9 +44,10 @@ const object = {
     auth: {
         token: localStorage.getItem("uuid")
     },
-    transports: ["websocket", "polling"],
+    transports: ["websocket"],
     autoConnect: true,
     reconnection: true,
+    upgrade: false,
     // reconnectionAttempts: "Infinity",
     reconnectionDelay: 1000,
     reconnectionDelayMax: 5000,
@@ -59,7 +60,6 @@ export const Context = createContext()
 function App() {
     const [userData, setUserData] = React.useState(null)
     const [socket, setSocket] = useState()
-    const [online, setOnlineUser] = useState([])
     const [showLikeUserModal, setShowLikeUserModal] = useState({ bool: false, reactUser: [] })
     const history = useHistory()
     // const [users, dispatch] = React.useReducer(Reducer, Init)
@@ -134,7 +134,6 @@ function App() {
     useEffect(() => {
         socket?.emit("newUser", getUserData)
         socket?.io.on("error", (err) => {
-            // alert("please connect to internet")
         })
         socket?.io.on("reconnect", (connect) => {
             console.log("reconnect successfull" + connect)
@@ -143,17 +142,9 @@ function App() {
     }, [getUserData])
 
 
-    useEffect(() => {
-        socket?.off("onlineUsers").on("onlineUsers", (data) => {
-            setOnlineUser(data)
-        })
-
-    }, [online])
 
 
-    useEffect(() => {
-        window.scrollTo(0, 0)
-    }, [])
+
 
 
 
@@ -272,11 +263,7 @@ function App() {
 
 
                                 <Route exact path="/messages">
-                                    {/* {
-                                    (getUserData && user) ? <Messages user={UserInformationLoad?.googleId} socket={socket} />
-                                        : <Redirect to="/login" />
 
-                                } */}
                                     {
                                         <ChatSection user={UserInformationLoad?.googleId} socket={socket} />
                                     }
@@ -306,7 +293,7 @@ function App() {
 
                                 <Route exact path="/blog/:name/bookmark">
                                     {
-                                        <BookMark socket={socket} />
+                                        <BookMark socket={socket} setShowLikeUserModal={setShowLikeUserModal} />
                                     }
                                 </Route>
 
@@ -345,7 +332,7 @@ function App() {
                         <abbr title="live User">
                             <div className="right_section  fixed md:top-[95%] top-[94.6%] right-[.5rem] md:w-[5rem] bg-[#6d369a7a] rounded-sm py-[.5rem] md:px-[1rem] px-[1rem] z-[999]">
 
-                                <RightSidebar socket={socket} online={online} />
+                                <RightSidebar socket={socket} currentId={UserInformationLoad?.googleId} />
 
                             </div>
 

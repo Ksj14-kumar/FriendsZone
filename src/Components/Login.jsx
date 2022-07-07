@@ -115,10 +115,7 @@ export default function Login({ socket }) {
         }, 2000)
 
         socket?.emit("login", serverData.cookie)
-        socket?.on("onlineUsers", (data) => {
-          console.log("online uyser", data)
-          // dispatch({ type: "onlineUsers", payload: data })
-        })
+
       }
       else if (status !== 200) {
         error({ message: "Opps, Something error occure" })

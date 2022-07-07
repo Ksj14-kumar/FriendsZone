@@ -1,10 +1,10 @@
 import Button from '@material-tailwind/react/Button';
 import Icon from '@material-tailwind/react/Icon';
 import Image from '@material-tailwind/react/Image';
-import Dropdown from '@material-tailwind/react/Dropdown';
-import DropdownItem from '@material-tailwind/react/DropdownItem';
+// import Dropdown from '@material-tailwind/react/Dropdown';
+// import DropdownItem from '@material-tailwind/react/DropdownItem';
 import userProfile from '../assets/img/download.png'
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ImageShow from './ImageShow'
 import ProfileLoader from '../Loader/ProfileLoader';
@@ -18,27 +18,29 @@ import { FaUserFriends } from 'react-icons/fa'
 import { BsMessenger } from 'react-icons/bs'
 import { useState } from 'react'
 import Badge from '@mui/material/Badge';
-import Notification from './Notification/Notification';
-import Popover from "@material-tailwind/react/Popover";
-import PopoverContainer from "@material-tailwind/react/PopoverContainer";
-import PopoverHeader from "@material-tailwind/react/PopoverHeader";
-import PopoverBody from "@material-tailwind/react/PopoverBody";
+// import Notification from './Notification/Notification';
+// import Popover from "@material-tailwind/react/Popover";
+// import PopoverContainer from "@material-tailwind/react/PopoverContainer";
+// import PopoverHeader from "@material-tailwind/react/PopoverHeader";
+// import PopoverBody from "@material-tailwind/react/PopoverBody";
 import { motion, AnimatePresence } from "framer-motion"
 import { success, error } from '../toastifyMessage/Toast';
 import SearchBarTable from '../SearchBarTable';
-import FriendsNoti from './Notification/FriendsNoti';
-import Messages from "./Notification/Messages";
+// import FriendsNoti from './Notification/FriendsNoti';
+// import Messages from "./Notification/Messages";
 import AdminRightSideBar from "./AdminRightSideBar"
 import FriendsNotification from './AdminNavbarComponents/FriendsNotification';
 import AllTypeOfNotificationAdminNavbar from './AdminNavbarComponents/AllTypeOfNotificationAdminNavbar';
 import MessagesNotifications from './AdminNavbarComponents/MessagesNotifications';
+import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 const _id = localStorage.getItem("uuid")
 
-export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
-
+function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     //ALLS  HOOKS
     const wrapperRef = useRef()
+    const location = useLocation()
     const [showModal, setShowModalCode] = useState(false);
     const [showModalBackground, setShowModalCodeBackground] = useState(false);
     const [progressMessage, setProgressMessage] = useState("")
@@ -51,6 +53,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     const [disabledButtonBg, setDisabledButtonBg] = useState(false)
     const [userSearchHistory, setUserSearchHistory] = useState([])
     const [Length, SetNotificationLength] = useState(null)
+    const [accecptMessageNotification, setUserMessageAfterAcceptRequest] = useState([])
     const [showRightSideBar, setShowRightSideBar] = useState(false)
     const notification = useRef(null)
     const messenger = useRef(null)
@@ -74,101 +77,148 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     const [AllNotificationSet, setAllNotification] = useState([])
     const [messengerComponent, setMessengerComponent] = useState(false)
     const [messageNotification, setMessagesNotification] = useState([])
-
-
+    const [arrivalMessageNotification, setArrivalMessageNotification] = useState([])
     const dispatch = useDispatch()
     // ==========================================ALL Reducer function==================================
     //UNSELECT THE PROFILR iMAGES
-
-    const uploadImageDataFromServer = useSelector((state) => {
-        return state.uploadImageDataFrom
+    const { uploadImageDataFromServer, showImage, uploadImageDataFromBackground, ShowImageBackground, LoaderRedux, checkUrlExitsBg, checkUrlExitsProfile, UserInformationLoad, UnreadMessageNotification, theme } = useSelector((state) => {
+        return {
+            showImage: state.ShowImage.value,
+            uploadImageDataFromBackground: state.uploadImageDataFromBackground,
+            ShowImageBackground: state.ShowImageBackground.value,
+            LoaderRedux: state.LoaderRedux,
+            checkUrlExitsBg: state.checkUrlExitsBg,
+            checkUrlExitsProfile: state.checkUrlExitsProfile,
+            UserInformationLoad: state.UserInformationLoad.value,
+            UnreadMessageNotification: state.UnreadMessageNotification,
+            uploadImageDataFromServer: state.uploadImageDataFrom,
+            theme: state.Theme
+        }
     })
-    const showImage = useSelector((state) => {
-        return state.ShowImage.value
-    })
-    const uploadImageDataFromBackground = useSelector((state) => {
-        return state.uploadImageDataFromBackground
-    })
-    const ShowImageBackground = useSelector((state) => {
-        return state.ShowImageBackground.value
-    })
-    const LoaderRedux = useSelector((state) => {
-        return state.LoaderRedux
-    })
-
-    const likedUserDatails = useSelector((state) => {
-        return state.Notification
-    })
-    const checkUrlExitsBg = useSelector((state) => {
-        return state.checkUrlExitsBg
-    })
-    const checkUrlExitsProfile = useSelector((state) => {
-        return state.checkUrlExitsProfile
-    })
-
-    const UserInformationLoad = useSelector((state) => {
-        return state.UserInformationLoad.value
-    })
-    const UnreadMessageNotification = useSelector((state) => {
-        return state.UnreadMessageNotification
-    })
-
     const { receiverrequest, AllNotification } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "", senderrequest: [], receiverrequest: [], AllNotification: [] }
 
 
-    console.log({ UnreadMessageNotification })
 
 
+    // useEffect(() => {
+    //     async function LoadUnreadMessages() {
+    //         try {
+    //             const res = await axios({
+    //                 method: "GET",
+    //                 url: `${process.env.REACT_APP_API_BACKENDURL}/api/v1/load/all/unread/message/${UserInformationLoad?.googleId}`,
+    //                 headers: {
+    //                     "Content-Type": "application/json",
+    //                     "Authorization": localStorage.getItem("uuid"),
+    //                 }
+    //             })
+    //             console.log({ res })
 
+    //         } catch (err) {
+
+    //         }
+
+    //     }
+
+    //     LoadUnreadMessages()
+
+    // }, [])
+
+
+    useEffect(() => {
+        const value1 = UserInformationLoad.message?.length ? UserInformationLoad.message : []
+        setUserMessageAfterAcceptRequest(value1)
+    }, [UserInformationLoad])
 
 
     useEffect(() => {
         setReceivedRequest(receiverrequest?.length === 0 ? [] : receiverrequest?.sort((a, b) => {
             return b.time - a.time
         }))
-
         setAllNotification(AllNotification?.length === 0 ? [] : AllNotification?.sort((a, b) => {
             return b.time - a.time
         }))
-
         if (UserInformationLoad.message?.length > 0 || UnreadMessageNotification?.length > 0) {
             const value1 = UserInformationLoad.message?.length ? UserInformationLoad.message : []
             const value2 = UnreadMessageNotification?.length ? UnreadMessageNotification : []
-            setMessagesNotification([...value1, ...value2])
+
+            if (arrivalMessageNotification.length === 0) {
+                setMessagesNotification([...accecptMessageNotification, ...value2])
+            }
+            else {
+
+                if (arrivalMessageNotification.length === 0) {
+                    setMessagesNotification([...value2, ...accecptMessageNotification])
+                }
+                else {
+                    setMessagesNotification([...accecptMessageNotification, ...arrivalMessageNotification])
+                }
+
+
+            }
+
         }
-    }, [UserInformationLoad])
-
-
+    }, [UserInformationLoad, accecptMessageNotification, arrivalMessageNotification])
     useEffect(() => {
         socket?.off("getNotificationAllType")?.on("getNotificationAllType", (data) => {
-            console.log(data)
             AllNotificationSet !== undefined && setAllNotification([data, ...AllNotificationSet])
         }
         )
-
     }, [socket])
+
+    //get the user messags Notificatio
+    useEffect(() => {
+
+        socket?.off("getMessageNotification")?.on("getMessageNotification", async (data) => {
+            const isAlreadyUserExits = arrivalMessageNotification !== undefined && arrivalMessageNotification.length > 0 && arrivalMessageNotification?.some((v) => v?.anotherUserId === data?.anotherUserId)
+            if (isAlreadyUserExits) {
+                const value = arrivalMessageNotification.map((item) => {
+                    if (location.search.split("=")[1] === undefined && location.search.split("=")[1] !== data.anotherUserId && location.pathname !== "/messages") {
+                        if (item.anotherUserId === data.anotherUserId) {
+                            return {
+                                ...item,
+                                messageLength: item.messageLength + 1
+                            }
+                        }
+                        else {
+
+                            return item
+                        }
+                    }
+
+                })
+                setArrivalMessageNotification(value)
+
+            }
+            else {
+                if (location.search.split("=")[1] !== data.anotherUserId || location.search.split("=")[1] !== undefined || location.pathname !== "/messages") {
+                    if (arrivalMessageNotification.length === 0) {
+                        setArrivalMessageNotification([{ ...data, messageLength: 1 }])
+                    }
+                    else {
+                        setArrivalMessageNotification([...arrivalMessageNotification, { ...data, messageLength: 1 }])
+
+                    }
+
+
+                }
+            }
+        }
+        )
+    }, [socket, arrivalMessageNotification])
 
     //profile image uploader
     function imageUploadHandler(e) {
-        // if (file.type !== "image/jpeg" || file.type !== "image/png" || file.type !== "image/jpg") {
-        //     error("Please upload a valid image")
-        //     return
-        // }
         if (e.target.files[0].size > 36700160) {
             error({ message: "file size is too large ,less than 16MB" })
             return
         }
         else {
             const file = e.target.files[0]
-            // setFileInput(file)
-            //create the image local url
             const URL = window.URL.createObjectURL(file)
-            //set the url into state
             setUrl(URL)
             const reader = new FileReader();
             reader.readAsDataURL(file)
             reader.onloadend = function () {
-
                 dispatch({ type: "SetValueOfPreviewImageProfile", payload: reader.result })
             }
         }
@@ -181,9 +231,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             return
         }
         else {
-            //create the image local url
             const URL = window.URL.createObjectURL(file)
-            //set the url into state
             setBackgroundImageUrl(URL)
             const reader = new FileReader();
             reader.readAsDataURL(file)
@@ -229,9 +277,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 // const res = await fetch(data.url)
                 // const blobURL = await res.blob()
                 // const blob = URL.createObjectURL(blobURL)
-
                 // dispatch({ type: "OriginalProfileURL", payload: data.url })
-
                 dispatch({ type: "ShowImage", payload: data.url })
                 //set the whole info regrading image from, server and dispatch to 
                 dispatch({ type: "uploadImageDataFromServer", payload: data })
@@ -244,19 +290,16 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 error({ message: message })
                 setUploadLoader(false)
                 setDisabledButton(false)
-
             }
             else if (status === 499) {
                 error({ message: "not Upload please, Try again" })
                 setUploadLoader(false)
                 setDisabledButton(false)
-
             }
             else if (status === 400) {
                 error({ message: "please select photo" })
                 setUploadLoader(false)
                 setDisabledButton(false)
-
             }
             else {
             }
@@ -296,7 +339,6 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             if (status === 200) {
                 //show the message after successfull upload
                 let backgroundURL;
-
                 if (data.url) {
                     const res = await fetch(data.url)
                     const blob = await res.blob()
@@ -321,23 +363,19 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 error({ message: message })
                 setUploadLoaderBackground(false)
                 setDisabledButtonBg(false)
-
             }
             else if (status === 499) {
                 error({ message: "not Upload please, Try again" })
                 setUploadLoaderBackground(false)
                 setDisabledButtonBg(false)
-
             }
             else if (status === 400) {
                 error({ message: "please select photo" })
                 setUploadLoaderBackground(false)
                 setDisabledButtonBg(false)
-
             }
             else if (status === 401) {
                 setUploadLoaderBackground(false)
-
                 error({ message: "not upload please, Try again" })
                 setDisabledButtonBg(false)
                 return
@@ -379,12 +417,10 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 setDeleteLoader(false)
                 return
             }
-
             else if (res.status === 401) {
                 error({ message: "not upload please, Try again" })
                 setDeleteLoader(false)
                 setDisabledButton(false)
-
                 return
             }
             else if (res.status !== 200) {
@@ -392,7 +428,6 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 setDeleteLoader(false)
                 setDisabledButton(false)
                 return
-
             }
             // window.alert(res.data.message)
         }
@@ -409,7 +444,6 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/delete/assest/bg/`, {
                 body: JSON.stringify({ uploadImageDataFromBackground, uuid: _id }),
                 method: "DELETE",
-
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + localStorage.getItem("uuid"),
@@ -448,13 +482,11 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     }
     //====================LOGOUT THE ACCOUNT=============================
     async function logout() {
-
         try {
             // socket?.emit("newUser", { data: localStorage.getItem("uuid") })
             socket?.emit("logout", socket?.id)
             // socket?.disconnect()
             // socket?.emit("disconnect", { uuid: localStorage.getItem("uuid") })
-
             localStorage.removeItem("uuid")
             localStorage.clear()
             // ${process.env.REACT_APP_API_BACKENDURL}
@@ -468,13 +500,10 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             const url = await res.json()
             window.open(url.message, "_self")
             window.location.reload()
-
         }
         catch (err) {
             console.warn(err)
-
         }
-
     }
     // search the query from the server
     useEffect(() => {
@@ -485,21 +514,16 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                         "Authorization": "Bearer " + localStorage.getItem("uuid")
                     }
                 })
-
                 setUserData(res.data)  //notice that we can not use await keyword inside here
-
             }
             search()
         }
         catch (err) {
             console.warn(err)
         }
-
     }, [query])
-
     useEffect(() => {
         if (wrapperRef.current.contains(document.activeElement) === false) {
-
             dispatch({ type: "UNSELECT_PROFILE_IMAGE", payload: "" })
             dispatch({ type: "UNSELECT_BACKGROUND_IMAGE", payload: "" })
             dispatch({ type: "SetValueOfPreviewImageProfile", payload: "" })
@@ -511,11 +535,8 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             setDisabledButtonBg(false)
             setDisabledButton(false)
             setUploadLoaderBackground(false)
-
         }
-
     }, [showModal, showModalBackground])
-
     async function DeleteFriendRequest(senderId) {
         try {
             setReceivedRequest(receiverrequest.filter(friend => friend._id !== senderId))
@@ -527,13 +548,10 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                     "Authorization": "Bearer " + localStorage.getItem("uuid")
                 }
             })
-
         }
         catch (err) {
         }
     }
-
-
     //accecpt the friend request
     async function AcceptFriendRequest(senderId, name, url) {
         try {
@@ -546,9 +564,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 }
             })
             const acceptResponseData = await acceptResponse.json()
-            console.log("accepy friends reqeust", acceptResponseData)
             if (acceptResponse.status === 200) {
-                console.log(acceptResponseData)
                 const array = receivedRequest.filter(friend => { return friend._id !== senderId })
                 setReceivedRequest(array)
                 setAcceptRequest(true)
@@ -563,7 +579,6 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         catch (err) {
         }
     }
-
     useEffect(() => {
         async function loadHistory() {
             try {
@@ -572,10 +587,8 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": "Bearer " + localStorage.getItem("uuid")
-
                     }
                 })
-
                 const resData = await res.json()
                 const data = resData.data
                 if (res.status === 200) {
@@ -584,23 +597,15 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                     // }
                 }
                 else if (res.status !== 200) {
-                    console.log(data)
-
                     //not load hisory
                 }
             }
             catch (err) {
                 // console.warn(err)
-
             }
-
         }
         loadHistory()
-
     }, [])
-
-
-
     async function deleteHistory(searchUserId) {
         try {
             const filterData = userSearchHistory.filter((item) => item.searchUserId !== searchUserId)
@@ -621,15 +626,12 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             console.warn(err)
         }
     }
-
-
     useEffect(() => {
         if (ImageRef.current) {
             const { top, left, width, height } = ImageRef.current.getBoundingClientRect()
             dispatch({ type: "POS_AdminNavBar", payload: { x: left + width / 2, y: top + height / 2 } })
         }
     }, [ImageRef])
-
     // ======================================CLICK OUTSIDE THE clickOutSideFriendsNotification==========
     useEffect(() => {
         function handleClickOutside(event) {
@@ -643,7 +645,6 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         };
     }, [clickOutSideFriendsNoti])
     // messengerComponent
-
     // ======================================CLICK OUTSIDE THE the messenger component==========
     useEffect(() => {
         function handleClickOutside(event) {
@@ -661,7 +662,6 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         function handleClickOutside(event) {
             if (AllTypeNitification.current && !AllTypeNitification.current.contains(event.target)) {
                 setShowNotification(false)
-
             }
         }
         document.addEventListener("mousedown", handleClickOutside);
@@ -670,12 +670,11 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         };
     }, [AllTypeNitification])
 
-    console.log({ messageNotification })
 
-
+    console.log({ theme })
     return (
         <>
-            <nav className="bg-light-blue-500  py-2 px-3 fixed w-full z-[18] drop-shadow-lg">
+            <nav className={`${theme ? "bg-[#000000fc]" : " bg-light-blue-500"}  py-2 px-3 fixed w-full z-[18] drop-shadow-lg`}>
                 <div className="container max-w-full mx-auto flex items-center justify-between md:pr-8 md:pl-10 ">
                     <div className="md:hidden">
                         <Button
@@ -710,28 +709,23 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                     </div>
                     <div className="flex  items-center w-full  justify-end ">
                         <div className="flex  relative  w-full justify-end  ">
-
-
                             <div className="left_side_search flex  flex-[8] md:justify-end justify-start items-center relative md:mr-[3rem]">
                                 <motion.div className={`wrap_inout_search w-[38rem] mds-editor31:w-[25rem] mds-editor32:w-[3rem] rounded-full transition-all duration-300 ${expandSearch ? "mds-editor32:w-full" : "mds-editor32:w-[3rem]"}`}
                                 >
-                                    <SearchBarTable showSearch={showSearch} setShowSearch={setShowSearch} setQuery={setQuery} setPopOverEffect={setPopOverEffect} query={query} data={userData} userSearchHistory1={userSearchHistory} deleteHistory={deleteHistory} setExpandSearch={setExpandSearch} expandSearch={expandSearch} />
-
+                                    <SearchBarTable showSearch={showSearch} setShowSearch={setShowSearch} setQuery={setQuery} setPopOverEffect={setPopOverEffect} query={query} data={userData} userSearchHistory1={userSearchHistory} deleteHistory={deleteHistory} setExpandSearch={setExpandSearch} expandSearch={expandSearch} theme={theme} />
                                 </motion.div>
                             </div>
-
                             <div className={`group_right_s flex flex-[2]   justify-end  ${expandSearch ? "mds-editor32:hidden" : "block"}`}>
                                 <div className={`group_icons flex md:w-full w-[12rem]   justify-around items-center  gap-x-2`}>
                                     <section className={`friends  flex    
-                                    relative     align-middle justify-center   flex-shrink-0 rounded-full px-[.5rem] py-[.5rem] bg-[#fff]   ${friendModalNotification && " bg-[#bfbfbf]"}`}
+                                    relative     align-middle justify-center   flex-shrink-0 rounded-full px-[.5rem] py-[.5rem]  ${theme ? "bg-[#343434b8]" : "bg-[#fff]"}   ${friendModalNotification && " bg-[#bfbfbf]"}`}
                                         ref={clickOutSideFriendsNoti}
                                         onClick={() => {
                                             setFriendModalNotification(true)
                                         }}>
-                                        <FaUserFriends className={`text-[2rem] self-center text-[#270082] cursor-pointer mds-editor28:text-[1.7rem] ${friendModalNotification && "text-[#ef1e1e]"}`} />
-                                        <article className='  absolute right-2 -top-2 mds-editor8:-top-3 cursor-pointer'>
+                                        <FaUserFriends className={`text-[2rem] self-center ${theme ? "text-[#fff]" : "text-[#270082]"} cursor-pointer mds-editor28:text-[1.7rem] ${friendModalNotification && "text-[#ef1e1e]"}`} />
+                                        <article className='  absolute right-2 -top-2 mds-editor8:-top-[.5rem]  cursor-pointer'>
                                             {
-
                                                 (receiverrequest !== undefined && receiverrequest.length > 0) &&
                                                 <Badge badgeContent={receiverrequest.filter((item) => { return item.read === false }).length} color="error" max={20}>
                                                 </Badge>
@@ -742,15 +736,16 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                                 receivedRequest={receivedRequest} AcceptFriendRequest={AcceptFriendRequest} DeleteFriendRequest={DeleteFriendRequest} messageAftetAcceptRequest={messageAftetAcceptRequest}
                                                 __id__={UserInformationLoad?._id}
                                                 setReceivedRequest={setReceivedRequest}
+                                                theme={theme}
                                             />}
                                         </AnimatePresence>
                                     </section>
-                                    <section className={`notification  flex  relative   align-middle flex-shrink-0 justify-center rounded-full px-[.5rem] py-[.5rem] bg-[#fff] ${showNotification ? "bg-[#bfbfbf] " : ""}`}
+                                    <section className={`notification  flex  relative   align-middle flex-shrink-0 justify-center rounded-full px-[.5rem] py-[.5rem] ${theme ? "bg-[#343434b8]" : "bg-[#fff]"} ${showNotification ? "bg-[#bfbfbf] " : ""}`}
                                         onClick={() => setShowNotification(true)}
                                         ref={AllTypeNitification}
                                     >
-                                        <MdNotifications className={`text-[2rem] self-center text-[#270082] cursor-pointer mds-editor28:text-[1.7rem] ${showNotification && "text-[#ef1e1e]"}`} />
-                                        <article className=' bg-red-500 absolute right-2 -top-2 mds-editor8:-top-3 cursor-pointer'>
+                                        <MdNotifications className={`text-[2rem] self-center  ${theme ? "text-[#fff]" : "text-[#270082]"}  cursor-pointer mds-editor28:text-[1.7rem] ${showNotification && "text-[#ef1e1e]"}`} />
+                                        <article className=' bg-red-500 absolute right-2 -top-2 mds-editor8:-top-[.5rem]  cursor-pointer'>
                                             {
                                                 <Badge badgeContent={AllNotificationSet?.length && AllNotificationSet.filter((item) => {
                                                     return item.read === false
@@ -762,32 +757,38 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                         <AnimatePresence>
                                             {
                                                 showNotification &&
-                                                <AllTypeOfNotificationAdminNavbar AllNotification={AllNotificationSet} setAllNotification={setAllNotification} />
+                                                <AllTypeOfNotificationAdminNavbar AllNotification={AllNotificationSet} setAllNotification={setAllNotification}
+                                                theme={theme}
+                                                    __id__={UserInformationLoad?._id}
+                                                />
                                             }
                                         </AnimatePresence>
                                     </section>
-
                                     <section className={`
-                                    messenger  flex    relative px-[.7rem] py-[.7rem] rounded-full flex-shrink-0 bg-[#fff] ${messengerComponent && "bg-[#bfbfbf] "} `}
+                                    messenger  flex  ${theme ? "bg-[#343434b8]" : "bg-[#fff]"}  relative px-[.7rem] py-[.7rem] rounded-full flex-shrink-0 bg-[#fff] ${messengerComponent && "bg-[#bfbfbf] "} `}
                                         ref={messenger}
                                         onClick={() => {
                                             setMessengerComponent(true)
                                         }}
                                     >
-                                        <BsMessenger className={`text-[1.6rem] self-center cursor-pointer  text-[#270082] mds-editor28:text-[1.3rem] ${messengerComponent && "text-[#ef1e1e]"}`} />
-                                        <article className='absolute right-1 -top-2 mds-editor8:-top-3 cursor-pointer '>
+                                        <BsMessenger className={`text-[1.6rem] self-center cursor-pointer   ${theme ? `text-[#fff] ${messengerComponent && "text-[#ef1e1e]"}` : `text-[#270082] ${messengerComponent && "text-[#ef1e1e]"}`} mds-editor28:text-[1.3rem] ${messengerComponent && "text-[#ef1e1e]"}`} />
+                                        <article className='absolute right-1 -top-2 mds-editor8:-top-[.5rem] cursor-pointer '>
                                             {
                                                 // UnreadMessageNotification
                                                 // UserInformationLoad?.message.length + UnreadMessageNotification[0]?.messageLength ? UserInformationLoad?.message.length + UnreadMessageNotification[0]?.messageLength : ""
                                                 UserInformationLoad?.message &&
-                                                <Badge badgeContent={messageNotification?.length} color="error" max={20} >
+                                                <Badge badgeContent={messageNotification.filter((item => item?.read === false)).length} color="error" max={20} >
                                                 </Badge>
                                             }
                                         </article>
                                         {messengerComponent &&
                                             // messageNotification
                                             // UserInformationLoad?.message
-                                            <MessagesNotifications messageList={messageNotification} setMessengerComponent={setMessengerComponent} />
+                                            <MessagesNotifications messageList={messageNotification} setMessengerComponent={setMessengerComponent} setUserMessageAfterAcceptRequest={setUserMessageAfterAcceptRequest}
+                                                __id__={UserInformationLoad?._id}
+                                                setArrivalMessageNotification={setArrivalMessageNotification}
+                                                theme={theme}
+                                            />
                                         }
                                     </section>
                                 </div>
@@ -848,11 +849,8 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                         >
                                             Logout
                                         </DropdownItem>
-
-
                                     </Dropdown> */}
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -991,7 +989,6 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                     fileInputSubmit(e)
                                     setShowModalCode(true)
                                     setDisabledButton(true)
-
                                 }
                                 }
                                 ripple="light"
@@ -1004,7 +1001,6 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             </Modal>
             {/* BACKGROUND SET IMAGE MODAL */}
             <Modal size="sm" active={showModalBackground} className="z-[1000]" toggler={() => setShowModalCodeBackground(false)}>
-                {/* ref={wrapperRef} */}
                 <form onSubmit={fileInputSubmitBackground} >
                     <ModalHeader toggler={() => setShowModalCodeBackground(false)}>
                         Background Image
@@ -1125,17 +1121,14 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                     </PopoverBody>
                 </PopoverContainer>
             </Popover>
-
             <Popover placement="bottom" ref={message}>
                 <PopoverContainer>
                     <PopoverHeader>Messages</PopoverHeader>
                     <PopoverBody>
-
                         <Messages message={UserInformationLoad?.message} socket={socket} />
                     </PopoverBody>
                 </PopoverContainer>
             </Popover>
-
             <Popover placement="bottom" ref={friends}>
                 <PopoverContainer>
                     <PopoverHeader className="bg-red-200">{receivedRequest !== undefined && receivedRequest.length > 0 ? "Friends Notification" : "No Notification: "}</PopoverHeader>
@@ -1155,21 +1148,16 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                                     url={item.url}
                                                     type={item.type}
                                                     acceptRequest={acceptRequest}
-
                                                     AcceptFriendRequest={AcceptFriendRequest}
                                                     setAcceptRequest={setAcceptRequest}
                                                     messageAftetAcceptRequest={messageAftetAcceptRequest}
-
                                                     DeleteFriendRequest={
                                                         DeleteFriendRequest
                                                     } />
                                             </>
                                         )
-
                                     }))
                             }
-
-
                             <section className='w-full bg-green-500 my-0'>
                                 {
                                     // messageAftetAcceptRequest.length && messageAftetAcceptRequest.map((item) => {
@@ -1188,11 +1176,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                     })
                                 }
                             </section>
-
                         </div>
-
-
-
                     </PopoverBody>
                     <PopoverBody className="bg-blue-600">
                     </PopoverBody>
@@ -1202,27 +1186,4 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     );
 }
 
-
-
-
-
-// function MessageAfterFriendRequestAccept({ item }) {
-//     return (
-//         <>
-//             <div className="wrapper  px-1">
-//                 {/* <p className='flex cursor-pointer hover:bg-[#dadada] rounded-md py-1 w-full'>
-//                     <Image src={item.url}
-//                         rounded={true}
-//                         className="md:w-[2.7rem] w-[2rem] md:h-[2.7rem] h-[2rem]"
-//                     />
-//                     <p className='ml-1 truncate'>
-//                         <span className='text-[1.1rem] font-semibold'>{item.name}</span>, and you are connected
-//                     </p>
-//                 </p> */}
-//                 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Rem dolores ducimus culpa temporibus sit. Officia numquam eius laborum dignissimos quia?
-//             </div>
-
-
-//         </>
-//     )
-// }
+export default AdminNavbar = React.memo(AdminNavbar)
