@@ -9,7 +9,7 @@ import { NavLink } from "react-router-dom"
 import { BallTriangle, Circles, Triangle, ThreeDots, TailSpin } from "react-loader-spinner"
 import { useSelector } from 'react-redux'
 
-function ReactUserList({ reactUser }) {
+function ReactUserList({ reactUser,theme }) {
     console.log({ reactUser })
     const [userInfo, setUserInfo] = useState({ name: "", image: "", isFriends: "" })
     const [loader, setLoader] = useState(false)
@@ -98,7 +98,7 @@ function ReactUserList({ reactUser }) {
 
 
 
-            <div className={`wrapper_for_react_user flex w-full items-center gap-y-2 mb-3 ${loader ? "hidden" : "flex"}`}>
+            <div className={`wrapper_for_react_user flex w-full items-center gap-y-2 mb-3 px-2 py-1 rounded-md  ${theme?"hover:bg-[#2d2d2d]":"hover:bg-[#b8b8b8]"} {loader ? "hidden" : "flex"}`}>
                 <NavLink to={`/profile/${reactUser}`}>
 
 
@@ -106,14 +106,14 @@ function ReactUserList({ reactUser }) {
                         <div className="image_wrappe  w-[3rem] h-[3rem] rounded-full relative flex-shrink-0">
                             {
                                 userInfo.image ?
-                                    <Image src={userInfo?.image && userInfo.image} className="w-full h-full flex-shrink-0 rounded-full" rounded={true} /> :
-                                    <Image src={Photos} className="w-full h-full flex-shrink-0 rounded-full" rounded={true} />
+                                    <Image src={userInfo?.image && userInfo.image} className={`w-full h-full flex-shrink-0 rounded-full ${theme?"outline outline-1 outline-offset-1 outline-[#ffff]":""}`} rounded={true} /> :
+                                    <Image src={Photos} className={`w-full h-full flex-shrink-0 rounded-full ${theme?"outline outline-1 outline-offset-1 outline-[#ffff]":""}`} rounded={true} />
                             }
                             <p className='absolute top-[1.5rem] text-[1rem] -right-[3px] rounded-full bg-blue-400 text-[#fff] p-1'>
                                 <HiThumbUp />
                             </p>
                         </div>
-                        <p className='text-[1.3rem] tracking-wider ml-2 flex truncate'>
+                        <p className={`text-[1.3rem] tracking-wider ml-2 flex truncate ${theme?"text-[#fff]":"text-[#0a0a0a]"}`}>
                             {userInfo.name && userInfo.name}
                         </p>
                     </div>

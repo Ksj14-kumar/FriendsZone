@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 import LiveUser from './chatSection/LiveUser';
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-function FooterButton({ bool, onlinefriends}) {
+function FooterButton({ bool, onlinefriends,theme}) {
     const dispatch = useDispatch()
     const targetDiv = useRef()
     const siblingDiv = useRef()
@@ -67,21 +67,21 @@ function FooterButton({ bool, onlinefriends}) {
         <>
             <motion.main className="main border-1 border-solid border-gray-200"
             >
-                <header className="_top_chat_header  flex   items-center hover:cursor-pointer  py-1 justify-between ">
+                <header className={`_top_chat_header  flex   items-center hover:cursor-pointer  py-1 justify-between ${theme?"bg-[#000]":"bg-[#fff]"}`}>
                     <section className="_left  "
                         ref={siblingDiv}
                     >
-                        <p className='text-lg text-black ml-4 mds-editor7:text-sm font-serif tracking-wider'>Active</p>
+                        <p className={`text-lg  ml-4 mds-editor7:text-sm font-serif tracking-wider ${theme?"text-[#f9f9f9]":"text-[#000000]"}`}>Active</p>
                     </section>
                     <section className="_right relative  -px-4 mr-10 flex"
                         onFocus={() => {
                         }}
                     >
-                        <div className="container_search flex  items-center relative  w-0"
+                        <div className={`container_search flex  items-center relative  w-0 ${theme?"bg-[#000]":"bg-[#ffffff]"}`}
 
                             ref={targetDiv}
                         >
-                            <input type="text" placeholder="Search..." id="search_friend_live" className='h-[2rem] focus:outline-none rounded-full indent-2 caret-[#d5309e] focus:border-1  w-full pr-[2rem] text-center focus:border-2 focus:border-solid focus:border-[#ffffff] font-serif tracking-wider '
+                            <input type="text" placeholder="Search..." id="search_friend_live" className={`h-[2rem] focus:outline-none rounded-full indent-2 caret-[#d5309e] focus:border-1  w-full pr-[2rem] text-center focus:border-2 focus:border-solid focus:border-[#ffffff] font-serif tracking-wider ${theme?"bg-[#000]":"bg-[#ffffff]"}`}
                             />
                             
                         </div>
@@ -96,12 +96,12 @@ function FooterButton({ bool, onlinefriends}) {
                         return (
                             <>
                                 <NavLink to={`/messages?q=${item._id}`}>
-                                    <LiveUser value={item} />
+                                    <LiveUser value={item} theme={theme} />
                                 </NavLink>
                             </>
 
                         )
-                    }) : <NoUserLive />
+                    }) : <NoUserLive theme={theme} />
                 }
 
 
@@ -119,10 +119,10 @@ export default FooterButton;
 
 
 
-function NoUserLive() {
+function NoUserLive({theme}) {
     return (
         <>
-            <p className="text-[2rem] text-black text-center py-2">No User Live</p>
+            <p className={`text-[2rem]  text-center py-2 ${theme?"text-[#fff]":"text-black"}`}>No User Live</p>
 
         </>
     )

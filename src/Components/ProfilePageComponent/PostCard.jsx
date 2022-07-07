@@ -44,7 +44,7 @@ import axios from "axios"
 
 
 
-function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserModal, single, name, setAllPosts,bookMark }) {
+function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserModal, single, name, setAllPosts, bookMark, theme }) {
     const [commentToggle, setCommentToggle] = useState(false)
     const [commentsLength, setCommentLength] = useState({ length: 0, post_id: "" })
     const [shareLength, setShareLength] = useState(0)
@@ -262,18 +262,18 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
     }, [item])
     return (
         <>
-            <div className={`post-card flex justify-around w-full mb-2 rounded-md ${bookMark?"w-[25rem] ":"md:w-[42rem]"}  drop-shadow-sm ${loadingPost && loadingPostSecond ? "mb-[3rem] w-screen md:w-full md:ml-[2rem] md:mr-[2rem] h-[30rem]" : ""}`}>
-                <Card className={`post p-0   ${single === "single" && name ? " mds-editor28:rounded-t-none" : "rounded-xl"}     ${loadingPost && loadingPostSecond ? "bg-[#dedede]" : ""}`}>
-                    <CardBody className={` ${loadingPost && loadingPostSecond ? " bg-[#dcdcdc]" : ""}`} >
+            <div className={`post-card flex justify-around w-full mb-2 rounded-md ${bookMark ? "w-[25rem] " : "md:w-[42rem]"}  drop-shadow-sm ${loadingPost && loadingPostSecond ? "mb-[3rem] w-screen md:w-full md:ml-[2rem] md:mr-[2rem] h-[30rem]" : ""}`}>
+                <Card className={`post p-0 ${theme ? "bg-[#282828] border border-solid border-[#292929] rounded-md" : "bg-[#fff] rounded-md"}   ${single === "single" && name ? " mds-editor28:rounded-t-none" : "rounded-xl"}     ${loadingPost && loadingPostSecond ? "bg-[#dedede]" : ""}`}>
+                    <CardBody className={` ${theme ? "bg-[#282828] rounded-md" : "bg-[#fff] rounded-md"} ${loadingPost && loadingPostSecond ? " bg-[#dcdcdc]" : ""}`} >
                         <div className={`back_to_hone  flex mb-3 w-full items-center  ${single === "single" && name ? "flex mds-editor28:rounded-t-none" : "hidden"} ${loadingPost && loadingPostSecond ? "bg-[#]" : ""}`}>
                             <NavLink
                                 to={"/"}
                             >
                                 <p className='w-full  py-1 flex-[1] cursor-pointer'>
-                                    <BsArrowLeft className='text-[2rem]' />
+                                    <BsArrowLeft className={`text-[2rem] ${theme ? "text-[#fff]" : "text-[#060606]"}`} />
                                 </p>
                             </NavLink>
-                            <p className='flex justify-center flex-[11] tracking-wider text-[#2b2b2b] text-[1.5rem] select-none font-semibold'>
+                            <p className={`flex justify-center flex-[11] tracking-wider ${theme ? "text-[#e0e0e0]" : "text-[#2b2b2b]"} text-[1.5rem] select-none font-semibold`}>
                                 Collegezone
                             </p>
                         </div>
@@ -288,28 +288,28 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                             item.profileImage ?
                                                 (
                                                     <>
-                                                        <LoadProfileImage url={item.profileImage} setLoadingPost={setLoadingPost} image={item.image} />
+                                                        <LoadProfileImage url={item.profileImage} setLoadingPost={setLoadingPost} image={item.image} theme={theme} />
                                                     </>
                                                 ) : <Image
                                                     src={profile}
                                                     rounded={true}
                                                     raised={false}
                                                     alt="Rounded Image"
-                                                    className="w-full h-full"
+                                                    className={`w-full h-full ${theme ? "outline outline-1 outline-offset-1 outline-[#e0e0e0] outline-solid" : ""}`}
                                                 />
                                         }
                                     </article>
                                     <article className={`public-name-article ml-[.5rem]  post  w-full ${loadingPost && loadingPostSecond ? " mt-[3px]" : "-mt-[.4rem]"}`}>
-                                        <article className={`text-black text-xl ${loadingPost && loadingPostSecond ? "bg-[#8f8f8f] h-[15px]  rounded-md" : ""}`}>
+                                        <article className={`${theme ? "text-[#fff]" : "text-black"} text-xl ${loadingPost && loadingPostSecond ? "bg-[#8f8f8f] h-[15px]  rounded-md" : ""}`}>
                                             {loadingPost && loadingPostSecond ? "" : (item.username ? item.username : "NA")}
                                         </article>
-                                        <article className={`flex  ${loadingPost && loadingPostSecond ? "bg-[#8f8f8f] h-[15px] mt-2 mb-[3px] animate-pulse w-full rounded-md" : " "}`}>
+                                        <article className={`flex ${theme ? "text-[#fafafa]" : "text-[#050505]"} ${loadingPost && loadingPostSecond ? "bg-[#8f8f8f] h-[15px] mt-2 mb-[3px] animate-pulse w-full rounded-md" : " "}`}>
                                             {loadingPost && loadingPostSecond ? "" : (format(item.createdAt))}
                                             {
                                                 loadingPost && loadingPostSecond ? "" : (item.privacy === "public" ?
-                                                    <IoEarth className='mt-[4px] ml-[.3rem]' /> :
-                                                    item.privacy === "friends" ? <HiUsers className="mt-[4px] ml-[.3rem]" /> :
-                                                        <MdLock className='mt-[4px] ml-[.3rem]' />)
+                                                    <IoEarth className={`mt-[4px] ml-[.3rem] ${theme ? "text-[#fff]" : "text-[#010101]"}`} /> :
+                                                    item.privacy === "friends" ? <HiUsers className={`mt-[4px] ml-[.3rem] ${theme ? "text-[#fff]" : "text-[#010101]"}`} /> :
+                                                        <MdLock className={`mt-[4px] ml-[.3rem] ${theme ? "text-[#fff]" : "text-[#010101]"}`} />)
                                             }
                                         </article>
                                     </article>
@@ -329,7 +329,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                     setShowPopOver(true)
                                                 }}
                                             >
-                                                <BsThreeDotsVertical className='text-[1.5rem]' />
+                                                <BsThreeDotsVertical className={`text-[1.5rem] ${theme ? "text-[#fff]" : "text-[#000]"}`} />
                                             </button>}
                                         </section>
                                         <AnimatePresence>
@@ -528,7 +528,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                         setShowPopOver(true)
                                                     }}
                                                 >
-                                                    <BsThreeDotsVertical className='text-[1.5rem]' />
+                                                    <BsThreeDotsVertical className={`text-[1.5rem] ${theme ? "text-[#fff]" : "text-[#0e0e0e]"}`} />
                                                 </button>}
                                             </section>
                                             <AnimatePresence>
@@ -724,7 +724,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                         <section className='text-caption ml-2  mt-[2rem]   px-[1rem]  text-[1.3rem] md:text-lg '
                         >
                             {
-                                loadingPost && loadingPostSecond ? "" : <ReadMore children={item.text} className='cursor-pointer' />
+                                loadingPost && loadingPostSecond ? "" : <ReadMore children={item.text} theme={theme} className={`cursor-pointer ${theme ? "text-[#ffff]" : "text-[#000]"}`} />
                             }
                         </section>
                     </CardBody>
@@ -741,8 +741,8 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                     : "")
                         }
                     </section>
-                    <hr className={loadingPost && loadingPostSecond ? "" : "bg-grey-200 mt-[2px]"} />
-                    <CardFooter className="like and dislike section flex justify-start py-0  mb-[.8rem] px-0">
+                    <hr className={`${loadingPost && loadingPostSecond ? "" : " mt-[2px]"} ${theme ? "bg-[#171717] hidden" : "bg-[#fff]"}`} />
+                    <CardFooter className="like and dislike section flex justify-start py-0  mb-[.8rem] px-0 mt-1">
                         <main className={`main_section flex  w-full  -mb-[8px] ${loadingPost && loadingPostSecond ? "bg-[#dedede]" : ""} `}>
                             <section className='like_love  flex-[10]  cursor-pointer'
                                 onClick={() => {
@@ -757,7 +757,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                 <MdThumbUpAlt className='text-white' />
                                             </div>}
                                         {loadingPost && loadingPostSecond ? "" : <p className="like count ml-[4rem]">
-                                            <span className='mr-[3px] '>
+                                            <span className={` mr-[3px] ${theme?"text-[#fff]":"text-[#030303]"}`}>
                                                 {
                                                     formatnumber(likeCount)
                                                 }
@@ -771,12 +771,12 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                     <div className="bg-[#8f8f8f] w-[5rem] rounded-sm h-[2rem] animate-pulse mr-[8px]">
                                     </div>
                                 ) : <section className="comments">
-                                    <p className='text-[1.2rem] font-light cursor-pointer underline truncate'
+                                    <p className={`text-[1.2rem] font-light cursor-pointer underline truncate ${theme ? "text-[#fff]" : "text-[#000000]"}`}
                                         onClick={(e) => {
                                             SetCommentSection(e, item.post_id)
                                         }
                                         }
-                                    >comments <span>{
+                                    >comments <span className={` ${theme ? "text-[#fff]" : "text-[#000000]"}`}>{
                                         (commentsLength.length > 0 && commentsLength.post_id !== "") &&
                                         item.post_id === commentsLength.post_id && formatnumber(commentsLength.length)
                                     }
@@ -786,13 +786,12 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                     <div className="bg-[#8f8f8f] w-[5rem] rounded-sm h-[2rem] animate-pulse">
                                     </div>
                                 ) : <section className="share  md:ml-[1rem]">
-                                    <p className='text-[1.2rem] font-light cursor-pointer underline truncate mds-editor20:ml-[10px] before:
-                                 '>share <span>{shareLength}</span></p>
+                                    <p className={`text-[1.2rem] font-light cursor-pointer underline truncate mds-editor20:ml-[10px] ${theme ? "text-[#ffffff]" : "text-[#080808]"}`}>share <span className={` ${theme ? "text-[#fff]" : "text-[#000000]"}`}>{shareLength}</span></p>
                                 </section>}
                             </div>
                         </main>
                     </CardFooter>
-                    <hr className='mb-[.2rem]' />
+                    <hr className={`mb-[.2rem] ${theme ? "bg-[#2d2d2d] hidden" : "bg-[#2d2d2d]"}`} />
                     <CardFooter className={`flex justify-between -mt-[1rem] mx-[0rem]mds-editor10:justify-center ${loadingPost && loadingPostSecond ? "bg-[#dedede]" : ""}`}>
                         <section className='mds-editor10:text-[.6rem]'
                             // data-for={item.post_id}
@@ -809,7 +808,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                     iconOnly={false}
                                     ripple="none"
                                     // bookMark
-                                    className={`hover:bg-gray-100 text-gray-500  text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem] bg-[#a6a6a6] h-[2.5rem] animate-pulse ${bookMark?"px-[1rem] h-[2rem] text-[1.5rem]":""}`}
+                                    className={`hover:bg-gray-100 text-gray-500  text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem] bg-[#a6a6a6] h-[2.5rem] animate-pulse ${bookMark ? "px-[1rem] h-[2rem] text-[1.5rem]" : ""}`}
                                 >
                                 </Button>
                             ) : <Button
@@ -820,7 +819,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                 block={false}
                                 iconOnly={false}
                                 ripple="none"
-                                className={`hover:bg-gray-100 text-gray-500   ${bookMark?"px-[1.3rem] h-[3rem] text-[1.5rem]":"text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem]"}`}
+                                className={`hover:bg-gray-100 text-gray-500   ${bookMark ? "px-[1.3rem] h-[3rem] text-[1.5rem]" : "text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem]"}`}
                                 onClick={() => {
                                     callLikeHnadler(item.userId, item.post_id, item.image, item.profileImage)
                                     // setUserId([item.userId, item.post_id]);
@@ -828,7 +827,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                 }}
                             >
                                 {
-                                    like ? <RiThumbUpFill className={` text-blue-600 ${bookMark?"text-[1.5rem]":"text-[2rem] md:text-[2rem]"}`} /> : <MdOutlineThumbUpAlt className="text-[2rem] md:text-[2rem] hover:text-blue-500" />
+                                    like ? <RiThumbUpFill className={` text-blue-600 ${bookMark ? "text-[1.5rem]" : "text-[2rem] md:text-[2rem]"}`} /> : <MdOutlineThumbUpAlt className="text-[2rem] md:text-[2rem] hover:text-blue-500" />
                                 }
                             </Button>}
                         </section>
@@ -853,7 +852,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                 block={false}
                                 iconOnly={false}
                                 ripple="none"
-                                className={`hover:bg-gray-100 text-gray-500  ${bookMark?"px-[1.3rem] h-[3rem] text-[1.2rem]":"text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem]"}`}
+                                className={`hover:bg-gray-100 text-gray-500  ${bookMark ? "px-[1.3rem] h-[3rem] text-[1.2rem]" : "text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem]"}`}
                                 onClick={
                                     (e) => {
                                         SetCommentSection(e, item.post_id)
@@ -884,16 +883,16 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                 block={false}
                                 iconOnly={false}
                                 ripple="none"
-                                className={`hover:bg-gray-100 text-gray-500  ${bookMark?"px-[1.3rem] h-[3rem] text-[1.5rem]":"text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem]"}`}
+                                className={`hover:bg-gray-100 text-gray-500  ${bookMark ? "px-[1.3rem] h-[3rem] text-[1.5rem]" : "text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem]"}`}
                                 onClick={() => {
                                     callLikeHnadler(item.userId, item.post_id, "share")
                                 }}
                             >
-                                <RiShareFill className={`${bookMark?"text-[1.5rem]":"text-[2rem]"}`} />
+                                <RiShareFill className={`${bookMark ? "text-[1.5rem]" : "text-[2rem]"}`} />
                             </Button>}
                         </section>
                     </CardFooter>
-                    <hr className='-mt-[.8rem]' />
+                    <hr className={`-mt-[.8rem] ${theme ? "bg-[#2a2a2a] hidden" : "bg-[#2e2e2e]"}`} />
                     {loadingPost && loadingPostSecond ? "" : <section className={`comment-section  mt-2 `}>
                         {
                             UserInformationLoad !== undefined &&
@@ -911,6 +910,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                 setLike={setLike}
                                 item={item}
                                 setLikeCount={setLikeCount}
+                                theme={theme}
                             />
                         }
                     </section>}
@@ -1013,7 +1013,7 @@ function formatnumber(number) {
 
 
 
-function LoadProfileImage({ url, setLoadingPost, image }) {
+function LoadProfileImage({ url, setLoadingPost, image, theme }) {
     const [loaded, setLoaded] = useState(false)
     const [blobURL, setURL] = useState("")
     const isMount = useRef(true)
@@ -1053,7 +1053,7 @@ function LoadProfileImage({ url, setLoadingPost, image }) {
                 rounded={true}
                 raised={false}
                 alt=""
-                className="w-full h-full rounded-full"
+                className={`w-full h-full rounded-full ${theme ? "outline outline-1 outline-offset-1 outline-[#c0c0c0]  outline-solid" : ""}`}
             />}
         </>
     )

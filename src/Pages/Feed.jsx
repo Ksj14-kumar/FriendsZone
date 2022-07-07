@@ -9,10 +9,11 @@ function Feed({ socket, setShowLikeUserModal, showLikeUserModal }) {
     const [suggestionFriends, setSuggestionFriends] = useState([])
 
 
-    const { UserInformationLoad, PostWhichUserSelectedImageORVideo } = useSelector((state) => {
+    const { UserInformationLoad, PostWhichUserSelectedImageORVideo,theme } = useSelector((state) => {
         return {
             UserInformationLoad: state.UserInformationLoad.value,
-            PostWhichUserSelectedImageORVideo: state.PostWhichUserSelectedImageORVideo
+            PostWhichUserSelectedImageORVideo: state.PostWhichUserSelectedImageORVideo,
+            theme:state.Theme
         }
     })
 
@@ -102,7 +103,7 @@ function Feed({ socket, setShowLikeUserModal, showLikeUserModal }) {
                 transition={{ ease: "easeInOut", delay: .1 }}
             > */}
 
-            <UserFeed PostWhichUserSelectedImageORVideo={PostWhichUserSelectedImageORVideo} socket={socket} AllUser={suggestionFriends} FilterUser={FilterUser} showLikeUserModal={showLikeUserModal} setShowLikeUserModal={setShowLikeUserModal} />
+            <UserFeed PostWhichUserSelectedImageORVideo={PostWhichUserSelectedImageORVideo} socket={socket} AllUser={suggestionFriends} FilterUser={FilterUser} showLikeUserModal={showLikeUserModal} setShowLikeUserModal={setShowLikeUserModal} theme={theme} />
             {/* </motion.div> */}
 
         </>

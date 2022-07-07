@@ -14,7 +14,7 @@ import {
 } from "./api";
 import { AnimatePresence } from "framer-motion";
 
-const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, currentUserName, UserIdForPostComments, post_id, setCommentLength, socket, setCommentToggle, commentsLength, setLike, setLikeCount, item }) => {
+const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, currentUserName, UserIdForPostComments, post_id, setCommentLength, socket, setCommentToggle, commentsLength, setLike, setLikeCount, item ,theme}) => {
 
 
   const [Length, setLength] = useState(0)
@@ -295,10 +295,9 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
 
   return (
     <div className="comments">
-      <CommentForm submitLabel="Comment" handleSubmit={addComment} commentToggle={commentToggle} backendComments={backendComments} setCommentToggle={setCommentToggle} />
-      <div className={`comments-container mb-[1.5rem]  ${commentLoader && "w-full  mb-[2rem]"}`}>
+      <CommentForm submitLabel="Comment" handleSubmit={addComment} commentToggle={commentToggle} backendComments={backendComments} setCommentToggle={setCommentToggle} theme={theme} />
+      <div className={`comments-container mb-[1.5rem]   ${commentLoader && "w-full  mb-[2rem]"}`}>
         {/* commentLoader ? <CommentLodaer /> : */}
-
         <AnimatePresence>
 
           {commentToggle && rootComments.map((rootComment) => (
@@ -315,6 +314,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
               ImageUrl={rootComment.ImageUrl}
               // ImageUrl={ImageUrl}
               currentUserName={currentUserName}
+              theme={theme}
             />
           ))}
         </AnimatePresence >

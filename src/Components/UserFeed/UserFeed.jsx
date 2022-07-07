@@ -11,7 +11,7 @@ import { BiWindowOpen } from 'react-icons/bi'
 
 
 
-function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser, FilterUser, setShowLikeUserModal, showLikeUserModal }) {
+function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser, FilterUser, setShowLikeUserModal, showLikeUserModal,theme }) {
     const params = useParams()
     const [Users, setAllUser] = useState([])
     const [allPosts, setAllPosts] = useState([])
@@ -77,21 +77,21 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
 
     return (
         <>
-            <div className="_wrapper mt-[0rem] ">
+            <div className={`_wrapper mt-[0rem] ${theme?"bg-[#060606] drop-shadow-lg":"bg-[#e4e4e4]"}`}>
                 <div className={`profile_card-container flex`} id="feed">
                     <div className="wrapper_container w-full  lg:flex lg:justify-center  " ref={scroll}>
                         <div className="inne flex items-center flex-col  py-0  md:ml-[17rem] lg:ml-[0] mt-[3.8rem]  md:w-[52rem] w-full  ">
                             <div className="top_section  p-4 w-full mds-editor28:p-0 mds-editor28:my-[15px]">
                                 {
                                     UserInformationLoad !== null ?
-                                        Object.keys(params).length === 0 ? <AddPost socket={socket} setAllPosts={setAllPosts} /> : <></> : ""
+                                        Object.keys(params).length === 0 ? <AddPost socket={socket} setAllPosts={setAllPosts} theme={theme} /> : <></> : ""
                                 }
 
                             </div>
                             <div className="center_section  p-2 pr-4  w-full overflow-hidden mds-editor28:p-0 mb-2">
                                 {
                                     Object.keys(params).length === 0 ?
-                                        <FriendSuggestion AllUser={Users} FilterUser={FilterUser} />
+                                        <FriendSuggestion AllUser={Users} FilterUser={FilterUser} theme={theme}/>
                                         : <></>
                                 }
                             </div>
@@ -100,7 +100,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                                 {
                                     UserInformationLoad !== null ?
 
-                                        < PublicPostCard profilePost={PostWhichUserSelectedImageORVideo} socket={socket} threeDot={threeDot} setShowLikeUserModal={setShowLikeUserModal} setAllPosts={setAllPosts} allPosts={allPosts} /> : <KindlyCreateProfile />
+                                        < PublicPostCard profilePost={PostWhichUserSelectedImageORVideo} socket={socket} threeDot={threeDot} setShowLikeUserModal={setShowLikeUserModal} setAllPosts={setAllPosts} allPosts={allPosts} theme={theme} /> : <KindlyCreateProfile theme={theme} />
                                 }
                             </div>
                         </div>
@@ -128,35 +128,35 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
             {
                 showLikeUserModal?.bool &&
                 <div className="friends_like_modal  fixed  w-screen h-screen  z-[20] top-0 right-0 flex justify-center md:items-center ">
-                    <div className="inner_friends_wrapper md:fixed bg-[#fff] md:w-[69%] w-full  flex flex-col px-4 top-[2%] rounded-md drop-shadow-md">
+                    <div className={`inner_friends_wrapper md:fixed ${theme?"bg-[#070707] border border-solid border-[#2e2e2e]":"bg-[#fff]"} md:w-[69%] w-full  flex flex-col px-4 top-[2%] rounded-md drop-shadow-md`}>
 
                         <>
-                            <header className="flex items-center w-full bg-[#ffffff] py-1">
+                            <header className={`flex items-center w-full  py-1 ${theme?"bg-[#000000]":"bg-[#ffffff]"}`}>
                                 <div className="left_arrow flex flex-[1] justify-center cursor-pointer"
                                     onClick={() => {
                                         setShowLikeUserModal({ bool: false, reactUser: [] })
                                     }}
                                 >
                                     <p className='flex'>
-                                        <HiArrowLeft className='text-[1.8rem] font-serif' />
+                                        <HiArrowLeft className={`text-[1.8rem] font-serif ${theme?"text-[#fff]":"text-[#000]"}`} />
                                     </p>
                                 </div>
                                 <div className="logo_name flex flex-[11] justify-center select-none">
-                                    <p className='text-[1.6rem] tracking-wider font-sans font-medium'>
+                                    <p className={`text-[1.6rem] tracking-wider font-sans font-medium ${theme?"text-[#f8f8f8]":"text-[#040404]"}`}>
 
                                         CollegeZone
 
                                     </p>
                                 </div>
                             </header>
-                            <section className="like_all_love flex justify-start py-1 border border-t border-l-0 border-r-0 border-solid w-full">
+                            <section className={`like_all_love flex justify-start py-1 border border-t ${theme?"border-t-[#282828] border-b-[#282828]":"border-t-[#8e8e8e] border-b-[#8e8e8e]"} border-l-0 border-r-0 border-solid w-full`}>
                                 <div className="like_w flex items-center flex-[4]  justify-evenly  mds-editor28:flex-[12]">
                                     <NavLink to={path}
                                         activeStyle={{ borderBottom: "2px solid red" }}
                                     >
-                                        <p className="all cursor-pointer text-[1.2rem] tracking-wider py-1">
+                                        <p className={`all cursor-pointer text-[1.2rem] tracking-wider py-1 ${theme?"text-[#fff]":"text-[#000]"}`}>
                                             All
-                                            <span className='ml-[5px]'>99+</span>
+                                            <span className={`ml-[5px] ${theme?"text-[#ffff]":"text-[#0a0a0a]"}`}>99+</span>
                                         </p>
                                     </NavLink>
                                     {/* <NavLink to={path + "liked"}
@@ -175,7 +175,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                                         </p>
                                     </NavLink> */}
                                 </div>
-                                <div className="w flex-[8] mds-editor28:flex-0">
+                                <div className="w flex-[8] mds-editor28:flex-0 ">
 
                                 </div>
 
@@ -185,7 +185,8 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                                     showLikeUserModal.reactUser.length > 0 && showLikeUserModal.reactUser.map((item, index) => {
                                         return (
                                             <>
-                                                <ReactUserList key={index} reactUser={item} />
+                                                <ReactUserList key={index} reactUser={item} theme=
+                                                {theme} />
 
 
                                             </>
@@ -236,11 +237,11 @@ function RightSideComponents({ item }) {
 }
 
 
-function KindlyCreateProfile() {
+function KindlyCreateProfile({theme}) {
     return (
         <>
             <div className="por   flex flex-col justify-center items-center">
-                <h1 className='text-[1.5rem] font-semibold tracking-wider px-4'>Create, profile to see other posts, like posts, comment and more</h1>
+                <h1 className={`text-[1.5rem] font-semibold tracking-wider px-4 ${theme?"text-[#fff]":"text-[#000]"}`}>Create, profile to see other posts, like posts, comment and more</h1>
                 <NavLink to={"/update_profile"} referrerPolicy="same-origin">
                     <p className='text-[1.8rem] font-serif tracking-wider text-[#1a57dc] ml-4 hover:underline transition-all'>
                         go to link

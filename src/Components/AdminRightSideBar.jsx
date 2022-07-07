@@ -11,8 +11,11 @@ import { NavLink } from "react-router-dom"
 function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout }) {
     const [bool, setBool] = useState(true)
     const adminRightSideBar = useRef(null)
-    const UserInformationLoad = useSelector((state) => {
-        return state.UserInformationLoad.value
+    const { UserInformationLoad, theme } = useSelector((state) => {
+        return {
+            UserInformationLoad: state.UserInformationLoad.value,
+            theme: state.Theme
+        }
     })
 
     const fullName = UserInformationLoad?.fname + " " + UserInformationLoad?.lname
@@ -45,12 +48,12 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout }) {
                     ease: "easeInOut",
                 }}
                 exit={{ opacity: 0, x: 200 }}
-                className="fixed bg-[#fffefe] top-[3.4rem] right-[0rem] z-[17] w-[25rem] mds-editor28:w-[16rem] h-screen px-4" id="adminRightSideBar"
+                className={`fixed ${theme?"bg-[#010101] border border-solid border-[#343434]":"bg-[#fffefe]"} top-[3.4rem] right-[0rem] z-[17] w-[25rem] mds-editor28:w-[16rem] h-screen px-4`} id="adminRightSideBar"
                 ref={adminRightSideBar}
             >
 
 
-                <div className="Con">
+                <div className={`Con ${theme?"text-[#fff]":"text-[#000]"}`}>
                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Facere, accusantium!
 
                 </div>
@@ -98,6 +101,7 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout }) {
                                             icon={i.icon}
                                             name={i.name}
                                             arrow={i.arrow}
+                                            theme={theme}
 
                                         />
                                     </NavLink>

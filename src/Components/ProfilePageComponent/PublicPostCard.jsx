@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 // MATERIAL UI
 
 
-function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal, setAllPosts, allPosts }) {
+function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal, setAllPosts, allPosts,theme }) {
   const [PostData, setPostdata] = useState([])
   const [length, setLength] = useState(null)
   const [PostLength, setLoadPostLength] = useState(null)
@@ -421,7 +421,7 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal, s
         Object.keys(checkParams).length === 0 ?
           (allPosts.length > 0) && allPosts.map((item, index) => {
             return (<>
-              <PostCard key={index} item={item} index={index} socket={socket} setShowLikeUserModal={setShowLikeUserModal} setAllPosts={setAllPosts} />
+              <PostCard key={index} item={item} index={index} socket={socket} setShowLikeUserModal={setShowLikeUserModal} setAllPosts={setAllPosts} theme={theme} />
 
             </>
             )
@@ -429,7 +429,7 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal, s
           :
           (profilePost.length > 0) && profilePost.map((item, index) => {
             return (<>
-              <PostCard key={index} item={item} index={index} socket={socket} threeDot={threeDot} setShowLikeUserModal={setShowLikeUserModal} setAllPosts={setAllPosts} />
+              <PostCard key={index} item={item} index={index} socket={socket} threeDot={threeDot} setShowLikeUserModal={setShowLikeUserModal} setAllPosts={setAllPosts} theme={theme} />
             </>
             )
           })

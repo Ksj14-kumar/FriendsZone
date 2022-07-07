@@ -51,7 +51,7 @@ function useOutsideAlerter(ref, setTextAreaValue, dispatch, setUrlOfImageUpload,
         };
     }, [ref, setPostLoader]);
 }
-function AddPost({ setAllPosts, socket }) {
+function AddPost({ setAllPosts, socket,theme }) {
     //all state start
     const wrapperref = React.useRef()
     const [showModal, setShowModalCode] = React.useState(false);
@@ -399,15 +399,15 @@ function AddPost({ setAllPosts, socket }) {
         <>
             <div className="post-card flex justify-around relative">
                 {/* ===================POST CARD PAGE ========================*/}
-                <Card className="inner-post-card  shadow-lg h-[12rem]">
+                <Card className={`inner-post-card  shadow-lg h-[12rem] ${theme?"bg-[#272727] drop-shadow-lg":"bg-[#fff]"}`}>
 
                     <CardBody>
                         <div className="flex justify-center ">
-                            <H6 color="gray" >Create Post</H6>
+                            <H6 color={`${theme?"white":"gray"}`} >Create Post</H6>
                         </div>
                         <div className="inner-body  flex mds-editor7:-ml-[.5rem] ">
                             {/* d9d9d9 */}
-                            <div className={`card-post-image bg-[#d9d9d9] w-[4rem] h-[4rem] rounded-full flex-shrink-0 mds-editor7:w-[3rem] mds-editor7:h-[3rem] ${loader ? "animate-pulse" : ""}`}>
+                            <div className={`card-post-image bg-[#d9d9d9]  w-[4rem] h-[4rem] rounded-full flex-shrink-0 mds-editor7:w-[3rem] mds-editor7:h-[3rem] ${loader ? "animate-pulse" : ""}`}>
                                 {
 
                                     DispatchProfileImage !== "" ? <Image
@@ -415,13 +415,13 @@ function AddPost({ setAllPosts, socket }) {
                                         rounded={true}
                                         raised={false}
                                         alt=""
-                                        className="w-full h-full"
+                                        className={`w-full h-full ${theme?"outline outline-1 outline-offset-2 outline-[#fcfbfb] outline-solid":""}`}
                                     /> : <Image
                                         src={DefaultProfile}
                                         rounded={true}
                                         raised={false}
                                         alt=""
-                                        className="w-full h-full"
+                                        className={`w-full h-full ${theme?"outline outline-1 outline-offset-2 outline-[#fcfbfb] outline-solid":""}`}
                                     />
                                 }
                             </div>
@@ -459,11 +459,11 @@ function AddPost({ setAllPosts, socket }) {
                     </CardBody>
                     <CardFooter className="   flex justify-around -mt-[2rem]   pb-[2rem] " role="group">
                         <div className="photos ">
-                            <Button color="#ECECEC" size="regular" className="px-[2.5rem] md:px-[3.5rem] border-none   bg-[#151D3B] text-2xl
+                            <Button color="#ECECEC" size="regular" 
+                            className={`px-[2.5rem] md:px-[3.5rem] border-none   ${theme?"bg-[#122d92]":"bg-[#151D3B]"} text-2xl
                             mds-editor7:px-[2rem]
                             mds-editor7:py-2                            mds-editor7:text-xl
-                            mds-editor7:mt-[.8rem]
-                            "
+                            mds-editor7:mt-[.8rem]`}
                                 onClick={(e) => setShowModalCodePhoto(true)}
                                 ripple="light"
                                 ref={photosRef}
@@ -476,11 +476,11 @@ function AddPost({ setAllPosts, socket }) {
                             </TooltipsContent>
                         </Tooltips>
                         <div className="video">
-                            <Button color="" size="regular" className="px-[2.5rem] md:px-[3.5rem]   text-2xl bg-[#151D3B]
+                            <Button color="" size="regular" 
+                            className={`px-[2.5rem] md:px-[3.5rem]   text-2xl ${theme?"bg-[#122d92]":"bg-[#151D3B]"}
                             mds-editor7:px-[2rem]
                             mds-editor7:py-2                            mds-editor7:text-xl
-                            mds-editor7:mt-[.8rem]
-                            "
+                            mds-editor7:mt-[.8rem]`}
                                 ripple="light"
                                 onClick={(e) => setShowModalCodeVideo(true)}
                                 ref={videoRef}
@@ -493,12 +493,12 @@ function AddPost({ setAllPosts, socket }) {
                             <TooltipsContent className="text-black">Upload Video</TooltipsContent>
                         </Tooltips>
                         <div className="feeling">
-                            <Button color="" size="regular" className="px-[2.5rem] md:px-[3.5rem] bg-[#151D3B]   text-2xl
+                            <Button color="" size="regular" 
+                            className={`px-[2.5rem] md:px-[3.5rem] ${theme?"bg-[#122d92]":"bg-[#151D3B]"}   text-2xl
                             mds-editor7:px-[2rem]
                             mds-editor7:py-2                            mds-editor7:text-xl
-                            mds-editor7:mt-[.8rem]
-                            
-                            " ripple="light"
+                            mds-editor7:mt-[.8rem]`}
+                            ripple="light"
                                 onClick={(e) => setShowModalCodeText(true)}
                                 ref={rssRef}
                             >

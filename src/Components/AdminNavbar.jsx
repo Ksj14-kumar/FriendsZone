@@ -674,7 +674,7 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     console.log({ theme })
     return (
         <>
-            <nav className={`${theme ? "bg-[#000000fc]" : " bg-light-blue-500"}  py-2 px-3 fixed w-full z-[18] drop-shadow-lg`}>
+            <nav className={`${theme ? "bg-[#000000fc] drop-shadow-xl border-b border-b-solid border-b-[#212121]" : " bg-light-blue-500"}  py-2 px-3 fixed w-full z-[18] drop-shadow-lg`}>
                 <div className="container max-w-full mx-auto flex items-center justify-between md:pr-8 md:pl-10 ">
                     <div className="md:hidden">
                         <Button

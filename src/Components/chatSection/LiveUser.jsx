@@ -8,7 +8,7 @@ import Button from "@material-tailwind/react/Button";
 import { MdLocalPhone } from 'react-icons/md';
 
 let str = "Sanju Kumar"
-function LiveUser({ value }) {
+function LiveUser({ value,theme }) {
     const buttonRef = useRef(null)
 
 
@@ -38,16 +38,16 @@ function LiveUser({ value }) {
                     {value?.url ? <Image
                         src={value?.url}
                         rounded={true}
-                        className="w-full h-full cursor-pointer"
+                        className={`w-full h-full cursor-pointer ${theme?"outline outline-2 outline-offset-1 outline-[#7a7a7a] outline-solid":""}`}
                     /> :
                         <Image
                             src={Photos}
                             rounded={true}
-                            className="w-full h-full cursor-pointer"
+                            className={`w-full h-full cursor-pointer ${theme?"outline outline-2 outline-offset-1 outline-[#fff]":""}`}
                         />}
 
                 </Button>
-                <p className='text-lg text-black mt-[2px] mr-[3px] ml-[5px] cursor-pointer truncate'>{value.name.length > 16 ? value.name.slice(0, 15) + "..." : value.name}</p>
+                <p className={`text-lg  mt-[2px] mr-[3px] ml-[5px] cursor-pointer truncate ${theme?"text-[#fff]":"text-black"}`}>{value.name.length > 16 ? value.name.slice(0, 15) + "..." : value.name}</p>
 
                 <section className="video_group flex justify-around ml-auto mr-[5px] items-center">
                     <div className="video bg-[#9e9e9e56] hover:bg-[#4103eaf8] p-[4px] rounded-full transition-all duration-100 cursor-pointer text-black hover:text-white">

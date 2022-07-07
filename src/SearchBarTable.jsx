@@ -133,7 +133,7 @@ function SearchBarTable({ showSearch, setShowSearch, setPopOverEffect, setQuery,
 
                     {/* //USER SEARTCH HISTORY  */}
 
-                    <div className={`search_hi  absolute w-full top-[28px]  rounded-b-lg ${theme?"bg-[#050505]":"bg-[#fff]"}`}>
+                    <div className={`search_hi  absolute w-full top-[28px]  rounded-b-lg ${theme?"bg-[#050505]  border border-solid border-[#212121]":"bg-[#fff]"}`}>
 
                         {
                             history &&
@@ -152,7 +152,7 @@ function SearchBarTable({ showSearch, setShowSearch, setPopOverEffect, setQuery,
 
 
                     {/* //user search data */}
-                    <div className={`quesr_Search absolute w-full top-[28px]  rounded-b-lg ${theme?"bg-[#090909]":"bg-[#fff]"}`}>
+                    <div className={`quesr_Search absolute w-full top-[28px]  rounded-b-lg ${theme?"bg-[#090909]  border border-solid border-[#212121]":"bg-[#fff]"}`}>
 
                         {
                             query.length > 0 && (

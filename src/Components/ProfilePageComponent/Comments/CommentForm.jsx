@@ -27,6 +27,7 @@ const CommentForm = ({
     commentToggle,
     commentReplyName,
     comment,
+    theme,
 
     backendComments,
     setCommentToggle
@@ -106,7 +107,7 @@ const CommentForm = ({
                     >
                         <textarea
                             ref={textRef}
-                            className={`resize-none border border-solid border-[#dad7d7] focus:outline-none  w-full overflow-hidden p-4 rounded-lg text-[1.1rem] font-serif tracking-wider`}
+                            className={`resize-none border border-solid  focus:outline-none  w-full overflow-hidden p-4 rounded-lg text-[1.1rem] font-serif tracking-wider ${theme?"bg-[#535353] text-[#fff] border-[#7c7c7c]":"border-[#dad7d7]"}`}
                             placeholder="Write a comment..."
                             onChange={(e) => {
                                 setText(e.target.value)
@@ -181,7 +182,6 @@ const CommentForm = ({
                                                         </li>
                                                     </div>
                                                 </NavLink>
-
                                             </>
                                         )
                                     })
@@ -205,11 +205,8 @@ const CommentForm = ({
                             </Switch>
 
                         </main>
-
                     </section>}
-
                     <section className="flex py-[5px] px-2">
-
                         <Button
                             color={isTextareaDisabled ? "gray" : "blue"}
                             buttonType="filled"
@@ -231,9 +228,6 @@ const CommentForm = ({
                             {submitLabel}
                         </Button>
                         {hasCancelButton && (
-
-
-
                             <Button
                                 color={isTextareaDisabled ? "gray" : "blue"}
                                 buttonType="link"

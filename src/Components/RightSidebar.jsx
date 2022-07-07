@@ -19,10 +19,11 @@ function RightSidebar({ socket, currentUser, currentId }) {
     const componentMount = useRef(true)
 
 
-    const { UserInformationLoad, onlineUsers } = useSelector((state) => {
+    const { UserInformationLoad, onlineUsers, theme } = useSelector((state) => {
         return {
             onlineUsers: state.OnlineUsers,
-            UserInformationLoad: state.UserInformationLoad.value
+            UserInformationLoad: state.UserInformationLoad.value,
+            theme: state.Theme
 
         }
     })
@@ -96,15 +97,17 @@ function RightSidebar({ socket, currentUser, currentId }) {
                     {bottomUsers && (
                         <motion.div
                             className={
-                                (color === "red" ? "bg-white " : "") +
-                                "text-base  float-left py-2 list-none text-left rounded mb-[5rem]  mds-editor3:ml-4 bg-[#fff] md:mr-[.2rem] mds-editor11:w-[20rem] mds-editor12:w-[22rem] max-h-[500px] overflow-y-auto -mt-[9rem] -ml-[15.7rem]  "
+
+                                `text-base  float-left py-2 list-none text-left rounded mb-[5rem]  mds-editor3:ml-4 md:mr-[.2rem] mds-editor11:w-[20rem] mds-editor12:w-[22rem] max-h-[500px] overflow-y-auto -mt-[9rem] -ml-[15.7rem] ${theme?"bg-[#020202]":"bg-[#fff] "} `
                             }
                             initial={{ opacity: 0, x: 100 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.5 }}
                             exit={{ opacity: 0, x: 100 }}
                         >
-                            <FooterButton bool={dropdownPopoverShow} onlinefriends={onlinefriends} currentId={UserInformationLoad?.googleId} socket={socket} NumberOfFriendsOnline={NumberOfFriendsOnline} />
+                            <FooterButton bool={dropdownPopoverShow} onlinefriends={onlinefriends} currentId={UserInformationLoad?.googleId} socket={socket} NumberOfFriendsOnline={NumberOfFriendsOnline}
+                                theme={theme}
+                            />
                         </motion.div>
                     )}
                 </AnimatePresence>

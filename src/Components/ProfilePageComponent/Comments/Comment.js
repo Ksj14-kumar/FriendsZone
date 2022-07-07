@@ -21,6 +21,7 @@ const Comment = ({
     currentUserId,
     ImageUrl,
     currentUserName,
+    theme,
 }) => {
 
     const [showReplies, setShowReplies] = useState(false)
@@ -91,7 +92,7 @@ const Comment = ({
 
 
     return (
-        <motion.div key={comment?.uuid} className="comment flex   md:ml-[3rem]  mt-5   mds-editor6:ml-[0.1rem] mds-editor6:text-[.9rem] flex-wrap relative "
+        <motion.div key={comment?.uuid} className="comment flex  md:ml-[3rem]  mt-5   mds-editor6:ml-[0.1rem] mds-editor6:text-[.9rem] flex-wrap relative "
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -110,17 +111,17 @@ const Comment = ({
                                     rounded={true}
                                     raised={false}
                                     alt=""
-                                    className="w-full h-full flex-shrink-0"
+                                    className={`w-full h-full flex-shrink-0 ${theme?"outline outline-2 outline-offset-1 outline-[#ebebeb]":""}`} 
                                 /> : <Image
                                     src={UserPhoto}
                                     rounded={true}
                                     raised={false}
                                     alt=""
-                                    className="w-full h-full flex-shrink-0"
+                                    className={`w-full h-full flex-shrink-0 ${theme?"outline outline-2 outline-offset-1 outline-[#ebebeb]":""}`}
                                 />
                         }
                     </div>
-                    <div className="comment-author text-[1.1rem] font-medium mds-editor28:text-[1.2rem] mds-editor6:text-[.9rem] ml-2">{comment.username}</div>
+                    <div className={`comment-author text-[1.1rem] font-medium mds-editor28:text-[1.2rem] mds-editor6:text-[.9rem] ml-2 ${theme?"text-[#fff]":"text-[#000]"}`}>{comment.username}</div>
                 </div>
                 {/* comment-content  flex ml-2 -mt-1 items-center */}
                 {/* ml-2 */}
@@ -128,7 +129,7 @@ const Comment = ({
                     {/* comment-author text-[1.1rem] font-medium mds-editor28:text-[1.2rem] mds-editor6:text-[.9rem] */}
                     {!isEditing &&
                         <div className={`w-full overflow-hidden flex flex-wrap pl-[0rem] mds-editor33:pl-[.1rem] mds-editor33:pr-[1.5rem] break-all  ${comment.parentId !== null && "pl-[0rem] mds-editor33:pl-[1.3rem] mds-editor33:pr-[2rem]"}`}>
-                            {comment.type === "text" ? <div className="comment-text ml-2  font-serif tracking-wider w-full flex flex-wrap break-all"
+                            {comment.type === "text" ? <div className={`comment-text ml-2  font-serif tracking-wider w-full flex flex-wrap break-all ${theme?"text-[#fff]":"text-[#fff]"}`}
                                 dangerouslySetInnerHTML={{ __html: convertToLink(comment.body) }}
                             ></div> : (
                                 comment.type === "gif" &&
@@ -307,7 +308,7 @@ const Comment = ({
                                         block={false}
                                         iconOnly={false}
                                         ripple=""
-                                        className="lowercase ml-[5rem] font-bold text-base mb-3 text-[#570A57]"
+                                        className={`lowercase ml-[5rem] font-bold text-base mb-3 ${theme?"text-[#3440e9]":"text-[#570A57]"}`}
                                         onClick={() => {
                                             setShowReplies(true)
                                         }}
