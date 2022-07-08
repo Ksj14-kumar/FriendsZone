@@ -13,8 +13,11 @@ function AllFriends({ user, socket }) {
 
     console.log("All  Friends Are Loading")
 
-    const UserInformationLoad = useSelector((state) => {
-        return state.UserInformationLoad.value
+    const { UserInformationLoad,theme } = useSelector((state) => {
+        return {
+            UserInformationLoad: state.UserInformationLoad.value,
+            theme:state.Theme
+        }
     })
 
     useEffect(() => {
@@ -93,13 +96,13 @@ function AllFriends({ user, socket }) {
 
     return (
         <>
-            <div className='text-center  mt-[8rem] flex justify-center py-2 mds-editor21:w-full'>
+            <div className={`text-center  mt-[4rem] flex justify-center py-2 mds-editor21:w-full h-[calc(100vh-4rem)] ${theme?"bg-[#090909]":"bg-[#e4e4e4]"}`}>
                 <div className="inner  text-center mx-auto  mds-editor21:w-full mds-editor7:px-2">
                     {
                         loader ? <Loader /> : (loadFriends.length > 0) ? loadFriends.map((item) => {
                             return (
 
-                                <FriendsCard info={item} sendFriendRequest={sendFriendRequest} loader={loader} />
+                                <FriendsCard info={item} sendFriendRequest={sendFriendRequest} loader={loader} theme={theme}/>
                             )
                         }) : (loadFriends.length === 0 && <ShowTextWhenNoUserExit />)
                     }

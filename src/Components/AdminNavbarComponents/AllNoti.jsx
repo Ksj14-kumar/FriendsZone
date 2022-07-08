@@ -62,7 +62,7 @@ function AllNoti({ notification,theme }) {
                 notification.type === "like" ?
                     (
                         <>
-                            <hr className={`${theme?"bg-[#060606]":"bg-[#c5c3c3]"}`} />
+                            <hr className={`${theme?"bg-[#060606] hidden":"bg-[#c5c3c3]"}`} />
                             <div className={`like_wrapper flex justify-evenly mt-1 px-2 py-1 ${theme?"hover:bg-[#626262]":"hover:bg-[#dbdbdb] "}`}>
                                 <NavLink to={`/profile/${notification.userLikedId}`}>
                                     <div className="Image_wrapper flex-shrink-0 w-[2.6rem] h-[2.6rem]">
@@ -115,7 +115,7 @@ function AllNoti({ notification,theme }) {
                             (
 
                                 <NavLink to={`${notification.post_url}`}>
-                                    <hr className={`${theme?"bg-[#000000]":"bg-[#c5c3c3]"}`} />
+                                    <hr className={`${theme?"bg-[#000000] hidden":"bg-[#c5c3c3]"}`} />
 
                                     <div className={`comment_wrapper mb-0 flex w-full mt-1  px-2 py-1 ${notification.read === false && "bg-[#d5d5d5]"} ${theme?"hover:bg-[#2d2d2d]":"hover:bg-[#dbdbdb]"}`}>
                                         <div className="container02 flex justify-between  w-full">
@@ -177,7 +177,7 @@ function AllNoti({ notification,theme }) {
                             ) :
                             (
                                 <NavLink to={`${notification.post_url}`}>
-                                    <hr className={`${theme?"bg-[#000000]":"bg-[#c5c3c3]"}`} />
+                                    <hr className={`${theme?"bg-[#000000] hidden":"bg-[#c5c3c3]"}`} />
 
                                     <div className={`comment_wrapper mb-0 flex w-full mt-1  px-2 py-1 ${notification.read === false && "bg-[#c5c3c3]"} ${theme?"hover:bg-[#2d2d2d]":"hover:bg-[#dbdbdb]"}`}>
                                         <div className="container02 flex justify-between  w-full">

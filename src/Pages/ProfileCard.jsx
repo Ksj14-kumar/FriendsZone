@@ -44,13 +44,16 @@ function ProfileCard(props) {
     const Query = useSelector((state) => {
         return state.Query
     })
-    const UserInformationLoad = useSelector((state) => {
-        console.log(state)
-        return state.UserInformationLoad.value
+    const {UserInformationLoad,BgImage,theme} = useSelector((state) => {
+        return {
+            UserInformationLoad: state.UserInformationLoad.value,
+            BgImage:state.ShowImageBackground.value,
+            theme:state.Theme
+
+
+        }
     })
-    const BgImage = useSelector((state) => {
-        return state.ShowImageBackground.value
-    })
+  
     const { fname, lname, googleId, url, friends } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "", url: "", senderrequest: [] }
     const { path } = useRouteMatch()
     useEffect(() => {
@@ -107,9 +110,9 @@ function ProfileCard(props) {
                     "Authorization": `Bearer ${localStorage.getItem("uuid")}`
                 }
             })
-            
+
             if (sendFriendRequestResponse.status === 200) {
-                
+
             }
         }
         catch (err) {
@@ -208,8 +211,8 @@ function ProfileCard(props) {
         <>
             {/* <div className='con'> */}
             {/* <AdminNavbar /> */}
-            <div className="make_two_section md:flex md:justify-between relative">
-                <div className="profile_card-container  w-full">
+            <div className={`make_two_section md:flex md:justify-between relative ${theme?"bg-[#000000]":""}`}>
+                <div className="profile_card-container  w-full ">
                     <div className="profile_wrapper flex  flex-col items-center">
                         <section className="relative block h-[300px] md:h-[400px] w-[615px]">
                             <div className="bg-profile-background bg-cover bg-center absolute top-[3.7rem] w-full h-full flex flex-shrink-0  ">
@@ -232,9 +235,9 @@ function ProfileCard(props) {
                                 }
                             </div>
                         </section>
-                        <div className=' card-container flex justify-center md:pl-[0] relative     md:w-[58rem]  md:mt-[6rem] mt-[17rem]  -mb-[6rem] '>
-                            <Card className=" lg:-mt-[170px] md:-mt-[280px] -mt-[300px] 
-                        md:ml-[8rem] md:mr-[6rem]  md-w-[71rem] mx-[2rem]  " >
+                        <div className=' card-container flex justify-center md:pl-[0] relative  z-[2]   md:w-[58rem]  md:mt-[6rem] mt-[17rem]  -mb-[6rem] '>
+                            <Card className={`lg:-mt-[170px] md:-mt-[280px] -mt-[300px] 
+                        md:ml-[8rem] md:mr-[6rem]  md-w-[71rem] mx-[2rem]  ${theme?"bg-[#161616]":"bg-[#ffffff]"}`} >
                                 <div className="flex flex-wrap justify-center relative md:flex-col">
                                     <div className="w-48 mds-editor2:w-40 px-4 -mt-24 relative outline-1 outline-red-600 rounded-full md:justify-center md:mx-auto">
                                         {userInfo.ProfileURL ?
@@ -350,8 +353,8 @@ function ProfileCard(props) {
                                                 >
                                                     <div className="p-4 text-center  rounded-lg rounded-b-none   
                                              pb-1">
-                                                        <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold
-                                                    space-x-1">Status</span>
+                                                        <span className={`md:text-lg text-[1rem] font-semibold
+                                                    space-x-1 ${theme?"text-[#fff]":"text-[#020202]"}`}>Status</span>
                                                         <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
                                                             🎭
                                                         </span>
@@ -361,8 +364,8 @@ function ProfileCard(props) {
                                                     activeStyle={{ borderBottom: "2px solid #E91E63" }}
                                                 >
                                                     <div className="p-4 text-center  rounded-lg rounded-b-none  pb-1 ">
-                                                        <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Friends</span>
-                                                        <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
+                                                        <span className={`${theme?"text-[#fff]":"text-gray-700"} md:text-lg text-[1rem] font-semibold space-x-1`}>Friends</span>
+                                                        <span className={`text-xl font-medium block uppercase tracking-wide ${theme?"text-[#fff]":"text-[#000]"}`}>
                                                             {
                                                                 Object.keys(userInfo).length > 0 && userInfo.userGeneralInfo[0].friends.length
                                                             }
@@ -381,8 +384,8 @@ function ProfileCard(props) {
                                                     activeStyle={{ borderBottom: "2px solid #E91E63" }}
                                                 >
                                                     <div className="p-4 text-center  rounded-lg rounded-b-none  pb-1 ">
-                                                        <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Photos</span>
-                                                        <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
+                                                        <span className={`md:text-lg text-[1rem] font-semibold space-x-1 ${theme?"text-[#fff]":"text-[#000]"}`}>Photos</span>
+                                                        <span className={`text-xl font-medium block uppercase tracking-wide ${theme?"text-[#fff]":"text-[#000]"}`}>
                                                             22
                                                         </span>
                                                     </div>
@@ -391,8 +394,8 @@ function ProfileCard(props) {
                                                     activeStyle={{ borderBottom: "2px solid #E91E63" }}
                                                 >
                                                     <div className="p-4 text-center  rounded-lg rounded-b-none  pb-1 ">
-                                                        <span className=" text-gray-700 md:text-lg text-[1rem] font-semibold space-x-1">Posts</span>
-                                                        <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
+                                                        <span className={`md:text-lg text-[1rem] font-semibold space-x-1 ${theme?"text-[#fff]":"text-[#020202]"}`}>Posts</span>
+                                                        <span className={`text-xl font-medium block uppercase tracking-wide ${theme?"text-[#fdfdfd]":"text-[#020202]"}`}>
                                                             {
                                                                 Object.keys(userInfo).length > 0 && userInfo.getUserPost.length
                                                             }
@@ -404,13 +407,14 @@ function ProfileCard(props) {
                                                 <div className={`section  mt-4  flex-auto  mds-editor8:w-full  border border-solid border-[#cccccc59] rounded-xl ${loadUserProfileInfo && "bg-[#c4c3c3ea] animate-pulse"}`} >
                                                     {/* fname={fname} lname={lname} country={country} city={city} stream={stream} position={position} aboutMe={aboutMe} college={college} */}
                                                     <Route exact path={path} >
-                                                        <Status info={Object.keys(userInfo).length > 0 && userInfo.userGeneralInfo[0]} loadUserProfileInfo={loadUserProfileInfo} />
+                                                        <Status info={Object.keys(userInfo).length > 0 && userInfo.userGeneralInfo[0]} loadUserProfileInfo={loadUserProfileInfo} theme ={theme} />
                                                     </Route>
                                                     <Route exact path="/user/friends">
                                                         {userInfo ? <Friends info={Object.keys(userInfo).length > 0 && userInfo.userGeneralInfo[0]} loadUserProfileInfo={loadUserProfileInfo} usernameId={usernameId} _id={googleId}
                                                             cancleFriendRequest={cancleFriendRequest}
                                                             setAcceptMessage={setAcceptMessage}
                                                             friends={friends}
+                                                            theme={theme}
                                                         /> : <Redirect to={path} />
                                                         }
                                                     </Route>
@@ -434,7 +438,7 @@ function ProfileCard(props) {
                             </Card>
                         </div>
                     </div>
-                    <UserFeed PostWhichUserSelectedImageORVideo={Object.keys(userInfo).length > 0 && userInfo.getUserPost} socket={props.socket} threeDot={Object.keys(userInfo).length > 0 && userInfo.ShowDot} setShowLikeUserModal={props.setShowLikeUserModal} showLikeUserModal={props.showLikeUserModal} />
+                    <UserFeed PostWhichUserSelectedImageORVideo={Object.keys(userInfo).length > 0 && userInfo.getUserPost} socket={props.socket} threeDot={Object.keys(userInfo).length > 0 && userInfo.ShowDot} setShowLikeUserModal={props.setShowLikeUserModal} showLikeUserModal={props.showLikeUserModal} theme={theme} />
                     <Tooltips placement="top" ref={buttonRef}>
                         <TooltipsContent>Create Profile</TooltipsContent>
                     </Tooltips>

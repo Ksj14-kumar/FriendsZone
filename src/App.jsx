@@ -68,8 +68,11 @@ function App() {
     const users = useSelector((state) => {
         return state.UserStillLogin
     })
-    const UserInformationLoad = useSelector((state) => {
-        return state.UserInformationLoad.value
+    const { UserInformationLoad, theme } = useSelector((state) => {
+        return {
+            UserInformationLoad: state.UserInformationLoad.value,
+            theme:state.Theme
+        }
     })
 
 
@@ -163,12 +166,12 @@ function App() {
                     {
                         // \\userData
                         // (getUserData) && <Sidebar />
-                        (getUserData && user) && <Sidebar socket={socket} />
+                        (getUserData && user) && <Sidebar socket={socket} theme={theme} />
                     }
                 </div>
                 <>
                     {/* 000B49 */}
-                    <div className=' bg-cover app_class'>
+                    <div className={`bg-cover app_class ${theme?"bg-[#000000]":"bg-[#e4e4e4]"}`}>
                         <AnimatePresence>
 
                             <Switch location={location} key={location.key}>

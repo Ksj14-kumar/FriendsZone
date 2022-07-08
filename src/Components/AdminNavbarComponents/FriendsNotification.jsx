@@ -33,7 +33,7 @@ function FriendsNotification({ receivedRequest, AcceptFriendRequest, DeleteFrien
             id="friendsNoti"
         >
             <header className={`py-2  w-full rounded-md px-1 text-[1.2rem] font-serif tracking-wider truncate select-none mds-editor36:text-center ${theme ? "text-[#fff]" : "text-[#000]"}`}>Friend Notifications</header>
-            <hr className={`mb-1  ${theme ? "bg-[#0f0f0f]" : "bg-[#ececec]"}`} />
+            <hr className={`mb-1  ${theme ? "bg-[#0f0f0f] hidden" : "bg-[#ececec]"}`} />
 
             <main className="body">
                 {

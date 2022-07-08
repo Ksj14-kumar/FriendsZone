@@ -8,7 +8,7 @@ import { HiPencil } from 'react-icons/hi'
 import Button from '@material-tailwind/react/Button';
 import { BrowserRouter, NavLink, Redirect, useHistory, Route, Switch } from 'react-router-dom';
 
-function Status({ info, loadUserProfileInfo }) {
+function Status({ info, loadUserProfileInfo, theme }) {
     const buttonRef = useRef()
     const history = useHistory()
     return (
@@ -37,21 +37,24 @@ function Status({ info, loadUserProfileInfo }) {
                             </Button> */}
                         </section>
                 }
-                <H5 color="gray">
+                <H5 className={`${theme ? "text-[#fff]" : "text-[#000]"}`}>
 
 
-                    {
+                    <p className={`${theme ? "text-[#fff]" : "text-[#000]"}`}>
+
+                        {
 
 
-                        (
-                            loadUserProfileInfo ? "" :
-                                (info.fname && info.lname) ? info.fname + " " + info.lname : "")
+                            (
+                                loadUserProfileInfo ? "" :
+                                    (info.fname && info.lname) ? info.fname + " " + info.lname : "")
 
 
-                    }
+                        }
+                    </p>
 
                 </H5>
-                <div className="mt-0 mb-2 text-gray-700 flex items-center justify-center gap-2">
+                <div className={`mt-0 mb-2  flex items-center justify-center gap-2 ${theme ? "text-[#fff]" : "text-[#0a0a0a]"}`}>
                     {loadUserProfileInfo ? "" : (info.city && info.country) &&
                         <>
                             <Icon name="place" size="xl" />
@@ -64,7 +67,7 @@ function Status({ info, loadUserProfileInfo }) {
 
                     }
                 </div>
-                <div className="mb-2 text-gray-700 mt-10 flex items-center justify-center gap-2">
+                <div className={`mb-2 ${theme ? "text-[#fff]" : "text-[#040404]"} mt-10 flex items-center justify-center gap-2`}>
                     {
                         loadUserProfileInfo ? "" : (info.position && info.stream) &&
                             <>
@@ -74,7 +77,7 @@ function Status({ info, loadUserProfileInfo }) {
                             </>
                     }
                 </div>
-                <div className="mb-2 text-gray-700 flex items-center justify-center gap-2">
+                <div className={`mb-2 ${theme ? "text-[#fff]" : "text-[#000]"} flex items-center justify-center gap-2`}>
                     {
                         loadUserProfileInfo ? "" : info.college &&
                             <>
@@ -85,9 +88,12 @@ function Status({ info, loadUserProfileInfo }) {
                 </div>
             </div>
             <CardBody>
-                <div className="border-t border-lightBlue-200 text-center px-2 ">
-                    <LeadText color="blueGray">
+                <div className={`border-t border-lightBlue-200 text-center px-2  ${theme?"text-[#fff]":"text-[#000]"}`}>
+                    <LeadText className={`${theme?"text-[#fff]":"text-[#000]"}`}>
+                        <p className={`${theme?"text-[#fff]":"text-[#000]"}`}>
+
                         {loadUserProfileInfo ? "" : (info.aboutMe ? info.aboutMe : "")}
+                        </p>
                     </LeadText>
                 </div>
             </CardBody>

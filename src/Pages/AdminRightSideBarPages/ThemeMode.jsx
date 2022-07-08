@@ -18,7 +18,7 @@ function ThemeMode() {
                 <div className="blog_theme  border-solid border-[#dcdcdc] w-full rounded-md">
                     <div className="mode flex justify-end pr-[1rem] py-3">
                         <p className='text-[1.4rem] font-serif tracking-wider flex justify-end '>
-                            <div className={`toogle_theme rounded-[50px] border-1 border-solid w-[9rem] py-1  flex justify-around relative cursor-pointer ${!toggle ? "bg-[#fff]" : "bg-[#000]"}`}
+                            <div className={`toogle_theme rounded-[50px] border-1 border-solid w-[9rem] py-1  flex justify-around relative cursor-pointer ${!toggle ? "bg-[#fff]" : "bg-[#000] border border-solid border-[#222222]"}`}
                                 onClick={() => {
                                     setToggle(!toggle)
                                     dispatch({ type: "Theme", payload: !toggle })
@@ -33,16 +33,14 @@ function ThemeMode() {
 
                                 </section>
                                 <motion.div className={`ball rounded-full p-[1.56rem] top-[1px] ${!toggle ? "bg-[#030303]" : "bg-[#ffffff]"} absolute border-[1px] border-solid border-[#fff] ${toggle ? "left-[9px]" : "left-[5.25rem]"}`}
-                                // animate={{ x: toggle ? 0 : 10 }}
-                                // transition={{ duration: .4 }}
-                                // whileTap={{x:"5.25rem"}}
+                                
 
                                 ></motion.div>
 
                             </div>
                         </p>
                     </div>
-                    <section className='outer_theme w-full'>
+                    {/* <section className='outer_theme w-full'>
                         <header className="text-[1.4rem] font-serif tracking-wider w-full text-center py-2 text-[#fff] bg-[#0a6fdb]">
                             Color Customization
                         </header>
@@ -139,7 +137,7 @@ function ThemeMode() {
 
 
 
-                    </section>
+                    </section> */}
 
                 </div>
 

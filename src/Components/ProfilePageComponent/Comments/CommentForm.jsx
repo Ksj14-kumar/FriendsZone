@@ -107,7 +107,7 @@ const CommentForm = ({
                     >
                         <textarea
                             ref={textRef}
-                            className={`resize-none border border-solid  focus:outline-none  w-full overflow-hidden p-4 rounded-lg text-[1.1rem] font-serif tracking-wider ${theme?"bg-[#535353] text-[#fff] border-[#7c7c7c]":"border-[#dad7d7]"}`}
+                            className={`resize-none border border-solid  focus:outline-none  w-full overflow-hidden p-4 rounded-lg text-[1.1rem] font-serif tracking-wider ${theme ? "bg-[#535353] text-[#fff] border-[#7c7c7c]" : "border-[#dad7d7]"}`}
                             placeholder="Write a comment..."
                             onChange={(e) => {
                                 setText(e.target.value)
@@ -136,14 +136,14 @@ const CommentForm = ({
                             <Icon name={<BsFillEmojiSmileFill className="text-[#ef703d] text-[1.5rem] mb-[8px]" />} />
                         </Button>
                     </section>
-                    {emojiContainer && <section className="emoji gif  ml-0 rounded-md drop-shadow-lg border border-solid border-[#e5e5e5]">
+                    {emojiContainer && <section className={`emoji gif  ml-0 rounded-md drop-shadow-lg border border-solid ${theme ? "border-[#343434]" : "border-[#e5e5e5]"}`}>
                         <nav className="emoji navigation">
                             <ul className="list of all Stickers flex justify-around  rounded-md">
                                 {
                                     [
                                         {
                                             name: "Emoji",
-                                            icon: <BsFillEmojiSmileFill className="text-[1.5rem] text-[#eb9113] mr-2" />
+                                            icon: <BsFillEmojiSmileFill className={`text-[1.5rem]  mr-2 ${theme ? "text-[#eb9113]" : "text-[#eb9113]"}`} />
                                         },
                                         {
                                             name: "GIF",
@@ -168,7 +168,7 @@ const CommentForm = ({
                                                     <div className="w-full"
                                                         key={index}
                                                     >
-                                                        <li className={`text bg-[#d3e2e2] flex w-full py-1 justify-center text-[1.2rem] tracking-wider font-sans items-center rounded-md 
+                                                        <li className={`text ${theme ? "bg-[#181818] text-[#fff]" : "bg-[#d3e2e2] text-[#181818]"} flex w-full py-1 justify-center text-[1.2rem] tracking-wider font-sans items-center rounded-md 
                                                         
                                                         ${i.name === "Emoji" && "rounded-tr-none rounded-br-none"}
                                                         ${i.name === "GIF" && "rounded-none"}
@@ -189,17 +189,17 @@ const CommentForm = ({
 
                             </ul>
                         </nav>
-                        <hr className="py-[1px]" />
+                        <hr className={theme ? "hidden py-[1px]" : "py-[1px]"} />
                         <main className=" flex flex-wrap" id="comment_emoji">
                             <Switch>
                                 <Route exact path="/emojiPicker/comment">
-                                    <EmojiComponent setComponent={setComponent} onEmojiClick={onEmojiClick} />
+                                    <EmojiComponent setComponent={setComponent} onEmojiClick={onEmojiClick} theme={theme} />
                                 </Route>
                                 <Route exact path="/gif/comment">
-                                    <GifComponent setComponent={setComponent} sendGiF={sendGiF} commentReplyName={commentReplyName} setShowEmojicontenor={setShowEmojicontenor} />
+                                    <GifComponent setComponent={setComponent} sendGiF={sendGiF} commentReplyName={commentReplyName} setShowEmojicontenor={setShowEmojicontenor} theme={theme} />
                                 </Route>
                                 <Route exact path="/sticker/comments">
-                                    <StickerComponent setComponent={setComponent} commentReplyName={commentReplyName} setShowEmojicontenor={setShowEmojicontenor} emojiContainer={emojiContainer} sendStickers={sendStickers} />
+                                    <StickerComponent setComponent={setComponent} commentReplyName={commentReplyName} setShowEmojicontenor={setShowEmojicontenor} emojiContainer={emojiContainer} sendStickers={sendStickers} theme={theme} />
                                 </Route>
 
                             </Switch>
@@ -272,7 +272,7 @@ const CommentForm = ({
 
 export default CommentForm;
 
-function EmojiComponent({ setComponent, onEmojiClick }) {
+function EmojiComponent({ setComponent, onEmojiClick, theme }) {
     useEffect(() => {
         setComponent(true)
     }, [setComponent])
@@ -282,7 +282,7 @@ function EmojiComponent({ setComponent, onEmojiClick }) {
 
                 disableSearchBar={true}
                 disableAutoFocus={true}
-                preload={true}
+                preload={false}
                 pickerStyle={{
                     "nav": {
                         "display": "none",
@@ -290,7 +290,11 @@ function EmojiComponent({ setComponent, onEmojiClick }) {
                     },
                     "width": "100%",
                     "borderTopLeftRadius": "0px",
-                    "borderTopRightRadius": "0px"
+                    "borderTopRightRadius": "0px",
+                    "backgroundColor": theme ? "#060606" : "#fff",
+                    ".emoji-scroll-wrapper": {
+                        "backgroundColor": "#060606"
+                    }
                     // "marginLeft":"5rem"
 
                 }
@@ -299,11 +303,12 @@ function EmojiComponent({ setComponent, onEmojiClick }) {
     )
 }
 
-function GifComponent({ setComponent, commentReplyName, setShowEmojicontenor, sendGiF }) {
+function GifComponent({ setComponent, commentReplyName, setShowEmojicontenor, sendGiF, theme }) {
     const [GifList, setGifList] = useState([])
     const [tranding, setTranding] = useState({ tranding: null, trandingList: [] })
     const [love, setLove] = useState([])
     const [family, setFamily] = useState([])
+    const [loader, setLoader] = useState(false)
 
     const [BoolValue, setBoolValue] = useState({ t: false, love: false, family: false })
     const [showTranding, setShowTranding] = useState(false)
@@ -329,8 +334,10 @@ function GifComponent({ setComponent, commentReplyName, setShowEmojicontenor, se
 
     useEffect(() => {
         async function f1() {
+            setLoader(true)
             const Gif = await gf.search("tranding")
             setTranding({ trandingList: Gif.data, tranding: true })
+            setLoader(false)
         }
         f1()
     }, [])
@@ -355,10 +362,10 @@ function GifComponent({ setComponent, commentReplyName, setShowEmojicontenor, se
     return (
         <>
             <div className="wrapper_ flex flex-col overflow-y-auto w-full">
-                <nav className="navigation flex w-full justify-around  border-b border-b-solid cursor-pointer">
+                <nav className={`navigation flex w-full justify-around  cursor-pointer ${theme ? "border-[#1b1b1b] border-b border-b-solid" : "border-[#d8d8d8]  border-b border-b-solid"}`}>
 
 
-                    <div className={`tranding text-[1.2rem] bg-[#f2f2f2] w-full flex justify-center  tracking-wide py-1
+                    <div className={`tranding text-[1.2rem] ${theme ? "bg-[#040404] text-[#fff]" : "bg-[#f2f2f2] text-[#000000]"} w-full flex justify-center  tracking-wide py-1
                     
                     ${BoolValue.t ? "border-b-[2px] border-b-solid border-b-[#0a28ef]" : ""}`}
                         onClick={() => {
@@ -370,8 +377,10 @@ function GifComponent({ setComponent, commentReplyName, setShowEmojicontenor, se
                         }}
                     >Tranding</div>
 
-                    <div className={`love tranding text-[1.2rem] bg-[#f2f2f2] w-full flex justify-center  tracking-wide py-1 border-r  border-r-[#dad8d8]
-                    border-l  border-l-[#dad8d8]
+                    <div className={`love tranding text-[1.2rem] ${theme ? "bg-[#040404] text-[#fff]" : "bg-[#f2f2f2] text-[#000000]"} w-full flex justify-center  tracking-wide py-1
+                       ${theme ?
+                            "border-l-[#282828] border-r-[#3d3d3d] border-r border-l" :
+                            "border-l-[#dad8d8] border-r-[#dad8d8] border-r border-l"}
                     ${BoolValue.love ? "border-b-[2px] border-b-solid border-b-[#0a28ef]" : ""}
                     `}
 
@@ -386,7 +395,7 @@ function GifComponent({ setComponent, commentReplyName, setShowEmojicontenor, se
                         }}
 
                     >Love</div>
-                    <div className={`family tranding text-[1.2rem] bg-[#f2f2f2] w-full flex justify-center  tracking-wide py-1
+                    <div className={`family tranding text-[1.2rem] ${theme ? "bg-[#040404] text-[#fff]" : "bg-[#f2f2f2] text-[#000000]"} w-full flex justify-center  tracking-wide py-1
                     ${BoolValue.family ? "border-b-[2px] border-b-solid border-b-[#0a28ef]" : ""} `}
                         onClick={() => {
                             // setTranding("tranding")
@@ -402,7 +411,7 @@ function GifComponent({ setComponent, commentReplyName, setShowEmojicontenor, se
                 </nav>
 
                 <div className="search__Field w-full px-2 py-1">
-                    <input type="search" name="" id="" className="py-1 w-full rounded-md font-serif text-[1rem] pl-3 drop-shadow-lg tracking-wider focus:outline-none mds-editor28:py-1 mds-editor28:text-[1rem]" placeholder="Search Gif..."
+                    <input type="search" name="" id="" className={`py-1 w-full rounded-md font-serif text-[1rem] pl-3 drop-shadow-lg tracking-wider focus:outline-none mds-editor28:py-1 mds-editor28:text-[1rem] ${theme ? "bg-[#656565] text-white" : "bg-[#fff] text-black"}`} placeholder="Search Gif..."
                         onChange={(e) => {
                             handleChange(e.target.value)
                         }}
@@ -410,7 +419,7 @@ function GifComponent({ setComponent, commentReplyName, setShowEmojicontenor, se
                 </div>
                 <div className="Gif_containe flex flex-wrap justify-center gap-x-2 gap-y-1 w-full  overflow-y-auto max-h-[21rem] md:max-h-[25rem] pt-1" id="comment_gif_container">
                     {
-                        BoolValue.t ? (tranding.trandingList.length > 0 && tranding.trandingList.map((i, index) => {
+                        BoolValue.t ? loader ? "loading..." : (tranding.trandingList.length > 0 && tranding.trandingList.map((i, index) => {
                             return (
                                 <>
                                     <div className="image flex w-[18rem] cursor-pointer" key={index}
@@ -532,7 +541,6 @@ function GifComponent({ setComponent, commentReplyName, setShowEmojicontenor, se
 
                 </div>
 
-                {/* <Grid width="100%" columns={2} fetchGifs={fetchGifs} /> */}
             </div>
 
         </>

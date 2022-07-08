@@ -261,6 +261,7 @@ const Comment = ({
                         <CommentForm
                             submitLabel="Reply"
                             commentReplyName={comment.username}
+                            theme={theme}
                             handleSubmit={(value) => {
                                 addComment(value, replyId, comment.userId)
                                 // console.log({ text })

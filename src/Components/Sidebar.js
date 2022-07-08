@@ -93,20 +93,21 @@ export default function Sidebar(props) {
             />
             <div
                 // w-64 sidebar width
-                className={`h-screen fixed top-0 md:left-0 ${showSidebar} overflow-y-auto flex-row flex-nowrap overflow-hidden shadow-xl bg-[#fff] w-64 z-[4] py-4 px-6 transition-all duration-300 mr-36  mt-[3.7rem] text-black`}
+                className={`h-screen fixed top-0 md:left-0 ${showSidebar} overflow-y-auto flex-row flex-nowrap overflow-hidden shadow-xl ${props.theme ? "bg-[#040404] border-r border-r-solid border-r-[#232323]" : "bg-[#fff]"} w-64 z-[4] py-4 px-6 transition-all duration-300 mr-36  mt-[3.7rem] text-black`}
             >
-                <div className="flex-col items-stretch min-h-full flex-nowrap px-0 relative text-black" >
+                <div className="flex-col items-stretch min-h-full flex-nowrap px-0 relative text-black " >
                     <NavLink
 
                         to=""
                         rel="noreferrer"
-                        className="mt-2 text-center w-full inline-block active text-black"
+                        className={`text-center w-full inline-block active text-black ${props.theme ? "bg-[#262626] hover:bg-[#565656] py-3 rounded-md mt-0" : "mt-2"} `}
                     >
 
                         {/* props.name */}
                         {/* <H6 className="text-white"></H6> */}
                         <p
-                            className='text-black text-xl font-serif font-bold leading-normal mt-0 mb-2'
+                            className={`${props.theme ? "text-[#ffffff]  " : "text-black"} text-xl font-serif font-bold leading-normal mt-0 mb-2`}
+
                         >
                             {Name ? Name : Name1}
 
@@ -116,19 +117,19 @@ export default function Sidebar(props) {
                         <hr className="my-4 min-w-full" />
 
                         <ul className="flex-col min-w-full flex list-none text-white">
-                            <li className="rounded-lg mb-4 hover:bg-[#2a97bb] transition duration-2000
+                            <li className={`rounded-lg mb-4 ${props.theme ? "bg-[#262626] hover:bg-[#565656]" : " hover:bg-[#2a97bb]"} transition duration-2000
                             hover:shadow-lg
                             hover:transparent
                             hover:transition-all
                             hover:duration-2000
                             
-                            hover:ease-in-out">
+                            hover:ease-in-out`}>
                                 {
                                     googleId ?
                                         <NavLink
                                             to={`/profile/${googleId}`}
                                             exact
-                                            className="flex items-center gap-4 text-sm text-black font-medium px-4 py-3 rounded-lg hover:text-white"
+                                            className={`flex items-center gap-4 text-sm ${props.theme ? "text-[#fff]" : "text-black"} font-medium px-4 py-3 rounded-lg hover:text-white`}
                                             activeClassName="bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white shadow-md "
                                         >
                                             <Icon name={<CgProfile />} size="2xl" />
@@ -137,7 +138,7 @@ export default function Sidebar(props) {
                                         <NavLink
                                             to={`/unknownuser/`}
                                             exact
-                                            className="flex items-center gap-4 text-sm text-black font-medium px-4 py-3 rounded-lg hover:text-white"
+                                            className={`flex items-center gap-4 text-sm ${props.theme ? "text-[#fff]" : "text-black"} font-medium px-4 py-3 rounded-lg hover:text-white`}
                                             activeClassName="bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white shadow-md "
                                         >
                                             <Icon name={<CgProfile />} size="2xl" />
@@ -145,18 +146,17 @@ export default function Sidebar(props) {
                                         </NavLink>
                                 }
                             </li>
-                            <li className="rounded-lg mb-2 hover:bg-[#2a97bb] transition duration-2000
+                            <li className={`rounded-lg mb-2 ${props.theme?"hover:bg-[#565656] bg-[#262626] ":"hover:bg-[#2a97bb] "} transition duration-2000
                             hover:shadow-lg
                             hover:transparent
                             hover:transition-all
                             hover:duration-2000
                             hover:text-white
-                            hover:ease-in-out 
-                            "
+                            hover:ease-in-out`}
                             >
                                 <NavLink
                                     to="/update_profile"
-                                    className="flex items-center gap-4 text-sm text-black font-medium px-4 py-3 rounded-lg hover:text-white"
+                                    className={`flex items-center gap-4 text-sm ${props.theme?"text-[#fff]":"text-black"} font-medium px-4 py-3 rounded-lg hover:text-white`}
                                     activeClassName="bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white shadow-md"
                                 >
                                     <Icon name={<IoMdSettings />} size="2xl" />

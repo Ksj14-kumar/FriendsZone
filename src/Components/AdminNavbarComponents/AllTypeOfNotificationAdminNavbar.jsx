@@ -40,7 +40,7 @@ function AllTypeOfNotificationAdminNavbar({ AllNotification, setAllNotification,
             id="allNotification"
         >
             <header className={`py-2  w-full rounded-md px-1 text-[1.2rem] font-serif tracking-wider truncate mds-editor36:text-center md:pl-2 ${theme?"text-[#fff]":"text-[#000]"}`}>Notifications</header>
-            <hr className={`bg-[#e9e9e9] ${AllNotification?.length ? "hidden" : "flex"}`} />
+            {/* <hr className={`bg-[#e9e9e9] ${AllNotification?.length ? "hidden" : "flex"}`} /> */}
             <main className="body mt-2">
                 {AllNotification?.map((notification, index) => {
                     return (

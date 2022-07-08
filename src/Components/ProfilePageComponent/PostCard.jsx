@@ -38,6 +38,7 @@ import { BsArrowLeft } from "react-icons/bs"
 import BookMarkApi from "../../AlLFetchApi/__functionApi"
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import axios from "axios"
+import H5 from "@material-tailwind/react/Heading5"
 
 
 
@@ -45,6 +46,8 @@ import axios from "axios"
 
 
 function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserModal, single, name, setAllPosts, bookMark, theme }) {
+
+    
     const [commentToggle, setCommentToggle] = useState(false)
     const [commentsLength, setCommentLength] = useState({ length: 0, post_id: "" })
     const [shareLength, setShareLength] = useState(0)
@@ -53,6 +56,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
     const [visibilityView, setVisibilityViewEvents] = useState(false)
     const [loadingPost, setLoadingPost] = useState(false)
     const [loadingPostSecond, setLoadingPostSecond] = useState(false)
+    const [colorCode, setColorCode] = useState("")
     const dispatch = useDispatch()
     const buttonRef = useRef()
     const location = useLocation()
@@ -133,13 +137,11 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
     }, [item, UserInformationLoad])
     //realitime like system
     useEffect(() => {
-        // if (isMount.current) {
         if (socket.connected) {
             socket.on("getLikeCount", (data) => {
                 if (item.post_id === data.post_id) {
                     setLikeCount(data.likeCount)
                 }
-                // setLikeCount(data)
             })
         }
     }, [likeCount])
@@ -169,12 +171,12 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^>>>> SEND THE REACTION TO Specific I  ID<<<<<<<<<<^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     useEffect(() => {
         //load the like when user refresh the page and show user which post already liked
-        setLike(item.liked.includes(googleId))
-    }, [item.liked, _id, googleId])
+        item.postType !== "news" && setLike(item.liked.includes(googleId))
+    }, [item?.liked, _id, googleId])
     // ========================================================SET THE LIKE COUNT NUMBER ====================================
     useEffect(() => {
-        setLikeCount(item.liked.length === 0 ? 0 : item.liked.length)
-    }, [item.liked])
+        item.postType !== "news" && setLikeCount(item.liked.length === 0 ? 0 : item.liked.length)
+    }, [item?.liked])
     //function which excute when current user liked it any post
     async function callLikeHnadler(userId, post_id, bgImageUrl, profileImage) {
         try {
@@ -260,6 +262,15 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
             window.scrollTo(0, 0)
         }
     }, [item])
+
+
+    //random color generator
+    useEffect(() => {
+        setColorCode('#' + ('000000' + (Math.random() * 0xFFFFFF << 0).toString(16)).slice(-6))
+
+    }, [item])
+
+    
     return (
         <>
             <div className={`post-card flex justify-around w-full mb-2 rounded-md ${bookMark ? "w-[25rem] " : "md:w-[42rem]"}  drop-shadow-sm ${loadingPost && loadingPostSecond ? "mb-[3rem] w-screen md:w-full md:ml-[2rem] md:mr-[2rem] h-[30rem]" : ""}`}>
@@ -281,22 +292,35 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                         <div className="flex justify-center relative">
                         </div>
                         <section className={`header-image-section post ${loadingPost && loadingPostSecond ? "flex w-full" : " md:rounded-lg  flex justify-between"} `} >
-                            <NavLink to={`/profile/${item.userId}`}>
+                            <NavLink to={`${item.postType === "news" ? `${item.NewsURL}` : `/profile/${item.userId}`}`}
+                                target={item.postType === "news" ? "_blank" : ""}
+                            >
                                 <main className={`flex  join-of-name-select-option post  ${loadingPost && loadingPostSecond ? " flex flex-[11] w-full bg-[#] animate-pulse" : ""} `}>
                                     <article className=' card-post-image-modal w-[3rem]  h-[3rem] rounded-full flex-shrink-0 po '>
                                         {
-                                            item.profileImage ?
-                                                (
-                                                    <>
-                                                        <LoadProfileImage url={item.profileImage} setLoadingPost={setLoadingPost} image={item.image} theme={theme} />
-                                                    </>
-                                                ) : <Image
-                                                    src={profile}
-                                                    rounded={true}
-                                                    raised={false}
-                                                    alt="Rounded Image"
-                                                    className={`w-full h-full ${theme ? "outline outline-1 outline-offset-1 outline-[#e0e0e0] outline-solid" : ""}`}
-                                                />
+                                            item.postType === "news" ?
+                                                <>
+                                                    <div className={`word w-[3.1rem] h-[3.1rem] flex-shrink-0 bg-[#fb2222] text-white  flex justify-center items-center rounded-full text-[1.7rem]`}>
+                                                        {
+                                                            item.profileImage
+                                                        }
+                                                    </div>
+
+
+
+                                                </>
+                                                : (item.profileImage ?
+                                                    (
+                                                        <>
+                                                            <LoadProfileImage url={item.profileImage} setLoadingPost={setLoadingPost} image={item.image} theme={theme} />
+                                                        </>
+                                                    ) : <Image
+                                                        src={profile}
+                                                        rounded={true}
+                                                        raised={false}
+                                                        alt="Rounded Image"
+                                                        className={`w-full h-full ${theme ? "outline outline-1 outline-offset-1 outline-[#e0e0e0] outline-solid" : ""}`}
+                                                    />)
                                         }
                                     </article>
                                     <article className={`public-name-article ml-[.5rem]  post  w-full ${loadingPost && loadingPostSecond ? " mt-[3px]" : "-mt-[.4rem]"}`}>
@@ -306,7 +330,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                         <article className={`flex ${theme ? "text-[#fafafa]" : "text-[#050505]"} ${loadingPost && loadingPostSecond ? "bg-[#8f8f8f] h-[15px] mt-2 mb-[3px] animate-pulse w-full rounded-md" : " "}`}>
                                             {loadingPost && loadingPostSecond ? "" : (format(item.createdAt))}
                                             {
-                                                loadingPost && loadingPostSecond ? "" : (item.privacy === "public" ?
+                                                loadingPost && loadingPostSecond ? "" : item.postType === "news" ? <IoEarth className={`mt-[4px] ml-[.3rem] ${theme ? "text-[#fff]" : "text-[#010101]"}`} /> : (item.privacy === "public" ?
                                                     <IoEarth className={`mt-[4px] ml-[.3rem] ${theme ? "text-[#fff]" : "text-[#010101]"}`} /> :
                                                     item.privacy === "friends" ? <HiUsers className={`mt-[4px] ml-[.3rem] ${theme ? "text-[#fff]" : "text-[#010101]"}`} /> :
                                                         <MdLock className={`mt-[4px] ml-[.3rem] ${theme ? "text-[#fff]" : "text-[#010101]"}`} />)
@@ -318,11 +342,9 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                             {
                                 (threeDot === true) ?
                                     (<>
-                                        <section className=" flex justify-center align-middle" ref={deletePost}
+                                        <section className=" flex justify-center align-middle " ref={deletePost}
                                         >
-                                            {/* <button className=' focus:border-0 border-0 focus:outline-0 outline-none -mt-2 '>
-                                                <BsThreeDotsVertical className='text-[1.5rem]' />
-                                            </button> */}
+
                                             {loadingPost && loadingPostSecond ? "" : <button className=' focus:border-0 border-0 focus:outline-0 outline-none -mt-2 '
                                                 onClick={(e) => {
                                                     e.preventDefault();
@@ -333,7 +355,8 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                             </button>}
                                         </section>
                                         <AnimatePresence>
-                                            {showPopOver && <motion.div ref={postPopupModal} className="popOverEffect bg-[#fff] absolute right-[4rem] top-[1.2rem] drop-shadow-lg w-[18rem]  px-1 py-4 border border-solid border-[#ececec] rounded-md z-[18]"
+                                            {showPopOver && <motion.div ref={postPopupModal} className={`
+                                            popOverEffect ${theme ? "bg-[#191919] border-[#444343]" : "bg-[#fff] border-[#ececec]"} absolute right-[4rem] top-[1.2rem] drop-shadow-lg w-[18rem]  px-1 py-4 border border-solid  rounded-md z-[18]`}
                                                 initial={{ opacity: 0, scale: 0 }}
                                                 animate={{ opacity: 1, scale: 1 }}
                                                 transition={{ duration: 0, ease: "easeInOut", type: "tween" }}
@@ -343,10 +366,10 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                     {
                                                         item.userId === googleId ?
                                                             [
-                                                                // { icon: <MdBookmark className="text-[1.8rem] text-[#999999]" />, name: "BookMark" },
-                                                                { icon: <MdVisibility className="text-[1.8rem] text-[#999999]" />, name: "Visibility" },
-                                                                { icon: <MdOutlineLink className="text-[1.8rem] text-[#999999]" />, name: "Copy link" },
-                                                                { icon: <MdDelete className="text-[1.8rem] text-[#999999]" />, name: "Delete Post" }
+
+                                                                { icon: <MdVisibility className={`text-[1.8rem] ${theme ? "text-[#f3f3f3]" : "text-[#111111]"}`} />, name: "Visibility" },
+                                                                { icon: <MdOutlineLink className={`text-[1.8rem] ${theme ? "text-[#f3f3f3]" : "text-[#111111]"}`} />, name: "Copy link" },
+                                                                { icon: <MdDelete className={`text-[1.8rem] ${theme ? "text-[#f3f3f3]" : "text-[#111111]"}`} />, name: "Delete Post" }
                                                             ].map((i) => {
                                                                 return (
                                                                     <>
@@ -375,7 +398,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                                     i.icon
                                                                                                 }
                                                                                             </p>
-                                                                                            <p className=" flex-[10] text-[#6a6a6a] font-sans tracking-wider text-[1.3rem] ml-1">
+                                                                                            <p className={` flex-[10] ${theme ? "text-[#f6f6f6]" : "text-[#000000]"} font-sans tracking-wider text-[1.3rem] ml-1`}>
                                                                                                 {i.name}
                                                                                             </p>
                                                                                         </>
@@ -383,10 +406,11 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                     {i.name === "Visibility" && <p className="flex-[1] text-[#6a6a6a] font-sans tracking-wider text-[1.3rem]">
                                                                                         {
                                                                                             !visibilityView ? (
-                                                                                                <FiChevronRight className="text-[1.8rem] text-[#999999]" />
+                                                                                                <FiChevronRight className={`text-[1.8rem] ${theme ? "text-[#ffffff]" : "text-[#070707]"}`} />
+
                                                                                             )
                                                                                                 : (
-                                                                                                    <FiChevronDown className="text-[1.8rem] text-[#999999]" />
+                                                                                                    <FiChevronDown className={`text-[1.8rem] ${theme ? "text-[#ffffff]" : "text-[#070707]"}`} />
                                                                                                 )
                                                                                         }
                                                                                     </p>}
@@ -397,12 +421,15 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                             i.name === "Visibility" && visibilityView && <motion.ul className=" ml-8 mt-1">
                                                                                 {
                                                                                     [
-                                                                                        { icon: <FaUserAlt className="text-[1.3rem]" />, name: "private" },
                                                                                         {
-                                                                                            icon: <HiUsers className="text-[1.3rem]" />,
+                                                                                            icon: <FaUserAlt className={`text-[1.3rem] ${theme ? "text-[#fff]" : "text-[#000]"}`}
+                                                                                            />, name: "private"
+                                                                                        },
+                                                                                        {
+                                                                                            icon: <HiUsers className={`text-[1.3rem] ${theme ? "text-[#fff]" : "text-[#000]"}`} />,
                                                                                             name: "friends"
                                                                                         }, {
-                                                                                            icon: <FaUsers className="text-[1.3rem]" />,
+                                                                                            icon: <FaUsers className={`text-[1.3rem] ${theme ? "text-[#fff]" : "text-[#000]"}`} />,
                                                                                             name: "public"
                                                                                         }
                                                                                     ].map((i) => {
@@ -423,7 +450,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                                         <p className='flex-1'>
                                                                                                             {i.icon}
                                                                                                         </p>
-                                                                                                        <p className="flex-[11] text-[1.4rem] text-[#6a6a6a] ml-2">{i.name}</p>
+                                                                                                        <p className={`flex-[11] text-[1.4rem]  ml-2 ${theme ? "text-[#f5f5f5]" : "text-[#070707]"}`}>{i.name}</p>
                                                                                                     </div>
                                                                                                     <div className="che flex-[1] mr-2">
                                                                                                         {
@@ -444,7 +471,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                 )
                                                             }) : (
                                                                 [
-                                                                    { icon: <MdOutlineLink className="text-[1.8rem] text-[#999999]" />, name: "Copy link" },
+                                                                    { icon: <MdOutlineLink className={`text-[1.8rem] ${theme ? "text-[#fefefe]" : "text-[#000000]"}`} />, name: "Copy link" },
                                                                     { icon: <MdBookmark className={`text-[1.8rem]  ${bookMarkColor ? "text-red-700" : "text-[#999999]"}`} />, name: "BookMark" },
                                                                 ].map((i) => {
                                                                     return (
@@ -464,7 +491,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                                 setMoveBookMark(!bookMarkMove)
                                                                                                 steBookMarkColor(!bookMarkColor)
                                                                                                 addBookMarkPostFunction(item)
-                                                                                                // dispatch({ type: "ADD_BookMark_Post", payload: item })
+
                                                                                             }
                                                                                         }}
                                                                                         key={index}
@@ -503,7 +530,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                                     i.icon
                                                                                                 }
                                                                                             </p>
-                                                                                            <p className=" flex-[10] text-[#6a6a6a] font-sans tracking-wider text-[1.3rem] ml-1">
+                                                                                            <p className={` flex-[10]  font-sans tracking-wider text-[1.3rem] ml-1 ${theme ? "text-[#ffffff]" : "text-[#0a0a0a]"} `}>
                                                                                                 {i.name}
                                                                                             </p>
                                                                                         </div>
@@ -532,7 +559,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                 </button>}
                                             </section>
                                             <AnimatePresence>
-                                                {showPopOver && <motion.div ref={postPopupModal} className="popOverEffect bg-[#fff] absolute right-[4rem] top-[1.2rem] drop-shadow-lg w-[18rem]  px-1 py-4 border border-solid border-[#ececec] rounded-md z-[18]"
+                                                {showPopOver && <motion.div ref={postPopupModal} className={`popOverEffect ${theme ? "bg-[#343434] border-[#464646] border border-solid" : "bg-[#fff] border-[#ececec] border border-solid"} absolute right-[4rem] top-[1.2rem] drop-shadow-lg w-[18rem]  px-1 py-4   rounded-md z-[18]`}
                                                     initial={{ opacity: 0, scale: 0 }}
                                                     animate={{ opacity: 1, scale: 1 }}
                                                     transition={{ duration: 0, ease: "easeInOut", type: "tween" }}
@@ -542,10 +569,10 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                         {
                                                             item.userId === googleId ?
                                                                 [
-                                                                    // { icon: <MdBookmark className="text-[1.8rem] text-[#999999]" />, name: "BookMark" },
-                                                                    { icon: <MdVisibility className="text-[1.8rem] text-[#999999]" />, name: "Visibility" },
-                                                                    { icon: <MdOutlineLink className="text-[1.8rem] text-[#999999]" />, name: "Copy link" },
-                                                                    { icon: <MdDelete className="text-[1.8rem] text-[#999999]" />, name: "Delete Post" }
+
+                                                                    { icon: <MdVisibility className={`text-[1.8rem] ${theme ? "text-[#efefef]" : "text-[#999999]"}`} />, name: "Visibility" },
+                                                                    { icon: <MdOutlineLink className={`text-[1.8rem] ${theme ? "text-[#efefef]" : "text-[#999999]"}`} />, name: "Copy link" },
+                                                                    { icon: <MdDelete className={`text-[1.8rem] ${theme ? "text-[#efefef]" : "text-[#999999]"}`} />, name: "Delete Post" }
                                                                 ].map((i) => {
                                                                     return (
                                                                         <>
@@ -574,7 +601,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                                         i.icon
                                                                                                     }
                                                                                                 </p>
-                                                                                                <p className=" flex-[10] text-[#6a6a6a] font-sans tracking-wider text-[1.3rem] ml-1">
+                                                                                                <p className={`flex-[10] font-sans tracking-wider text-[1.3rem] ml-3 ${theme ? "text-[#e8e8e8] " : "text-[#6a6a6a] "}`}>
                                                                                                     {i.name}
                                                                                                 </p>
                                                                                             </>
@@ -582,10 +609,10 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                         {i.name === "Visibility" && <p className="flex-[1] text-[#6a6a6a] font-sans tracking-wider text-[1.3rem]">
                                                                                             {
                                                                                                 !visibilityView ? (
-                                                                                                    <FiChevronRight className="text-[1.8rem] text-[#999999]" />
+                                                                                                    <FiChevronRight className={`text-[1.8rem] ${theme ? "text-[#e7e7e7]" : "text-[#999999]"}`} />
                                                                                                 )
                                                                                                     : (
-                                                                                                        <FiChevronDown className="text-[1.8rem] text-[#999999]" />
+                                                                                                        <FiChevronDown className={`text-[1.8rem] ${theme ? "text-[#e7e7e7]" : "text-[#999999]"}`} />
                                                                                                     )
                                                                                             }
                                                                                         </p>}
@@ -596,12 +623,12 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                 i.name === "Visibility" && visibilityView && <motion.ul className=" ml-8 mt-1">
                                                                                     {
                                                                                         [
-                                                                                            { icon: <FaUserAlt className="text-[1.3rem]" />, name: "private" },
+                                                                                            { icon: <FaUserAlt className={` text-[1.3rem] ${theme ? "text-[#fff]" : "text-[#0a0a0a]"}`} />, name: "private" },
                                                                                             {
-                                                                                                icon: <HiUsers className="text-[1.3rem]" />,
+                                                                                                icon: <HiUsers className={` text-[1.3rem] ${theme ? "text-[#fff]" : "text-[#0a0a0a]"}`} />,
                                                                                                 name: "friends"
                                                                                             }, {
-                                                                                                icon: <FaUsers className="text-[1.3rem]" />,
+                                                                                                icon: <FaUsers className={` text-[1.3rem] ${theme ? "text-[#fff]" : "text-[#0a0a0a]"}`} />,
                                                                                                 name: "public"
                                                                                             }
                                                                                         ].map((i) => {
@@ -622,7 +649,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                                             <p className='flex-1'>
                                                                                                                 {i.icon}
                                                                                                             </p>
-                                                                                                            <p className="flex-[11] text-[1.4rem] text-[#6a6a6a] ml-2">{i.name}</p>
+                                                                                                            <p className={`flex-[11] text-[1.4rem] ${theme ? "text-[#eeeeee]" : "text-[#0b0b0b]"} ml-2`}>{i.name}</p>
                                                                                                         </div>
                                                                                                         <div className="che flex-[1] mr-2">
                                                                                                             {
@@ -643,7 +670,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                     )
                                                                 }) : (
                                                                     [
-                                                                        { icon: <MdOutlineLink className="text-[1.8rem] text-[#999999]" />, name: "Copy link" },
+                                                                        { icon: <MdOutlineLink className={`text-[1.8rem] ${theme ? "text-[#f8f8f8]" : "text-[#090909]"} `} />, name: "Copy link" },
                                                                         { icon: <MdBookmark className={`text-[1.8rem]  ${bookMarkColor ? "text-red-700" : "text-[#999999]"}`} />, name: "BookMark" },
                                                                     ].map((i) => {
                                                                         return (
@@ -702,7 +729,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                                         i.icon
                                                                                                     }
                                                                                                 </p>
-                                                                                                <p className=" flex-[10] text-[#6a6a6a] font-sans tracking-wider text-[1.3rem] ml-1">
+                                                                                                <p className={`flex-[10] ${theme ? "text-[#fcfcfc]" : "text-[#070707]"} font-sans tracking-wider text-[1.3rem] ml-1 `}>
                                                                                                     {i.name}
                                                                                                 </p>
                                                                                             </div>
@@ -724,25 +751,35 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                         <section className='text-caption ml-2  mt-[2rem]   px-[1rem]  text-[1.3rem] md:text-lg '
                         >
                             {
-                                loadingPost && loadingPostSecond ? "" : <ReadMore children={item.text} theme={theme} className={`cursor-pointer ${theme ? "text-[#ffff]" : "text-[#000]"}`} />
+                                loadingPost && loadingPostSecond ? "" : item.postType === "news" ?
+                                    <>
+                                        <H5 className="">{item.title}</H5>
+                                        <ReadMore children={item.text} theme={theme} className={`cursor-pointer ${theme ? "text-[#ffff]" : "text-[#000]"}`} />
+                                    </>
+                                    : (<ReadMore children={item.text} theme={theme} className={`cursor-pointer ${theme ? "text-[#ffff]" : "text-[#000]"}`} />)
                             }
                         </section>
                     </CardBody>
                     <section className={`image section   relative w-full   ${loadingPost && loadingPostSecond ? "mt-0 h-[15rem]" : "mt-[.8rem]"}`}>
                         {
-                            item.fileType === "video" ?
+                            item.postType === "news" ? <Image
+                                rounded={false}
+                                className="rounded-t-none rounded-b-none w-full"
+                                src={item.image}
+                            /> : (item.fileType === "video" ?
                                 (item.image ?
-                                    // <iframe className="w-full h-full" src={mediaURL} frameBorder="1" allow="accelerometer;  encrypted-media; gyroscope; picture-in-picture" allowFullScreen ></iframe>
+
                                     <LoadPostContentVideo url={item.image} setLoadingPostSecond={setLoadingPostSecond} />
                                     : "")
                                 :
                                 (item.image ?
                                     <LoadPostContentImage url={item.image} setLoadingPostSecond={setLoadingPostSecond} />
-                                    : "")
+                                    : ""))
+
                         }
                     </section>
                     <hr className={`${loadingPost && loadingPostSecond ? "" : " mt-[2px]"} ${theme ? "bg-[#171717] hidden" : "bg-[#fff]"}`} />
-                    <CardFooter className="like and dislike section flex justify-start py-0  mb-[.8rem] px-0 mt-1">
+                    {item.postType !== "news" && (<CardFooter className="like and dislike section flex justify-start py-0  mb-[.8rem] px-0 mt-1">
                         <main className={`main_section flex  w-full  -mb-[8px] ${loadingPost && loadingPostSecond ? "bg-[#dedede]" : ""} `}>
                             <section className='like_love  flex-[10]  cursor-pointer'
                                 onClick={() => {
@@ -757,7 +794,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                 <MdThumbUpAlt className='text-white' />
                                             </div>}
                                         {loadingPost && loadingPostSecond ? "" : <p className="like count ml-[4rem]">
-                                            <span className={` mr-[3px] ${theme?"text-[#fff]":"text-[#030303]"}`}>
+                                            <span className={` mr-[3px] ${theme ? "text-[#fff]" : "text-[#030303]"}`}>
                                                 {
                                                     formatnumber(likeCount)
                                                 }
@@ -790,11 +827,10 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                 </section>}
                             </div>
                         </main>
-                    </CardFooter>
+                    </CardFooter>)}
                     <hr className={`mb-[.2rem] ${theme ? "bg-[#2d2d2d] hidden" : "bg-[#2d2d2d]"}`} />
-                    <CardFooter className={`flex justify-between -mt-[1rem] mx-[0rem]mds-editor10:justify-center ${loadingPost && loadingPostSecond ? "bg-[#dedede]" : ""}`}>
+                    {item.postType !== "news" && (<CardFooter className={`flex justify-between -mt-[1rem] mx-[0rem]mds-editor10:justify-center ${loadingPost && loadingPostSecond ? "bg-[#dedede]" : ""}`}>
                         <section className='mds-editor10:text-[.6rem]'
-                            // data-for={item.post_id}
                             id="like"
                             data-tip="this is tooltips"
                         >
@@ -807,7 +843,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                     block={false}
                                     iconOnly={false}
                                     ripple="none"
-                                    // bookMark
                                     className={`hover:bg-gray-100 text-gray-500  text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem] bg-[#a6a6a6] h-[2.5rem] animate-pulse ${bookMark ? "px-[1rem] h-[2rem] text-[1.5rem]" : ""}`}
                                 >
                                 </Button>
@@ -891,92 +926,35 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                 <RiShareFill className={`${bookMark ? "text-[1.5rem]" : "text-[2rem]"}`} />
                             </Button>}
                         </section>
-                    </CardFooter>
+                    </CardFooter>)}
                     <hr className={`-mt-[.8rem] ${theme ? "bg-[#2a2a2a] hidden" : "bg-[#2e2e2e]"}`} />
                     {loadingPost && loadingPostSecond ? "" : <section className={`comment-section  mt-2 `}>
                         {
-                            UserInformationLoad !== undefined &&
-                            <Comments
-                                commentToggle={commentToggle}
-                                currentUserId={googleId ? googleId : null}
-                                post_id={item.post_id ? item.post_id : null}
-                                UserIdForPostComments={item.userId ? item.userId : null}
-                                currentUserName={fname + " " + lname}
-                                ImageUrl={OriginalProfileURL ? OriginalProfileURL : null}
-                                setCommentLength={setCommentLength}
-                                socket={socket}
-                                setCommentToggle={setCommentToggle}
-                                commentsLength={commentsLength}
-                                setLike={setLike}
-                                item={item}
-                                setLikeCount={setLikeCount}
-                                theme={theme}
-                            />
+                            item.postType !== "news" && (UserInformationLoad !== undefined &&
+                                <Comments
+                                    commentToggle={commentToggle}
+                                    currentUserId={googleId ? googleId : null}
+                                    post_id={item.post_id ? item.post_id : null}
+                                    UserIdForPostComments={item.userId ? item.userId : null}
+                                    currentUserName={fname + " " + lname}
+                                    ImageUrl={OriginalProfileURL ? OriginalProfileURL : null}
+                                    setCommentLength={setCommentLength}
+                                    socket={socket}
+                                    setCommentToggle={setCommentToggle}
+                                    commentsLength={commentsLength}
+                                    setLike={setLike}
+                                    item={item}
+                                    setLikeCount={setLikeCount}
+                                    theme={theme}
+                                />)
                         }
                     </section>}
                 </Card>
             </div >
-            {
-                // VisibilityModal && <Model visible={VisibilityModal} visibilityHandle={visibleHandler} setPrivacyToServer={VisibilityChange} privacy={item.privacy} post_id={item.post_id} disabled={disabled} />
-            }
+
             <Tooltips Tooltips placement="top" ref={buttonRef} className="ml-[5rem]" >
                 <TooltipsContent className="flex justify-center md:justify-between  px-[5px] ">
-                    {/* <section className='emoji-section rounded-[50px] text-black w-[3rem] h-[3rem] sm:w-[3rem] sm:h-[3rem] md:w-[5rem] md:h-[5rem]   mx-[3px] outline outline-offest-1 outline-gray-100 cursor-pointer flex-shrink-0'
-                        onClick={emojiHandle}
-                    >
-                        <article className='setEmoji w-[3.5] h-[3.5]'>
-                            <Image
-                                src={emoji}
-                                rounded={true}
-                                className="w-2rem h-2rem bg-black-800"
-                            />
-                        </article>
-                    </section>
-                    <section className='emoji-section rounded-[50px] text-black w-[3rem] h-[3rem] md:w-[5rem] md:h-[5rem]   mx-[3px] outline outline-offest-1 outline-gray-100 cursor-pointer flex-shrink-0' >
-                        <article className='setEmoji w-[3.5] h-[3.5]'>
-                            <Image
-                                src={emoji2}
-                                rounded={true}
-                                className="w-2rem h-2rem bg-black-800"
-                            />
-                        </article>
-                    </section>
-                    <section className='emoji-section rounded-[50px] text-black w-[3rem] h-[3rem] md:w-[5rem] md:h-[5rem]   mx-[3px] outline outline-offest-1 outline-gray-100 cursor-pointer flex-shrink-0' >
-                        <article className='setEmoji w-[3.5] h-[3.5]'>
-                            <Image
-                                src="https://tenor.com/view/licking-lips-emoji-love-this-gif-23499819"
-                                rounded={true}
-                                className="w-2rem h-2rem bg-black-800"
-                            />
-                        </article>
-                    </section>
-                    <section className='emoji-section rounded-[50px] text-black w-[3rem] h-[3rem] md:w-[5rem] md:h-[5rem]   mx-[3px] outline outline-offest-1 outline-gray-100 cursor-pointer flex-shrink-0 ' >
-                        <article className='setEmoji w-[3.5] h-[3.5]'>
-                            <Image
-                                src={emoji3}
-                                rounded={true}
-                                className="w-2rem h-2rem bg-black-800"
-                            />
-                        </article>
-                    </section>
-                    <section className='emoji-section rounded-[50px] text-black w-[3rem] h-[3rem] md:w-[5rem] md:h-[5rem]   mx-[3px] outline outline-offest-1 outline-gray-100 cursor-pointer flex-shrink-0' >
-                        <article className='setEmoji w-[3.5] h-[3.5]'>
-                            <Image
-                                src={emoji4}
-                                rounded={true}
-                                className="w-2rem h-2rem bg-black-800"
-                            />
-                        </article>
-                    </section>
-                    <section className='emoji-section rounded-[50px] text-black w-[3rem] h-[3rem] md:w-[5rem] md:h-[5rem]   mx-[3px] outline outline-offest-1 outline-gray-100 cursor-pointer flex-shrink-0' >
-                        <article className='setEmoji w-[3.5] h-[3.5]'>
-                            <Image
-                                src={emoji5}
-                                rounded={true}
-                                className="w-2rem h-2rem bg-black-800"
-                            />
-                        </article>
-                    </section> */}
+
                 </TooltipsContent>
             </Tooltips>
         </>

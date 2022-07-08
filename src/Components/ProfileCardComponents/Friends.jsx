@@ -6,7 +6,7 @@ import { BrowserRouter, Link, NavLink, Redirect, Route, useParams, useRouteMatch
 import ProfileCard from "../../Pages/ProfileCard"
 import FriendsCardInProfileCard from "./FriendsCardInProfileCard"
 
-function Friends({ info, loadUserProfileInfo, usernameId, _id, cancleFriendRequest, setAcceptMessage, friends }) {
+function Friends({ info, loadUserProfileInfo, usernameId, _id, cancleFriendRequest, setAcceptMessage, friends,theme }) {
 
   const { path } = useRouteMatch()
   console.log(path)
@@ -43,6 +43,7 @@ function Friends({ info, loadUserProfileInfo, usernameId, _id, cancleFriendReque
                     _id={_id}
                     setAcceptMessage={setAcceptMessage}
                     cancleFriendRequest={cancleFriendRequest}
+                    theme={theme}
                     friendsId={item.anotherUserId || item.anotherUserId} />
                 </Link>
 
