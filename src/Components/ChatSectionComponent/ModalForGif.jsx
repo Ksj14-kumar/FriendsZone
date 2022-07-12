@@ -1,22 +1,11 @@
 import Image from '@material-tailwind/react/Image'
 import React, { useEffect } from 'react'
-import img from "../../assets/img/team-2-800x800.jpg"
 import { MdSend } from "react-icons/md"
 import { GiphyFetch } from '@giphy/js-fetch-api'
-
-
-
-
-
 function ModalForGif({ setSelectedGif, selectedGif, senderId, setModal, sendMessage }) {
     const giphy = new GiphyFetch(process.env.REACT_APP_GIPHY_KEY)
     const [Giphy, setGiPhy] = React.useState([])
     const [selected_Gif_url, setSelected_Gif_URL] = React.useState([])
-
-
-
-
-
     async function handleSelect(url) {
         const object = {
             message: url,
@@ -24,31 +13,20 @@ function ModalForGif({ setSelectedGif, selectedGif, senderId, setModal, sendMess
             time: Date.now(),
             type: "GIF",
             messageID: Math.floor(Math.random() * 10000000000)
-
         }
         setSelected_Gif_URL([...selected_Gif_url, object])
     }
-
-
     useEffect(() => {
         setSelectedGif(selected_Gif_url)
-
     }, [selected_Gif_url])
-
     async function HandleSubmit() {
         setSelectedGif(selected_Gif_url)
         sendMessage()
         setModal(false)
-
-
     }
-
-    // console.log(Giphy)
     return (
         <>
             <div className="w-screen h-screen bg-[#0a0a0a3a] fixed z-[19] flex   justify-center ">
-
-
                 <div className="w-[51rem]  mt-[2rem] bg-[#fff] text-black rounded-lg z-[17] p-3 mb-[0rem] overflow-y-auto  overflow-x-hidden" id="selected_Giphy_scroll">
                     <div className="search_input flex">
                         <div className="inpu flex-[10]">
@@ -66,24 +44,17 @@ function ModalForGif({ setSelectedGif, selectedGif, senderId, setModal, sendMess
                                     setModal(false)
                                     setGiPhy([])
                                     setSelected_Gif_URL([])
-
-
                                 }}
                             >X</button>
                         </div>
-
-
                     </div>
-
                     {selected_Gif_url.length > 0 && <div className="selected_Gif_image relative my-[.8rem]">
                         <p className="text-[1.5rem] text-[#080808] font-serif py-1 text-center underline">Selected Gif
-
                         </p>
                         {
                             selected_Gif_url.length
                         }
                         <div className="container12 flex flex-wrap gap-2 overflow-y-auto  max-h-[20rem]" id="selected_Gif">
-
                             {selected_Gif_url.length > 0 && selected_Gif_url.map(item => {
                                 return (
                                     <>
@@ -111,7 +82,6 @@ function ModalForGif({ setSelectedGif, selectedGif, senderId, setModal, sendMess
                             </abbr>
                         </p>
                     </div>}
-
                     <div className="Gif_container grid md:grid-cols-3 grid-cols-2 mds-editor17:grid-cols-1 grid-row-2  md:grid-row-3 overflow-y-auto gap-[6px] mt-[8px] place-items-center" id="Search_scroll_bar_filter">
                         {
                             Giphy.length > 0 && Giphy.map((item, index) => {
@@ -132,13 +102,9 @@ function ModalForGif({ setSelectedGif, selectedGif, senderId, setModal, sendMess
                                 )
                             })
                         }
-
                     </div>
-
                 </div>
             </div>
-
-
         </>
     )
 }

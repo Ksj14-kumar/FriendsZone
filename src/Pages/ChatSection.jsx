@@ -31,6 +31,7 @@ import GroupMessageBox from "../Components/ChatSectionComponent/GroupMessageBox"
 import SimpleLeft from '../Components/ChatSectionComponent/SimpleLeft'
 import { Error } from '../Components/Toastify';
 import Axios from "axios"
+import InternetDetection from '../Components/InternetDetection';
 
 
 
@@ -50,7 +51,6 @@ function ChatSection({ user, socket }) {
   const [loader, setLoader] = useState(false)
   const [uploadLoaderMessage, setUploadLoaderMessage] = useState("")
   const [err, setErr] = useState(false)
-  // const [imageFile, setFile] = useState("")
   const [TextMessageBase64, setTextMessageBase64] = useState("")
   const [typing, setTyping] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
@@ -84,7 +84,6 @@ function ChatSection({ user, socket }) {
   const [SingleChatLoader, setSingleUserChatLoader] = useState(false)
   const [blockUser, setBlokedUser] = useState(false)
   const [searchQuery, setQuery] = useState("")
-
   const history = useHistory()
   const params = useParams()
   const Video = useRef()
@@ -182,7 +181,6 @@ function ChatSection({ user, socket }) {
         }
       }
       catch (err) {
-        console.log(err)
       }
     }
     q?.length === 9 && CheckRoomId()
@@ -452,7 +450,6 @@ function ChatSection({ user, socket }) {
         }
         else if (res.status === 500) {
           setMessageId([...messageId, resData.messageId])
-
           setUploadLoaderMessage(false)
           textMessage.includes("blob:http://") && (setTextMessageBase64("") || setTextMessage(""))
           error({ message: "not send", pos: "top-right" })
@@ -473,7 +470,6 @@ function ChatSection({ user, socket }) {
     setTextMessage(e.target.value)
     setFileType("text")
   }
-
   //getMessages
   useEffect(() => {
     async function getMessages() {
@@ -481,7 +477,6 @@ function ChatSection({ user, socket }) {
         setMessageLoader(true)
         const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/messages/get/${user}/${q}`, {
           method: "GET",
-
           headers: {
             "Authorization": `Bearer ${localStorage.getItem("uuid")}`
           }
@@ -500,14 +495,10 @@ function ChatSection({ user, socket }) {
         }
       } catch (err) {
         console.warn(err)
-
       }
     }
     q.length > 9 && getMessages()
   }, [q, socket])
-
-
-
   //getallConversetaion recently chat
   useEffect(() => {
     async function getAllConversation() {
@@ -518,7 +509,6 @@ function ChatSection({ user, socket }) {
             "Authorization": `Bearer ${localStorage.getItem("uuid")}`
           }
         })
-        console.log({ resData })
         if (resData.status === 200) {
           setLoader(false)
           setConvertionUsersList(resData.data)
@@ -527,7 +517,6 @@ function ChatSection({ user, socket }) {
         else if (resData.status !== 200) {
           setLoader(false)
           setConvertionUsersList([])
-
         }
       }
       catch (err) {
@@ -606,7 +595,6 @@ function ChatSection({ user, socket }) {
           }
         })
         const resData = await res.json()
-        console.log("group members", resData)
         if (res.status === 200) {
           setRoomData(resData)
           setGroupMembers(resData.RoomMembers)
@@ -631,7 +619,6 @@ function ChatSection({ user, socket }) {
           }
         })
         const resData = await res.json()
-        console.log("group messages", resData)
         if (res.status === 200) {
           setGroupMessageLoader(false)
           setGroupMessages(resData.result)
@@ -656,20 +643,16 @@ function ChatSection({ user, socket }) {
       textarea.current.style.height = scrollHeight + "px";
     }
   }, [textMessage])
-
-
   //search messages on the search field values
   useEffect(() => {
     const filterMessages = currentChat.filter((item) => {
       return item.message?.toLowerCase()?.includes(searchQuery.toLowerCase())
     })
   }, [searchQuery])
-
   //delete the message
   async function deleteMessage(value) {
     try {
       socket?.emit("deleteMessage", { value, friendId: q, currentId: user })
-
       setcurrentChat(currentChat.filter(item => item._id !== value._id))
       const res = await Axios({
         url: `${process.env.REACT_APP_API_BACKENDURL}/api/v1/delete/message`,
@@ -685,16 +668,12 @@ function ChatSection({ user, socket }) {
       error({ message: "Not Delete, try again", pos: "top-right" })
     }
   }
-
   //get delete message using socket
   useEffect(() => {
     socket?.on("deleteMessage", (data) => {
-      // console.log(data)
       setcurrentChat(currentChat.filter((item => item._id !== data.value._id)))
     })
   }, [socket, currentChat])
-
-
   //unblocked and block user 
   useEffect(() => {
     try {
@@ -706,16 +685,12 @@ function ChatSection({ user, socket }) {
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${localStorage.getItem("uuid")}`
-
           }
         })
-
       })()
     } catch (err) {
     }
   }, [blockUser])
-
-
   return (
     <>
       {
@@ -734,6 +709,7 @@ function ChatSection({ user, socket }) {
       {
         ModalForFriends && <SearchFriendsForGroupChat setModalForFriends={setModalForFriends} RoomData={RoomData} setGroupMembers={setGroupMembers} />
       }
+      <InternetDetection/>
       <div className="top_container flex justify-center  mds-editor23:w-full mds-editor23:block" id='top_chat_container '>
         {/* ======================================LEFT SIDE OF CHAT SECTION=================================== */}
         {/* {liveFriends !== undefined && liveFriends.length > 0 && <aside id="live_top_users" className=" md:hidden mt-[4.2rem] flex w-full   fixed bg-[#d0d0d0] ">

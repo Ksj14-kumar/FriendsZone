@@ -5,9 +5,7 @@ import Spinner from "react-spinkit"
 
 function LoginLoader() {
     return (
-
         <Circles color="#051367" height={25} width={140} style={{fontSize:"1rem"}} />
-        // <Spinner name="ball-clip-rotate" />
     )
 }
 

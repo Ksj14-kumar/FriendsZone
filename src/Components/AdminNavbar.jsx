@@ -1,10 +1,8 @@
 import Button from '@material-tailwind/react/Button';
 import Icon from '@material-tailwind/react/Icon';
 import Image from '@material-tailwind/react/Image';
-// import Dropdown from '@material-tailwind/react/Dropdown';
-// import DropdownItem from '@material-tailwind/react/DropdownItem';
 import userProfile from '../assets/img/download.png'
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ImageShow from './ImageShow'
 import ProfileLoader from '../Loader/ProfileLoader';
@@ -18,23 +16,15 @@ import { FaUserFriends } from 'react-icons/fa'
 import { BsMessenger } from 'react-icons/bs'
 import { useState } from 'react'
 import Badge from '@mui/material/Badge';
-// import Notification from './Notification/Notification';
-// import Popover from "@material-tailwind/react/Popover";
-// import PopoverContainer from "@material-tailwind/react/PopoverContainer";
-// import PopoverHeader from "@material-tailwind/react/PopoverHeader";
-// import PopoverBody from "@material-tailwind/react/PopoverBody";
 import { motion, AnimatePresence } from "framer-motion"
 import { success, error } from '../toastifyMessage/Toast';
 import SearchBarTable from '../SearchBarTable';
-// import FriendsNoti from './Notification/FriendsNoti';
-// import Messages from "./Notification/Messages";
 import AdminRightSideBar from "./AdminRightSideBar"
 import FriendsNotification from './AdminNavbarComponents/FriendsNotification';
 import AllTypeOfNotificationAdminNavbar from './AdminNavbarComponents/AllTypeOfNotificationAdminNavbar';
 import MessagesNotifications from './AdminNavbarComponents/MessagesNotifications';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-
 const _id = localStorage.getItem("uuid")
 
 function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
@@ -96,40 +86,10 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         }
     })
     const { receiverrequest, AllNotification } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "", senderrequest: [], receiverrequest: [], AllNotification: [] }
-
-
-
-
-    // useEffect(() => {
-    //     async function LoadUnreadMessages() {
-    //         try {
-    //             const res = await axios({
-    //                 method: "GET",
-    //                 url: `${process.env.REACT_APP_API_BACKENDURL}/api/v1/load/all/unread/message/${UserInformationLoad?.googleId}`,
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                     "Authorization": localStorage.getItem("uuid"),
-    //                 }
-    //             })
-    //             console.log({ res })
-
-    //         } catch (err) {
-
-    //         }
-
-    //     }
-
-    //     LoadUnreadMessages()
-
-    // }, [])
-
-
     useEffect(() => {
         const value1 = UserInformationLoad.message?.length ? UserInformationLoad.message : []
         setUserMessageAfterAcceptRequest(value1)
     }, [UserInformationLoad])
-
-
     useEffect(() => {
         setReceivedRequest(receiverrequest?.length === 0 ? [] : receiverrequest?.sort((a, b) => {
             return b.time - a.time
@@ -140,22 +100,17 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         if (UserInformationLoad.message?.length > 0 || UnreadMessageNotification?.length > 0) {
             const value1 = UserInformationLoad.message?.length ? UserInformationLoad.message : []
             const value2 = UnreadMessageNotification?.length ? UnreadMessageNotification : []
-
             if (arrivalMessageNotification.length === 0) {
                 setMessagesNotification([...accecptMessageNotification, ...value2])
             }
             else {
-
                 if (arrivalMessageNotification.length === 0) {
                     setMessagesNotification([...value2, ...accecptMessageNotification])
                 }
                 else {
                     setMessagesNotification([...accecptMessageNotification, ...arrivalMessageNotification])
                 }
-
-
             }
-
         }
     }, [UserInformationLoad, accecptMessageNotification, arrivalMessageNotification])
     useEffect(() => {
@@ -164,10 +119,8 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         }
         )
     }, [socket])
-
     //get the user messags Notificatio
     useEffect(() => {
-
         socket?.off("getMessageNotification")?.on("getMessageNotification", async (data) => {
             const isAlreadyUserExits = arrivalMessageNotification !== undefined && arrivalMessageNotification.length > 0 && arrivalMessageNotification?.some((v) => v?.anotherUserId === data?.anotherUserId)
             if (isAlreadyUserExits) {
@@ -180,14 +133,11 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                             }
                         }
                         else {
-
                             return item
                         }
                     }
-
                 })
                 setArrivalMessageNotification(value)
-
             }
             else {
                 if (location.search.split("=")[1] !== data.anotherUserId || location.search.split("=")[1] !== undefined || location.pathname !== "/messages") {
@@ -196,16 +146,12 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                     }
                     else {
                         setArrivalMessageNotification([...arrivalMessageNotification, { ...data, messageLength: 1 }])
-
                     }
-
-
                 }
             }
         }
         )
     }, [socket, arrivalMessageNotification])
-
     //profile image uploader
     function imageUploadHandler(e) {
         if (e.target.files[0].size > 36700160) {
@@ -273,11 +219,6 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 success({ message: message })
                 //set the base64 url encode value none after submit profile image to server or clear input file field
                 dispatch({ type: "SetValueOfPreviewImageProfile", payload: "" })
-                //dispatch the latest profile image url to the profile image component
-                // const res = await fetch(data.url)
-                // const blobURL = await res.blob()
-                // const blob = URL.createObjectURL(blobURL)
-                // dispatch({ type: "OriginalProfileURL", payload: data.url })
                 dispatch({ type: "ShowImage", payload: data.url })
                 //set the whole info regrading image from, server and dispatch to 
                 dispatch({ type: "uploadImageDataFromServer", payload: data })
@@ -309,27 +250,22 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     async function fileInputSubmitBackground(e) {
         e.preventDefault()
         if (!checkUrlExitsBg.value) {
-            // alert("Please select a  image")
             error({ message: "please select a  photo" })
             return
         }
         else {
             // setShowImage(previewImage)
             setUploadLoaderBackground(true)
-            // ${process.env.REACT_APP_API_BACKENDURL}
             const serverResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/user/blob/image/bg/S6MjFqeb8HdJRGjkUs9W/QUCzIb1mKtMevddN24yB/YWYhtXwEEtUlHu0Nkhmq/eAQCSzpYo28SJxXCMV4d/yR3VTmMynJw6N3xlS530/WpsJsZKo4hGf18jaWmZL/`, {
                 method: "POST",
                 body: JSON.stringify({
                     data:
                         checkUrlExitsBg.value,
                     url: BgUrl,
-                    // url: previewImage,
                     uuid: _id
                 }),
                 headers: {
                     "Content-Type": "application/json",
-                    // "Content-Type": "multipart/form-data",
-                    // "Content-Type": "x-www-form-urlencoded",
                     "Authorization": `Bearer ${localStorage.getItem("uuid")}`
                 }
             })
@@ -389,7 +325,6 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         try {
             setDeleteLoader(true)
             setDisabledButton(true)
-            // ${process.env.REACT_APP_API_BACKENDURL}
             const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/delete/assest/`, {
                 body: JSON.stringify({ uploadImageDataFromServer, uuid: _id }),
                 method: "DELETE",
@@ -403,10 +338,6 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 dispatch({ type: "ShowImage", payload: "" })
                 setDisabledButton(false)
                 success({ message: "Profile photo removed successfully" })
-                //show the delete message send by server
-                //show the toastify message after successfull delete
-                //set the profile image url none afetr delete the profile photos
-                //set the ShowImage url none after delete the image because when user upload profile photo then excute ternary condition successful upload always active
                 setProgressMessage("")
                 setDeleteLoader(false)
                 return
@@ -440,7 +371,6 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         try {
             setDisabledButtonBg(true)
             setDeleteLoader(true)
-            // ${process.env.REACT_APP_API_BACKENDURL}
             const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/delete/assest/bg/`, {
                 body: JSON.stringify({ uploadImageDataFromBackground, uuid: _id }),
                 method: "DELETE",
@@ -465,14 +395,12 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             else if (res.status === 401) {
                 error({ message: message })
                 setDisabledButtonBg(false)
-                // window.alert(resData.message)
                 setDeleteLoader(false)
                 return
             }
             else if (res.status === 500) {
                 setDisabledButtonBg(false)
                 error({ message: message })
-                // window.alert(resData.message)
                 setDeleteLoader(false)
                 return
             }
@@ -483,18 +411,13 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     //====================LOGOUT THE ACCOUNT=============================
     async function logout() {
         try {
-            // socket?.emit("newUser", { data: localStorage.getItem("uuid") })
             socket?.emit("logout", socket?.id)
-            // socket?.disconnect()
-            // socket?.emit("disconnect", { uuid: localStorage.getItem("uuid") })
             localStorage.removeItem("uuid")
             localStorage.clear()
-            // ${process.env.REACT_APP_API_BACKENDURL}
             const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/logout`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
-                    // "Authorization": "Bearer " + localStorage.getItem("uuid")
                 }
             })
             const url = await res.json()
@@ -519,7 +442,6 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             search()
         }
         catch (err) {
-            console.warn(err)
         }
     }, [query])
     useEffect(() => {
@@ -569,11 +491,8 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 setReceivedRequest(array)
                 setAcceptRequest(true)
                 setMessageAfterRequestAccept(acceptResponseData.Users)
-                // success({ message: acceptResponseData.message })
-                // setFriendsRequest(friendsRequest.filter(friend => friend._id !== senderId))
             }
             else if (acceptResponse.status !== 200) {
-                // error({ message: acceptResponseData.message })
             }
         }
         catch (err) {
@@ -592,16 +511,12 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 const resData = await res.json()
                 const data = resData.data
                 if (res.status === 200) {
-                    // if (Aborted === false) {
                     setUserSearchHistory(data?.history)
-                    // }
                 }
                 else if (res.status !== 200) {
-                    //not load hisory
                 }
             }
             catch (err) {
-                // console.warn(err)
             }
         }
         loadHistory()
@@ -669,9 +584,6 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [AllTypeNitification])
-
-
-    
     return (
         <>
             <nav className={`${theme ? "bg-[#000000fc] drop-shadow-xl border-b border-b-solid border-b-[#212121]" : " bg-light-blue-500"}  py-2 px-3 fixed w-full z-[18] drop-shadow-lg`}>
@@ -774,16 +686,12 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                         <BsMessenger className={`text-[1.6rem] self-center cursor-pointer   ${theme ? `text-[#fff] ${messengerComponent && "text-[#ef1e1e]"}` : `text-[#270082] ${messengerComponent && "text-[#ef1e1e]"}`} mds-editor28:text-[1.3rem] ${messengerComponent && "text-[#ef1e1e]"}`} />
                                         <article className='absolute right-1 -top-2 mds-editor8:-top-[.5rem] cursor-pointer '>
                                             {
-                                                // UnreadMessageNotification
-                                                // UserInformationLoad?.message.length + UnreadMessageNotification[0]?.messageLength ? UserInformationLoad?.message.length + UnreadMessageNotification[0]?.messageLength : ""
                                                 UserInformationLoad?.message &&
                                                 <Badge badgeContent={messageNotification.filter((item => item?.read === false)).length} color="error" max={20} >
                                                 </Badge>
                                             }
                                         </article>
                                         {messengerComponent &&
-                                            // messageNotification
-                                            // UserInformationLoad?.message
                                             <MessagesNotifications messageList={messageNotification} setMessengerComponent={setMessengerComponent} setUserMessageAfterAcceptRequest={setUserMessageAfterAcceptRequest}
                                                 __id__={UserInformationLoad?._id}
                                                 setArrivalMessageNotification={setArrivalMessageNotification}
@@ -863,6 +771,10 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                         showRightSideBar &&
                         <AdminRightSideBar showRightSideBar={showRightSideBar}
                             setShowRightSideBar={setShowRightSideBar} logout={logout}
+                            setShowModalCode={setShowModalCode}
+                            setShowModalCodeBackground={setShowModalCodeBackground}
+                            theme={theme}
+
                         />
                     }
                 </AnimatePresence>
@@ -884,7 +796,6 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                             (
                                                 <div className="flex w-full  items-center justify-center bg-grey-lighter hover:bg-grey-lighter" >
                                                     <label className="w-64 flex flex-col items-center  bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-white"
-                                                    // style={{ backgroundColor: "red" }}
                                                     >
                                                         <svg className="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                                             style={{ color: "green" }}
@@ -932,9 +843,7 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                         <div className="flex w-full items-center justify-center bg-grey-lighter hover:bg-grey-lighter mt-6 "
                                             ripple={"light"}
                                             onClick={(e) => {
-                                                // alert("helo")
                                                 RemoveProfilePhoto()
-                                                // setStrategyImage(UnselectProfileImage.value)
                                                 dispatch({ type: "SET_UNSELECT_PROFILE_IMAGE", payload: { value: "" } })
                                             }}
                                         >
@@ -951,9 +860,7 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                     <div className="flex w-full items-center justify-center bg-grey-lighter hover:bg-grey-lighter mt-6 "
                                         ripple={"light"}
                                         onClick={(e) => {
-                                            // alert("helo")
                                             RemoveProfilePhoto()
-                                            // setStrategyImage(UnselectProfileImage.value)
                                             dispatch({ type: "SET_UNSELECT_PROFILE_IMAGE", payload: { value: "" } })
                                         }}
                                     >
@@ -966,7 +873,6 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                     </div>
                                 )
                             }
-                            {/* </p> */}
                         </ModalBody>
                         <ModalFooter>
                             <Button
@@ -982,7 +888,6 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                             </Button>
                             <Button
                                 color="green"
-                                // onClick={(e) => setShowModalCode(false)}
                                 disabled={disabledButton ? true : false}
                                 onClick={(e) => {
                                     e.preventDefault()
@@ -1014,7 +919,6 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                         (
                                             <div className="flex w-full  items-center justify-center bg-grey-lighter hover:bg-grey-lighter" >
                                                 <label className="w-64 flex flex-col items-center  bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-white"
-                                                // style={{ backgroundColor: "red" }}
                                                 >
                                                     <svg className="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                                         style={{ color: "green" }}
@@ -1038,7 +942,6 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                                 (
                                                     <div className="flex w-full  items-center justify-center bg-grey-lighter hover:bg-grey-lighter" >
                                                         <label className="w-64 flex flex-col items-center  bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-white"
-                                                        // style={{ backgroundColor: "red" }}
                                                         >
                                                             <svg className="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                                                 style={{ color: "green" }}
@@ -1061,9 +964,7 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                 <div className="flex w-full items-center justify-center bg-grey-lighter hover:bg-grey-lighter mt-6 "
                                     ripple={"light"}
                                     onClick={(e) => {
-                                        // alert("helo")
                                         RemoveBackgroundPhoto()
-                                        // setStrategyImage(UnselectProfileImage.value)
                                         dispatch({ type: "SET_UNSELECT_PROFILE_IMAGE", payload: { value: "" } })
                                     }}
                                 >
@@ -1111,77 +1012,6 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                     </ModalFooter>
                 </form>
             </Modal>
-            {/* <ToastContainer /> */}
-            {/* ==========================NOTIFICATION======================= */}
-            {/* <Popover placement="bottom" ref={notification}>
-                <PopoverContainer>
-                    <PopoverHeader>Notifications</PopoverHeader>
-                    <PopoverBody>
-                        <Notification userLiked={likedUserDatails} socket={socket} SetNotificationLength={SetNotificationLength} />
-                    </PopoverBody>
-                </PopoverContainer>
-            </Popover>
-            <Popover placement="bottom" ref={message}>
-                <PopoverContainer>
-                    <PopoverHeader>Messages</PopoverHeader>
-                    <PopoverBody>
-                        <Messages message={UserInformationLoad?.message} socket={socket} />
-                    </PopoverBody>
-                </PopoverContainer>
-            </Popover>
-            <Popover placement="bottom" ref={friends}>
-                <PopoverContainer>
-                    <PopoverHeader className="bg-red-200">{receivedRequest !== undefined && receivedRequest.length > 0 ? "Friends Notification" : "No Notification: "}</PopoverHeader>
-                    <PopoverBody className=" px-0">
-                        <div className="wrap w-full">
-                            {
-                                // friendsRequest
-                                receivedRequest !== undefined &&
-                                receivedRequest.length > 0 && (
-                                    receivedRequest.map((item) => {
-                                        console.log({ item })
-                                        return (
-                                            <>
-                                                <FriendsNoti
-                                                    SenderRequestId={item._id}
-                                                    name={item.name}
-                                                    url={item.url}
-                                                    type={item.type}
-                                                    acceptRequest={acceptRequest}
-                                                    AcceptFriendRequest={AcceptFriendRequest}
-                                                    setAcceptRequest={setAcceptRequest}
-                                                    messageAftetAcceptRequest={messageAftetAcceptRequest}
-                                                    DeleteFriendRequest={
-                                                        DeleteFriendRequest
-                                                    } />
-                                            </>
-                                        )
-                                    }))
-                            }
-                            <section className='w-full bg-green-500 my-0'>
-                                {
-                                    // messageAftetAcceptRequest.length && messageAftetAcceptRequest.map((item) => {
-                                    //     return (
-                                    //         <>
-                                    //             <MessageAfterFriendRequestAccept item={item} />
-                                    //         </>
-                                    //     )
-                                    // })
-                                    [1, 2, 3, 4].map((item) => {
-                                        return (
-                                            <>
-                                                <MessageAfterFriendRequestAccept item={item} />
-                                            </>
-                                        )
-                                    })
-                                }
-                            </section>
-                        </div>
-                    </PopoverBody>
-                    <PopoverBody className="bg-blue-600">
-                    </PopoverBody>
-                </PopoverContainer>
-            </Popover> */}
         </>
     );
 }

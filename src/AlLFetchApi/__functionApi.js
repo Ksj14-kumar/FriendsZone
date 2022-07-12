@@ -11,14 +11,11 @@ const fetchApiFunction = {
         })
         return response
     },
-
     CopyPostLinkApi: async (payload) => {
         try {
-
             const res = await fetch(`${baseUrl}/blob/api/v1/_user/single/post/${payload.post}/`, {
                 method: "POST",
                 body: JSON.stringify(payload),
-
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('uuid')}`
@@ -30,7 +27,6 @@ const fetchApiFunction = {
             return err
         }
     }
-
 }
 
 

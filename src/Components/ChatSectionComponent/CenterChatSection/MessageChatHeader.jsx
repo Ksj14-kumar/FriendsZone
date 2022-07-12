@@ -6,20 +6,15 @@ import { BsArrowLeft, BsThreeDotsVertical } from 'react-icons/bs';
 import { IoSearchOutline } from "react-icons/io5"
 import { BiBlock } from "react-icons/bi"
 import { HiArrowSmDown, HiArrowSmUp } from "react-icons/hi"
-import img from '../../../assets/img/team-2-800x800.jpg';
 import Photo from "../../../assets/img/download.png"
 import { useHistory } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 function MessageChatHeader({ chatHeader, setVideoOverlay, q, RoomData, setRoomChatHeader, RoomChatHeader, groupMessageLoader, SingleChatLoader, setQuery, own, socket, setBlokedUser, blockUser }) {
-
     const history = useHistory()
     const HideThreeDotsComponent = useRef(null)
     const [isOnline, setOnline] = useState({ friendId: "", status: false })
     const [showThreeDotsComponent, setThreeDotsComponent] = useState(false)
     const [showHeaderSearchBar, setShowHeaderSearchBar] = useState(false)
-
-
-
     useEffect(() => {
         function HideThreeDotsComponent(e) {
             if (HideThreeDotsComponent.current && !HideThreeDotsComponent.current.contains(e.target)) {
@@ -31,20 +26,15 @@ function MessageChatHeader({ chatHeader, setVideoOverlay, q, RoomData, setRoomCh
             document.removeEventListener("click", HideThreeDotsComponent)
         }
     }, [HideThreeDotsComponent])
-
-
     useEffect(() => {
         socket?.emit("isUserOnline", { friendId: q, currentUser: own })
         socket?.on("isOnline", (data) => {
             setOnline(data)
         })
     }, [socket, q])
-
-
     return (
         <div>
             {
-                // <AnimatePresence initial={true}>
                 showHeaderSearchBar &&
                 <motion.div className='header search bar absolute z-[22] flex w-full h-[4.2rem] bg-[#b7b6b6]'
                     initial={{ opacity: 0 }}
@@ -70,16 +60,12 @@ function MessageChatHeader({ chatHeader, setVideoOverlay, q, RoomData, setRoomCh
                         <HiArrowSmDown className='text-[2.5rem] mr-2 cursor-pointer' />
                     </div>
                 </motion.div>
-                // </AnimatePresence>
-
             }
             <header className={`top_header   top flex justify-between bg-[#d6d6d6]    drop-shadow-lg   mds-editor23:w-full w-full py-3 relative md:py-2 ${q?.length === 9 ? "cursor-pointer" : ""}`}
                 disabled={q?.length === 9 ? true : false}
-
             >
                 {
                     // <AnimatePresence>
-
                     showThreeDotsComponent &&
                     <motion.div className="three_dots_components absolute top-[4.3rem] right-[2px] bg-[#fff] z-[19] w-[19rem] rounded-md p-3"
                         initial={{ x: 100 }}
@@ -91,12 +77,10 @@ function MessageChatHeader({ chatHeader, setVideoOverlay, q, RoomData, setRoomCh
                     </motion.div>
                     // </AnimatePresence>
                 }
-
                 <div className="left_t flex flex-4 justify-around items-center  ml-[0rem]"
                     onClick={() => {
                         (q?.length === 9 && !groupMessageLoader) &&
                             setRoomChatHeader(!RoomChatHeader)
-                        // setBool(true)
                     }}
                 >
                     <div className="arrow_left ml-[5px] w-[3rem] cursor-pointer md:hidden flex"
@@ -126,39 +110,28 @@ function MessageChatHeader({ chatHeader, setVideoOverlay, q, RoomData, setRoomCh
                                             alt=""
                                             className="flex-shrink-0 w-full h-full"
                                         />
-
                                     ))
                         }
-
                         {isOnline.friendId === q && isOnline.status && <div className="div bg-[#20fa08] h-[.7rem] w-[.7rem] rounded-full absolute top-[24px] right-0 animate-pulse border-[1px] border-solid border-[#ffff]"></div>}
                     </div>
-
                     <div className="top_center_header ml-[1rem] cursor-pointer  flex flex-col ">
-
                         <p className='text-[1.2-rem] tracking-wider font-medium font-serif text-[#1a1919] truncate'>{
-
                             SingleChatLoader ? "" : (q?.length !== 9 ? chatHeader !== undefined && chatHeader?.fname + " " + chatHeader?.lname : RoomData !== undefined ? RoomData.RoomName : "")
-
                         }
                             <br />
-
                             {
                                 q?.length === 9 &&
                                 <small classNAme="text-[1.2rem] tracking-wider text-semibold">Room</small>
-
                             }
-
                         </p>
                     </div>
                 </div>
                 {
-
                     q &&
                     <div className="right_top_header  mr-[.2rem]   flex  w-[10rem] px-2 items-center flex-[5] justify-end md:gap-x-4 gap-x-2">
                         <div className="video bg-[#fff] w-[2.7rem] h-[2.7rem] rounded-full flex justify-center items-center cursor-pointer"
                             onClick={(e) => {
                                 setVideoOverlay(true)
-
                             }}
                         >
                             <IoIosVideocam className="video_icon text-[1.8rem]  text-[#111363] hover:text-[#166a0b]" />
@@ -173,18 +146,10 @@ function MessageChatHeader({ chatHeader, setVideoOverlay, q, RoomData, setRoomCh
                         >
                             <BsThreeDotsVertical className='text-[1.3rem]  cursor-pointer' />
                         </div>
-
-
                     </div>
-
-
                 }
-
             </header >
-
-
         </div >
-
     )
 }
 
@@ -193,9 +158,6 @@ export default MessageChatHeader = React.memo(MessageChatHeader);
 function ChangeURL({ url }) {
     const [blob, setBlob] = useState("")
     const [loader, setLoader] = useState(false)
-
-
-
     useEffect(() => {
         async function loadImage() {
             setLoader(true)
@@ -211,9 +173,7 @@ function ChangeURL({ url }) {
             {
                 loader ? (
                     <div className="image_conta flex-shrink-0 w-full h-full bg-[#640303] animate-pulse rounded-full">
-
                     </div>
-
                 ) : (
                     <Image
                         src={blob}
@@ -238,7 +198,7 @@ function ThreeDotsComponents({ setShowHeaderSearchBar, showHeaderSearchBar, setT
                     text: "Search",
                     id: 1
                 }, {
-                    iconName: <BiBlock className={`text-[1.3rem] ${blockUser?"text-[#22dd2c]":"text-[#ca1212]"}`} />,
+                    iconName: <BiBlock className={`text-[1.3rem] ${blockUser ? "text-[#22dd2c]" : "text-[#ca1212]"}`} />,
                     text: `${blockUser ? "Unblock" : "Block"}`,
                     id: 2,
                 }
@@ -251,7 +211,7 @@ function ThreeDotsComponents({ setShowHeaderSearchBar, showHeaderSearchBar, setT
                                         setShowHeaderSearchBar(!showHeaderSearchBar)
                                         setThreeDotsComponent(false)
                                     }
-                                    else if (item.id ==2) {
+                                    else if (item.id == 2) {
                                         setBlokedUser(!blockUser)
                                     }
                                 }}
@@ -266,11 +226,8 @@ function ThreeDotsComponents({ setShowHeaderSearchBar, showHeaderSearchBar, setT
                                         item.text
                                     }
                                 </p>
-
                             </section>
                             <hr className='bg-[#c5c5c5]' />
-
-
                         </>
                     )
                 })

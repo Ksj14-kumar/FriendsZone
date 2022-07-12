@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import Axios from "axios"
 import CircleLoader from "../../Loader/CircleLoader"
-
 function ForwardMessagesComponent({ setShowForwardComponent, takeWholeMessageForforward, setWholeMessage }) {
     const [showSearchBar, setShowSearchBar] = useState(false)
     const [searchBarValue, setSearchBarValue] = useState([])
@@ -20,24 +19,13 @@ function ForwardMessagesComponent({ setShowForwardComponent, takeWholeMessageFor
             userFriends: state.UserInformationLoad.value
         }
     })
-
     function handleChange(value) {
-
         if (!checkBoxBool && value) {
             setSelectUsers([...selectUser, { friendId: value, currentUserId: userFriends?.googleId }])
         } else if (checkBoxBool) {
             setSelectUsers(selectUser.filter(item => item.friendId !== value))
         }
-
     }
-
-
-
-
-
-
-
-
     useEffect(() => {
         if (query.length > 0) {
             const filterFriends = userFriends.friends !== undefined && userFriends.friends.length > 0 && userFriends.friends.filter(item => {
@@ -46,12 +34,9 @@ function ForwardMessagesComponent({ setShowForwardComponent, takeWholeMessageFor
             setSearchBarValue(filterFriends)
         }
     }, [query])
-
-
     async function forwardMessage() {
         if (selectUser.length > 0) {
             try {
-
                 controller = new AbortController()
                 setLoader(true)
                 selectUser.forEach(async (item) => {
@@ -65,7 +50,6 @@ function ForwardMessagesComponent({ setShowForwardComponent, takeWholeMessageFor
                                 senderId: userFriends.googleId,
                                 forwarded: true
                             },
-
                             groupId: item
                         },
                         responseType: "json",
@@ -73,36 +57,20 @@ function ForwardMessagesComponent({ setShowForwardComponent, takeWholeMessageFor
                             "Content-Type": "application/json",
                             "Authorization": "Bearer " + localStorage.getItem("uuid"),
                         }
-
-
                     })
-
                 })
                 setLoader(false)
-
-
-
             } catch (err) {
-
             }
         }
     }
-
-
-    // console.log({ selectUser })
-
     return (
-
         <div className='absolute  w-full z-[19] bg-[#1111114d] md:h-[calc(100vh-8.8rem)] h-[calc(100vh-4.4rem)] px-[1rem] overflow-y-hidden'>
-
             <div className="formardCoponents relative top-[1%] bg-[#fff] w-full p-4 rounded-md drop-shadow-lg  ">
-
                 <header className='text-[1.2rem] font-thin tracking-wider font-serif mb-1 flex items-center relative'>
                     {<p className="text-[1.3rem] font-medium flex-[9]">
                         forward message
-
                     </p>
-
                     }
                     {showSearchBar &&
                         <motion.div className="search_wrapper absolute w-[88%] mds-editor6:mr-[1rem]"
@@ -114,22 +82,16 @@ function ForwardMessagesComponent({ setShowForwardComponent, takeWholeMessageFor
                                 onChange={(e) => {
                                     setQuery(e.target.value)
                                 }}
-
                             />
                         </motion.div>}
                     <div className="cona flex items-center flex-[3] 
                     justify-end">
-
-
                         <motion.p className='search mr-4 relative z-[20] cursor-pointer'
                             onClick={() => {
                                 setShowSearchBar(!showSearchBar)
                             }}
-
-
                         >
                             <MdSearch className="text-[2.1rem] text-[#727272] cursor-pointer" />
-
                         </motion.p>
                         <p className="bg-[#ccc]  rounded-full cursor-pointer hover:text-[#f91616] relative z-[19]  "
                             onClick={() => {
@@ -149,7 +111,6 @@ function ForwardMessagesComponent({ setShowForwardComponent, takeWholeMessageFor
                     {
                         query.length > 0 ?
                             (
-
                                 searchBarValue.length > 0 ? searchBarValue.map((item, index) => {
                                     return (
                                         <>
@@ -161,9 +122,6 @@ function ForwardMessagesComponent({ setShowForwardComponent, takeWholeMessageFor
                                         no user found
                                     </p>
                                 </div>
-
-
-
                             )
                             :
                             userFriends?.friends !== undefined && userFriends?.friends.map((item, index) => {
@@ -189,7 +147,6 @@ function ForwardMessagesComponent({ setShowForwardComponent, takeWholeMessageFor
                     </button>
                 </footer>
             </div>
-
         </div >
     )
 }
@@ -197,11 +154,6 @@ function ForwardMessagesComponent({ setShowForwardComponent, takeWholeMessageFor
 export default ForwardMessagesComponent;
 
 function FriendList({ item, handleChange, setCheckBox, checkBoxBool }) {
-
-
-
-
-
     return (
         <>
             <section className='py-1 rounded-md hover:bg-[#dfdfdf] mt-[4px] px-2'>
@@ -215,7 +167,6 @@ function FriendList({ item, handleChange, setCheckBox, checkBoxBool }) {
                                     handleChange(item._id)
                                     setCheckBox(!checkBoxBool)
                                 }}
-
                             />
                         </label>
                     </div>
@@ -233,11 +184,9 @@ function FriendList({ item, handleChange, setCheckBox, checkBoxBool }) {
                         </div>
                     </div>
                     <div className="p text-[1.3rem] tracking-wider truncate flex-[4] font-serif mds-editor6:ml-2">{item.name ? item.name : ""}</div>
-
                 </div>
             </section>
             <hr className='bg-[#b8b8b8] mt-[4px]' />
-
         </>
     )
 }

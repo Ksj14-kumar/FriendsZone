@@ -114,8 +114,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
 
   //update the comment
   const updateComment = async (text, commentId) => {
-    // console.log({ text, commentId })
-    // return
 
     try {
       const updateResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/update/comment/${commentId}`, {
@@ -162,15 +160,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
   }
 
 
-
-  //now get the all commnet using socket,io
-  // useEffect(() => {
-  //   socket?.off("getComments").on("getComments", (data) => {
-  //     console.log({ data })
-  //     setBackendComments([...backendComments, data])
-  //     // data.post_id === post_id && 
-  //   })
-  // }, [socket, backendComments, setCommentLength, setBackendComments, post_id])
 
   // ======================GET COMMENT LENGTH===================================
   useEffect(() => {
@@ -286,11 +275,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
     // }
   }, [post_id])
 
-
-  // console.log({ commentToggle })
-  // console.log({ rootComments })
-  // console.log({ backendComments })
-  // console.log({ backendComments })
 
 
   return (

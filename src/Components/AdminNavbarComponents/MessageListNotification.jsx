@@ -5,13 +5,9 @@ import { NavLink } from 'react-router-dom'
 import React from 'react'
 import { useDispatch } from "react-redux"
 function MessageListNotification({ item, setMessengerComponent, setArrivalMessageNotification, theme }) {
-
-
     const dispatch = useDispatch()
-
     return (
         <>
-
             {
                 item?.type === "friend" ?
                     (
@@ -23,7 +19,6 @@ function MessageListNotification({ item, setMessengerComponent, setArrivalMessag
                                 }}
                             >
                                 <NavLink to={`/messages?q=${item._id}`}>
-
                                     <div className="__wrapper flex">
                                         <section className="_profile flex w-[2.7rem] h-[2.7rem] flex-shrink-0 flex-[2] rounded-full items-center justify-center">
                                             {
@@ -46,7 +41,6 @@ function MessageListNotification({ item, setMessengerComponent, setArrivalMessag
                                         </section>
                                     </div>
                                 </NavLink>
-
                             </div>
                             <hr className='bg-[#e3e1e1]' />
                         </>
@@ -73,12 +67,10 @@ function MessageListNotification({ item, setMessengerComponent, setArrivalMessag
                                                     rounded={true}
                                                     className="w-[3rem] h-[3rem] flex-shrink-0 rounded-full"
                                                 />}
-
                                         </section>
                                         <section className="text_message894 flex flex-[10] flex-col w-full  pl-2">
                                             <p className='text-[1.4rem] font-medium tracking-wider font-serif  w-full truncate'>{item.name}</p>
                                             <div className="wrapper589 flex  w-full py-1 items-center justify-between">
-
                                                 <p className='text-[1.1rem]  tracking-wider font-sans'>
                                                     send a new message
                                                 </p>
@@ -94,7 +86,6 @@ function MessageListNotification({ item, setMessengerComponent, setArrivalMessag
                         </>
                     )
             }
-
         </>
     )
 }

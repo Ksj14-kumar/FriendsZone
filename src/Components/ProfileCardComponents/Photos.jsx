@@ -1,17 +1,12 @@
 import React from 'react'
-
 import Photos from '../UserPhotos/Photos';
-function Photos1() {
+function Photos1({assests}) {
   return (
     <>
       <div className="container1  flex flex-wrap justify-center">
-        <Photos />
-
+        <Photos assests={assests}/>
       </div>
-
-
     </>
-
   )
 }
 

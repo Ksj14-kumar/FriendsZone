@@ -1,13 +1,9 @@
 import React, { useState } from 'react'
-
 function StickerComponent() {
     const [Stickers, setStickers] = useState([])
     const [inputValue, setSearchInputValue]= useState("")
-
-
     async function Getstickers() {
         const res = await fetch(`https://messenger.stipop.io/v1/search?userId=693598975&q=${inputValue}&lang=en&pageNumber=1&limit=10`, {
-            // b10c4679cc70a403eefdbe2075846c55
             headers: {
                 "apikey": ""
             }
@@ -15,15 +11,12 @@ function StickerComponent() {
         const data = await res.json()
         setStickers(data.body.stickerList)
     }
-
-    console.log(Stickers)
     return (
         <>
             <div className="w-full bg-green max-h-[25rem]">
                 <input type="text" name="" id=""
                     onChange={(e) => {
                         setSearchInputValue(e.target.value)
-                        
                     }}
                 />
                 <button className="btn px-4 py-2 text-white bg-[#620101]"
@@ -32,7 +25,6 @@ function StickerComponent() {
                     }}
                 >Get</button>
                 <div className="Sticker_group overflow-auto">
-
                     {
                         Stickers !== null && Stickers.map((item, index) => {
                             return (
@@ -41,7 +33,6 @@ function StickerComponent() {
                         })
                     }
                 </div>
-
             </div>
         </>
     )

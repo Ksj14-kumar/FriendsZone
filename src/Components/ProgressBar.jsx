@@ -3,10 +3,8 @@ import Progress from "@material-tailwind/react/Progress";
 
 export default function ProgressBar(props) {
     return (
-
         <>
             <h3 style={{ color: "white", textAlign: "center", fontSize: "1rem", 
-            
             marginBottom: ".5rem",
              backgroundColor:props.bgColor,
               borderRadius: "15px",

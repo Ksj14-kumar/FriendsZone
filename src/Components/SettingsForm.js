@@ -5,26 +5,17 @@ import Button from '@material-tailwind/react/Button';
 import Input from '@material-tailwind/react/Input';
 import Textarea from '@material-tailwind/react/Textarea';
 import React from 'react'
-// import Radio from "@material-tailwind/react/Radio"
-
 import { ToastContainer, toast } from 'react-toastify';
 import Icon from '@material-tailwind/react/Icon';
 import ProfileCreateLoader from '../Loader/ProfileCreateLoader';
 import { useDispatch, useSelector } from 'react-redux';
-
-
-
-export default function SettingsForm() {
+export default function SettingsForm({ theme }) {
     const [loader, setLoader] = React.useState(false)
-
     const dispatch = useDispatch()
-
-
     const url = useSelector((state) => {
         return state.ShowImage.value
     })
     const _id = localStorage.getItem("uuid")
-
     const [UserProfileInformationm, setUserProfileInformationm] = React.useState({
         username: "",
         fname: "",
@@ -39,53 +30,37 @@ export default function SettingsForm() {
         degree: "",
         position: "",
         aboutMe: ""
-
-
-
     })
-
-
-
     let name, value;
     function InputHandleValue(e) {
         e.preventDefault()
         name = e.target.name
         value = e.target.value
         setUserProfileInformationm({ ...UserProfileInformationm, [name]: value })
-
     }
-
     async function SubmitInfo(e) {
         e.preventDefault()
         const { username, fname, lname, gender, address, city, country, postalCode, aboutMe, college, stream, degree, position } = UserProfileInformationm
-
         if (!username || !fname || !lname || !gender || !address || !city || !country || !postalCode || !aboutMe || !college || !stream || !degree || !position) {
             error({ message: "Please fill all the fields" })
             return
-
         }
-
         else {
             setLoader(true)
-            // ${process.env.REACT_APP_API_BACKENDURL}
-            console.log({ UserProfileInformationm })
-            const UserProfileInformation={
-                username:await titleCase(UserProfileInformationm.username),
-                fname:await titleCase(UserProfileInformationm.fname),
-                lname:await titleCase(UserProfileInformationm.lname),
-                position:await titleCase(UserProfileInformationm.position),
-                aboutMe:await titleCase(UserProfileInformationm.aboutMe),
-                stream:await titleCase(UserProfileInformationm.stream),
-                degree:await titleCase(UserProfileInformationm.degree),
-                postalCode:await titleCase(UserProfileInformationm.postalCode),
-                city:await titleCase(UserProfileInformationm.city),
-                country:await titleCase(UserProfileInformationm.country),
-                college:await titleCase(UserProfileInformationm.college),
-                address:await titleCase(UserProfileInformationm.address),
-                gender:await titleCase(UserProfileInformationm.gender)
-
-
-
+            const UserProfileInformation = {
+                username: await titleCase(UserProfileInformationm.username),
+                fname: await titleCase(UserProfileInformationm.fname),
+                lname: await titleCase(UserProfileInformationm.lname),
+                position: await titleCase(UserProfileInformationm.position),
+                aboutMe: await titleCase(UserProfileInformationm.aboutMe),
+                stream: await titleCase(UserProfileInformationm.stream),
+                degree: await titleCase(UserProfileInformationm.degree),
+                postalCode: await titleCase(UserProfileInformationm.postalCode),
+                city: await titleCase(UserProfileInformationm.city),
+                country: await titleCase(UserProfileInformationm.country),
+                college: await titleCase(UserProfileInformationm.college),
+                address: await titleCase(UserProfileInformationm.address),
+                gender: await titleCase(UserProfileInformationm.gender)
             }
             const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/user/i/b/y9y5y0q3eztm3ibcd8z0/bum6ozd9m1sw4w9fbxea/amqvdkbe49sn4u3cvsvt/e5ce6ba3miamapdl7wyv/`, {
                 method: "PUT",
@@ -93,12 +68,8 @@ export default function SettingsForm() {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + localStorage.getItem("uuid"),
-
                 },
-
-
             })
-
             const resData = await res.json()
             if (res.status === 200) {
                 dispatch({ type: "USERINFO_LOAD", payload: resData.data })
@@ -120,20 +91,14 @@ export default function SettingsForm() {
                     position: ""
                 })
             }
-
             else {
                 error({ message: resData.message })
                 setLoader(false)
             }
-
         }
-
-
     }
-
-
     return (
-        <Card>
+        <Card className={`${theme ? "bg-black" : "bg-white"}`}>
             <CardHeader color="purple" contentPosition="none" className="overflow-hidden">
                 <div className="w-full flex items-center justify-between">
                     <h2 className="text-white text-2xl ">User Details</h2>
@@ -160,34 +125,37 @@ export default function SettingsForm() {
                                 name="username"
                                 outline={true}
                                 placeholder="Username"
+                                className={`placeholder:bg-[#fff] text-[#fff]`}
                                 value={UserProfileInformationm.username}
-
                                 onChange={InputHandleValue}
                             />
                         </div>
                         <div className="w-full lg:w-6/12 pl-4 mb-10 font-light">
                             <div className="form-check">
                                 <div className='male flex'>
-                                    <input className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 my-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="radio" name="gender"
+                                    {/* <input className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 my-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="radio" name="gender"
                                         id="flexRadioDefault10"
                                         value="Male"
                                         onChange={InputHandleValue}
-
+                                    /> */}
+                                    <input type="radio" name="radio-3" className="mr-1 mb-2 radio radio-secondary"
+                                        value="Male"
+                                        id="flexRadioDefault10"
+                                        onChange={InputHandleValue}
                                     />
                                     <p className="text-[#D1D1D1]">Male</p>
-
-
                                 </div>
-
                                 <div className='female flex'>
-
-                                    <input className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 my-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="radio" name="gender" id="flexRadioDefault10"
+                                    {/* <input className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 my-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="radio" name="gender" id="flexRadioDefault10"
                                         value="Female"
                                         onChange={InputHandleValue}
-
+                                    /> */}
+                                    <input type="radio" name="radio-3" className="mr-1  radio radio-secondary"
+                                    id="flexRadioDefault10"
+                                        value="Female"
+                                        onChange={InputHandleValue}
                                     />
                                     <p className="text-[#D1D1D1]" >Female</p>
-
                                 </div>
                             </div>
                         </div>
@@ -197,13 +165,8 @@ export default function SettingsForm() {
                                 color="purple"
                                 outline={true}
                                 value={UserProfileInformationm.fname}
-
                                 name="fname"
-
-
                                 onChange={InputHandleValue}
-
-
                                 placeholder="First Name"
                             />
                         </div>
@@ -214,19 +177,13 @@ export default function SettingsForm() {
                                 outline={true}
                                 value={
                                     UserProfileInformationm.lname
-
                                 }
                                 name="lname"
-
-
                                 onChange={InputHandleValue}
-
-
                                 placeholder="Last Name"
                             />
                         </div>
                     </div>
-
                     <h6 className="text-purple-800 text-sm my-6  uppercase underline">
                         Contact Information
                     </h6>
@@ -238,14 +195,9 @@ export default function SettingsForm() {
                                 outline={true}
                                 value={
                                     UserProfileInformationm.address
-
                                 }
                                 name="address"
-
-
                                 onChange={InputHandleValue}
-
-
                                 placeholder="Address"
                             />
                         </div>
@@ -256,14 +208,9 @@ export default function SettingsForm() {
                                 outline={true}
                                 value={
                                     UserProfileInformationm.city
-
                                 }
                                 name="city"
-
-
                                 onChange={InputHandleValue}
-
-
                                 placeholder="City"
                             />
                         </div>
@@ -274,14 +221,9 @@ export default function SettingsForm() {
                                 outline={true}
                                 value={
                                     UserProfileInformationm.country
-
                                 }
                                 name="country"
-
-
                                 onChange={InputHandleValue}
-
-
                                 placeholder="Country"
                             />
                         </div>
@@ -292,19 +234,13 @@ export default function SettingsForm() {
                                 outline={true}
                                 value={
                                     UserProfileInformationm.postalCode
-
                                 }
                                 name="postalCode"
-
-
                                 onChange={InputHandleValue}
-
-
                                 placeholder="Postal Code"
                             />
                         </div>
                     </div>
-
                     <h6 className="text-purple-800 text-sm my-6  uppercase underline">
                         Education
                     </h6>
@@ -316,15 +252,9 @@ export default function SettingsForm() {
                                 outline={true}
                                 value={
                                     UserProfileInformationm.college
-
                                 }
-
                                 name="college"
-
-
                                 onChange={InputHandleValue}
-
-
                                 placeholder="College/University"
                             />
                         </div>
@@ -335,15 +265,9 @@ export default function SettingsForm() {
                                 outline={true}
                                 value={
                                     UserProfileInformationm.stream
-
                                 }
                                 name="stream"
-
-
-
                                 onChange={InputHandleValue}
-
-
                                 placeholder="Stream"
                             />
                         </div>
@@ -354,26 +278,16 @@ export default function SettingsForm() {
                                 outline={true}
                                 value={
                                     UserProfileInformationm.degree
-
                                 }
-
                                 name="degree"
-
-
                                 onChange={InputHandleValue}
-
-
                                 placeholder="Degree"
                             />
                         </div>
-
                     </div>
-
-
                     <h6 className="text-purple-800 text-sm my-6  uppercase underline">
                         Position
                     </h6>
-
                     <div className="w-full lg:w-4/12 px-4 mb-10 font-light">
                         <Input
                             type="text"
@@ -381,21 +295,12 @@ export default function SettingsForm() {
                             outline={true}
                             value={
                                 UserProfileInformationm.position
-
                             }
-
                             name="position"
-
-
                             onChange={InputHandleValue}
-
-
                             placeholder="Eg. Solution Manager/Student"
                         />
                     </div>
-
-
-
                     <h6 className="text-purple-800 text-sm my-6  uppercase underline">
                         About Me
                     </h6>
@@ -404,19 +309,11 @@ export default function SettingsForm() {
                             onChange={InputHandleValue}
                             value={
                                 UserProfileInformationm.aboutMe
-
                             }
                             name="aboutMe"
-
-
-
                             outline={true} />
                     </div>
-
-
-
                     <div className='container mt-[2rem]'>
-
                         <Button
                             color="lightBlue"
                             buttonType="filled"
@@ -433,10 +330,7 @@ export default function SettingsForm() {
                                     "Create Profile"
                             }
                         </Button>
-
                     </div>
-
-
                 </form>
             </CardBody>
             <ToastContainer />
@@ -457,11 +351,9 @@ function error(props) {
         progress: undefined,
         theme: "colored"
     });
-
     notify()
     return (
         <div>
-
             <ToastContainer />
         </div>
     );
@@ -480,11 +372,9 @@ async function success(props) {
         progress: undefined,
         theme: "colored"
     });
-
     notify()
     return (
         <div>
-
             <ToastContainer />
         </div>
     );
@@ -495,7 +385,7 @@ async function success(props) {
 function titleCase(str) {
     str = str.toLowerCase().split(' ');
     for (var i = 0; i < str.length; i++) {
-      str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+        str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
     }
     return str.join(' ');
-  }
+}

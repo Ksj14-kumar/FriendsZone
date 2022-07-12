@@ -1,21 +1,18 @@
 import React from 'react'
 import AdminNavbar from '../Components/AdminNavbar';
+import InternetDetection from '../Components/InternetDetection';
 import SettingsForm from '../Components/SettingsForm';
 
-function UpdateProfile() {
+function UpdateProfile({ theme }) {
     return (
-
-
         <>
-
             {/* <AdminNavbar /> */}
-            <div className="container` md:ml-[20rem] mt-[7rem]  md:mr-[5rem] mx-[2rem]">
-                <SettingsForm />
 
+            <InternetDetection />
+            <div className="container` md:ml-[20rem] pt-[6rem]  md:mr-[5rem] mx-[2rem]">
+                <SettingsForm theme={theme} />
             </div>
-
         </>
-
     )
 }
 

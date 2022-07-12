@@ -129,12 +129,11 @@ const Comment = ({
                     {/* comment-author text-[1.1rem] font-medium mds-editor28:text-[1.2rem] mds-editor6:text-[.9rem] */}
                     {!isEditing &&
                         <div className={`w-full overflow-hidden flex flex-wrap pl-[0rem] mds-editor33:pl-[.1rem] mds-editor33:pr-[1.5rem] break-all  ${comment.parentId !== null && "pl-[0rem] mds-editor33:pl-[1.3rem] mds-editor33:pr-[2rem]"}`}>
-                            {comment.type === "text" ? <div className={`comment-text ml-2  font-serif tracking-wider w-full flex flex-wrap break-all ${theme?"text-[#fff]":"text-[#fff]"}`}
+                            {comment.type === "text" ? <div className={`comment-text ml-2  font-serif tracking-wider w-full flex flex-wrap break-all ${theme?"text-[#fff]":"text-[#111]"}`}
                                 dangerouslySetInnerHTML={{ __html: convertToLink(comment.body) }}
                             ></div> : (
                                 comment.type === "gif" &&
                                 <div className={`${comment.parentId !== null && "pr-1"} w-full`}>
-
                                     <Image src={GifURL} className=" w-[15rem] mds-editor28:w-[10rem]"
 
                                     />
@@ -157,7 +156,6 @@ const Comment = ({
                         comment
                         initialText={comment?.body}
                         handleSubmit={(value) => {
-                            // console.log({ text })
                             updateComment(value, comment.uuid)
                         }}
                         handleCancel={() => {
@@ -264,7 +262,6 @@ const Comment = ({
                             theme={theme}
                             handleSubmit={(value) => {
                                 addComment(value, replyId, comment.userId)
-                                // console.log({ text })
                             }}
                         />
                     </div>

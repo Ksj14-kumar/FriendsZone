@@ -9,10 +9,8 @@
 // import NavLink from "@material-tailwind/react/NavLink";
 // import Icon from "@material-tailwind/react/Icon";
 // import NavItem from "@material-tailwind/react/NavItem";
-
 // export default function Header1() {
 //   const [openNavbar, setOpenNavbar] = useState(false);
-
 //   return (
 //     <Navbar color="lightBlue" navbar>
 //         <NavbarContainer>
@@ -24,7 +22,6 @@
 //                     ripple="light"
 //                 />
 //             </NavbarWrapper>
-
 //             <NavbarCollapse open={openNavbar}>
 //                 <Nav className="flex  md:flex-row ">
 //                     <NavItem active="light" ripple="light">

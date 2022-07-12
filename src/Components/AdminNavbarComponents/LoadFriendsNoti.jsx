@@ -6,7 +6,6 @@ import Photos from "../../assets/img/download.png"
 
 
 function LoadFriendsNoti({ item, AcceptFriendRequest, DeleteFriendRequest, theme }) {
-
     return (
         <>
             <section className={`flex flex-col  ${theme ? "hover:bg-[#424242]" : "hover:bg-[#cfcfcf71]"}  rounded-md py-[.5rem] transition-all duration-100 `}>
@@ -51,7 +50,6 @@ function LoadFriendsNoti({ item, AcceptFriendRequest, DeleteFriendRequest, theme
                             onClick={(e) => {
                                 e.preventDefault()
                                 AcceptFriendRequest(item._id, item.name, item.url)
-                                // setAcceptRequest(true)
                             }}
                         >
                             Accept
@@ -73,18 +71,8 @@ function LoadFriendsNoti({ item, AcceptFriendRequest, DeleteFriendRequest, theme
                         </Button>
                     </div>
                 </>
-
-
             </section>
-
-
-
-
-
         </>
     )
 }
-
-
-
 export default LoadFriendsNoti = React.memo(LoadFriendsNoti)

@@ -12,7 +12,6 @@ import Icon from "@material-tailwind/react/Icon";
 
 export default function Header1() {
   const [openNavbar, setOpenNavbar] = useState(false);
-
   return (
     <Navbar color="lightBlue" navbar>
         <NavbarContainer>
@@ -24,7 +23,6 @@ export default function Header1() {
                     ripple="light"
                 />
             </NavbarWrapper>
-
             <NavbarCollapse open={openNavbar}>
                 <Nav>
                     <NavItem active="light" ripple="light">

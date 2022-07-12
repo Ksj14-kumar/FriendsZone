@@ -1,31 +1,17 @@
 import React, { useEffect, useState } from 'react'
-
-import { useSelector} from "react-redux"
-
+import { useSelector } from "react-redux"
 import { TailSpin } from 'react-loader-spinner'
 import AllFriendsBeforeSearch from './AllFriendsBeforeSearch'
 import AllFriendsAfterSearch from './AllFriendsAfterSearch'
 import { motion } from "framer-motion"
-
-
-
 function SearchFriendsForGroupChat({ setModalForFriends, RoomData, setGroupMembers }) {
-
     const [query, setQuery] = useState("")
     const [friends, setFriends] = useState([])
     const [friendsLoad, setFriendsload] = useState([])
-
     const [friendsLoader, setFriendsLoader] = useState(false)
-
-
-
-
-
     const UserInformationLoad = useSelector((state) => {
         return state.UserInformationLoad.value
     })
-
-
     useEffect(() => {
         const get_Friends_users_Details = async () => {
             try {
@@ -33,14 +19,11 @@ function SearchFriendsForGroupChat({ setModalForFriends, RoomData, setGroupMembe
                     return friend.name.toLowerCase().includes(query.toLowerCase())
                 })
                 setFriends(filter_Users)
-
             } catch (err) {
-                console.warn(err)
             }
         }
         get_Friends_users_Details()
     }, [query])
-
     useEffect(() => {
         const get_Friends_users_Details = async () => {
             try {
@@ -50,8 +33,6 @@ function SearchFriendsForGroupChat({ setModalForFriends, RoomData, setGroupMembe
                     body: JSON.stringify({
                         Id_to_fetch: UserInformationLoad?._id,
                         roomId: RoomData._id,
-
-
                     }),
                     headers: {
                         "Content-Type": "application/json",
@@ -68,15 +49,10 @@ function SearchFriendsForGroupChat({ setModalForFriends, RoomData, setGroupMembe
                     setFriendsLoader(false)
                 }
             } catch (err) {
-                console.warn(err)
             }
         }
         get_Friends_users_Details()
-
     }, [])
-
-
-    console.log({ query, friendsLoad })
     return (
         <>
             <motion.div
@@ -91,9 +67,7 @@ function SearchFriendsForGroupChat({ setModalForFriends, RoomData, setGroupMembe
                                 setModalForFriends(false)
                             }}
                         >X</button>
-
                     </header>
-
                     <div className="search_fields  px-[1rem] mb-2 flex w-full">
                         <input type="text" placeholder="Search"
                             className="search_input focus:outline-none rounded-md w-full h-[2.7rem] indent-4 text-[1.3rem] font-serif tracking-wider"
@@ -105,7 +79,6 @@ function SearchFriendsForGroupChat({ setModalForFriends, RoomData, setGroupMembe
                     </div>
                     <hr className="" />
                     <div className="userFriends h-full  overflow-y-auto px-[1rem]" id="add_group_friends">
-
                         {
                             query.length > 0 && (friends !== undefined && friends.map((item) => {
                                 return (
@@ -120,16 +93,8 @@ function SearchFriendsForGroupChat({ setModalForFriends, RoomData, setGroupMembe
                                 )
                             }))
                         }
-
-
-
                     </div>
-
-
-
                 </div>
-
-
             </motion.div>
         </>
     )
@@ -141,11 +106,8 @@ function Loader() {
     return (
         <>
             <div className="loader_sp w-full h-full flex justify-center items-center">
-                {/* F2EBE9 */}
-                {/* 00BFFF */}
                 <TailSpin color="#F2EBE9" height={80} width={80} />
             </div>
-
         </>
     )
 }

@@ -12,7 +12,6 @@ import ModalBody from "@material-tailwind/react/ModalBody";
 import ModalFooter from "@material-tailwind/react/ModalFooter";
 import ProfileLoader from '../../Loader/ProfileLoader';
 import DefaultProfile from "../../assets/img/download.png"
-
 import Icon from "@material-tailwind/react/Icon";
 import ProgressBar from '../ProgressBar';
 import SelectedImageShowWithURL from './SelectedImageShowWithURL';
@@ -30,29 +29,18 @@ import { IoVideocam } from 'react-icons/io5';
 
 function useOutsideAlerter(ref, setTextAreaValue, dispatch, setUrlOfImageUpload, setPostLoader) {
     useEffect(() => {
-        /**
-         * Alert if clicked on outside of element
-         */
         function handleClickOutside(event) {
             if (ref.current && !ref.current.contains(event.target)) {
-                // alert("You clicked outside of me!");
-                // console.log("click outside the woindow")
-                // setTextAreaValue("")
-                // setUrlOfImageUpload("")
-                // dispatch({ type: "UNSELECT_POST_IMAGE", payload: "" })
                 setPostLoader(false)
             }
         }
-        // Bind the event listener
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
-            // Unbind the event listener on clean up
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [ref, setPostLoader]);
 }
-function AddPost({ setAllPosts, socket,theme }) {
-    //all state start
+function AddPost({ setAllPosts, socket, theme }) {
     const wrapperref = React.useRef()
     const [showModal, setShowModalCode] = React.useState(false);
     const [showModalVideo, setShowModalCodeVideo] = React.useState(false);
@@ -79,7 +67,6 @@ function AddPost({ setAllPosts, socket,theme }) {
     const VideoModelRef = React.useRef()
     //all reducer start from here
     const dispatch = useDispatch()
-
     const DispatchProfileImage = useSelector((state) => {
         return state.ShowImage.value
     })
@@ -90,23 +77,17 @@ function AddPost({ setAllPosts, socket,theme }) {
     const UnselectPostImage = useSelector((state) => {
         return state.UnselectPostImage.value
     })
-
-
     const loader = useSelector((state) => {
         return state.LoaderRedux
     })
-
     const OriginalProfileURL = useSelector((state) => {
         return state.OriginalProfileURL
     })
-    // OriginalProfileURL
-    // const {_id}= UserStillLogin
     const _id = localStorage.getItem("uuid")
     const { fname, lname } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "" }
     const name = `What is your in mind Today ? ${fname ? fname.toLowerCase() : "NA"}`
     const name1 = `Say Something About your post if.  👀   ${fname ? fname.toLowerCase() : "NA"}`
     const name2 = `Say Something About your video if.   ${fname ? fname.toLowerCase() : "NA"}`
-
     let signal;
     let controller = new AbortController()
     signal = controller.signal
@@ -114,15 +95,12 @@ function AddPost({ setAllPosts, socket,theme }) {
     // ====================================================selected mixed post=======================
     function SelectImage(e) {
         const file = e.target.files[0]
-        // console.log("user selected post", file)
         if (file.size < 104857600) {
-            // set the size limit to 16MB
             if (file.type === "image/jpeg" || file.type === "image/png" || file.type === "image/jpg" || file.type === "image/*" || file.type === "video/*" || file.type === "video/mp4") {
                 if (file.type === "video/mp4") {
                     dispatch({ type: "SELECT_POST_VIDEO", payload: "video" })
                     setFileType("video")
                     const createImageURL = URL.createObjectURL(file)
-                    // console.log("createImageURL", createImageURL)
                     setImageAsUrl(createImageURL)
                     setUrlOfImageUpload(createImageURL)
                     dispatch({ type: "SELECTED_POST_IMAGE", payload: createImageURL })
@@ -136,7 +114,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                     dispatch({ type: "SELECT_POST_VIDEO", payload: "image" })
                     setFileType("image")
                     const createImageURL = URL.createObjectURL(file)
-                    // console.log("createImageURL", createImageURL)
                     setImageAsUrl(createImageURL)
                     setUrlOfImageUpload(createImageURL)
                     dispatch({ type: "SELECTED_POST_IMAGE", payload: createImageURL })
@@ -177,7 +154,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                 setFileType("video")
                 setFile(videoRef.current.value)
                 const createImageURL = URL.createObjectURL(file)
-                // console.log("createImageURL", createImageURL)
                 setImageAsUrl(createImageURL)
                 setUrlOfImageUpload(createImageURL)
                 dispatch({ type: "SELECTED_POST_IMAGE", payload: createImageURL })
@@ -189,37 +165,29 @@ function AddPost({ setAllPosts, socket,theme }) {
                 return
             }
             else {
-                // console.log("video", videoRef.current.value)
                 setTextAreaValue("")
                 videoRef.current.value = ""
                 error({ message: "please select only video" })
                 setFile(videoRef.current.value)
-                // console.log("video2", videoRef.current.value)
                 return
-                // alert("please seletc only video")
             }
         }
         else {
-            // console.log("video", videoRef.current.value)
             error({ message: "file size is too large" })
             videoRef.current.value = ""
             setTextAreaValue("")
-            // console.log("video2", videoRef.current.value)
             setFile(videoRef.current.value)
         }
     }
     // ======================================SELECTE THE PHOTOS POST===============================
     function SelectPhotos(e) {
         const file = e.target.files[0]
-        // console.log("user selected post", file)
         if (file.size < 104857600) {
-            // set the size limit to 16MB
             if (file.type === "image/jpeg" || file.type === "image/png" || file.type === "image/jpg" || file.type === "image/*") {
                 dispatch({ type: "SELECT_POST_VIDEO", payload: "image" })
                 setFileType("image")
                 setFile(photosRef.current.value)
                 const createImageURL = URL.createObjectURL(file)
-                // console.log("createImageURL", createImageURL)
                 setImageAsUrl(createImageURL)
                 setUrlOfImageUpload(createImageURL)
                 dispatch({ type: "SELECTED_POST_IMAGE", payload: createImageURL })
@@ -259,33 +227,26 @@ function AddPost({ setAllPosts, socket,theme }) {
     //Upload the post---------------------------------------To the server-------------
     async function SubmitPost(e) {
         if (!textareaValue && !UnselectPostImage) {
-
             return
         }
         else {
-
             setDisabledGroup(true)
             setDisabledPhotos(true)
             setDisabledText(true)
             setDisabledVideo(true)
             setPostLoader(true)
             setDisabledGroup(true)
-            // /api/v1/_user/single/post/
-            // local/url/
             const SaveUserPostIntoDb = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/api/v1/_user/single/post/`, {
                 method: "POST",
                 signal: signal,
                 body: JSON.stringify({
                     text: textareaValue,
-                    // image: ImageAsUrl,
                     image: userPost,
                     privacy: PrivateOrPublic,
                     post_id: uuidv4(),
                     fileType: fileType,
                     name: fname + " " + lname,
-                    // userProfileImageUrl: DispatchProfileImage,
                     userProfileImageUrl: OriginalProfileURL,
-                    // likes_count: 100,
                     time: Date.now(),
                     uuid: _id
                 }),
@@ -294,10 +255,7 @@ function AddPost({ setAllPosts, socket,theme }) {
                     "Authorization": `Bearer ${localStorage.getItem("uuid")}`
                 }
             })
-            // const { status, data } = SaveUserPostIntoDb
             const SaveUserPostIntoDbJson = await SaveUserPostIntoDb.json()
-            // setTextAreaValue("")
-            // const SaveUserPostIntoDbJson = await SaveUserPostIntoDb.json()
             if (SaveUserPostIntoDb.status === 200) {
                 success({ message: "posted successfully" })
                 setDisabledGroup(false)
@@ -305,38 +263,17 @@ function AddPost({ setAllPosts, socket,theme }) {
                 setDisabledText(false)
                 setDisabledVideo(false)
                 setPostLoader(false)
-
                 dispatch({ type: "UNSELECT_POST_IMAGE", payload: "" })
                 setTextAreaValue("")
                 setFileType("")
                 setTextAreaValue("")
                 setPost("")
-
                 //==========================================SEND ALL POSTS USING REDUX =================
-                // dispatch({
-                //     type: "LOAD_POSTS",
-                //     payload: SaveUserPostIntoDbJson.data
-                // })
-
-                //SEND POST USING SOCKET.IO 
-                // if (socket.connected) {
-                //     // SaveUserPostIntoDbJson.data
-
-                //     socket?.emit("Send_Posts", SaveUserPostIntoDbJson.data)
-                // }
-                // else {
                 setAllPosts((prev) => {
-
                     return prev ? [SaveUserPostIntoDbJson.data, ...prev] : [SaveUserPostIntoDbJson.data]
                 })
                 // }
-
-
-                // window.location.reload()
-
-
             }
-
             else if (SaveUserPostIntoDb.status === 500) {
                 error({ message: SaveUserPostIntoDbJson.message })
                 setDisabledGroup(false)
@@ -348,21 +285,8 @@ function AddPost({ setAllPosts, socket,theme }) {
             }
             else if (SaveUserPostIntoDb.status !== 200 && SaveUserPostIntoDb.status !== 500) {
                 setPost("")
-                // Error({ message: "This Post is Already exit.." })
-
-                // inputFileRef.current.value = ""
-                // videoRef.current.value = ""
-                // textRef.current.value = ""
-                // photosRef.current.value = ""
-                // setTextAreaValue("")
-                // setPostLoader(false)
-                // setFile(inputFileRef.current.value)
-                // setFile(photosRef.current.value)
-                // setFile(videoRef.current.value)
-                // setFile(textRef.current.value)
                 setDisabledGroup(false)
                 setDisabledPhotos(false)
-
                 setDisabledText(false)
                 setDisabledVideo(false)
                 setTextAreaValue("")
@@ -373,25 +297,19 @@ function AddPost({ setAllPosts, socket,theme }) {
     function GetPrivatORPublic(e) {
         setPrivateOrPublic(e.target.value)
     }
-    //clear the content of each model when user click outside of the model
     useEffect(() => {
         if ((VideoModelRef.current.contains(document.activeElement) === false) || (photosRef.current.contains(document.activeElement) === false)
             || (textRef.current.contains(document.activeElement) === false) || (wrapperref.current.contains(document.activeElement) === false)
         ) {
-
             setDisabledGroup(false)
             setDisabledPhotos(false)
             setDisabledText(false)
             setDisabledVideo(false)
-            // alert("click")
-            // profileInput.current.value = null
             dispatch({ type: "SELECTED_POST_IMAGE", payload: "" })
             dispatch({ type: "UNSELECT_POST_IMAGE", payload: "" })
             setTextAreaValue("")
             setPostLoader(false)
-            //abort the request
             controller.abort()
-
         }
     }, [showModalPhoto, showModal, showModalVideo, showModalText, dispatch])
     //============================================MODAL FOR Photos===================
@@ -399,57 +317,53 @@ function AddPost({ setAllPosts, socket,theme }) {
         <>
             <div className="post-card flex justify-around relative">
                 {/* ===================POST CARD PAGE ========================*/}
-                <Card className={`inner-post-card  shadow-lg h-[12rem] ${theme?"bg-[#272727] drop-shadow-lg":"bg-[#fff]"}`}>
-
+                <Card className={`inner-post-card  shadow-lg h-[12rem] ${theme ? "bg-[#272727] drop-shadow-lg" : "bg-[#fff]"}`}>
                     <CardBody>
                         <div className="flex justify-center ">
-                            <H6 color={`${theme?"white":"gray"}`} >Create Post</H6>
+                            <H6 color={`${theme ? "white" : "gray"}`} >Create Post</H6>
                         </div>
                         <div className="inner-body  flex mds-editor7:-ml-[.5rem] ">
-                            {/* d9d9d9 */}
                             <div className={`card-post-image bg-[#d9d9d9]  w-[4rem] h-[4rem] rounded-full flex-shrink-0 mds-editor7:w-[3rem] mds-editor7:h-[3rem] ${loader ? "animate-pulse" : ""}`}>
                                 {
-
                                     DispatchProfileImage !== "" ? <Image
                                         src={DispatchProfileImage}
                                         rounded={true}
                                         raised={false}
                                         alt=""
-                                        className={`w-full h-full ${theme?"outline outline-1 outline-offset-2 outline-[#fcfbfb] outline-solid":""}`}
+                                        className={`w-full h-full ${theme ? "outline outline-1 outline-offset-2 outline-[#fcfbfb] outline-solid" : ""}`}
                                     /> : <Image
                                         src={DefaultProfile}
                                         rounded={true}
                                         raised={false}
                                         alt=""
-                                        className={`w-full h-full ${theme?"outline outline-1 outline-offset-2 outline-[#fcfbfb] outline-solid":""}`}
+                                        className={`w-full h-full ${theme ? "outline outline-1 outline-offset-2 outline-[#fcfbfb] outline-solid" : ""}`}
                                     />
                                 }
                             </div>
                             <div className="post-text-container  ml-[1rem]    mr-[3rem] relative flex w-full flex-wrap items-stretch  mb-3 mds-editor7:mb-2">
                                 <button type="button"
-                                    className=" py-4  
-                                 Gray-600     border shadow 
-                                outline-none   w-full pl-10
-                                indent-5 rounded-[15px]
-                                px-[10rem]
-                                indent-none
-                                cursor-pointer
-                                caret-transparent	
-                                hover:outline-none
-                                text-gray-400
-                                flex-shrink-0
-                                mds-editor7:px-[5rem]
-                                mds-editor7:py-3
-                                focus:outline-none
-                                
-                                "
+                                    className={`
+                                    py-4  
+                                    shadow 
+                            outline-none   w-full pl-10
+                            indent-5 rounded-[15px]
+                            px-[10rem]
+                            indent-none
+                            cursor-pointer
+                            caret-transparent	
+                            hover:outline-none
+                            text-gray-400
+                            flex-shrink-0
+                            mds-editor7:px-[5rem]
+                            mds-editor7:py-3
+                            focus:outline-none 
+                            border border-solid ${theme?"border-[#585555]":"border-[#eaeaea]"}`}
                                     onClick={(e) => {
                                         if (UserInformationLoad) {
                                             setShowModalCode(true)
                                         }
                                         else {
                                             error({ message: "Kindly, Create Profile" })
-                                            // alert("please create profile")
                                         }
                                     }
                                     }
@@ -459,8 +373,8 @@ function AddPost({ setAllPosts, socket,theme }) {
                     </CardBody>
                     <CardFooter className="   flex justify-around -mt-[2rem]   pb-[2rem] " role="group">
                         <div className="photos ">
-                            <Button color="#ECECEC" size="regular" 
-                            className={`px-[2.5rem] md:px-[3.5rem] border-none   ${theme?"bg-[#122d92]":"bg-[#151D3B]"} text-2xl
+                            <Button color="#ECECEC" size="regular"
+                                className={`px-[2.5rem] md:px-[3.5rem] border-none   ${theme ? "bg-gradient-to-bl from-gray-700 via-gray-900 to-black" : "bg-[#151D3B]"} text-2xl
                             mds-editor7:px-[2rem]
                             mds-editor7:py-2                            mds-editor7:text-xl
                             mds-editor7:mt-[.8rem]`}
@@ -476,8 +390,8 @@ function AddPost({ setAllPosts, socket,theme }) {
                             </TooltipsContent>
                         </Tooltips>
                         <div className="video">
-                            <Button color="" size="regular" 
-                            className={`px-[2.5rem] md:px-[3.5rem]   text-2xl ${theme?"bg-[#122d92]":"bg-[#151D3B]"}
+                            <Button color="" size="regular"
+                                className={`px-[2.5rem] md:px-[3.5rem]   text-2xl ${theme ? "bg-gradient-to-bl from-gray-700 via-gray-900 to-black" : "bg-[#151D3B]"}
                             mds-editor7:px-[2rem]
                             mds-editor7:py-2                            mds-editor7:text-xl
                             mds-editor7:mt-[.8rem]`}
@@ -485,7 +399,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                 onClick={(e) => setShowModalCodeVideo(true)}
                                 ref={videoRef}
                             >
-                                {/* <Icon name={} ripple={true} /> */}
                                 <RiVideoAddFill />
                             </Button>
                         </div>
@@ -493,16 +406,15 @@ function AddPost({ setAllPosts, socket,theme }) {
                             <TooltipsContent className="text-black">Upload Video</TooltipsContent>
                         </Tooltips>
                         <div className="feeling">
-                            <Button color="" size="regular" 
-                            className={`px-[2.5rem] md:px-[3.5rem] ${theme?"bg-[#122d92]":"bg-[#151D3B]"}   text-2xl
+                            <Button color="" size="regular"
+                                className={`px-[2.5rem] md:px-[3.5rem] ${theme ? "bg-gradient-to-bl from-gray-700 via-gray-900 to-black" : "bg-[#151D3B]"}   text-2xl
                             mds-editor7:px-[2rem]
                             mds-editor7:py-2                            mds-editor7:text-xl
                             mds-editor7:mt-[.8rem]`}
-                            ripple="light"
+                                ripple="light"
                                 onClick={(e) => setShowModalCodeText(true)}
                                 ref={rssRef}
                             >
-                                {/* <Icon name={<MdRssFeed />} ripple={true} /> */}
                                 <MdRssFeed />
                             </Button>
                         </div>
@@ -513,7 +425,7 @@ function AddPost({ setAllPosts, socket,theme }) {
                 </Card>
             </div>
             {/* ================MODAL FOR POST PHotos and Video ================== */}
-            <div className="con "
+            <div className="con bg-[#1e1e1e] "
             >
                 <Modal size="lg" active={showModal} toggler={(e) => {
                     setShowModalCode(false)
@@ -528,7 +440,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                 New Post
                             </ModalHeader>
                         </div>
-                        {/* w-[21rem] */}
                         <div className="modal-body w-[21rem] md:w-full ">
                             <ModalBody >
                                 <p className="text-base leading-relaxed text-gray-600 font-normal
@@ -538,10 +449,7 @@ function AddPost({ setAllPosts, socket,theme }) {
                                         <main className='flex  join-of-name-select-option '>
                                             <article className='
                                     card-post-image-modal w-[3rem]  h-[3rem] rounded-full flex-shrink-0
-                                    
                                     '>
-
-
                                                 {DispatchProfileImage !== "" ? <Image
                                                     src={DispatchProfileImage}
                                                     rounded={true}
@@ -565,13 +473,10 @@ function AddPost({ setAllPosts, socket,theme }) {
                                                 >
                                                     <option value="public"
                                                         className=''
-                                                    // onChange={GetPrivatORPublic}
                                                     >Public</option>
                                                     <option value="private"
-                                                    //    onChange={GetPrivatORPublic}
                                                     >Private</option>
                                                     <option value="friends"
-                                                    //    onChange={GetPrivatORPublic}
                                                     >Friends</option>
                                                 </select>
                                             </article>
@@ -579,7 +484,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                     </section>
                                     <section className='input-field-section mt-[1rem]
                                     relative w-full
-                                
                                 '>
                                         <textarea
                                             className="
@@ -590,7 +494,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                             h-[9rem]
                                             px-3
                                             py-1.5
-                                            
                                             border-none
                                             font-normal
                                             text-gray-700
@@ -632,13 +535,11 @@ function AddPost({ setAllPosts, socket,theme }) {
                                             />} size="sm" />
                                         </Button>
                                     </section>
-                                    {/* UnselectPostImage */}
                                     <section className='image-section mt-[1rem] overflow-auto mb-[1rem] pr-[.5rem] '>
                                         <article className=' h-[10rem] border border-gray-300 rounded-lg flex '>
                                             {uploadLoaderBackground ? <ProfileLoader /> : progressMessageBackground === "Uploaded Successfully" ? <ProgressBar text={progressMessageBackground} bgColor="green" /> : UnselectPostImage ? <SelectedImageShowWithURL text={UnselectPostImage} /> :
                                                 <div className="flex w-full  items-center justify-center bg-grey-lighter hover:bg-grey-lighter " >
                                                     <label className="  flex-col items-center  bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-white h-full w-full flex justify-center"
-                                                    // style={{ backgroundColor: "red" }}
                                                     >
                                                         <svg className="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                                             style={{ color: "green" }}
@@ -650,7 +551,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                                             accept='image/*,video/*'
                                                             ref={inputFileRef}
                                                             onChange={(e) => {
-                                                                // setInputValue(e.target.value)
                                                                 SelectImage(e)
                                                             }}
                                                         />
@@ -665,21 +565,11 @@ function AddPost({ setAllPosts, socket,theme }) {
                         <div className="modal-footer">
                             <ModalFooter >
                                 <div className="btn-group mt-2 flex justify-center">
-                                    {/* <Button
-                                        color="red"
-                                        buttonType="link"
-                                        onClick={(e) => setShowModalCode(false)}
-                                        ripple="dark"
-                                    >
-                                        Close
-                                    </Button> */}
                                     {postLoader ? <Button
                                         color="green"
-
                                         disabled={groupDisable ? true : false}
                                         onClick={(e) => {
                                             SubmitPost()
-
                                         }}
                                         ripple="light"
                                         block={true}
@@ -687,12 +577,9 @@ function AddPost({ setAllPosts, socket,theme }) {
                                         <LoaderForPost />
                                     </Button> : <Button
                                         color="green"
-
                                         disabled={groupDisable ? true : false}
                                         onClick={(e) => {
                                             SubmitPost()
-
-                                            // setShowModalCode(false)
                                         }}
                                         ripple="light"
                                         block={true}
@@ -706,7 +593,7 @@ function AddPost({ setAllPosts, socket,theme }) {
                 </Modal>
             </div>
             {/* =======================MODAL FOR THE VIDEO=========================== */}
-            <Modal size="lg" className="" active={showModalVideo} toggler={() => {
+            <Modal size="lg" className="bg-[#727272]" active={showModalVideo} toggler={() => {
                 setShowModalCodeVideo(false)
             }}>
                 <div className="modalHeader -mb-[1rem] -mt-[1rem]  md:w-[30rem] " ref={VideoModelRef}>
@@ -724,7 +611,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                 <main className='flex  join-of-name-select-option '>
                                     <article className='
                                     card-post-image-modal w-[3rem]  h-[3rem] rounded-full flex-shrink-0
-                                    
                                     '>
                                         {DispatchProfileImage !== "" ? <Image
                                             src={DispatchProfileImage}
@@ -749,13 +635,10 @@ function AddPost({ setAllPosts, socket,theme }) {
                                         >
                                             <option value="public"
                                                 className=''
-                                            // onChange={GetPrivatORPublic}
                                             >Public</option>
                                             <option value="private"
-                                            //    onChange={GetPrivatORPublic}
                                             >Private</option>
                                             <option value="friends"
-                                            //    onChange={GetPrivatORPublic}
                                             >Friends</option>
                                         </select>
                                     </article>
@@ -763,7 +646,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                             </section>
                             <section className='input-field-section mt-[1rem]
                                     relative 
-                                
                                 '>
                                 <textarea
                                     className="
@@ -774,7 +656,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                             h-[9rem]
                                             px-3
                                             py-1.5
-                                            
                                             border-none
                                             font-normal
                                             text-gray-700
@@ -794,7 +675,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                     onChange={(e) => {
                                         setTextAreaValue(e.target.value)
                                     }}
-                                    // value={chosenEmoji ? chosenEmoji.emoji : ""}
                                     placeholder={name2}
                                 >
                                 </textarea>
@@ -816,13 +696,11 @@ function AddPost({ setAllPosts, socket,theme }) {
                                     />} size="sm" />
                                 </Button>
                             </section>
-                            {/* UnselectPostImage */}
                             <section className='image-section mt-[1rem] overflow-auto mb-[1rem] pr-[.5rem] '>
                                 <article className=' h-[10rem] border border-gray-300 rounded-lg flex '>
                                     {uploadLoaderBackground ? <ProfileLoader /> : progressMessageBackground === "Uploaded Successfully" ? <ProgressBar text={progressMessageBackground} bgColor="green" /> : UnselectPostImage ? <SelectedImageShowWithURL text={UnselectPostImage} /> :
                                         <div className="flex w-full  items-center justify-center bg-grey-lighter hover:bg-grey-lighter " >
                                             <label className="  flex-col items-center  bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-white h-full w-full flex justify-center"
-                                            // style={{ backgroundColor: "red" }}
                                             >
                                                 <IoVideocam className='text-[3.5rem] font-semibold text-[#1f680b]' />
                                                 <span className="mt-2 text-base leading-normal" style={{ color: "green" }}>Video</span>
@@ -830,7 +708,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                                     accept='video/*'
                                                     ref={videoRef}
                                                     onChange={(e) => {
-                                                        // setInputValue(e.target.value)
                                                         SelectVideo(e)
                                                     }}
                                                 />
@@ -851,7 +728,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                 onClick={(e) => {
                                     e.preventDefault()
                                     SubmitPost()
-                                    // setShowModalCodeVideo(false)
                                 }}
                                 ripple="light"
                                 block={true}
@@ -863,7 +739,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                 onClick={(e) => {
                                     e.preventDefault()
                                     SubmitPost()
-                                    // setShowModalCodeVideo(false)
                                 }}
                                 ripple="light"
                                 block={true}
@@ -893,7 +768,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                 <main className='flex  join-of-name-select-option '>
                                     <article className='
                                     card-post-image-modal w-[3rem]  h-[3rem] rounded-full flex-shrink-0
-                                    
                                     '>
                                         {DispatchProfileImage !== "" ? <Image
                                             src={DispatchProfileImage}
@@ -918,13 +792,10 @@ function AddPost({ setAllPosts, socket,theme }) {
                                         >
                                             <option value="public"
                                                 className=''
-                                            // onChange={GetPrivatORPublic}
                                             >Public</option>
                                             <option value="private"
-                                            //    onChange={GetPrivatORPublic}
                                             >Private</option>
                                             <option value="friends"
-                                            //    onChange={GetPrivatORPublic}
                                             >Friends</option>
                                         </select>
                                     </article>
@@ -932,7 +803,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                             </section>
                             <section className='input-field-section mt-[1rem]
                                     relative 
-                                
                                 '>
                                 <textarea
                                     className="
@@ -943,7 +813,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                             h-[9rem]
                                             px-3
                                             py-1.5
-                                            
                                             border-none
                                             font-normal
                                             text-gray-700
@@ -963,7 +832,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                     onChange={(e) => {
                                         setTextAreaValue(e.target.value)
                                     }}
-                                    // value={chosenEmoji ? chosenEmoji.emoji : ""}
                                     placeholder={name1}
                                 >
                                 </textarea>
@@ -985,13 +853,11 @@ function AddPost({ setAllPosts, socket,theme }) {
                                     />} size="sm" />
                                 </Button>
                             </section>
-                            {/* UnselectPostImage */}
                             <section className='image-section mt-[1rem] overflow-auto mb-[1rem] pr-[.5rem] '>
                                 <article className=' h-[10rem] border border-gray-300 rounded-lg flex '>
                                     {uploadLoaderBackground ? <ProfileLoader /> : progressMessageBackground === "Uploaded Successfully" ? <ProgressBar text={progressMessageBackground} bgColor="green" /> : UnselectPostImage ? <SelectedImageShowWithURL text={UnselectPostImage} /> :
                                         <div className="flex w-full  items-center justify-center bg-grey-lighter hover:bg-grey-lighter " >
                                             <label className="  flex-col items-center  bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-white h-full w-full flex justify-center"
-                                            // style={{ backgroundColor: "red" }}
                                             >
                                                 <svg className="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                                     style={{ color: "green" }}
@@ -1003,7 +869,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                                     accept='image/*'
                                                     ref={photosRef}
                                                     onChange={(e) => {
-                                                        // setInputValue(e.target.value)
                                                         SelectPhotos(e)
                                                     }}
                                                 />
@@ -1024,7 +889,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                 onClick={(e) => {
                                     e.preventDefault()
                                     SubmitPost()
-                                    // setShowModalCodeVideo(false)
                                 }}
                                 ripple="light"
                                 block={true}
@@ -1036,7 +900,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                 onClick={(e) => {
                                     e.preventDefault()
                                     SubmitPost()
-                                    // setShowModalCodeVideo(false)
                                 }}
                                 ripple="light"
                                 block={true}
@@ -1048,7 +911,8 @@ function AddPost({ setAllPosts, socket,theme }) {
                 </footer>
             </Modal>
             {/* =========================ADD SOME TEXT================== */}
-            <Modal size="lg" className="" active={showModalText} toggler={() => {
+
+            <Modal size="lg" className={`${theme ? "bg-[#0c0c0c]" : "bg-[#0c0c0c] border border-solid border-[#3c3c3c]"} text_modal`} active={showModalText} toggler={() => {
                 setShowModalCodeText(false)
             }}>
                 <div className="modalHeader -mb-[1rem] -mt-[1rem]  md:w-[30rem] ">
@@ -1066,7 +930,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                 <main className='flex  join-of-name-select-option '>
                                     <article className='
                                     card-post-image-modal w-[3rem]  h-[3rem] rounded-full flex-shrink-0
-                                    
                                     '>
                                         {DispatchProfileImage !== "" ? <Image
                                             src={DispatchProfileImage}
@@ -1091,14 +954,10 @@ function AddPost({ setAllPosts, socket,theme }) {
                                         >
                                             <option value="public"
                                                 className=''
-                                            // onChange={GetPrivatORPublic}
                                             >Public</option>
                                             <option value="private"
-                                            //    onChange={GetPrivatORPublic}
                                             >Private</option>
-
                                             <option value="friends"
-                                            //    onChange={GetPrivatORPublic}
                                             >Friends</option>
                                         </select>
                                     </article>
@@ -1106,7 +965,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                             </section>
                             <section className='input-field-section mt-[1rem]
                                     relative 
-                                
                                 '>
                                 <textarea
                                     className="
@@ -1117,7 +975,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                             h-[9rem]
                                             px-3
                                             py-1.5
-                                            
                                             border-none
                                             font-normal
                                             text-gray-700
@@ -1137,7 +994,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                     onChange={(e) => {
                                         SelectTextHandle(e)
                                     }}
-                                    // value={chosenEmoji ? chosenEmoji.emoji : ""}
                                     placeholder={name}
                                 >
                                 </textarea>
@@ -1171,7 +1027,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                 onClick={(e) => {
                                     e.preventDefault()
                                     SubmitPost()
-                                    // setShowModalCodeVideo(false)
                                 }}
                                 ripple="light"
                                 block={true}
@@ -1183,7 +1038,6 @@ function AddPost({ setAllPosts, socket,theme }) {
                                 onClick={(e) => {
                                     e.preventDefault()
                                     SubmitPost()
-                                    // setShowModalCodeVideo(false)
                                 }}
                                 ripple="light"
                                 block={true}
@@ -1194,11 +1048,11 @@ function AddPost({ setAllPosts, socket,theme }) {
                     </ModalFooter>
                 </footer>
             </Modal>
+
             {/* <ToastContainer /> */}
             <Modal size="regular" active={emojiModal} toggler={() => setEmojiModal(false)} className="z-[1000] mt-[22rem]">
                 <div className="con" ref={wrapperref}>
                     <ModalHeader toggler={() => setEmojiModal(false)}>
-                        {/* Modal Title */}
                     </ModalHeader>
                     <ModalBody>
                         <Picker onEmojiClick={onEmojiClick} skinTone={SKIN_TONE_MEDIUM_DARK} />
@@ -1218,10 +1072,8 @@ export default AddPost
 
 function LoaderForPost() {
     return (
-
         <>
             <ThreeDots color="#001D6E" height={22} width={22} />
-
         </>
     )
 }

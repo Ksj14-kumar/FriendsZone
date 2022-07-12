@@ -1,8 +1,5 @@
 import React from 'react'
-
 const TextList = (props) => {
-
-    console.log("text list", props)
     const items = props.gifs.map((itemData) => {
         return <Item url={itemData.url} />;
     });

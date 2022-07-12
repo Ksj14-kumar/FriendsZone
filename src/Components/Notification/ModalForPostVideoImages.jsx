@@ -1,10 +1,7 @@
 import React from 'react'
 import Modal from 'react-modal';
 function ModalForPostVideoImages(props) {
-    
-    // const [modalIsOpen, setIsOpen] = React.useState(false);
     const [modalIsOpen, setIsOpen] = React.useState(false);
-
     const customStyles = {
         content: {
             top: '50%',
@@ -16,21 +13,14 @@ function ModalForPostVideoImages(props) {
         },
     };
     let subtitle;
-
-    
-
     function afterOpenModal() {
-        // references are now sync'd and can be accessed.
         subtitle.style.color = '#f00';
     }
-
     function closeModal() {
         setIsOpen(false);
     }
     return (
-
         <>
-            {/* <button className='bg-red-600' onClick={() => { setIsOpen(!modalIsOpen) }}>Open</button> */}
             <Modal
                 isOpen={modalIsOpen}
                 onAfterOpen={afterOpenModal}
@@ -50,7 +40,6 @@ function ModalForPostVideoImages(props) {
                 </form>
             </Modal>
         </>
-
     )
 }
 

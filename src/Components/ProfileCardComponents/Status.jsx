@@ -14,57 +14,28 @@ function Status({ info, loadUserProfileInfo, theme }) {
     return (
         <>
             <div className="text-center ">
-
                 {
                     (info.fname && info.lname && info.country && info.city && info.stream && info.position && info.aboutMe) ? "" :
                         <section>
-                            {/* <Button
-                                color="deepPurple"
-                                buttonType="filled"
-                                size="regular"
-                                rounded={true}
-                                block={false}
-                                iconOnly={true}
-                                ripple="light"
-                                ref={buttonRef}
-                                onClick={() => {
-                                    history.push("/update_profile")
-                                }}
-
-
-                            >
-                                <Icon name={<HiPencil className='text-[1.5rem]' />} size="sm" />
-                            </Button> */}
                         </section>
                 }
                 <H5 className={`${theme ? "text-[#fff]" : "text-[#000]"}`}>
-
-
                     <p className={`${theme ? "text-[#fff]" : "text-[#000]"}`}>
-
                         {
-
-
                             (
                                 loadUserProfileInfo ? "" :
                                     (info.fname && info.lname) ? info.fname + " " + info.lname : "")
-
-
                         }
                     </p>
-
                 </H5>
                 <div className={`mt-0 mb-2  flex items-center justify-center gap-2 ${theme ? "text-[#fff]" : "text-[#0a0a0a]"}`}>
                     {loadUserProfileInfo ? "" : (info.city && info.country) &&
                         <>
                             <Icon name="place" size="xl" />
-
                             {
-
                                 (info.city && info.country) ? info.city + ", " + info.country : ""
                             }
                         </>
-
                     }
                 </div>
                 <div className={`mb-2 ${theme ? "text-[#fff]" : "text-[#040404]"} mt-10 flex items-center justify-center gap-2`}>
@@ -72,7 +43,6 @@ function Status({ info, loadUserProfileInfo, theme }) {
                         loadUserProfileInfo ? "" : (info.position && info.stream) &&
                             <>
                                 <Icon name="work" size="xl" />
-
                                 {(info.position && info.stream) ? info.position + "," + info.stream : ""}
                             </>
                     }
@@ -91,7 +61,6 @@ function Status({ info, loadUserProfileInfo, theme }) {
                 <div className={`border-t border-lightBlue-200 text-center px-2  ${theme?"text-[#fff]":"text-[#000]"}`}>
                     <LeadText className={`${theme?"text-[#fff]":"text-[#000]"}`}>
                         <p className={`${theme?"text-[#fff]":"text-[#000]"}`}>
-
                         {loadUserProfileInfo ? "" : (info.aboutMe ? info.aboutMe : "")}
                         </p>
                     </LeadText>
@@ -112,11 +81,7 @@ function Status({ info, loadUserProfileInfo, theme }) {
                         }
                     </a>
                 </div>
-
             </CardFooter>
-
-
-
         </>
     )
 }

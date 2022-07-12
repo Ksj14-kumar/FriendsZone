@@ -38,7 +38,6 @@ function GeeyMenuButton() {
                     </div>
                 </div>
             </div>
-
         </>
     )
 }

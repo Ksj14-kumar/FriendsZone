@@ -2,11 +2,6 @@ import React, { useEffect, useState } from 'react'
 import RecentlyChatUser from './LeftSideChatSectionComponent/RecentlyChatUser';
 function SimpleLeft({ converzationList, current, setChatHeader, socket }) {
     const [unreadMessage, setUnreadMessage] = useState([])
-
-
-
-
-
     useEffect(() => {
         const getUnreadMessages = async () => {
             try {
@@ -29,9 +24,6 @@ function SimpleLeft({ converzationList, current, setChatHeader, socket }) {
         }
         getUnreadMessages()
     }, [])
-
-
-    
     return (
         <>
             {

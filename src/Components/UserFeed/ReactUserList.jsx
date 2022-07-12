@@ -4,23 +4,18 @@ import Image from '@material-tailwind/react/Image'
 import Button from '@material-tailwind/react/Button'
 import { FaFacebookMessenger, FaUserPlus } from "react-icons/fa"
 import Icon from '@material-tailwind/react/Icon'
-import { HiArrowLeft, HiThumbUp, HiHeart } from "react-icons/hi"
+import {  HiThumbUp } from "react-icons/hi"
 import { NavLink } from "react-router-dom"
-import { BallTriangle, Circles, Triangle, ThreeDots, TailSpin } from "react-loader-spinner"
+import {TailSpin } from "react-loader-spinner"
 import { useSelector } from 'react-redux'
 
 function ReactUserList({ reactUser,theme }) {
-    console.log({ reactUser })
     const [userInfo, setUserInfo] = useState({ name: "", image: "", isFriends: "" })
     const [loader, setLoader] = useState(false)
     const [connectMessage, setConnectMessage] = useState(false)
-
-
     const UserInformationLoad = useSelector((state) => {
         return state.UserInformationLoad.value
     })
-
-
     useEffect(() => {
         async function getUserReactDetails() {
             try {
@@ -30,19 +25,15 @@ function ReactUserList({ reactUser,theme }) {
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${localStorage.getItem("uuid")}`
-
                     }
                 })
                 const resData = await res.json()
-                console.log({ resData })
                 if (res.status === 200) {
                     setUserInfo(resData.details)
                     setLoader(false)
-
                 }
                 else if (res.status !== 200) {
                     setLoader(false)
-
                 }
             }
             catch (err) {
@@ -51,13 +42,7 @@ function ReactUserList({ reactUser,theme }) {
         }
         getUserReactDetails()
     }, [reactUser])
-
-
-
     async function sendFriendRequest(Recieverfname, Recieverlname, RecieverId, RecieverUrl, connectMessage) {
-
-        // console.log(Recieverfname, Recieverlname, RecieverId, RecieverUrl, connectMessage);
-
         const sendFriendRequestResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/sendfriendrequest/`, {
             method: "POST",
             body: JSON.stringify({
@@ -69,39 +54,24 @@ function ReactUserList({ reactUser,theme }) {
                 anotherUserId: RecieverId,
                 receiverUrl: RecieverUrl,
                 senderUrl: UserInformationLoad?.url,
-
                 connectMessage
             }
-
             ),
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("uuid")}`
-
             }
         })
         const response = await sendFriendRequestResponse.json()
         if (sendFriendRequestResponse.status === 200) {
-
         }
         else if (sendFriendRequestResponse.status !== 200) {
-
-
-
         }
     }
-
-
-
     return (
         <>
-
-
-
             <div className={`wrapper_for_react_user flex w-full items-center gap-y-2 mb-3 px-2 py-1 rounded-md  ${theme?"hover:bg-[#2d2d2d]":"hover:bg-[#b8b8b8]"} {loader ? "hidden" : "flex"}`}>
                 <NavLink to={`/profile/${reactUser}`}>
-
-
                     <div className="user_react_logo flex-[8] flex  items-center cursor-pointer">
                         <div className="image_wrappe  w-[3rem] h-[3rem] rounded-full relative flex-shrink-0">
                             {
@@ -131,7 +101,6 @@ function ReactUserList({ reactUser,theme }) {
                                             rounded={false}
                                             block={false}
                                             iconOnly={false}
-                                            // disabled={}
                                             ripple="light"
                                             className="normal-case tracking-wider font-light text-lg mds-editor28:py-1 mds-editor28:px-3"
                                             onClick={
@@ -168,8 +137,6 @@ function ReactUserList({ reactUser,theme }) {
                             (
                                 <div className="message">
                                     <NavLink to={`${UserInformationLoad?.googleId !== reactUser ? `/messages?q=${reactUser}` : ""}`}>
-
-
                                         <Button
                                             color="lightBlue"
                                             buttonType="filled"
@@ -186,13 +153,9 @@ function ReactUserList({ reactUser,theme }) {
                                     </NavLink>
                                 </div>
                             )
-
-
                     }
                 </div >
-
             </div >
-
         </>
     )
 }
@@ -205,7 +168,6 @@ function Loader() {
         <>
             <div className="loader_wrapper w-full h-full flex items-center justify-center">
                 <TailSpin color="#bbb" width={45} height={45} />
-
             </div>
         </>
     )

@@ -4,7 +4,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export function Success(props) {
-    console.log(props)
     const notify = () => toast.success(props.message, {
         position: props.position ? props.position : "top-center",
         autoClose: 1000,
@@ -16,24 +15,13 @@ export function Success(props) {
         theme: props.color ? props.color : "colored",
         transition: props.transition ? props.transition : "slide",
     });
-
     notify()
     return (
         <div>
-
-            {/* <ToastContainer /> */}
         </div>
     );
 }
-
-
-
-
-
 export function Error(props) {
-
-
-
     const notify = () => toast.error(props.message, {
         position: props.position ? props.position : "top-center",
         autoClose: 1000,
@@ -51,16 +39,11 @@ export function Error(props) {
         //     fontWeight: 'bold',
         //     borderRadius: '5px',
         //     zIndex: '15000',
-
-
         // }
-
     });
-
     notify()
     return (
         <div>
-
             {/* <ToastContainer /> */}
         </div>
     );

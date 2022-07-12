@@ -6,26 +6,16 @@ import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 function FriendsCard({ info, sendFriendRequest, loader,theme }) {
     const [connectMessage, setConnectMessage] = useState(false)
-
-
     const UserInformationLoad = useSelector((state) => {
         return state.UserInformationLoad.value
     })
-
     useEffect(() => {
         const bool = info.receiverrequest.some((item) => item._id === UserInformationLoad?.googleId)
         setConnectMessage(bool)
-
-
     }, [info])
-
-
     return (
         <>
-
             <div className={`conta   ${theme?"bg-[#1a1a1a]":"bg-[#fffcfc]"} flex justify-around align-baseline content-center w-[30rem] mds-editor21:w-full py-4 rounded-lg mb-[2rem] ${theme?"border border-solid border-[#3a3a3a]":"border border-solid border-[#b0b0b0]"}`}>
-
-
                 <section className={`left_side w-[5rem] h-[5rem] mds-editor7:w-[3rem] mds-editor7:h-[3rem] flex-shrink-0 flex drop-shadow-lg cursor-pointer `}>
                     <NavLink to={`/profile/${info?.googleId}`}>
                         {info.url?<Image
@@ -47,8 +37,6 @@ function FriendsCard({ info, sendFriendRequest, loader,theme }) {
                 <section className="center  flex align-middle content-center truncate">
                     <p className={`text-[1.8rem] mds-editor7:text-[1.4rem] mt-5 mds-editor7:mt-1 ${theme?"text-[#fff]":"text-[#010101]"}`}>{info.fname + " " + info.lname}</p>
                 </section>
-
-
                 <section className="right_side ">
                     <Button
                         color="purple"
@@ -62,25 +50,15 @@ function FriendsCard({ info, sendFriendRequest, loader,theme }) {
                         onClick={() => {
                             sendFriendRequest(info.fname, info.lname, info.googleId, info.url, connectMessage)
                             setConnectMessage(!connectMessage)
-
-
                         }}
-
-
                     >
                         {
                             connectMessage ? "request sent" : "Connect"
-
                         }
-
                     </Button>
                 </section>
-
-
             </div>
-
         </>
-
     )
 }
 

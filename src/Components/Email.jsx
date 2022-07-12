@@ -11,17 +11,12 @@ import { NavLink } from 'react-router-dom'
 export default function Email() {
     return (
         <div className=" mx-auto relative  h-screen ">
-
             <div className="inner  mx-auto py-28 w-96">
-
-
                 <Card>
                     <CardHeader color="green" size="sm">
                         <H5 color="white">Forget Password</H5>
                     </CardHeader>
-
                     <CardBody>
-
                         <div className="mb-8 px-4">
                             <InputIcon
                                 type="email"
@@ -30,9 +25,6 @@ export default function Email() {
                                 iconName="email"
                             />
                         </div>
-
-
-
                     </CardBody>
                     <CardFooter>
                         <div className="flex justify-center">
@@ -46,9 +38,7 @@ export default function Email() {
                             </Button>
                         </div>
                         <div className="footer-section flex justify-between ">
-
                             <p className="m-0 p-0 font-serif font-bold italic mt-[3px]">Go to home</p>
-
                             <NavLink exact to="/" className="text-lg
                             text-blue-800  font-semibold mb-4  "> Click here</NavLink>
                         </div>

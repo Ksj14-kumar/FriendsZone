@@ -9,7 +9,6 @@ function AllNoti({ notification,theme }) {
     const [loading, setLoading] = useState(false)
     const [blobURL, setBlobUrl] = useState("")
     const [profileImageLoading, setProfileImageLoading] = useState(false)
-
     useEffect(() => {
         async function loadPostImage() {
             try {
@@ -17,7 +16,6 @@ function AllNoti({ notification,theme }) {
                 const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/api/v1/_user/posts/`, {
                     method: "GET",
                     headers: {
-                        // "Content-Type":"application/json",
                         "Authorization": "Bearer " + localStorage.getItem("uuid"),
                         "post": notification.postImagePath
                     }
@@ -36,8 +34,6 @@ function AllNoti({ notification,theme }) {
         }
         loadPostImage()
     }, [notification])
-
-
     useEffect(() => {
         async function loadProfileImage() {
             try {
@@ -50,12 +46,10 @@ function AllNoti({ notification,theme }) {
                 }
             }
             catch (err) {
-                // console.log(err)
             }
         }
         loadProfileImage()
     }, [notification])
-
     return (
         <>
             {
@@ -71,11 +65,11 @@ function AllNoti({ notification,theme }) {
                                                 <Image
                                                     src={notification.userPorfile}
                                                     rounded={true}
-                                                    className={`rounded-full flex-shrink-0 w-[2.6rem] h-[2.6rem] ${theme?"outline outline-2 outline-solid outline-offset-2 outline-[#fff]":""}`}
+                                                    className={`rounded-full flex-shrink-0 w-[2.6rem] max-h-[2.6rem] ${theme?"outline outline-2 outline-solid outline-offset-2 outline-[#fff]":""}`}
                                                 /> : <Image
                                                     src={Photos}
                                                     rounded={true}
-                                                    className={`rounded-full flex-shrink-0 w-[2.6rem] h-[2.6rem] ${theme?"outline outline-2 outline-solid outline-offset-1 outline-[#fff]":""}`}
+                                                    className={`rounded-full flex-shrink-0 w-[2.6rem] max-h-[2.6rem] ${theme?"outline outline-2 outline-solid outline-offset-1 outline-[#fff]":""}`}
                                                 />
                                         }
                                     </div>
@@ -102,34 +96,30 @@ function AllNoti({ notification,theme }) {
                                             <Image
                                                 src={blobPost}
                                                 rounded={false}
-                                                className="flex-shrink-0 w-[2.9rem] h-[2.9rem]"
+                                                className="flex-shrink-0 w-[2.9rem] max-h-[2.9rem]"
                                             />}
                                     </div>
                                 </NavLink>
                             </div>
-                            {/* <hr className="bg-[#dfdede]" /> */}
                         </>
                     ) :
                     (
                         notification.type === "comment" ?
                             (
-
                                 <NavLink to={`${notification.post_url}`}>
                                     <hr className={`${theme?"bg-[#000000] hidden":"bg-[#c5c3c3]"}`} />
-
                                     <div className={`comment_wrapper mb-0 flex w-full mt-1  px-2 py-1 ${notification.read === false && "bg-[#d5d5d5]"} ${theme?"hover:bg-[#2d2d2d]":"hover:bg-[#dbdbdb]"}`}>
                                         <div className="container02 flex justify-between  w-full">
                                             <div className="image flex flex-[2]  flex-shrink-0">
-
                                                 {notification.UserProfile ? <Image
                                                     src={notification.userPorfile}
                                                     rounded={true}
-                                                    className={`rounded-full flex-shrink-0 w-[2.6rem] h-[2.6rem]  ${theme?"outline outline-2 outline-solid outline-offset-2 outline-[#fff]":""}`}
+                                                    className={`rounded-full flex-shrink-0 w-[2.6rem] max-h-[2.6rem]  ${theme?"outline outline-2 outline-solid outline-offset-2 outline-[#fff]":""}`}
                                                 /> :
                                                     <Image
                                                         src={Photos}
                                                         rounded={true}
-                                                        className={`rounded-full flex-shrink-0 w-[2.6rem] h-[2.6rem] ${theme?"outline outline-2 outline-solid outline-offset-2 outline-[#fff]":""}`}
+                                                        className={`rounded-full flex-shrink-0 w-[2.6rem] max-h-[2.6rem] ${theme?"outline outline-2 outline-solid outline-offset-2 outline-[#fff]":""}`}
                                                     />
                                                 }
                                             </div>
@@ -151,7 +141,6 @@ function AllNoti({ notification,theme }) {
                                                 <p className={`text-[1rem] font-serif  tracking-wider break-all mds-editor36:text-[.9rem] ${theme?"text-[#fff]":"text-[#000]"}`}>Comment your post</p>
                                             </p>
                                             <div className="icons_wrappe flex items-center flex-[2] justify-end mr-[3px]">
-
                                                 <div className="icons flex items-center justify-center w-[2rem]">
                                                     <FaCommentAlt className={`text-[1.5rem]  mr-[1px] ${theme?"text-[#ffffff]":"text-[#102de8]"}`} />
                                                 </div>
@@ -169,29 +158,25 @@ function AllNoti({ notification,theme }) {
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                     {/* <hr className="bg-[#dfdede]" /> */}
                                 </NavLink>
-
                             ) :
                             (
                                 <NavLink to={`${notification.post_url}`}>
                                     <hr className={`${theme?"bg-[#000000] hidden":"bg-[#c5c3c3]"}`} />
-
                                     <div className={`comment_wrapper mb-0 flex w-full mt-1  px-2 py-1 ${notification.read === false && "bg-[#c5c3c3]"} ${theme?"hover:bg-[#2d2d2d]":"hover:bg-[#dbdbdb]"}`}>
                                         <div className="container02 flex justify-between  w-full">
                                             <div className="image flex flex-[2]  flex-shrink-0">
-
                                                 {notification.UserProfile ? <Image
                                                     src={notification.userPorfile}
                                                     rounded={true}
-                                                    className={`rounded-full flex-shrink-0 w-[2.6rem] h-[2.6rem] ${theme?"outline outline-2 outline-solid outline-offset-2 outline-[#fff]":""}`}
+                                                    className={`rounded-full flex-shrink-0 w-[2.6rem] max-h-[2.6rem] ${theme?"outline outline-2 outline-solid outline-offset-2 outline-[#fff]":""}`}
                                                 /> :
                                                     <Image
                                                         src={Photos}
                                                         rounded={true}
-                                                        className={`rounded-full flex-shrink-0 w-[2.6rem] h-[2.6rem] ${theme?"outline outline-2 outline-solid outline-offset-2 outline-[#fff]":""} `}
+                                                        className={`rounded-full flex-shrink-0 w-[2.6rem] max-h-[2.6rem] ${theme?"outline outline-2 outline-solid outline-offset-2 outline-[#fff]":""} `}
                                                     />
                                                 }
                                             </div>
@@ -201,7 +186,6 @@ function AllNoti({ notification,theme }) {
                                                 <p className={`text-[1rem] font-serif  tracking-wider break-all mds-editor36:text-[.9rem] ${theme?"text-[#fff]":"text-[#000]"}`}>reply your comment</p>
                                             </p>
                                             <div className="icons_wrappe flex items-center flex-[2] justify-end mr-[3px]">
-
                                                 <div className="icons flex items-center justify-center w-[2rem]">
                                                     <FaCommentAlt className={`text-[1.5rem]  mr-[1px] ${theme?"text-[#ffffff]":"text-[#102de8]"}`} />
                                                 </div>
@@ -219,21 +203,13 @@ function AllNoti({ notification,theme }) {
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
-
                                 </NavLink>
                             )
-
-
                     )
-
-
             }
-
         </>
     )
-
 }
 
 

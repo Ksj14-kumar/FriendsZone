@@ -4,7 +4,6 @@ import App from "./App"
 import "./index.css"
 import { ToastContainer } from 'react-toastify';
 import 'tippy.js/dist/border.css';
-// import "./index1.css"
 import "@material-tailwind/react/tailwind.css";
 import { BrowserRouter } from 'react-router-dom'
 
@@ -20,14 +19,10 @@ import { Provider } from 'react-redux'
 
 ReactDOM.render(
     <>
-
-
-
         <Provider store={store}>
             <BrowserRouter>
                 <App />
                 <ToastContainer />
-
             </BrowserRouter>
         </Provider>
     </>,

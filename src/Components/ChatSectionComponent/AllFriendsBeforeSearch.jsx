@@ -1,17 +1,11 @@
 import React, { useState } from 'react'
 import Photos from "../../assets/img/download.png"
 import Image from '@material-tailwind/react/Image'
-import Spinner from "react-spinkit"
-import { Audio, Bars, Circles, Oval, Grid, TailSpin } from 'react-loader-spinner'
+import { TailSpin } from 'react-loader-spinner'
 import { BiCheck } from "react-icons/bi"
-import Instance from '../../Config/Instance'
-
 function AllFriendsBeforeSearch({ item, setGroupMembers, RoomData, setFriends }) {
-
     const [loader, setLoader] = useState(false)
     const [message, setMessage] = useState("")
-
-
     async function AddfriendsInGroup(friendId) {
         try {
             setLoader(true)
@@ -24,29 +18,22 @@ function AllFriendsBeforeSearch({ item, setGroupMembers, RoomData, setFriends })
                 }
             })
             const resDataJson = await resData.json()
-            console.log({ resDataJson })
             if (resData.status === 200) {
                 setGroupMembers(resDataJson.room.RoomMembers)
                 setLoader(false)
                 setMessage("success")
-
-
             }
             else if (resData.status !== 200) {
                 setLoader(false)
-
                 setFriends([])
             }
         } catch (err) {
-            console.warn(err)
         }
-
     }
     return (
         <>
             <div className="friends_s flex items-center mt-[.2rem] bg-[#d6d5d523] h-[3rem] border border-solid border-[#cccbcb] rounded-md">
                 <div className="image_with_name flex flex-[10] items-center">
-
                     <div className="Image w-[2.5rem] h-[2.5rem] rounded-full flex-shrink-0 ml-[1.5rem] mds-editor7:ml-[.5rem] cursor-pointer">
                         {item.url ?
                             <Image
@@ -84,11 +71,8 @@ function Loader() {
     return (
         <>
             <div className="loader_sp w-full h-full flex justify-center items-center">
-                {/* F2EBE9 */}
-                {/* 00BFFF */}
                 <TailSpin color="#F2EBE9" height={27} width={27} />
             </div>
-
         </>
     )
 }

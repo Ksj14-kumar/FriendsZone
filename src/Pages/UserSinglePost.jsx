@@ -16,13 +16,9 @@ function UserSinglePost({ socket, setShowLikeUserModal, showLikeUserModal }) {
     const { path } = useRouteMatch()
     const params = query.parse(window.location.search)
     const name = params.auther
-    console.log({ path })
-
-
     useEffect(() => {
         async function getPostDetails() {
             try {
-
                 setLoading(true)
                 const res = await Apis.CopyPostLinkApi({ auther: params.auther, post: params.post })
                 if (res.status === 200) {
@@ -32,7 +28,6 @@ function UserSinglePost({ socket, setShowLikeUserModal, showLikeUserModal }) {
                 }
                 else if (res.status !== 200) {
                     setLoading(false)
-                    console.log("something error occured")
                 }
             }
             catch (err) {
@@ -41,22 +36,17 @@ function UserSinglePost({ socket, setShowLikeUserModal, showLikeUserModal }) {
         }
         params.auther && params.post && getPostDetails()
     }, [params.auther, params.post])
-
-
     return (
         <>
-
             <div className="single_post_container w-full  flex justify-center mt-[5rem] mds-editor28:absolute mds-editor28:-top-[70px] mds-editor28:z-[20]">
                 {
                     !loading ? (post.length > 0 && post.map((item, index) => {
                         return (
                             <>
                                 <PostCard key={index} item={item} index={index} socket={socket} setShowLikeUserModal={setShowLikeUserModal} single="single" name={name} />
-
                             </>
                         )
                     })) : (
-
                         <Card>
                             <CardBody>
                                 <div className="loader flex justify-center items-center w-full h-full">
@@ -67,11 +57,9 @@ function UserSinglePost({ socket, setShowLikeUserModal, showLikeUserModal }) {
                     )
                 }
             </div>
-
             {showLikeUserModal.bool &&
                 <div className="friends_like_modal absolute w-screen h-screen  z-[20] top-0 right-0 flex justify-center md:items-center">
                     <div className="inner_friends_wrapper md:fixed bg-[#fff] md:w-[69%] w-full  flex flex-col px-4 top-[2%] rounded-md drop-shadow-md">
-
                         <>
                             <header className="flex items-center w-full bg-[#ffffff] py-1">
                                 <div className="left_arrow flex flex-[1] justify-center cursor-pointer"
@@ -85,9 +73,7 @@ function UserSinglePost({ socket, setShowLikeUserModal, showLikeUserModal }) {
                                 </div>
                                 <div className="logo_name flex flex-[11] justify-center select-none">
                                     <p className='text-[1.6rem] tracking-wider font-sans font-medium'>
-
                                         CollegeZone
-
                                     </p>
                                 </div>
                             </header>
@@ -108,7 +94,6 @@ function UserSinglePost({ socket, setShowLikeUserModal, showLikeUserModal }) {
                                             <span className='ml-[5px]  text-[1.2rem]'>5+</span>
                                         </p>
                                     </NavLink> */}
-
                                     {/* <NavLink to={path + "loved"}
                                         activeStyle={{ borderBottom: "2px solid red" }}>
                                         <p className="love flex items-center cursor-pointer py-1">
@@ -118,9 +103,7 @@ function UserSinglePost({ socket, setShowLikeUserModal, showLikeUserModal }) {
                                     </NavLink> */}
                                 </div>
                                 <div className="w flex-[8] mds-editor28:flex-0">
-
                                 </div>
-
                             </section>
                             <footer className="all_react_users px-8 mds-editor28:px-3 py-1 w-full h-screen overflow-y-auto" id="user_react_list">
                                 {
@@ -128,28 +111,16 @@ function UserSinglePost({ socket, setShowLikeUserModal, showLikeUserModal }) {
                                         return (
                                             <>
                                                 <ReactUserList key={index} reactUser={item} />
-
-
                                             </>
                                         )
                                     })
                                 }
-
-
-
-
-
                             </footer>
-
                         </>
                     </div>
-
                 </div>}
-
             <RightSide />
-
         </>
-
     )
 }
 

@@ -1,27 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import Img from "../../../assets/img/team-3-800x800.jpg"
 import Image from '@material-tailwind/react/Image'
-
 import Instance from "../../../Config/Instance"
 import Photo from "../../../assets/img/download.png"
 import { NavLink, useParams, useLocation, useHistory } from 'react-router-dom'
-import { useDispatch, useSelector } from "react-redux"
-
-
-
-
-
-
-
-
-// setRoomChatHeader={setRoomChatHeader}
+import { useDispatch } from "react-redux"
 function RecentlyChatUser({ user, currentUser, setChatHeader, socket, unreadMessage }) {
     const [friendsDetails, setFriends_users_Details] = useState({})
     const [loader, setLoader] = useState(false)
-
-
-
-
     useEffect(() => {
         const extract_Friends_users = user?.conversations.filter(conversation => {
             return conversation !== currentUser
@@ -30,7 +15,6 @@ function RecentlyChatUser({ user, currentUser, setChatHeader, socket, unreadMess
             try {
                 setLoader(true)
                 const resData = await Instance.get(`/api/v1/users/${extract_Friends_users}`)
-                // console.log({ resData: resData })
                 if (resData.status === 200) {
                     setLoader(false)
                     setFriends_users_Details({ ...resData.data })
@@ -40,19 +24,13 @@ function RecentlyChatUser({ user, currentUser, setChatHeader, socket, unreadMess
                 }
             }
             catch (err) {
-                console.warn(err)
             }
         }
         get_Friends_users_Details()
     }, [user])
-
-
-
     return (
         <>
-
             < ChatUserList userD={friendsDetails} user={user} setChatHeader={setChatHeader} loader={loader} unreadMessage={unreadMessage} socket={socket} currentUser={currentUser} />
-
         </>
     )
 }
@@ -64,8 +42,7 @@ export default RecentlyChatUser = React.memo(RecentlyChatUser);
 function ChatUserList({ userD, user, setChatHeader, loader, unreadMessage, socket, currentUser }) {
     const params = useParams()
     const dispatch = useDispatch()
-    const [isOnline, setOnline] = useState({friendId:"",status:false})
-
+    const [isOnline, setOnline] = useState({ friendId: "", status: false })
     const [bool, setBool] = useState(false)
     const fullName = userD?.fname + " " + userD?.lname
     const { search } = useLocation()
@@ -76,18 +53,14 @@ function ChatUserList({ userD, user, setChatHeader, loader, unreadMessage, socke
         q === userD.id ? setBool(true) : setBool(false)
         q === userD.id && setChatHeader(userD)
         q === userD.id && dispatch({ type: "UserActive", payload: true })
-
     }, [q])
-
     useEffect(() => {
         socket?.emit("isUserOnline", { friendId: userD.id, currentUser: currentUser })
         socket?.on("isOnline", (data) => {
             setOnline(data)
         })
     }, [socket, userD])
-
     return (
-
         <NavLink to={`/messages?q=${userD.id}`}
             activeStyle={{
                 backgroundColor: "#F32424",
@@ -95,17 +68,10 @@ function ChatUserList({ userD, user, setChatHeader, loader, unreadMessage, socke
         >
             <div className={`top   mb-[.2rem] py-[.2rem] ${bool && "bg-[#f00606]"}`}
                 onClick={(e) => {
-                    // setChatHeader(userD)
-                    // setRoomChatHeader(false)
-
                     history.push(`/messages?q=${userD.id}`)
-
-
                 }}
             >
                 <div className="inner_div mx-[.5rem] bg-[#b0afaf]  flex  items-center rounded-md py-[.1rem] cursor-pointer mb-[0rem] hover:bg-[#161D6F] hover:text-white">
-
-
                     <section className="image  flex-shrink-0 flex flex-[3] items-center justify-center mx-auto cursor-pointer relative">
                         <div className="image_inner w-[2.6rem] h-[2.6rem] flex rounded-full   relative">
                             {
@@ -113,11 +79,9 @@ function ChatUserList({ userD, user, setChatHeader, loader, unreadMessage, socke
                                     <ChangeURL url={userD.url} />
                                     :
                                     <Image src={Photo} className="rounded-full flex-shrink-0 w-full h-full" rounded={true} />
-
                             }
                         </div>
-                        {isOnline.friendId===userD.id&& isOnline.status&&<div className="circle w-[.8rem] h-[.8rem] rounded-full absolute bg-[#45ef0d] animate-pulse top-[19px] right-[9px] border-[1px] border-solid border-[#ffff]"></div>}
-
+                        {isOnline.friendId === userD.id && isOnline.status && <div className="circle w-[.8rem] h-[.8rem] rounded-full absolute bg-[#45ef0d] animate-pulse top-[19px] right-[9px] border-[1px] border-solid border-[#ffff]"></div>}
                     </section>
                     <section className="name flex-[7] truncate flex justify-start">
                         <p className="text-lg font-serif tracking-wider px-1 truncate">{
@@ -125,8 +89,6 @@ function ChatUserList({ userD, user, setChatHeader, loader, unreadMessage, socke
                         }</p>
                     </section>
                     <section className="message_number flex-[2]  mr-[.8rem] rounded-full flex items-center justify-center ">
-
-
                         {
                             unreadMessage?.length > 0 && unreadMessage.map(item => {
                                 if (q !== item.anotherUserId) {
@@ -143,13 +105,10 @@ function ChatUserList({ userD, user, setChatHeader, loader, unreadMessage, socke
                                 }
                             })
                         }
-
                     </section>
-
                 </div >
             </div >
         </NavLink>
-
     )
 }
 
@@ -157,9 +116,6 @@ function ChatUserList({ userD, user, setChatHeader, loader, unreadMessage, socke
 function ChangeURL({ url }) {
     const [blob, setBlob] = useState("")
     const [loader, setLoader] = useState(false)
-
-
-
     useEffect(() => {
         async function loadImage() {
             setLoader(true)
@@ -175,16 +131,11 @@ function ChangeURL({ url }) {
             {
                 loader ? (
                     <div className="image_conta flex-shrink-0 w-full h-full bg-[#640303] animate-pulse rounded-full">
-
                     </div>
-
                 ) : (
                     <Image src={blob} className="rounded-full flex-shrink-0 w-full h-full" rounded={true} />
-
-
                 )
             }
-
         </>
     )
 }

@@ -6,18 +6,11 @@ import { ImCross } from 'react-icons/im';
 import { useDispatch, useSelector } from 'react-redux';
 function SelectedImageShowWithURL(props) {
     const dispatch = useDispatch()
-
-
-
     const FileType = useSelector((state) => {
         return state.FileType
     })
-
-
     return (
-
         <div className="image-container w-full h-full relative">
-
             {
                 FileType === "video" ?
                     <iframe className="w-full h-full" src={props.text ? props.text : "NA"} frameBorder="1" allow="accelerometer;  encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
@@ -29,9 +22,7 @@ function SelectedImageShowWithURL(props) {
                         className="rounded-sm"
                     />
             }
-            {/* [13.8rem] left-[17.5rem] */}
             <Button
-            // left-[17.5rem]
                 className="cross-btn absolute top-[.5rem] left-[17.5rem] md:right-2 z-[1000]"
                 color="gray"
                 buttonType="outline"
@@ -40,20 +31,13 @@ function SelectedImageShowWithURL(props) {
                 block={false}
                 iconOnly={true}
                 ripple="light"
-
                 onClick={() => {
                     dispatch({ type: "UNSELECT_POST_IMAGE", payload: "" })
                 }}
-
-
-
             >
                 <Icon name={<ImCross />} size="sm" />
             </Button>
-
         </div>
-
-
     )
 }
 

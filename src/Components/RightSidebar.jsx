@@ -1,45 +1,30 @@
 import React, { useRef, useEffect, useState } from 'react'
-
-
 import FooterButton from './FooterButton';
-import { createPopper } from "@popperjs/core";
-import ChatWindow from './chatSection/ChatWindow';
 import { BiWifi } from "react-icons/bi"
 import { useSelector, useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from "framer-motion"
 
 function RightSidebar({ socket, currentUser, currentId }) {
     const [online, setOnlineUser] = useState([])
-
     const [bottomUsers, ShowBottomUsers] = useState(false)
     const dispatch = useDispatch()
     const [NumberOfFriendsOnline, setFriendsLength] = useState([])
     const [onlinefriends, setOnlineFriends] = useState([])
     const isMount = useRef(true)
     const componentMount = useRef(true)
-
-
     const { UserInformationLoad, onlineUsers, theme } = useSelector((state) => {
         return {
             onlineUsers: state.OnlineUsers,
             UserInformationLoad: state.UserInformationLoad.value,
             theme: state.Theme
-
         }
     })
-
-
-
     const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
     const btnDropdownRef = React.createRef();
     const popoverDropdownRef = React.createRef();
-
-
-
     useEffect(() => {
         async function loadFriends() {
             try {
-
                 const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/friends/${currentId}`, {
                     method: "GET",
                     headers: {
@@ -56,8 +41,7 @@ function RightSidebar({ socket, currentUser, currentId }) {
                     })
                     setOnlineFriends(value)
                     setFriendsLength(value.length)
-                    // dispatch({ type: "onlineUsers", payload: value })
-                    // }
+                    
                 }
                 else if (res.status !== 200) {
                 }
@@ -65,14 +49,7 @@ function RightSidebar({ socket, currentUser, currentId }) {
             }
         }
         loadFriends()
-
     }, [currentId, onlineUsers])
-
-
-
-
-
-
     let bgColor;
     let color;
     color === "green"
@@ -97,7 +74,6 @@ function RightSidebar({ socket, currentUser, currentId }) {
                     {bottomUsers && (
                         <motion.div
                             className={
-
                                 `text-base  float-left py-2 list-none text-left rounded mb-[5rem]  mds-editor3:ml-4 md:mr-[.2rem] mds-editor11:w-[20rem] mds-editor12:w-[22rem] max-h-[500px] overflow-y-auto -mt-[9rem] -ml-[15.7rem] ${theme?"bg-[#020202]":"bg-[#fff] "} `
                             }
                             initial={{ opacity: 0, x: 100 }}

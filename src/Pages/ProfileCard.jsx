@@ -2,7 +2,6 @@ import Card from '@material-tailwind/react/Card';
 import React from 'react'
 import Image from '@material-tailwind/react/Image';
 import Button from '@material-tailwind/react/Button';
-// import Image from "@material-tailwind/react/Image";
 import { useDispatch, useSelector } from 'react-redux';
 import { BiUserX } from 'react-icons/bi'
 import { useEffect, useRef, useState } from 'react';
@@ -22,6 +21,8 @@ import Icon from '@material-tailwind/react/Icon';
 import UpdateProfile from './UpdateProfile';
 import UserFeed from '../Components/UserFeed/UserFeed';
 import RightSide from '../Components/UserFeed/RightSide';
+import { getListItemSecondaryActionClassesUtilityClass } from '@mui/material';
+import InternetDetection from '../Components/InternetDetection';
 
 
 
@@ -31,7 +32,6 @@ function ProfileCard(props) {
     const [loadUserProfileInfo, setLoadUSerProfileInfo] = useState(false)
     const buttonRef = useRef()
     const dispatch = useDispatch()
-    // const [query, setSearchQueary] = useState(null)
     const { search } = useLocation();
     const params = new URLSearchParams(search);
     const usernameId = useParams().username
@@ -41,19 +41,18 @@ function ProfileCard(props) {
     const [acceptorMessage, setAcceptorMessage] = useState(false)
     const [localProfileURL, setLocalProfileURL] = useState("")
     const [localBackgroundURL, setLocalBackgroundURL] = useState("")
+    const [assests, setAssests] = useState([])
+
     const Query = useSelector((state) => {
         return state.Query
     })
-    const {UserInformationLoad,BgImage,theme} = useSelector((state) => {
+    const { UserInformationLoad, BgImage, theme } = useSelector((state) => {
         return {
             UserInformationLoad: state.UserInformationLoad.value,
-            BgImage:state.ShowImageBackground.value,
-            theme:state.Theme
-
-
+            BgImage: state.ShowImageBackground.value,
+            theme: state.Theme
         }
     })
-  
     const { fname, lname, googleId, url, friends } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "", url: "", senderrequest: [] }
     const { path } = useRouteMatch()
     useEffect(() => {
@@ -110,9 +109,7 @@ function ProfileCard(props) {
                     "Authorization": `Bearer ${localStorage.getItem("uuid")}`
                 }
             })
-
             if (sendFriendRequestResponse.status === 200) {
-
             }
         }
         catch (err) {
@@ -207,11 +204,53 @@ function ProfileCard(props) {
         }
         f1()
     }, [usernameId, setLocalProfileURL, userInfo?.ProfileURL])
+
+    useEffect(() => {
+        (async function loadPhotos() {
+            const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/get/assests/path/${usernameId}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("uuid")}`
+                }
+            })
+            const jsonData = await res.json()
+            if (res.status === 200) {
+                let AllAssests = []
+                if (jsonData.length > 0) {
+                    jsonData.forEach(async (item) => {
+                        const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/api/v1/_user/posts/`, {
+                            method: "GET",
+                            headers: {
+                                "Authorization": `Bearer ${localStorage.getItem("uuid")}`,
+                                "post": item
+                            }
+                        })
+                        const blob = await res.blob()
+                        if (res.status === 200) {
+                            const url = URL.createObjectURL(blob)
+                            AllAssests.push(url)
+                        }
+                    })
+                    setAssests(AllAssests)
+                }
+                else {
+                    setAssests([])
+                    //send file to zero
+                }
+            }
+            else if (res.status !== 200) {
+                setAssests([])
+                //something error occured
+            }
+        })()
+
+    }, [usernameId])
     return (
         <>
             {/* <div className='con'> */}
             {/* <AdminNavbar /> */}
-            <div className={`make_two_section md:flex md:justify-between relative ${theme?"bg-[#000000]":""}`}>
+            <InternetDetection/>
+            <div className={`make_two_section md:flex md:justify-between relative ${theme ? "bg-[#000000]" : ""}`}>
                 <div className="profile_card-container  w-full ">
                     <div className="profile_wrapper flex  flex-col items-center">
                         <section className="relative block h-[300px] md:h-[400px] w-[615px]">
@@ -221,15 +260,12 @@ function ProfileCard(props) {
                                         src={BgImage}
                                         className="w-full h-full rounded-t-none bg-[#b9b8b8b5] animate-pulse rounded-b-sm"
                                         rounded={false}
-                                        raised={false}
-                                    // alt="Image"
                                     ></div> :
                                         (userInfo.BgURL ? <Image
                                             // src={userInfo.BgURL}
                                             src={localBackgroundURL}
                                             className="w-full h-full rounded-t-none "
                                             rounded={false}
-                                            raised={false}
                                             alt="Image"
                                         /> : "")
                                 }
@@ -237,7 +273,7 @@ function ProfileCard(props) {
                         </section>
                         <div className=' card-container flex justify-center md:pl-[0] relative  z-[2]   md:w-[58rem]  md:mt-[6rem] mt-[17rem]  -mb-[6rem] '>
                             <Card className={`lg:-mt-[170px] md:-mt-[280px] -mt-[300px] 
-                        md:ml-[8rem] md:mr-[6rem]  md-w-[71rem] mx-[2rem]  ${theme?"bg-[#161616]":"bg-[#ffffff]"}`} >
+                        md:ml-[8rem] md:mr-[6rem]  md-w-[71rem] mx-[2rem]  ${theme ? "bg-[#161616]" : "bg-[#ffffff]"}`} >
                                 <div className="flex flex-wrap justify-center relative md:flex-col">
                                     <div className="w-48 mds-editor2:w-40 px-4 -mt-24 relative outline-1 outline-red-600 rounded-full md:justify-center md:mx-auto">
                                         {userInfo.ProfileURL ?
@@ -354,7 +390,7 @@ function ProfileCard(props) {
                                                     <div className="p-4 text-center  rounded-lg rounded-b-none   
                                              pb-1">
                                                         <span className={`md:text-lg text-[1rem] font-semibold
-                                                    space-x-1 ${theme?"text-[#fff]":"text-[#020202]"}`}>Status</span>
+                                                    space-x-1 ${theme ? "text-[#fff]" : "text-[#020202]"}`}>Status</span>
                                                         <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
                                                             🎭
                                                         </span>
@@ -364,8 +400,8 @@ function ProfileCard(props) {
                                                     activeStyle={{ borderBottom: "2px solid #E91E63" }}
                                                 >
                                                     <div className="p-4 text-center  rounded-lg rounded-b-none  pb-1 ">
-                                                        <span className={`${theme?"text-[#fff]":"text-gray-700"} md:text-lg text-[1rem] font-semibold space-x-1`}>Friends</span>
-                                                        <span className={`text-xl font-medium block uppercase tracking-wide ${theme?"text-[#fff]":"text-[#000]"}`}>
+                                                        <span className={`${theme ? "text-[#fff]" : "text-gray-700"} md:text-lg text-[1rem] font-semibold space-x-1`}>Friends</span>
+                                                        <span className={`text-xl font-medium block uppercase tracking-wide ${theme ? "text-[#fff]" : "text-[#000]"}`}>
                                                             {
                                                                 Object.keys(userInfo).length > 0 && userInfo.userGeneralInfo[0].friends.length
                                                             }
@@ -384,13 +420,13 @@ function ProfileCard(props) {
                                                     activeStyle={{ borderBottom: "2px solid #E91E63" }}
                                                 >
                                                     <div className="p-4 text-center  rounded-lg rounded-b-none  pb-1 ">
-                                                        <span className={`md:text-lg text-[1rem] font-semibold space-x-1 ${theme?"text-[#fff]":"text-[#000]"}`}>Photos</span>
-                                                        <span className={`text-xl font-medium block uppercase tracking-wide ${theme?"text-[#fff]":"text-[#000]"}`}>
-                                                            22
+                                                        <span className={`md:text-lg text-[1rem] font-semibold space-x-1 ${theme ? "text-[#fff]" : "text-[#000]"}`}>Photos</span>
+                                                        <span className={`text-xl font-medium block uppercase tracking-wide ${theme ? "text-[#fff]" : "text-[#000]"}`}>
+                                                            {assests.length}
                                                         </span>
                                                     </div>
                                                 </NavLink>
-                                                <NavLink to="/user/posts"
+                                                {/* <NavLink to="/user/posts"
                                                     activeStyle={{ borderBottom: "2px solid #E91E63" }}
                                                 >
                                                     <div className="p-4 text-center  rounded-lg rounded-b-none  pb-1 ">
@@ -401,13 +437,13 @@ function ProfileCard(props) {
                                                             }
                                                         </span>
                                                     </div>
-                                                </NavLink>
+                                                </NavLink> */}
                                             </div>
                                             <Switch>
                                                 <div className={`section  mt-4  flex-auto  mds-editor8:w-full  border border-solid border-[#cccccc59] rounded-xl ${loadUserProfileInfo && "bg-[#c4c3c3ea] animate-pulse"}`} >
                                                     {/* fname={fname} lname={lname} country={country} city={city} stream={stream} position={position} aboutMe={aboutMe} college={college} */}
                                                     <Route exact path={path} >
-                                                        <Status info={Object.keys(userInfo).length > 0 && userInfo.userGeneralInfo[0]} loadUserProfileInfo={loadUserProfileInfo} theme ={theme} />
+                                                        <Status info={Object.keys(userInfo).length > 0 && userInfo.userGeneralInfo[0]} loadUserProfileInfo={loadUserProfileInfo} theme={theme} />
                                                     </Route>
                                                     <Route exact path="/user/friends">
                                                         {userInfo ? <Friends info={Object.keys(userInfo).length > 0 && userInfo.userGeneralInfo[0]} loadUserProfileInfo={loadUserProfileInfo} usernameId={usernameId} _id={googleId}
@@ -422,9 +458,9 @@ function ProfileCard(props) {
                                                         <Comments />
                                                     </Route>
                                                     <Route exact path="/user/photos">
-                                                        <Photos1 />
+                                                        <Photos1 assests={assests} />
                                                     </Route>
-                                                    <Route exact path="/user/posts"  >
+                                                    <Route exact path="/user/posts">
                                                         <Posts />
                                                     </Route>
                                                     <Route exact path="/update_profile"  >

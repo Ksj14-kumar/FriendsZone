@@ -6,11 +6,6 @@ function UserPhotos() {
     return (
         <div className="container2 md:ml-[17rem] mt-[0rem]  md:mr-[3rem] mx-[2rem]  h-full">
             <Photos />
-
-
-
-
-
         </div>
     )
 }

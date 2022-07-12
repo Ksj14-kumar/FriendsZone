@@ -1,19 +1,8 @@
 import Button from '@material-tailwind/react/Button'
 import Image from '@material-tailwind/react/Image'
-import React, { useState } from 'react'
+import React from 'react'
 import { NavLink } from 'react-router-dom'
-
-
 function FriendsNoti({ SenderRequestId, name, AcceptFriendRequest, DeleteFriendRequest, url, messageAftetAcceptRequest, acceptRequest, setAcceptRequest }) {
-
-
-
-
-
-
-    // console.log(messageAftetAcceptRequest)
-    // console.log(acceptRequest)
-
 
     return (
         <section className={`flex flex-col hover:bg-[#cfcfcf71]  rounded-md py-[.5rem] transition-all duration-100 `}>
@@ -24,25 +13,16 @@ function FriendsNoti({ SenderRequestId, name, AcceptFriendRequest, DeleteFriendR
                             <NavLink to={`/profile/${SenderRequestId}`}>
                                 <p className='md:text-[1.2rem] font-bold tracking-wider cursor-pointer truncate'>{name}</p>
                             </NavLink>
-
-
                             <p className='md:text-[1rem] font-light ml-[.3rem] flex truncate tracking-wider font-serif'>want to connect with you</p>
                         </div>
                         <NavLink to={`/profile/${SenderRequestId}`}>
-
                             <div className="left md:w-[2.7rem] w-[2rem] md:h-[2.7rem] h-[2rem] cursor-pointer flex-shrink-0 mr-[8px] ">
                                 <Image src={url}
                                     rounded={true}
-
                                 />
                             </div>
                         </NavLink>
-
                     </div>
-
-
-
-
                     <div className="btn-group flex justify-center ">
                         <Button
                             color="deepPurple"
@@ -55,15 +35,10 @@ function FriendsNoti({ SenderRequestId, name, AcceptFriendRequest, DeleteFriendR
                             onClick={(e) => {
                                 e.preventDefault()
                                 AcceptFriendRequest(SenderRequestId, name, url)
-                                // setAcceptRequest(true)
-
-
                             }}
-
                         >
                             Accept
                         </Button>
-
                         <Button
                             color="red"
                             buttonType="link"
@@ -77,14 +52,10 @@ function FriendsNoti({ SenderRequestId, name, AcceptFriendRequest, DeleteFriendR
                                 DeleteFriendRequest(SenderRequestId)
                             }}
                         >
-
                             Cancle
                         </Button>
-
-
                     </div>
                 </>
-
             }
         </section>
     )

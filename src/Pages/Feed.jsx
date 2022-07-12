@@ -7,29 +7,19 @@ function Feed({ socket, setShowLikeUserModal, showLikeUserModal }) {
     const dispatch = useDispatch()
     const [AllUser, setAllUser] = useState([])
     const [suggestionFriends, setSuggestionFriends] = useState([])
-
-
-    const { UserInformationLoad, PostWhichUserSelectedImageORVideo,theme } = useSelector((state) => {
+    const { UserInformationLoad, PostWhichUserSelectedImageORVideo, theme } = useSelector((state) => {
         return {
             UserInformationLoad: state.UserInformationLoad.value,
             PostWhichUserSelectedImageORVideo: state.PostWhichUserSelectedImageORVideo,
-            theme:state.Theme
+            theme: state.Theme
         }
     })
-
-
-
-
-
     useEffect(() => {
         socket?.emit("login", localStorage.getItem("uuid"))
         socket?.off("onlineUsers").on('onlineUsers', (data) => {
             dispatch({ type: "onlineUsers", payload: data })
         })
     }, [])
-
-    
-
     useEffect(() => {
         async function getAllUser() {
             try {
@@ -43,7 +33,6 @@ function Feed({ socket, setShowLikeUserModal, showLikeUserModal }) {
                     setAllUser(data)
                 }
                 else if (res.status !== 200) {
-                    console.log("error")
                 }
             }
             catch (err) {
@@ -52,7 +41,6 @@ function Feed({ socket, setShowLikeUserModal, showLikeUserModal }) {
         }
         getAllUser()
     }, [])
-
     useEffect(() => {
         async function isFriends() {
             try {
@@ -68,33 +56,21 @@ function Feed({ socket, setShowLikeUserModal, showLikeUserModal }) {
                         return data.friendList.some((value) => {
                             return value._id !== item.googleId && item.googleId !== UserInformationLoad?.googleId
                         })
-
                     })
                     setSuggestionFriends(filterUsers)
                 }
                 else if (res.status !== 200) {
                     return
-
                 }
-
             } catch (err) {
                 console.warn(err)
-
             }
         }
         UserInformationLoad?.googleId && isFriends()
     }, [])
-
-
-
-
-
-
-
     async function FilterUser(id) {
         setAllUser(AllUser.filter(user => user._id !== id))
     }
-
     return (
         <>
             {/* <motion.div className="animat"
@@ -102,10 +78,8 @@ function Feed({ socket, setShowLikeUserModal, showLikeUserModal }) {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ ease: "easeInOut", delay: .1 }}
             > */}
-
             <UserFeed PostWhichUserSelectedImageORVideo={PostWhichUserSelectedImageORVideo} socket={socket} AllUser={suggestionFriends} FilterUser={FilterUser} showLikeUserModal={showLikeUserModal} setShowLikeUserModal={setShowLikeUserModal} theme={theme} />
             {/* </motion.div> */}
-
         </>
     )
 }

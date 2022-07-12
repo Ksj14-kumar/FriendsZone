@@ -6,25 +6,16 @@ import Button from "@material-tailwind/react/Button";
 import Image from "@material-tailwind/react/Image";
 import Tooltips from "@material-tailwind/react/Tooltips";
 import TooltipsContent from "@material-tailwind/react/TooltipsContent";
-// import emoji from '../../assets/emoji/animated-emoticons-2018-5.gif';
-// import emoji2 from '../../assets/emoji/animated-emoticons-2018-25.gif';
-// import emoji3 from '../../assets/emoji/animated-emoticons-2018-21.gif';
-// import emoji4 from '../../assets/emoji/animated-emoticons-2018-41.gif';
-// import emoji5 from '../../assets/emoji/animated-emoticons-2018-8.gif';
 import { IoEarth } from 'react-icons/io5';
-import { MdAddComment, MdDelete, MdLock, MdOutlineThumbUpAlt, MdVisibilityOff, MdVisibility, MdThumbUpAlt, MdBookmark, MdOutlineLink, MdCheck } from 'react-icons/md';
+import { MdAddComment, MdDelete, MdLock, MdOutlineThumbUpAlt, MdVisibility, MdThumbUpAlt, MdBookmark, MdOutlineLink, MdCheck } from 'react-icons/md';
 import { RiShareFill, RiThumbUpFill } from 'react-icons/ri';
 import { FiChevronRight } from 'react-icons/fi';
 import { FaUserAlt, FaUsers } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux'
-import Popover from "@material-tailwind/react/Popover";
-import PopoverContainer from "@material-tailwind/react/PopoverContainer";
-import PopoverHeader from "@material-tailwind/react/PopoverHeader";
-import PopoverBody from "@material-tailwind/react/PopoverBody";
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Comments from './Comments/Comments';
 import { format } from 'timeago.js';
-import { motion, AnimatePresence, isMotionValue } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import ReadMore from './ReadMore';
 import { HiUsers } from "react-icons/hi"
 import { FiChevronDown } from "react-icons/fi"
@@ -32,7 +23,6 @@ import { error } from '../../toastifyMessage/Toast';
 import { success } from '../../toastifyMessage/Toast';
 import profile from '../../assets/img/download.png'
 import { NavLink, useLocation } from "react-router-dom"
-// import { createPopper } from "@popperjs/core"
 import { ThreeDots } from "react-loader-spinner"
 import { BsArrowLeft } from "react-icons/bs"
 import BookMarkApi from "../../AlLFetchApi/__functionApi"
@@ -40,23 +30,14 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import axios from "axios"
 import H5 from "@material-tailwind/react/Heading5"
 
-
-
-
-
-
 function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserModal, single, name, setAllPosts, bookMark, theme }) {
-
-    
     const [commentToggle, setCommentToggle] = useState(false)
     const [commentsLength, setCommentLength] = useState({ length: 0, post_id: "" })
     const [shareLength, setShareLength] = useState(0)
     const [showPopOver, setShowPopOver] = useState(false)
-    const [postBlobURL, setPostBlobUrl] = useState("")
     const [visibilityView, setVisibilityViewEvents] = useState(false)
     const [loadingPost, setLoadingPost] = useState(false)
     const [loadingPostSecond, setLoadingPostSecond] = useState(false)
-    const [colorCode, setColorCode] = useState("")
     const dispatch = useDispatch()
     const buttonRef = useRef()
     const location = useLocation()
@@ -64,30 +45,15 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
     const [deleteLoader, setDeleteLoader] = useState(false)
     const [like, setLike] = useState(false)
     const [likeCount, setLikeCount] = useState(null)
-    // const [userIds, setUserId] = useState([])
     const [bookMarkMove, setMoveBookMark] = useState(null)
-    // const [coOrdinate, setCordinate] = useState({ x: "", y: "" })
     const [bookMarkColor, steBookMarkColor] = useState(false)
-    const [blobURL, setBlobUrl] = useState("")
-    const [loadProfileImage, setLoadProfileImage] = useState(false)
-    const DeletedPost = useRef()
     const postPopupModal = useRef(null)
     const ImageRef = useRef(null)
-    const isMount = useRef(true)
-    const isLikeCountMount = useRef(true)
-    const isMountCommentLength = useRef(true)
-    // const ShowImage = useSelector((state) => {
-    //     return state.ShowImage.value
-    // })
-    const UserInformationLoad = useSelector((state) => {
-        return state.UserInformationLoad.value
-    })
-    const OriginalProfileURL = useSelector((state) => {
-        return state.OriginalProfileURL
-    })
-    const getPos = useSelector((state) => {
-        // console.log({ state })
-        return state.getPos
+    const { UserInformationLoad, OriginalProfileURL } = useSelector((state) => {
+        return {
+            UserInformationLoad: state.UserInformationLoad.value,
+            OriginalProfileURL: state.OriginalProfileURL
+        }
     })
     const { _id, fname, lname, googleId } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "" }
     function SetCommentSection(e, id) {
@@ -109,10 +75,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
             })
             const { message, data } = await DeletePostResponse.json()
             if (DeletePostResponse.status === 200) {
-                // dispatch({ type: "LOAD_POSTS", payload: data })
-                // const arrange = data.length > 0 && data.sort((a, b) => {
-                //     return b.time - a.time
-                // })
                 setAllPosts(data)
                 success({ message: message })
                 setDeleteLoader(false)
@@ -121,12 +83,10 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                 error({ message: message })
             }
         } catch (err) {
-            console.warn(err)
         }
     }
     //================================================POST IS BOOKMARKED OR NOT====================
     useEffect(() => {
-        // if (UserInformationLoad?.bookMarkPost) {
         const value = UserInformationLoad?.bookMarkPost?.length > 0 && UserInformationLoad.bookMarkPost.some((i) => {
             return i.post_id === item.post_id
         })
@@ -159,7 +119,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
             const data = await response.json()
             if (response.status === 200) {
                 success({ message: "Visibility Changed Successfully" })
-                // dispatch({ type: "LOAD_POSTS", payload: data.data })
                 setAllPosts(data.data)
             } else if (response.status === 500) {
                 error({ message: "Something went wrong" })
@@ -180,6 +139,19 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
     //function which excute when current user liked it any post
     async function callLikeHnadler(userId, post_id, bgImageUrl, profileImage) {
         try {
+
+            if (socket.connected) {
+                if (like) {
+                    socket.emit("likePost", { post_id, likedBy: googleId, likeTo: userId, OriginalProfileURL })
+                    socket?.emit("likeCount", { likeCount: likeCount - 1, post_id })
+                }
+                else {
+                    socket?.emit("likeCount", { likeCount: likeCount + 1, post_id })
+                }
+            }
+            else {
+                like ? setLikeCount(likeCount - 1) : setLikeCount(likeCount + 1)
+            }
             const result = await axios.put(`${process.env.REACT_APP_API_BACKENDURL}/blob/user/like/${post_id}`, {
                 likedBy: googleId,
                 likeTo: userId,
@@ -203,18 +175,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                     "Authorization": "Bearer " + localStorage.getItem("uuid")
                 }
             })
-            if (socket.connected) {
-                if (like) {
-                    socket.emit("likePost", { post_id, likedBy: googleId, likeTo: userId, OriginalProfileURL })
-                    socket?.emit("likeCount", { likeCount: likeCount - 1, post_id })
-                }
-                else {
-                    socket?.emit("likeCount", { likeCount: likeCount + 1, post_id })
-                }
-            }
-            else {
-                like ? setLikeCount(likeCount - 1) : setLikeCount(likeCount + 1)
-            }
         } catch (err) {
             like ? setLike(false) : setLike(true)
             like ? setLikeCount(likeCount - 1) : setLikeCount(likeCount + 1)
@@ -262,15 +222,10 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
             window.scrollTo(0, 0)
         }
     }, [item])
-
-
-    //random color generator
-    useEffect(() => {
-        setColorCode('#' + ('000000' + (Math.random() * 0xFFFFFF << 0).toString(16)).slice(-6))
-
-    }, [item])
-
-    
+    //redirect user to another url
+    function RedirectToAnotherUrl(value) {
+        window.location.assign(value)
+    }
     return (
         <>
             <div className={`post-card flex justify-around w-full mb-2 rounded-md ${bookMark ? "w-[25rem] " : "md:w-[42rem]"}  drop-shadow-sm ${loadingPost && loadingPostSecond ? "mb-[3rem] w-screen md:w-full md:ml-[2rem] md:mr-[2rem] h-[30rem]" : ""}`}>
@@ -291,10 +246,11 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                         <hr className={`py-[2px] mb-2 ${single === "single" && name ? "flex" : "hidden"} `} />
                         <div className="flex justify-center relative">
                         </div>
-                        <section className={`header-image-section post ${loadingPost && loadingPostSecond ? "flex w-full" : " md:rounded-lg  flex justify-between"} `} >
-                            <NavLink to={`${item.postType === "news" ? `${item.NewsURL}` : `/profile/${item.userId}`}`}
-                                target={item.postType === "news" ? "_blank" : ""}
-                            >
+                        <section className={`header-image-section post ${loadingPost && loadingPostSecond ? "flex w-full" : " md:rounded-lg  flex justify-between"} `}
+                        >
+                            {item.postType === "news" ? <div className="cursor-pointer" onClick={() => {
+                                RedirectToAnotherUrl(item.NewsURL)
+                            }}>
                                 <main className={`flex  join-of-name-select-option post  ${loadingPost && loadingPostSecond ? " flex flex-[11] w-full bg-[#] animate-pulse" : ""} `}>
                                     <article className=' card-post-image-modal w-[3rem]  h-[3rem] rounded-full flex-shrink-0 po '>
                                         {
@@ -305,9 +261,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                             item.profileImage
                                                         }
                                                     </div>
-
-
-
                                                 </>
                                                 : (item.profileImage ?
                                                     (
@@ -338,13 +291,54 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                         </article>
                                     </article>
                                 </main>
-                            </NavLink>
+                            </div> : (<NavLink to={`/profile/${item.userId}`}
+                            >
+                                <main className={`flex  join-of-name-select-option post  ${loadingPost && loadingPostSecond ? " flex flex-[11] w-full bg-[#] animate-pulse" : ""} `}>
+                                    <article className=' card-post-image-modal w-[3rem]  h-[3rem] rounded-full flex-shrink-0 po '>
+                                        {
+                                            item.postType === "news" ?
+                                                <>
+                                                    <div className={`word w-[3.1rem] h-[3.1rem] flex-shrink-0 bg-[#fb2222] text-white  flex justify-center items-center rounded-full text-[1.7rem]`}>
+                                                        {
+                                                            item.profileImage
+                                                        }
+                                                    </div>
+                                                </>
+                                                : (item.profileImage ?
+                                                    (
+                                                        <>
+                                                            <LoadProfileImage url={item.profileImage} setLoadingPost={setLoadingPost} image={item.image} theme={theme} />
+                                                        </>
+                                                    ) : <Image
+                                                        src={profile}
+                                                        rounded={true}
+                                                        raised={false}
+                                                        alt="Rounded Image"
+                                                        className={`w-full h-full ${theme ? "outline outline-1 outline-offset-1 outline-[#e0e0e0] outline-solid" : ""}`}
+                                                    />)
+                                        }
+                                    </article>
+                                    <article className={`public-name-article ml-[.5rem]  post  w-full ${loadingPost && loadingPostSecond ? " mt-[3px]" : "-mt-[.4rem]"}`}>
+                                        <article className={`${theme ? "text-[#fff]" : "text-black"} text-xl ${loadingPost && loadingPostSecond ? "bg-[#8f8f8f] h-[15px]  rounded-md" : ""}`}>
+                                            {loadingPost && loadingPostSecond ? "" : (item.username ? item.username : "NA")}
+                                        </article>
+                                        <article className={`flex ${theme ? "text-[#fafafa]" : "text-[#050505]"} ${loadingPost && loadingPostSecond ? "bg-[#8f8f8f] h-[15px] mt-2 mb-[3px] animate-pulse w-full rounded-md" : " "}`}>
+                                            {loadingPost && loadingPostSecond ? "" : (format(item.createdAt))}
+                                            {
+                                                loadingPost && loadingPostSecond ? "" : item.postType === "news" ? <IoEarth className={`mt-[4px] ml-[.3rem] ${theme ? "text-[#fff]" : "text-[#010101]"}`} /> : (item.privacy === "public" ?
+                                                    <IoEarth className={`mt-[4px] ml-[.3rem] ${theme ? "text-[#fff]" : "text-[#010101]"}`} /> :
+                                                    item.privacy === "friends" ? <HiUsers className={`mt-[4px] ml-[.3rem] ${theme ? "text-[#fff]" : "text-[#010101]"}`} /> :
+                                                        <MdLock className={`mt-[4px] ml-[.3rem] ${theme ? "text-[#fff]" : "text-[#010101]"}`} />)
+                                            }
+                                        </article>
+                                    </article>
+                                </main>
+                            </NavLink>)}
                             {
                                 (threeDot === true) ?
                                     (<>
                                         <section className=" flex justify-center align-middle " ref={deletePost}
                                         >
-
                                             {loadingPost && loadingPostSecond ? "" : <button className=' focus:border-0 border-0 focus:outline-0 outline-none -mt-2 '
                                                 onClick={(e) => {
                                                     e.preventDefault();
@@ -366,7 +360,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                     {
                                                         item.userId === googleId ?
                                                             [
-
                                                                 { icon: <MdVisibility className={`text-[1.8rem] ${theme ? "text-[#f3f3f3]" : "text-[#111111]"}`} />, name: "Visibility" },
                                                                 { icon: <MdOutlineLink className={`text-[1.8rem] ${theme ? "text-[#f3f3f3]" : "text-[#111111]"}`} />, name: "Copy link" },
                                                                 { icon: <MdDelete className={`text-[1.8rem] ${theme ? "text-[#f3f3f3]" : "text-[#111111]"}`} />, name: "Delete Post" }
@@ -407,7 +400,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                         {
                                                                                             !visibilityView ? (
                                                                                                 <FiChevronRight className={`text-[1.8rem] ${theme ? "text-[#ffffff]" : "text-[#070707]"}`} />
-
                                                                                             )
                                                                                                 : (
                                                                                                     <FiChevronDown className={`text-[1.8rem] ${theme ? "text-[#ffffff]" : "text-[#070707]"}`} />
@@ -491,7 +483,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                                 setMoveBookMark(!bookMarkMove)
                                                                                                 steBookMarkColor(!bookMarkColor)
                                                                                                 addBookMarkPostFunction(item)
-
                                                                                             }
                                                                                         }}
                                                                                         key={index}
@@ -504,19 +495,11 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                                     initial={{ opacity: 0, x: 0, y: 0 }}
                                                                                                     animate={bookMarkMove ? {
                                                                                                         opacity: [.2, .5, .6, .7, .9, 1],
-                                                                                                        // x: [10, 40, 50, 80, 100, 150, 180, 200],
-                                                                                                        // y: [-10, -40, -50, -80, -100, -150, -180, -200],
-                                                                                                        // translateY: [-10, -40, -50, -80, -100,],
-                                                                                                        // translateX: [10, 40, 50, 80, 100, 150, 180, 200, 250, 280, 300, 320, 340, 360, 380, 400, 420, 440, 460, 480, 500, 520, 540, 560, 580, 600],
-                                                                                                        // transformPerspective: 1000,
-                                                                                                        // translateX: coOrdinate.x,
                                                                                                         translateX: bookMarkMove ? 1000 : 0,
-                                                                                                        // translateY: coOrdinate.y,
                                                                                                         translateY: bookMarkMove ? -370 : 0,
                                                                                                         rotate: 360,
                                                                                                     } : ""}
                                                                                                     transition={{ duration: 5, ease: "easeInOut", type: "tween", times: "2" }}
-                                                                                                // exit={{ opacity: 0, x: 0, y: 0 }}
                                                                                                 >
                                                                                                     {
                                                                                                         i.icon
@@ -569,7 +552,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                         {
                                                             item.userId === googleId ?
                                                                 [
-
                                                                     { icon: <MdVisibility className={`text-[1.8rem] ${theme ? "text-[#efefef]" : "text-[#999999]"}`} />, name: "Visibility" },
                                                                     { icon: <MdOutlineLink className={`text-[1.8rem] ${theme ? "text-[#efefef]" : "text-[#999999]"}`} />, name: "Copy link" },
                                                                     { icon: <MdDelete className={`text-[1.8rem] ${theme ? "text-[#efefef]" : "text-[#999999]"}`} />, name: "Delete Post" }
@@ -703,19 +685,11 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                                         initial={{ opacity: 0, x: 0, y: 0 }}
                                                                                                         animate={bookMarkMove ? {
                                                                                                             opacity: [.2, .5, .6, .7, .9, 1],
-                                                                                                            // x: [10, 40, 50, 80, 100, 150, 180, 200],
-                                                                                                            // y: [-10, -40, -50, -80, -100, -150, -180, -200],
-                                                                                                            // translateY: [-10, -40, -50, -80, -100,],
-                                                                                                            // translateX: [10, 40, 50, 80, 100, 150, 180, 200, 250, 280, 300, 320, 340, 360, 380, 400, 420, 440, 460, 480, 500, 520, 540, 560, 580, 600],
-                                                                                                            // transformPerspective: 1000,
-                                                                                                            // translateX: coOrdinate.x,
                                                                                                             translateX: bookMarkMove ? 1000 : 0,
-                                                                                                            // translateY: coOrdinate.y,
                                                                                                             translateY: bookMarkMove ? -370 : 0,
                                                                                                             rotate: 360,
                                                                                                         } : ""}
                                                                                                         transition={{ duration: 5, ease: "easeInOut", type: "tween", times: "2" }}
-                                                                                                    // exit={{ opacity: 0, x: 0, y: 0 }}
                                                                                                     >
                                                                                                         {
                                                                                                             i.icon
@@ -753,7 +727,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                             {
                                 loadingPost && loadingPostSecond ? "" : item.postType === "news" ?
                                     <>
-                                        <H5 className="">{item.title}</H5>
+                                        <p className={` font-serif font-bold leading-normal mt-0 mb-2 ${theme ? "text-[#fff] text-3xl" : "text-[#0f0f0f] text-2xl"}`}>{item.title}</p>
                                         <ReadMore children={item.text} theme={theme} className={`cursor-pointer ${theme ? "text-[#ffff]" : "text-[#000]"}`} />
                                     </>
                                     : (<ReadMore children={item.text} theme={theme} className={`cursor-pointer ${theme ? "text-[#ffff]" : "text-[#000]"}`} />)
@@ -762,20 +736,26 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                     </CardBody>
                     <section className={`image section   relative w-full   ${loadingPost && loadingPostSecond ? "mt-0 h-[15rem]" : "mt-[.8rem]"}`}>
                         {
-                            item.postType === "news" ? <Image
-                                rounded={false}
-                                className="rounded-t-none rounded-b-none w-full"
-                                src={item.image}
-                            /> : (item.fileType === "video" ?
-                                (item.image ?
-
-                                    <LoadPostContentVideo url={item.image} setLoadingPostSecond={setLoadingPostSecond} />
-                                    : "")
-                                :
-                                (item.image ?
-                                    <LoadPostContentImage url={item.image} setLoadingPostSecond={setLoadingPostSecond} />
-                                    : ""))
-
+                            item.postType === "news" ?
+                                <div className="image cursor-pointer"
+                                    onClick={() => {
+                                        RedirectToAnotherUrl(item.NewsURL)
+                                    }}
+                                >
+                                    <Image
+                                        rounded={false}
+                                        className="rounded-t-none rounded-b-none w-full cursor-pointer"
+                                        src={item.image}
+                                    />
+                                </div>
+                                : (item.fileType === "video" ?
+                                    (item.image ?
+                                        <LoadPostContentVideo url={item.image} setLoadingPostSecond={setLoadingPostSecond} />
+                                        : "")
+                                    :
+                                    (item.image ?
+                                        <LoadPostContentImage url={item.image} setLoadingPostSecond={setLoadingPostSecond} />
+                                        : ""))
                         }
                     </section>
                     <hr className={`${loadingPost && loadingPostSecond ? "" : " mt-[2px]"} ${theme ? "bg-[#171717] hidden" : "bg-[#fff]"}`} />
@@ -857,7 +837,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                 className={`hover:bg-gray-100 text-gray-500   ${bookMark ? "px-[1.3rem] h-[3rem] text-[1.5rem]" : "text-[1.5rem] px-[2rem] md:px-[4rem] md:text-[2rem]"}`}
                                 onClick={() => {
                                     callLikeHnadler(item.userId, item.post_id, item.image, item.profileImage)
-                                    // setUserId([item.userId, item.post_id]);
                                     setLike(!like)
                                 }}
                             >
@@ -951,22 +930,14 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                     </section>}
                 </Card>
             </div >
-
             <Tooltips Tooltips placement="top" ref={buttonRef} className="ml-[5rem]" >
                 <TooltipsContent className="flex justify-center md:justify-between  px-[5px] ">
-
                 </TooltipsContent>
             </Tooltips>
         </>
     )
 }
 export default PostCard = React.memo(PostCard)
-
-
-
-
-
-
 function LoaderForPostOperation() {
     return (
         <>
@@ -974,8 +945,6 @@ function LoaderForPostOperation() {
         </>
     )
 }
-
-
 function formatnumber(number) {
     var unitlist = ["", "K", "M", "G"];
     let sign = Math.sign(number);
@@ -986,11 +955,6 @@ function formatnumber(number) {
     }
     return sign * Math.abs(number) + unitlist[unit]
 }
-
-
-
-
-
 function LoadProfileImage({ url, setLoadingPost, image, theme }) {
     const [loaded, setLoaded] = useState(false)
     const [blobURL, setURL] = useState("")
@@ -1036,8 +1000,6 @@ function LoadProfileImage({ url, setLoadingPost, image, theme }) {
         </>
     )
 }
-
-
 function LoadPostContentVideo({ url, setLoadingPostSecond }) {
     const [blobData, setPostBlobUrl] = useState("")
     const [load, setLoad] = useState(false)
@@ -1050,18 +1012,15 @@ function LoadPostContentVideo({ url, setLoadingPostSecond }) {
                 const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/api/v1/_user/posts/`, {
                     method: "GET",
                     headers: {
-                        // "Content-Type":"application/json",
                         "Authorization": "Bearer " + localStorage.getItem("uuid"),
                         "post": url
                     }
                 })
                 const blob = await res.blob()
                 if (res.status === 200) {
-                    // if (isMount.current) {
                     setPostBlobUrl(URL.createObjectURL(blob))
                     setLoad(false)
                     setLoadingPostSecond(false)
-                    // }
                 }
             }
             catch (err) {
@@ -1071,9 +1030,6 @@ function LoadPostContentVideo({ url, setLoadingPostSecond }) {
             }
         }
         loadFiles()
-        // return () => {
-        //     isMount.current = false
-        // }
     }, [url])
     return (
         <>
@@ -1095,8 +1051,6 @@ function LoadPostContentVideo({ url, setLoadingPostSecond }) {
         </>
     )
 }
-
-
 function LoadPostContentImage({ url, setLoadingPostSecond }) {
     const [blobData, setPostBlobUrl] = useState("")
     const [load, setLoad] = useState(false)
@@ -1150,41 +1104,3 @@ function LoadPostContentImage({ url, setLoadingPostSecond }) {
         </>
     )
 }
-{/* <Popover placement="auto" ref={deletePost}>
-<PopoverContainer>
-    <PopoverHeader>
-    </PopoverHeader>
-    <PopoverBody>
-        <div className="container1 flex flex-col justify-center -mt-3">
-            <section className=" flex  justify-between cursor-pointer align-baseline hover:bg-red-700 hover:rounded-lg hover:text-white px-6 py-2"
-                ref={DeletedPost}
-                onClick={(e) => {
-                    e.preventDefault();
-                    DeletePostById(item.post_id, item.userId);
-                }}
-            >
-                <MdDelete className='text-xl mt-[2px] mr-2' />
-                <p className='cursor-pointer flex text-[1rem] '
-                >
-                    Delete Post
-                </p>
-            </section>
-            <section
-                className='px-6 py-2 hover:bg-red-800 hover:rounded-lg hover:text-white flex   cursor-pointer align-baseline '
-                onClick={(e) => {
-                    VisibilityChange(item.post_id, item.privacy);
-                }}
-            >
-                {
-                    item.privacy === "public" ?
-                        <MdVisibility className='text-xl mt-[2px] mr-2' /> :
-                        <MdVisibilityOff className='text-xl mt-[2px] mr-2' />
-                }
-                <p
-                    className='cursor-pointer flex text-[1rem] '
-                >Visibility</p>
-            </section>
-        </div>
-    </PopoverBody>
-</PopoverContainer>
-</Popover> */}
