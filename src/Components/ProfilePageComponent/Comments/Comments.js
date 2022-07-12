@@ -104,7 +104,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
       }
     }
     catch (err) {
-      console.warn(err)
     }
   };
 
@@ -131,7 +130,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
       }
     }
     catch (err) {
-      console.warn(err)
     }
 
   };
@@ -155,7 +153,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
       }
     }
     catch (err) {
-      console.warn(err)
     }
   }
 
@@ -233,7 +230,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
         }
       }
       catch (err) {
-        console.warn(err)
       }
     }
     loadComment()
@@ -264,7 +260,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
         }
         // }
       } catch (error) {
-        console.warn(error)
       }
     }
     NumberOfComments()
