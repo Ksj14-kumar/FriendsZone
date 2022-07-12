@@ -734,7 +734,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                             }
                         </section>
                     </CardBody>
-                    <section className={`image section   relative w-full   ${loadingPost && loadingPostSecond ? "mt-0 h-[15rem]" : "mt-[.8rem]"}`}>
+                    <section className={`image section   relative w-full   ${loadingPost && loadingPostSecond ? "mt-0 h-[15rem] mds-editor28:w-full" : "mt-[.8rem]"}`}>
                         {
                             item.postType === "news" ?
                                 <div className="image cursor-pointer"

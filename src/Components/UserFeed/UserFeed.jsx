@@ -381,7 +381,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                                         : <></>
                                 }
                             </div>
-                            <div className="bottom_section  p-4 mds-editor28:p-[0px] ">
+                            <div className="bottom_section  p-4 mds-editor28:p-[0px] w-full flex flex-col items-center">
                                 {
                                     UserInformationLoad !== null ?
                                         <PublicPostCard profilePost={PostWhichUserSelectedImageORVideo} socket={socket} threeDot={threeDot} setShowLikeUserModal={setShowLikeUserModal} setAllPosts={setAllPosts} allPosts={allPosts} theme={theme}
