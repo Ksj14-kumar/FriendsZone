@@ -160,11 +160,17 @@ function ChangeURL({ url }) {
     const [loader, setLoader] = useState(false)
     useEffect(() => {
         async function loadImage() {
-            setLoader(true)
-            const res = await fetch(url)
-            const blobData = await res.blob()
-            setBlob(URL.createObjectURL(blobData))
-            setLoader(false)
+            try {
+
+                setLoader(true)
+                const res = await fetch(url)
+                const blobData = await res.blob()
+                setBlob(URL.createObjectURL(blobData))
+                setLoader(false)
+            }
+            catch (err) {
+
+            }
         }
         loadImage()
     }, [url])
