@@ -399,10 +399,10 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                     {i.name === "Visibility" && <p className="flex-[1] text-[#6a6a6a] font-sans tracking-wider text-[1.3rem]">
                                                                                         {
                                                                                             !visibilityView ? (
-                                                                                                <FiChevronRight className={`text-[1.8rem] ${theme ? "text-[#ffffff]" : "text-[#070707]"}`} />
+                                                                                                <FiChevronRight className={`text-[1.8rem] ${theme ? "text-[#ffffff]" : "text-[#111111]"}`} />
                                                                                             )
                                                                                                 : (
-                                                                                                    <FiChevronDown className={`text-[1.8rem] ${theme ? "text-[#ffffff]" : "text-[#070707]"}`} />
+                                                                                                    <FiChevronDown className={`text-[1.8rem] ${theme ? "text-[#ffffff]" : "text-[#111111]"}`} />
                                                                                                 )
                                                                                         }
                                                                                     </p>}
@@ -414,14 +414,14 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                 {
                                                                                     [
                                                                                         {
-                                                                                            icon: <FaUserAlt className={`text-[1.3rem] ${theme ? "text-[#fff]" : "text-[#000]"}`}
+                                                                                            icon: <FaUserAlt className={`text-[1.3rem] ${theme ? "text-[#fff]" : "text-[#111111]"}`}
                                                                                             />, name: "private"
                                                                                         },
                                                                                         {
-                                                                                            icon: <HiUsers className={`text-[1.3rem] ${theme ? "text-[#fff]" : "text-[#000]"}`} />,
+                                                                                            icon: <HiUsers className={`text-[1.3rem] ${theme ? "text-[#fff]" : "text-[#111111]"}`} />,
                                                                                             name: "friends"
                                                                                         }, {
-                                                                                            icon: <FaUsers className={`text-[1.3rem] ${theme ? "text-[#fff]" : "text-[#000]"}`} />,
+                                                                                            icon: <FaUsers className={`text-[1.3rem] ${theme ? "text-[#fff]" : "text-[#111111]"}`} />,
                                                                                             name: "public"
                                                                                         }
                                                                                     ].map((i) => {
@@ -442,7 +442,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                                         <p className='flex-1'>
                                                                                                             {i.icon}
                                                                                                         </p>
-                                                                                                        <p className={`flex-[11] text-[1.4rem]  ml-2 ${theme ? "text-[#f5f5f5]" : "text-[#070707]"}`}>{i.name}</p>
+                                                                                                        <p className={`flex-[11] tracking-wider font-serif text-[1.4rem]  ml-2 ${theme ? "text-[#f5f5f5]" : "text-[#070707]"}`}>{i.name}</p>
                                                                                                     </div>
                                                                                                     <div className="che flex-[1] mr-2">
                                                                                                         {
@@ -605,12 +605,12 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                 i.name === "Visibility" && visibilityView && <motion.ul className=" ml-8 mt-1">
                                                                                     {
                                                                                         [
-                                                                                            { icon: <FaUserAlt className={` text-[1.3rem] ${theme ? "text-[#fff]" : "text-[#0a0a0a]"}`} />, name: "private" },
+                                                                                            { icon: <FaUserAlt className={` text-[1.3rem] ${theme ? "text-[#fff]" : "text-[#111111]"}`} />, name: "private" },
                                                                                             {
-                                                                                                icon: <HiUsers className={` text-[1.3rem] ${theme ? "text-[#fff]" : "text-[#0a0a0a]"}`} />,
+                                                                                                icon: <HiUsers className={` text-[1.3rem] ${theme ? "text-[#fff]" : "text-[#111111]"}`} />,
                                                                                                 name: "friends"
                                                                                             }, {
-                                                                                                icon: <FaUsers className={` text-[1.3rem] ${theme ? "text-[#fff]" : "text-[#0a0a0a]"}`} />,
+                                                                                                icon: <FaUsers className={` text-[1.3rem] ${theme ? "text-[#fff]" : "text-[#111111]"}`} />,
                                                                                                 name: "public"
                                                                                             }
                                                                                         ].map((i) => {
@@ -631,7 +631,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                                                                                                             <p className='flex-1'>
                                                                                                                 {i.icon}
                                                                                                             </p>
-                                                                                                            <p className={`flex-[11] text-[1.4rem] ${theme ? "text-[#eeeeee]" : "text-[#0b0b0b]"} ml-2`}>{i.name}</p>
+                                                                                                            <p className={`flex-[11] text-[1.4rem] font-serif tracking-wider ${theme ? "text-[#eeeeee]" : "text-[#0b0b0b]"} ml-2`}>{i.name}</p>
                                                                                                         </div>
                                                                                                         <div className="che flex-[1] mr-2">
                                                                                                             {

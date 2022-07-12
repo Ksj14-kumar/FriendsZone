@@ -8,7 +8,7 @@ import { HiArrowLeft } from "react-icons/hi"
 import { NavLink, useParams, useRouteMatch } from "react-router-dom"
 import ReactUserList from './ReactUserList'
 import InternetDetection from '../InternetDetection'
-import { Plane } from "react-loader-spinner"
+import { Plane,InfinitySpin } from "react-loader-spinner"
 
 
 
@@ -502,7 +502,8 @@ function CoverPage() {
              bg-blue-100  bg-clip-padding backdrop-filter backdrop-blur-2xl bg-opacity-30 border border-gray-100
             ">
                 <div className="cover_Wrapper flex w-full justify-center items-center">
-                    <Plane ariaLabel="loading-indicator" />
+                    {/* <Plane ariaLabel="loading-indicator" /> */}
+                    <InfinitySpin color="red" />
                 </div>
             </div>
 
