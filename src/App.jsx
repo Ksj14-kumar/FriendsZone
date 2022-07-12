@@ -62,6 +62,10 @@ function App() {
             theme: state.Theme
         }
     })
+
+    socket?.io.on("error",(err)=>{
+        console.log({err})
+    })
     const getUserData = localStorage.getItem("uuid")
     const user = localStorage.getItem("user")
     useEffect(() => {
@@ -96,7 +100,6 @@ function App() {
         const isHttps = process.env.REACT_APP_API_BACKENDURL
         setSocket(io(isHttps, object))
         socket?.on("connect_error", (err) => {
-            console.log("CONSOLE>LOG", err)
         })
     }, [])
     //add  new user info to the server by socket when user login
