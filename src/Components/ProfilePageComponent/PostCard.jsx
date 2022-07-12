@@ -1018,9 +1018,12 @@ function LoadPostContentVideo({ url, setLoadingPostSecond }) {
                 })
                 const blob = await res.blob()
                 if (res.status === 200) {
+                    // if (isMount.current) {
+
                     setPostBlobUrl(URL.createObjectURL(blob))
                     setLoad(false)
                     setLoadingPostSecond(false)
+                    // }
                 }
             }
             catch (err) {
@@ -1030,6 +1033,10 @@ function LoadPostContentVideo({ url, setLoadingPostSecond }) {
             }
         }
         loadFiles()
+        // return () => {
+        //     isMount.current = false
+
+        // }
     }, [url])
     return (
         <>
@@ -1054,8 +1061,9 @@ function LoadPostContentVideo({ url, setLoadingPostSecond }) {
 function LoadPostContentImage({ url, setLoadingPostSecond }) {
     const [blobData, setPostBlobUrl] = useState("")
     const [load, setLoad] = useState(false)
-    const isMount = useRef(true)
     useEffect(() => {
+        let isMount = true
+
         async function loadFiles() {
             try {
                 setLoadingPostSecond(true)
@@ -1069,9 +1077,11 @@ function LoadPostContentImage({ url, setLoadingPostSecond }) {
                 })
                 const blob = await res.blob()
                 if (res.status === 200) {
-                    setPostBlobUrl(URL.createObjectURL(blob))
-                    setLoadingPostSecond(false)
-                    setLoad(false)
+                    if (isMount) {
+                        setPostBlobUrl(URL.createObjectURL(blob))
+                        setLoadingPostSecond(false)
+                        setLoad(false)
+                    }
                 }
             }
             catch (err) {
@@ -1080,6 +1090,10 @@ function LoadPostContentImage({ url, setLoadingPostSecond }) {
             }
         }
         loadFiles()
+        return () => {
+            isMount = false
+
+        }
     }, [url])
     return (
         <>

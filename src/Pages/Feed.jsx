@@ -21,6 +21,7 @@ function Feed({ socket, setShowLikeUserModal, showLikeUserModal }) {
         })
     }, [])
     useEffect(() => {
+        let mount = true
         async function getAllUser() {
             try {
                 const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/all/user`, {
@@ -30,7 +31,10 @@ function Feed({ socket, setShowLikeUserModal, showLikeUserModal }) {
                 })
                 const data = await res.json()
                 if (res.status === 200) {
-                    setAllUser(data)
+                    if (mount) {
+                        setAllUser(data)
+
+                    }
                 }
                 else if (res.status !== 200) {
                 }
@@ -40,6 +44,9 @@ function Feed({ socket, setShowLikeUserModal, showLikeUserModal }) {
             }
         }
         getAllUser()
+        return () => {
+            mount = false
+        }
     }, [])
     useEffect(() => {
         async function isFriends() {

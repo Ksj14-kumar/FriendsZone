@@ -31,7 +31,6 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
     const [profileLoader, setProfileLoader] = useState(false)
     const _id = localStorage.getItem("uuid")
     const dispatch = useDispatch()
-    const loadingPostIsMount = useRef(true)
     const TotalCommentIsMount = useRef(true)
     const loadNotificationIsMount = useRef(true)
     const userInfoLoadisMount = useRef(true)
@@ -71,8 +70,10 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
     //==============================================public post card side effect===============================
     //LOAD ALL THE posts for users
     useEffect(() => {
+        let loadingPostIsMount = true
         async function loadPosts() {
             try {
+
                 setPostLoader(true)
                 const loadPostResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/load/all/post/${initialPage}/${increament}`, {
                     method: "GET",
@@ -87,27 +88,27 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                     const Arrange = loadPostData.data.sort((a, b) => {
                         return b.time - a.time
                     })
-                    // if (loadingPostIsMount.current) {
-                    // setAllPosts((pre) => [...pre, ...Arrange])
-                    setAllPosts(Arrange)
-                    setPostLoader(false)
-                    //set all posts into session storage
-                    if (initialPage === 0) {
-                        sessionStorage.setItem("_users_posts", JSON.stringify(Arrange))
+                    if (loadingPostIsMount) {
+                        // setAllPosts((pre) => [...pre, ...Arrange])
+                        setAllPosts(Arrange)
+                        setPostLoader(false)
+                        //set all posts into session storage
+                        if (initialPage === 0) {
+                            sessionStorage.setItem("_users_posts", JSON.stringify(Arrange))
+                        }
+                        else if (initialPage > 0) {
+                            sessionStorage.removeItem("_users_posts")
+                            sessionStorage.setItem("_users_posts", JSON.stringify(allPosts))
+                        }
+                        initialPage = initialPage + 2
                     }
-                    else if (initialPage > 0) {
-                        sessionStorage.removeItem("_users_posts")
-                        sessionStorage.setItem("_users_posts", JSON.stringify(allPosts))
-                    }
-                    // }
-                    initialPage = initialPage + 2
                 }
             } catch (err) {
             }
         }
         loadPosts()
         return () => {
-            loadingPostIsMount.current = false
+            loadingPostIsMount = false
         }
     }, [increament])
     useEffect(() => {
