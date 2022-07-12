@@ -63,9 +63,7 @@ function App() {
         }
     })
 
-    socket?.io.on("error",(err)=>{
-        console.log({err})
-    })
+    
     const getUserData = localStorage.getItem("uuid")
     const user = localStorage.getItem("user")
     useEffect(() => {

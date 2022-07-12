@@ -291,6 +291,7 @@ const Comment = ({
                                                 currentUserId={currentUserId}
                                                 ImageUrl={ImageUrl}
                                                 currentUserName={currentUserName}
+                                                theme={theme}
                                             />
 
                                         )
