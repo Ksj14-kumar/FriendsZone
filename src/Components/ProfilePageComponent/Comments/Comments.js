@@ -14,7 +14,7 @@ import {
 } from "./api";
 import { AnimatePresence } from "framer-motion";
 
-const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, currentUserName, UserIdForPostComments, post_id, setCommentLength, socket, setCommentToggle, commentsLength, setLike, setLikeCount, item ,theme}) => {
+const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, currentUserName, UserIdForPostComments, post_id, setCommentLength, socket, setCommentToggle, commentsLength, setLike, setLikeCount, item, theme }) => {
 
 
   const [Length, setLength] = useState(0)
@@ -160,21 +160,29 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
 
   // ======================GET COMMENT LENGTH===================================
   useEffect(() => {
-    if (socket.connected) {
-      socket.on("getCommentLength", (data) => {
-        if (data.post_id === post_id) {
-          setCommentLength({ length: data.commentLength, post_id: data.post_id })
-        }
-      })
+    let isMount = true
+    if (isMount) {
+
+      if (socket.connected) {
+        socket.on("getCommentLength", (data) => {
+          if (data.post_id === post_id) {
+            setCommentLength({ length: data.commentLength, post_id: data.post_id })
+          }
+        })
+      }
+      else {
+        setCommentLength({ length: backendComments.length, post_id: post_id })
+      }
     }
-    else {
-      setCommentLength({ length: backendComments.length, post_id: post_id })
+    return () => {
+      isMount = false
     }
   }, [socket, backendComments])
 
 
   useEffect(() => {
     //load the all comments from backend
+    let isMount = true
     async function loadComment() {
       try {
         setCommentLoader(true)
@@ -187,7 +195,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
         })
         const commentData = await commentResponse.json()
         if (commentResponse.status === 200) {
-          if (isMount.current) {
+          if (isMount) {
             if (post_id === commentData.post_id) {
               setLength(commentData.length)
               setBackendComments(commentData.data)
@@ -200,14 +208,11 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
         }
       }
       catch (err) {
-        console.warn(err)
       }
     }
     loadComment()
     return (() => {
-      // setCommentToggle(false)
-      // setBackendComments([])
-      isMount.current = false
+      isMount = false
     })
   }, [post_id, UserIdForPostComments]);
 
@@ -237,6 +242,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
 
   useEffect(() => {
 
+    let isMount = true
     async function NumberOfComments() {
       try {
         const response = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/number/comment/length`, {
@@ -248,26 +254,24 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
           }
         })
         const data = await response.json()
-        // if (isMount1.current) {
+        if (isMount) {
 
-        // if (isMountCommentLength.current) {
-        if (response.status === 200) {
-          setCommentLength({ length: data.data, post_id: data.post })
-          // setShareLength(0)
+          // if (isMountCommentLength.current) {
+          if (response.status === 200) {
+            setCommentLength({ length: data.data, post_id: data.post })
+            // setShareLength(0)
+          }
+          else if (response.status !== 200) {
+            setCommentLength({ length: 0, post_id: data.post })
+          }
         }
-        else if (response.status !== 200) {
-          setCommentLength({ length: 0, post_id: data.post })
-        }
-        // }
       } catch (error) {
       }
     }
     NumberOfComments()
-    // return () => {
-    //   //   // setCommentLength(0)
-    //   //   // setShareLength(0)
-    //   // isMount1.current = false
-    // }
+    return () => {
+      isMount = false
+    }
   }, [post_id])
 
 

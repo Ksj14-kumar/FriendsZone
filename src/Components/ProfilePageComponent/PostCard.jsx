@@ -55,6 +55,9 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
             OriginalProfileURL: state.OriginalProfileURL
         }
     })
+
+    // console.log({item})
+
     const { _id, fname, lname, googleId } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "" }
     function SetCommentSection(e, id) {
         if (id) {
@@ -74,8 +77,12 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                 body: JSON.stringify({ post_id, userId: adminId })
             })
             const { message, data } = await DeletePostResponse.json()
+            console.log("delete posts", { data })
             if (DeletePostResponse.status === 200) {
-                setAllPosts(data)
+                setAllPosts(prev => {
+                    return prev.filter(item => item.post_id !== post_id)
+                })
+
                 success({ message: message })
                 setDeleteLoader(false)
             }
@@ -87,24 +94,30 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
     }
     //================================================POST IS BOOKMARKED OR NOT====================
     useEffect(() => {
+        let isMount = true
         const value = UserInformationLoad?.bookMarkPost?.length > 0 && UserInformationLoad.bookMarkPost.some((i) => {
             return i.post_id === item.post_id
         })
         if (value) {
-            steBookMarkColor(value)
+            if (isMount) {
+
+                steBookMarkColor(value)
+            }
         }
-        // }
-    }, [item, UserInformationLoad])
+        return () => {
+            isMount = false
+        }
+    }, [item])
     //realitime like system
     useEffect(() => {
         if (socket.connected) {
-            socket.on("getLikeCount", (data) => {
-                if (item.post_id === data.post_id) {
-                    setLikeCount(data.likeCount)
-                }
-            })
+            // socket.on("getLikeCount", (data) => {
+            //     if (item.post_id === data.post_id) {
+            //         setLikeCount(data.likeCount)
+            //     }
+            // })
         }
-    }, [likeCount])
+    }, [likeCount, socket])
     //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Change the visibility^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     async function VisibilityChange(post_id, visibility) {
         try {
@@ -130,12 +143,26 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^>>>> SEND THE REACTION TO Specific I  ID<<<<<<<<<<^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     useEffect(() => {
         //load the like when user refresh the page and show user which post already liked
-        item.postType !== "news" && setLike(item.liked.includes(googleId))
-    }, [item?.liked, _id, googleId])
+
+        let isMount = true
+        if (isMount) {
+            item.postType !== "news" && setLike(item.liked.includes(googleId))
+        }
+        return () => {
+            isMount = false
+        }
+    }, [item, _id, googleId])
     // ========================================================SET THE LIKE COUNT NUMBER ====================================
     useEffect(() => {
-        item.postType !== "news" && setLikeCount(item.liked.length === 0 ? 0 : item.liked.length)
-    }, [item?.liked])
+        let isMount = true
+        if (isMount) {
+            item.postType !== "news" && setLikeCount(item.liked.length === 0 ? 0 : item.liked.length)
+        }
+
+        return () => {
+            isMount = false
+        }
+    }, [item])
     //function which excute when current user liked it any post
     async function callLikeHnadler(userId, post_id, bgImageUrl, profileImage) {
         try {
@@ -144,9 +171,19 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                 if (like) {
                     socket.emit("likePost", { post_id, likedBy: googleId, likeTo: userId, OriginalProfileURL })
                     socket?.emit("likeCount", { likeCount: likeCount - 1, post_id })
+                    socket.on("getLikeCount", (data) => {
+                        if (item.post_id === data.post_id) {
+                            setLikeCount(data.likeCount)
+                        }
+                    })
                 }
                 else {
                     socket?.emit("likeCount", { likeCount: likeCount + 1, post_id })
+                    socket.on("getLikeCount", (data) => {
+                        if (item.post_id === data.post_id) {
+                            setLikeCount(data.likeCount)
+                        }
+                    })
                 }
             }
             else {
@@ -211,17 +248,19 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
         };
     }, [postPopupModal])
     useEffect(() => {
+        let isMount = true
         if (item.image === "") {
-            setLoadingPostSecond(false)
-            setLoadingPost(false)
+            if (isMount) {
+
+                setLoadingPostSecond(false)
+                setLoadingPost(false)
+            }
+        }
+        return () => {
+            isMount = false
         }
     }, [item.image])
-    useEffect(() => {
-        document.getElementById("root").scrollTo(0, 0)
-        if (location.path === "/") {
-            window.scrollTo(0, 0)
-        }
-    }, [item])
+
     //redirect user to another url
     function RedirectToAnotherUrl(value) {
         window.location.assign(value)

@@ -133,28 +133,28 @@ export default function SettingsForm({ theme }) {
                         <div className="w-full lg:w-6/12 pl-4 mb-10 font-light">
                             <div className="form-check">
                                 <div className='male flex'>
-                                    {/* <input className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 my-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="radio" name="gender"
+                                    <input className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 my-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="radio" name="gender"
                                         id="flexRadioDefault10"
                                         value="Male"
-                                        onChange={InputHandleValue}
-                                    /> */}
-                                    <input type="radio" name="radio-3" className="mr-1 mb-2 radio radio-secondary"
-                                        value="Male"
-                                        id="flexRadioDefault10"
                                         onChange={InputHandleValue}
                                     />
+                                    {/* <input type="radio" name="radio-3" className="mr-1 mb-2 radio radio-secondary"
+                                        value="Male"
+                                        id="flexRadioDefault10"
+                                        onChange={InputHandleValue}
+                                    /> */}
                                     <p className="text-[#D1D1D1]">Male</p>
                                 </div>
                                 <div className='female flex'>
-                                    {/* <input className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 my-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="radio" name="gender" id="flexRadioDefault10"
-                                        value="Female"
-                                        onChange={InputHandleValue}
-                                    /> */}
-                                    <input type="radio" name="radio-3" className="mr-1  radio radio-secondary"
-                                    id="flexRadioDefault10"
+                                    <input className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 my-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="radio" name="gender" id="flexRadioDefault10"
                                         value="Female"
                                         onChange={InputHandleValue}
                                     />
+                                    {/* <input type="radio" name="radio-3" className="mr-1  radio radio-secondary"
+                                    id="flexRadioDefault10"
+                                        value="Female"
+                                        onChange={InputHandleValue}
+                                    /> */}
                                     <p className="text-[#D1D1D1]" >Female</p>
                                 </div>
                             </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import AddPost from '../ProfilePageComponent/AddPost'
 import FriendSuggestion from '../ProfilePageComponent/FriendSuggestion'
 import PublicPostCard from '../ProfilePageComponent/PublicPostCard'
@@ -8,7 +8,7 @@ import { HiArrowLeft } from "react-icons/hi"
 import { NavLink, useParams, useRouteMatch } from "react-router-dom"
 import ReactUserList from './ReactUserList'
 import InternetDetection from '../InternetDetection'
-import { Plane,InfinitySpin } from "react-loader-spinner"
+import { Plane, InfinitySpin } from "react-loader-spinner"
 
 
 
@@ -31,20 +31,13 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
     const [profileLoader, setProfileLoader] = useState(false)
     const _id = localStorage.getItem("uuid")
     const dispatch = useDispatch()
-    const TotalCommentIsMount = useRef(true)
-    const loadNotificationIsMount = useRef(true)
-    const userInfoLoadisMount = useRef(true)
-    const backgroundImageIsMount = useRef(true)
-    const profileImageisMount = useRef(true)
-    const postLengthisMount = useRef(true)
-    const UnReadMessageIsMount = useRef(true)
     const { path } = useRouteMatch()
     const UserInformationLoad = useSelector((state) => {
         return state.UserInformationLoad.value
     })
     useEffect(() => {
-        socket?.off("get_posts")?.on("get_posts", (data) => {
-            setAllPosts(prev => [data, ...prev])
+        socket?.off("getPosts")?.on("getPosts", (data) => {
+            setAllPosts(data)
         })
     }, [socket])
     useEffect(() => {
@@ -62,18 +55,20 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                 setAllUser(WithoutFriends)
             }
             catch (err) {
-                console.warn(err)
             }
         }
         areFriends()
     }, [AllUser, UserInformationLoad?.friend])
+
+
+    
+
     //==============================================public post card side effect===============================
     //LOAD ALL THE posts for users
     useEffect(() => {
         let loadingPostIsMount = true
         async function loadPosts() {
             try {
-
                 setPostLoader(true)
                 const loadPostResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/load/all/post/${initialPage}/${increament}`, {
                     method: "GET",
@@ -89,7 +84,6 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                         return b.time - a.time
                     })
                     if (loadingPostIsMount) {
-                        // setAllPosts((pre) => [...pre, ...Arrange])
                         setAllPosts(Arrange)
                         setPostLoader(false)
                         //set all posts into session storage
@@ -106,12 +100,15 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
             } catch (err) {
             }
         }
-        loadPosts()
+        UserInformationLoad && loadPosts()
+        // loadPosts()
         return () => {
             loadingPostIsMount = false
         }
     }, [increament])
     useEffect(() => {
+        console.log("Comments")
+        let TotalCommentIsMount = true
         async function totalComment() {
             try {
                 setCommentLoader(true)
@@ -125,7 +122,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                 const totalCommentData = await totalCommentResponse.json()
                 if (totalCommentResponse.status === 200) {
                     setCommentLoader(false)
-                    if (TotalCommentIsMount.current) {
+                    if (TotalCommentIsMount) {
                         dispatch({ type: "SET_TOTAL_COMMENT", payload: totalCommentData.data })
                         dispatch({ type: "Get_All_Comments", payload: totalCommentData.data })
                     }
@@ -133,13 +130,15 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
             } catch (error) {
             }
         }
-        totalComment()
+        UserInformationLoad&&  totalComment()
         return () => {
-            TotalCommentIsMount.current = false
+            TotalCommentIsMount = false
         }
     }, [])
     //load the all notification 
     useEffect(() => {
+        console.log("notification")
+        let loadNotificationIsMount = true
         async function loadNotification() {
             try {
                 setNotificationLoader(true)
@@ -152,53 +151,26 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                 })
                 const loadNotificationData = await loadNotificationResponse.json()
                 if (loadNotificationResponse.status === 200) {
-                    if (loadNotificationIsMount.current) {
-                        setNotificationLoader(false)
+                    if (loadNotificationIsMount) {
 
                         dispatch({ type: "Send_Notification", payload: loadNotificationData.data })
+                        setNotificationLoader(false)
                     }
                 }
             } catch (err) {
             }
         }
-        loadNotification()
+        UserInformationLoad&&loadNotification()
         return () => {
-            loadNotificationIsMount.current = false
+            loadNotificationIsMount = false
         }
     }, [])
-    //===================LOAD THE USER INFORMATION FROM THE SERVER============
-    useEffect(() => {
-        async function userInfoLoad() {
-            try {
-                setInfoLoader(true)
-                const userInfo = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/user/083525p7ljhwmxifts31/l66cbrsuytmj1wujuauz/nqoye5ozdqj89b4s4qoq/ua1iztaxjo4bbmzvd391/3mzqeygnoszlknp90h51/t28uf00khscofxgjwj20/`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + localStorage.getItem("uuid")
-                    }
-                })
-                const res = await userInfo.json()
-                if (userInfo.status === 200) {
-                    if (userInfoLoadisMount.current) {
-                        setInfoLoader(false)
-                        dispatch({ type: "Theme", payload: res.message.theme })
-                        dispatch({ type: "USERINFO_LOAD", payload: res.message })
-                        dispatch({ type: "BOOK_MARK_POST", payload: res.message.bookMarkPost })
-                    }
-                }
-                else if (userInfo.status !== 200) {
-                }
-            } catch (err) {
-            }
-        }
-        userInfoLoad()
-        return () => {
-            userInfoLoadisMount.current = false
-        }
-    }, [])
+
+
     //=====================LOAD THE BACKGROUND IMAGE from the cloudinaryS=============
     useEffect(() => {
+        console.log("background")
+        let backgroundImageIsMount = true
         async function BackgroundImage() {
             try {
                 setBAckgroundLoader(true)
@@ -215,7 +187,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                 })
                 const data1 = await res1.json()
                 if (res1.status === 200) {
-                    if (backgroundImageIsMount.current) {
+                    if (backgroundImageIsMount) {
                         let backgroundURL;
                         if (data1.url) {
                             const convertURL = await fetch(data1.url)
@@ -225,11 +197,11 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                         else {
                             backgroundURL = ""
                         }
-                        setBAckgroundLoader(false)
                         dispatch({ type: "LOADER", payload: false })
                         dispatch({ type: "uploadImageDataFromServerBackground", payload: data1 })
                         dispatch({ type: "ShowImageBackground", payload: backgroundURL })
                         dispatch({ type: "LOADER", payload: false })
+                        setBAckgroundLoader(false)
                     }
                 }
                 else if (res1.status !== 404) {
@@ -239,13 +211,15 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                 // console.warn(err)
             }
         }
-        BackgroundImage()
+        UserInformationLoad&& BackgroundImage()
         return () => {
-            backgroundImageIsMount.current = false
+            backgroundImageIsMount = false
         }
     }, [])
     //====================LOAD PROFILE IMAGES fromc cloudinary=============
     useEffect(() => {
+        console.log("profileImage")
+        let profileImageisMount = true
         async function ProfileImages() {
             let url;
             try {
@@ -263,7 +237,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                 })
                 const data = await res.json()
                 if (res.status === 200) {
-                    if (profileImageisMount.current) {
+                    if (profileImageisMount) {
 
                         if (data.url !== false) {
                             const blobRes = await fetch(data.url)
@@ -275,11 +249,11 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                             url = ""
                             dispatch({ type: "OriginalProfileURL", payload: "" })
                         }
-                        setProfileLoader(false)
                         dispatch({ type: "LOADER", payload: false })
                         dispatch({ type: "uploadImageDataFromServer", payload: data })
                         dispatch({ type: "ShowImage", payload: url })
                         dispatch({ type: "LOADER", payload: false })
+                        setProfileLoader(false)
                     }
                 }
                 else {
@@ -288,12 +262,14 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
             } catch (err) {
             }
         }
-        ProfileImages()
+        UserInformationLoad&& ProfileImages()
         return () => {
-            profileImageisMount.current = false
+            profileImageisMount = false
         }
     }, [])
     useEffect(() => {
+        console.log("postLength")
+        let postLengthisMount = true
         async function getAllPostDataLength() {
             try {
                 const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/load/all/postlength`, {
@@ -304,7 +280,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                     }
                 })
                 const response = await res.json()
-                if (postLengthisMount.current) {
+                if (postLengthisMount) {
 
                     if (res.status === 200) {
                         setLength(response.l)
@@ -317,13 +293,14 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
             catch (err) {
             }
         }
-        getAllPostDataLength()
+        UserInformationLoad&&  getAllPostDataLength()
         return () => {
-            postLengthisMount.current = false
+            postLengthisMount = false
         }
     }, [])
     //get all unread messages for the current user
     useEffect(() => {
+        let UnReadMessageIsMount = true
         const getUnreadMessages = async () => {
             try {
                 const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/load/all/unread/message/${_id}`, {
@@ -334,7 +311,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                     }
                 })
                 const data = await res.json()
-                if (UnReadMessageIsMount.current) {
+                if (UnReadMessageIsMount) {
 
                     if (res.status === 200) {
                         dispatch({ type: "SET_UNREAD_MESSAGES", payload: data.empty })
@@ -347,14 +324,13 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
             catch (err) {
             }
         }
-        getUnreadMessages()
+        UserInformationLoad&&  getUnreadMessages()
         return () => {
-            UnReadMessageIsMount.current = false
+            UnReadMessageIsMount = false
         }
     }, [])
     //get online users
     useEffect(() => {
-
         socket?.on("onlineUsers", (data) => {
             dispatch({ type: "onlineUsers", payload: data })
         })
@@ -362,7 +338,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
     //set the all post into session storage
     return (
         <>
-            {(infoLoader && CommentsLoader && profileLoader && backgroundLoader && postLoader && notificationLoader) ? <CoverPage /> : ""}
+            {(CommentsLoader && profileLoader && backgroundLoader && postLoader && notificationLoader) ? <CoverPage /> : ""}
             <InternetDetection />
             <div className={`_wrapper mt-[0rem] min-h-screen  ${theme ? "bg-[#060606] drop-shadow-lg" : "bg-[#e4e4e4]"}`}>
                 <div className={`profile_card-container flex min-h-screen`} id="feed">
@@ -371,7 +347,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                             <div className="top_section  p-4 w-full mds-editor28:p-0 mds-editor28:my-[15px]">
                                 {
                                     UserInformationLoad !== null ?
-                                        Object.keys(params).length === 0 ? <AddPost socket={socket} setAllPosts={setAllPosts} theme={theme} /> : <></> : ""
+                                        Object.keys(params).length === 0 ? <AddPost socket={socket} setAllPosts={setAllPosts} theme={theme} allPosts={allPosts} UserInformationLoad={UserInformationLoad}/> : <></> : ""
                                 }
                             </div>
                             <div className="center_section  p-2 pr-4  w-full overflow-hidden mds-editor28:p-0 mb-2">
@@ -387,6 +363,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                                         <PublicPostCard profilePost={PostWhichUserSelectedImageORVideo} socket={socket} threeDot={threeDot} setShowLikeUserModal={setShowLikeUserModal} setAllPosts={setAllPosts} allPosts={allPosts} theme={theme}
                                             setIncreament={setIncreament} increament={increament}
                                             length={length}
+                                            UserInformationLoad={UserInformationLoad}
                                         />
                                         :
                                         <KindlyCreateProfile theme={theme} />

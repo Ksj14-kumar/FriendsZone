@@ -9,7 +9,7 @@ import { HiArrowSmDown, HiArrowSmUp } from "react-icons/hi"
 import Photo from "../../../assets/img/download.png"
 import { useHistory } from 'react-router-dom';
 import { motion } from 'framer-motion';
-function MessageChatHeader({ chatHeader, setVideoOverlay, q, RoomData, setRoomChatHeader, RoomChatHeader, groupMessageLoader, SingleChatLoader, setQuery, own, socket, setBlokedUser, blockUser }) {
+function MessageChatHeader({ chatHeader, setVideoOverlay, q, RoomData, setRoomChatHeader, RoomChatHeader, groupMessageLoader, SingleChatLoader, setQuery, own, socket, setBlokedUser, blockUser, BlockUser }) {
     const history = useHistory()
     const HideThreeDotsComponent = useRef(null)
     const [isOnline, setOnline] = useState({ friendId: "", status: false })
@@ -73,7 +73,7 @@ function MessageChatHeader({ chatHeader, setVideoOverlay, q, RoomData, setRoomCh
                         exit={{ opacity: 0 }}
                         ref={HideThreeDotsComponent}
                     >
-                        <ThreeDotsComponents setShowHeaderSearchBar={setShowHeaderSearchBar} showHeaderSearchBar={showHeaderSearchBar} setThreeDotsComponent={setThreeDotsComponent} setBlokedUser={setBlokedUser} blockUser={blockUser} />
+                        <ThreeDotsComponents setShowHeaderSearchBar={setShowHeaderSearchBar} showHeaderSearchBar={showHeaderSearchBar} setThreeDotsComponent={setThreeDotsComponent} setBlokedUser={setBlokedUser} blockUser={blockUser} BlockUser={BlockUser} />
                     </motion.div>
                     // </AnimatePresence>
                 }
@@ -159,20 +159,27 @@ function ChangeURL({ url }) {
     const [blob, setBlob] = useState("")
     const [loader, setLoader] = useState(false)
     useEffect(() => {
+        let isMount = true
         async function loadImage() {
             try {
 
                 setLoader(true)
                 const res = await fetch(url)
                 const blobData = await res.blob()
-                setBlob(URL.createObjectURL(blobData))
-                setLoader(false)
+                if (isMount) {
+
+                    setBlob(URL.createObjectURL(blobData))
+                    setLoader(false)
+                }
             }
             catch (err) {
 
             }
         }
         loadImage()
+        return () => {
+            isMount = false
+        }
     }, [url])
     return (
         <>
@@ -195,7 +202,7 @@ function ChangeURL({ url }) {
 }
 
 
-function ThreeDotsComponents({ setShowHeaderSearchBar, showHeaderSearchBar, setThreeDotsComponent, setBlokedUser, blockUser }) {
+function ThreeDotsComponents({ setShowHeaderSearchBar, showHeaderSearchBar, setThreeDotsComponent, setBlokedUser, blockUser, BlockUser }) {
     return (
         <>
             {
@@ -219,6 +226,7 @@ function ThreeDotsComponents({ setShowHeaderSearchBar, showHeaderSearchBar, setT
                                     }
                                     else if (item.id == 2) {
                                         setBlokedUser(!blockUser)
+                                        BlockUser()
                                     }
                                 }}
                             >

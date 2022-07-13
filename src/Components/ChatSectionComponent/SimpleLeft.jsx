@@ -3,6 +3,7 @@ import RecentlyChatUser from './LeftSideChatSectionComponent/RecentlyChatUser';
 function SimpleLeft({ converzationList, current, setChatHeader, socket }) {
     const [unreadMessage, setUnreadMessage] = useState([])
     useEffect(() => {
+        let isMount= true
         const getUnreadMessages = async () => {
             try {
                 const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/load/all/unread/message/${localStorage.getItem("uuid")}`, {
@@ -14,7 +15,10 @@ function SimpleLeft({ converzationList, current, setChatHeader, socket }) {
                 })
                 const data = await res.json()
                 if (res.status === 200) {
-                    setUnreadMessage(data.empty)
+                    if(isMount){
+
+                        setUnreadMessage(data.empty)
+                    }
                 }
                 else if (res.status !== 200) {
                 }
@@ -23,6 +27,10 @@ function SimpleLeft({ converzationList, current, setChatHeader, socket }) {
             }
         }
         getUnreadMessages()
+        return ()=>{
+            isMount=false
+
+        }
     }, [])
     return (
         <>

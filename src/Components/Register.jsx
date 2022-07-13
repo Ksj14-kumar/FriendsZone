@@ -91,7 +91,6 @@ export default function Register() {
                                     iconName="account_circle"
                                     value={info.name}
                                     onChange={handleInput}
-                                    defaultValue=""
                                 />
                             </div>
                             <div className="mb-8 px-4">
@@ -103,7 +102,6 @@ export default function Register() {
                                     name="email"
                                     value={info.email}
                                     onChange={handleInput}
-                                    defaultValue=""
                                 />
                             </div>
                             <div className="mb-4 px-4">
@@ -115,7 +113,6 @@ export default function Register() {
                                     name="password"
                                     value={info.password}
                                     onChange={handleInput}
-                                    defaultValue=""
                                 />
                             </div>
                             <div className="mb-4 px-4">
@@ -127,7 +124,6 @@ export default function Register() {
                                     name="confirmPassword"
                                     value={info.confirmPassword}
                                     onChange={handleInput}
-                                    defaultValue=""
                                 />
                             </div>
                         </CardBody>
@@ -142,7 +138,8 @@ export default function Register() {
                                 >
                                     {
                                         loader ?
-                                            <Icon name={<LoginLoader />}  size="sm" /> :
+                                            <LoginLoader />
+                                            :
                                             "Register"
                                     }
                                 </Button>

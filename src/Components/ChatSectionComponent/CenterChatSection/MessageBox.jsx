@@ -186,6 +186,7 @@ function SkeltonLoadingWhileMediaDownload({ text, setBool, setOverlayObject, fri
     const [loading, setLoading] = useState(false)
     const [blob, setBlob] = useState("")
     useEffect(() => {
+        let isMount = true
         async function laodMediaFile() {
             try {
                 setLoading(true)
@@ -204,14 +205,20 @@ function SkeltonLoadingWhileMediaDownload({ text, setBool, setOverlayObject, fri
                 })
                 const file = response.data
                 const Url = URL.createObjectURL(file)
-                setBlob(Url)
-                setLoading(false)
+                if (isMount) {
+                    setBlob(Url)
+                    setLoading(false)
+                }
             } catch (err) {
                 setLoading(false)
             }
         }
         laodMediaFile()
+        return ()=>{
+            isMount=false
+        }
     }, [text])
+
     return (
         <>
             {
@@ -238,6 +245,7 @@ function SkeltonVideoLoading({ text, friendId, currentId }) {
     const [loading, setLoading] = useState(false)
     const [blob, setBlob] = useState("")
     useEffect(() => {
+        let isMount = true
         async function laodMediaFile() {
             try {
                 setLoading(true)
@@ -256,13 +264,18 @@ function SkeltonVideoLoading({ text, friendId, currentId }) {
                 })
                 const file = response.data
                 const Url = URL.createObjectURL(file)
-                setBlob(Url)
-                setLoading(false)
+                if (isMount) {
+                    setBlob(Url)
+                    setLoading(false)
+                }
             } catch (err) {
                 setLoading(false)
             }
         }
         laodMediaFile()
+        return () => {
+            isMount = false
+        }
     }, [text])
     return (
         <>
@@ -285,6 +298,7 @@ function SkeltonAudio({ text, friendId, currentId }) {
     const [loading, setLoading] = useState(false)
     const [blob, setBlob] = useState("")
     useEffect(() => {
+        let isMount = true
         async function laodMediaFile() {
             try {
                 setLoading(true)
@@ -303,13 +317,20 @@ function SkeltonAudio({ text, friendId, currentId }) {
                 })
                 const file = response.data
                 const Url = URL.createObjectURL(file)
-                setBlob(Url)
-                setLoading(false)
+                if (isMount) {
+                    setBlob(Url)
+                    setLoading(false)
+
+                }
             } catch (err) {
+
                 setLoading(false)
             }
         }
         laodMediaFile()
+        return () => {
+            isMount = false
+        }
     }, [text])
     return (
         <>

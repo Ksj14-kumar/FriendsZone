@@ -86,6 +86,9 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         }
     })
     const { receiverrequest, AllNotification } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "", senderrequest: [], receiverrequest: [], AllNotification: [] }
+
+
+
     useEffect(() => {
         const value1 = UserInformationLoad.message?.length ? UserInformationLoad.message : []
         setUserMessageAfterAcceptRequest(value1)
@@ -624,7 +627,8 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                             <div className="left_side_search flex  flex-[8] md:justify-end justify-start items-center relative md:mr-[3rem]">
                                 <motion.div className={`wrap_inout_search w-[38rem] mds-editor31:w-[25rem] mds-editor32:w-[3rem] rounded-full transition-all duration-300 ${expandSearch ? "mds-editor32:w-full" : "mds-editor32:w-[3rem]"}`}
                                 >
-                                    <SearchBarTable showSearch={showSearch} setShowSearch={setShowSearch} setQuery={setQuery} setPopOverEffect={setPopOverEffect} query={query} data={userData} userSearchHistory1={userSearchHistory} deleteHistory={deleteHistory} setExpandSearch={setExpandSearch} expandSearch={expandSearch} theme={theme} />
+                                    
+                                    <SearchBarTable showSearch={showSearch} setShowSearch={setShowSearch} setQuery={setQuery} setPopOverEffect={setPopOverEffect} query={query} data={userData} userSearchHistory1={userSearchHistory} deleteHistory={deleteHistory} setExpandSearch={setExpandSearch} expandSearch={expandSearch} theme={theme} UserInformationLoad={UserInformationLoad} />
                                 </motion.div>
                             </div>
                             <div className={`group_right_s flex flex-[2]   justify-end  ${expandSearch ? "mds-editor32:hidden" : "block"}`}>
@@ -670,7 +674,7 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                             {
                                                 showNotification &&
                                                 <AllTypeOfNotificationAdminNavbar AllNotification={AllNotificationSet} setAllNotification={setAllNotification}
-                                                theme={theme}
+                                                    theme={theme}
                                                     __id__={UserInformationLoad?._id}
                                                 />
                                             }
@@ -703,7 +707,9 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                 <div className=" flex  justify-center items-center  relative w-[4rem] h-[3rem] ">
                                     <div className={`img cursor-pointer flex-shrink-0 w-[3rem] h-full  md:mr-0 bg-[#d5d5d5]  border-solid border-[#f1f0f0] rounded-full ml-3 ${LoaderRedux && "animate-pulse"}`}
                                         onClick={() => {
-                                            setShowRightSideBar(!showRightSideBar)
+                                            if (UserInformationLoad) {
+                                                setShowRightSideBar(!showRightSideBar)
+                                            }
                                         }}
                                         ref={ImageRef}
                                     >

@@ -63,7 +63,7 @@ function App() {
         }
     })
 
-    
+
     const getUserData = localStorage.getItem("uuid")
     const user = localStorage.getItem("user")
     useEffect(() => {
@@ -104,6 +104,7 @@ function App() {
     useEffect(() => {
         socket?.emit("newUser", getUserData)
     }, [getUserData])
+    
 
 
 
@@ -124,7 +125,7 @@ function App() {
                                 >
                                     {
                                         (getUserData && user) ?
-                                            <Feed socket={socket} setShowLikeUserModal={setShowLikeUserModal} showLikeUserModal={showLikeUserModal}/>
+                                            <Feed socket={socket} setShowLikeUserModal={setShowLikeUserModal} showLikeUserModal={showLikeUserModal} />
                                             : <Header />
                                     }
                                 </Route>

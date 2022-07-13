@@ -16,8 +16,9 @@ export default function Sidebar(props) {
             UserInformationLoad: state.UserInformationLoad.value,
             Name: state.Name
         }
+
     })
-    const { googleId } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "" }
+    const { googleId } = UserInformationLoad !== null || UserInformationLoad !== undefined ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "" }
     const _id = localStorage.getItem("uuid")
     const Name1 = JSON.parse(localStorage.getItem("user"))
     async function deleteAccount(e) {
@@ -97,8 +98,9 @@ export default function Sidebar(props) {
                             ].map((item, index) => {
                                 return (
                                     <>
-                                        <NavLink to={`${item.id === 1 ? (googleId ? (`${`/profile/${googleId}`}`) : ("/unknownuser/")) : (item.id === 2 ? ("/update_profile") : (item.id === 3 && ("/user/posts")))}`}
+                                        <NavLink to={`${item.id === 1 ? (UserInformationLoad?.googleId ? (`${`/profile/${UserInformationLoad?.googleId}`}`) : ("/unknownuser/")) : (item.id === 2 ? ("/update_profile") : (item.id === 3 && ("/user/posts")))}`}
                                             exact
+                                            key={index}
                                         >
                                             <div className={`list_wraper rounded-md mb-2 ${routerId === item.id && "bg-gradient-to-r from-rose-100 to-teal-100"} cursor-pointer ${item.id === 4 ? "bg-[#920303] hover:bg-[#da0404]" : "bg-[#e7e7e7] hover:bg-[#c7c7c7]"} transition-all delay-100 `} key={index}
                                                 onClick={() => {

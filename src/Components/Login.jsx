@@ -83,7 +83,7 @@ export default function Login({ socket }) {
         socket?.emit("login", serverData.cookie)
       }
       else if (status !== 200) {
-        error({ message: "Opps, Something error occure" })
+        error({ message: serverData.message })
         setLoader(false)
       }
       else if (status === 500) {
@@ -141,7 +141,9 @@ export default function Login({ socket }) {
                 disabled={loader ? true : false}
                 onClick={submit}
               >
-                {loader ? <Icon name={<LoginLoader />} size="sm" /> : "Get started"}
+                {loader ?
+                  <LoginLoader />
+                  : "Get started"}
               </Button>
             </div>
             <div className="button-group  flex justify-evenly my-2">

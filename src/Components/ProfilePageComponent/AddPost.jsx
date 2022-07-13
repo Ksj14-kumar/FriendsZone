@@ -40,7 +40,7 @@ function useOutsideAlerter(ref, setTextAreaValue, dispatch, setUrlOfImageUpload,
         };
     }, [ref, setPostLoader]);
 }
-function AddPost({ setAllPosts, socket, theme }) {
+function AddPost({ setAllPosts, socket, theme, allPosts }) {
     const wrapperref = React.useRef()
     const [showModal, setShowModalCode] = React.useState(false);
     const [showModalVideo, setShowModalCodeVideo] = React.useState(false);
@@ -84,6 +84,8 @@ function AddPost({ setAllPosts, socket, theme }) {
         return state.OriginalProfileURL
     })
     const _id = localStorage.getItem("uuid")
+    // const UserInformationLoad= JSON.parse(localStorage.getItem("info"))
+    // const {fname, lname}= JSON.parse(localStorage.getItem("info"))
     const { fname, lname } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "" }
     const name = `What is your in mind Today ? ${fname ? fname.toLowerCase() : "NA"}`
     const name1 = `Say Something About your post if.  👀   ${fname ? fname.toLowerCase() : "NA"}`
@@ -269,10 +271,22 @@ function AddPost({ setAllPosts, socket, theme }) {
                 setTextAreaValue("")
                 setPost("")
                 //==========================================SEND ALL POSTS USING REDUX =================
-                setAllPosts((prev) => {
-                    return prev ? [SaveUserPostIntoDbJson.data, ...prev] : [SaveUserPostIntoDbJson.data]
-                })
-                // }
+                //add post when user realtime
+                if (socket.connected) {
+                    socket?.emit("Send_Posts", { newPost: SaveUserPostIntoDbJson.data, prePosts: allPosts, socketId: socket.id })
+                }
+                else {
+                    // add post when user not realtime
+                    if (allPosts.length) {
+                        const addNewsPost = [SaveUserPostIntoDbJson.data, ...allPosts].sort((a, b) => {
+                            return b.time - a.time
+                        })
+                        setAllPosts(addNewsPost)
+                    }
+                    else {
+                        setAllPosts([SaveUserPostIntoDbJson.data])
+                    }
+                }
             }
             else if (SaveUserPostIntoDb.status === 500) {
                 error({ message: SaveUserPostIntoDbJson.message })
@@ -357,7 +371,7 @@ function AddPost({ setAllPosts, socket, theme }) {
                             mds-editor7:px-[5rem]
                             mds-editor7:py-3
                             focus:outline-none 
-                            border border-solid ${theme?"border-[#585555]":"border-[#eaeaea]"}`}
+                            border border-solid ${theme ? "border-[#585555]" : "border-[#eaeaea]"}`}
                                     onClick={(e) => {
                                         if (UserInformationLoad) {
                                             setShowModalCode(true)
@@ -378,7 +392,11 @@ function AddPost({ setAllPosts, socket, theme }) {
                             mds-editor7:px-[2rem]
                             mds-editor7:py-2                            mds-editor7:text-xl
                             mds-editor7:mt-[.8rem]`}
-                                onClick={(e) => setShowModalCodePhoto(true)}
+                                onClick={(e) => {
+                                    if(UserInformationLoad){
+                                        setShowModalCodePhoto(true)
+                                    }
+                                }}
                                 ripple="light"
                                 ref={photosRef}
                             >
@@ -396,7 +414,11 @@ function AddPost({ setAllPosts, socket, theme }) {
                             mds-editor7:py-2                            mds-editor7:text-xl
                             mds-editor7:mt-[.8rem]`}
                                 ripple="light"
-                                onClick={(e) => setShowModalCodeVideo(true)}
+                                onClick={(e) => {
+                                    if (UserInformationLoad) {
+                                        setShowModalCodeVideo(true)
+                                    }
+                                }}
                                 ref={videoRef}
                             >
                                 <RiVideoAddFill />
@@ -412,7 +434,12 @@ function AddPost({ setAllPosts, socket, theme }) {
                             mds-editor7:py-2                            mds-editor7:text-xl
                             mds-editor7:mt-[.8rem]`}
                                 ripple="light"
-                                onClick={(e) => setShowModalCodeText(true)}
+                                onClick={(e) => {
+                                    if (UserInformationLoad) {
+
+                                        setShowModalCodeText(true)
+                                    }
+                                }}
                                 ref={rssRef}
                             >
                                 <MdRssFeed />

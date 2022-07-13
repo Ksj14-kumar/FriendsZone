@@ -119,7 +119,6 @@ function ChatSection({ user, socket }) {
         }
       }
       catch (err) {
-        console.warn(err)
       }
     }
     GetAllRooms()
@@ -233,8 +232,8 @@ function ChatSection({ user, socket }) {
               setGroupMessages(data.result.RoomMessages)
               setTextMessage("")
             }
-            else if(res.status===455){
-              error({message:"can't not send message, you blocked this user"})
+            else if (res.status === 455) {
+              error({ message: "can't not send message, you blocked this user" })
             }
             else if (res.status !== 200) {
               error({ message: "not send", pos: "top-right" })
@@ -265,8 +264,8 @@ function ChatSection({ user, socket }) {
                 if (res.status === 200) {
                   setGroupMessages(data.result.RoomMessages)
                 }
-                else if(res.status===455){
-                  error({message:"can't not send message, you blocked this user"})
+                else if (res.status === 455) {
+                  error({ message: "can't not send message, you blocked this user" })
                 }
                 else if (res.status !== 200) {
                   error({ message: "not send", pos: "top-right" })
@@ -274,7 +273,6 @@ function ChatSection({ user, socket }) {
               })
             }
             catch (err) {
-              console.warn(err)
             }
           }
           else if (imageGroupURl.length > 0) {
@@ -302,8 +300,8 @@ function ChatSection({ user, socket }) {
                 setImageSentLoader(false)
                 setGroupMessages(data.result.RoomMessages)
               }
-              else if(res.status===455){
-                error({message:"can't not send message, you blocked this user"})
+              else if (res.status === 455) {
+                error({ message: "can't not send message, you blocked this user" })
               }
               else if (res.status !== 200) {
                 setImageSentLoader(false)
@@ -312,7 +310,6 @@ function ChatSection({ user, socket }) {
             })
           }
         } catch (err) {
-          console.warn(err)
         }
       }
       return
@@ -351,8 +348,8 @@ function ChatSection({ user, socket }) {
           setSentMessageLoader("not")
           setUploadLoaderMessage(false)
         }
-        else if(res.status===455){
-          error({message:"can't not send message, you blocked this user"})
+        else if (res.status === 455) {
+          error({ message: "can't not send message, you blocked this user" })
         }
       })
     }
@@ -392,8 +389,8 @@ function ChatSection({ user, socket }) {
             setImageGroupURl([])
             setImageSentLoader(false)
           }
-          else if(res.status===455){
-            error({message:"can't not send message, you blocked this user"})
+          else if (res.status === 455) {
+            error({ message: "can't not send message, you blocked this user" })
           }
           else if (res.status !== 200) {
             setMessageId([...messageId, res.messageId])
@@ -404,7 +401,6 @@ function ChatSection({ user, socket }) {
           }
         }
         catch (err) {
-          console.warn(err)
         }
       })
       setImageSentLoader(false)
@@ -445,8 +441,8 @@ function ChatSection({ user, socket }) {
           setTextMessageBase64("")
           setTextMessage("")
         }
-        else if(res.status===455){
-          error({message:"can't not send message, you blocked this user"})
+        else if (res.status === 455) {
+          error({ message: "can't not send message, you blocked this user" })
         }
         else if (res.status === 500) {
           setMessageId([...messageId, resData.messageId])
@@ -462,7 +458,6 @@ function ChatSection({ user, socket }) {
         }
       }
       catch (err) {
-        console.warn(err)
       }
     }
   }
@@ -482,8 +477,10 @@ function ChatSection({ user, socket }) {
           }
         })
         const resData = await res.json()
+        console.log({ resData })
         if (res.status === 200) {
           setMessageLoader(false)
+          setBlokedUser(resData?.block ? resData.block : false)
           setID(resData._id)
           setcurrentChat(resData.messages)
           const FilterImagesMessagesOnly = resData.messages.filter(item => item.type === "image")
@@ -494,7 +491,6 @@ function ChatSection({ user, socket }) {
           setcurrentChat([])
         }
       } catch (err) {
-        console.warn(err)
       }
     }
     q.length > 9 && getMessages()
@@ -512,7 +508,6 @@ function ChatSection({ user, socket }) {
         if (resData.status === 200) {
           setLoader(false)
           setConvertionUsersList(resData.data)
-          setBlokedUser(resData.data[0].block)
         }
         else if (resData.status !== 200) {
           setLoader(false)
@@ -545,7 +540,6 @@ function ChatSection({ user, socket }) {
         }
       }
       catch (err) {
-        console.warn(err)
       }
     }
     q?.length > 9 && get_Friends_users_Details()
@@ -576,7 +570,6 @@ function ChatSection({ user, socket }) {
         setSearchFriends([])
       }
     } catch (err) {
-      console.warn(err)
     }
   }
   useEffect(() => {
@@ -603,7 +596,6 @@ function ChatSection({ user, socket }) {
         }
       }
       catch (err) {
-        console.warn(err)
       }
     }
     q?.length === 9 && getGroupMembers()
@@ -628,7 +620,6 @@ function ChatSection({ user, socket }) {
         }
       }
       catch (err) {
-        console.warn(err)
       }
     }
     q?.length === 9 && getRoomsMessages()
@@ -675,22 +666,17 @@ function ChatSection({ user, socket }) {
     })
   }, [socket, currentChat])
   //unblocked and block user 
-  useEffect(() => {
-    try {
-      (async function () {
-        const res = await Axios({
-          url: `${process.env.REACT_APP_API_BACKENDURL}/api/v1/block/user`,
-          method: "PUT",
-          data: { currentId: user, friendId: q, blockUser },
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("uuid")}`
-          }
-        })
-      })()
-    } catch (err) {
-    }
-  }, [blockUser])
+  async function BlockUser() {
+    const res = await Axios({
+      url: `${process.env.REACT_APP_API_BACKENDURL}/api/v1/block/user`,
+      method: "PUT",
+      data: { currentId: user, friendId: q, blockUser },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("uuid")}`
+      }
+    })
+  }
   return (
     <>
       {
@@ -709,7 +695,7 @@ function ChatSection({ user, socket }) {
       {
         ModalForFriends && <SearchFriendsForGroupChat setModalForFriends={setModalForFriends} RoomData={RoomData} setGroupMembers={setGroupMembers} />
       }
-      <InternetDetection/>
+      <InternetDetection />
       <div className="top_container flex justify-center  mds-editor23:w-full mds-editor23:block" id='top_chat_container '>
         {/* ======================================LEFT SIDE OF CHAT SECTION=================================== */}
         {/* {liveFriends !== undefined && liveFriends.length > 0 && <aside id="live_top_users" className=" md:hidden mt-[4.2rem] flex w-full   fixed bg-[#d0d0d0] ">
@@ -767,8 +753,9 @@ function ChatSection({ user, socket }) {
                 <MessageChatHeader chatHeader={chatHeader} setVideoOverlay={setVideoOverlay} q={q} RoomData={RoomData} setRoomChatHeader={setRoomChatHeader} RoomChatHeader={RoomChatHeader} groupMessageLoader={groupMessageLoader} SingleChatLoader={SingleChatLoader} setQuery={setQuery} own={user} socket={socket}
                   setBlokedUser={setBlokedUser}
                   blockUser={blockUser}
+                  BlockUser={BlockUser}
                 />
-                <div className="center_message  flex-[8] overflow-y-auto w-full overflow-x-hidden bg-[#f5f5f5]" id="center_message" >
+                <div className="center_message mds-editor28:flex-[6]  flex-[8] overflow-y-auto w-full overflow-x-hidden bg-[#f5f5f5]" id="center_message" >
                   {
                     messageLoader ? <MessageLoader /> :
                       (q?.length === 24 && currentChat.length ?

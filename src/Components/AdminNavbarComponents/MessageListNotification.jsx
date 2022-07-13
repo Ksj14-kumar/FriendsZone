@@ -54,11 +54,11 @@ function MessageListNotification({ item, setMessengerComponent, setArrivalMessag
                                     dispatch({ type: "SET_UNREAD_MESSAGES", payload: [] })
                                 }}
                             >
-                                <NavLink to={`/messages?q=${item.anotherUserId}`}>
+                                <NavLink to={`/messages?q=${item?.anotherUserId}`}>
                                     <div className="chat_messages_container12 flex">
                                         <section className="profile_image flex-shrink-0 flex items-center justify-center w-[3rem] h-[3rem] flex-[2] ">
-                                            {item.url ? <Image
-                                                src={item.url}
+                                            {item?.url ? <Image
+                                                src={item?.url}
                                                 rounded={true}
                                                 className="w-[3rem] h-[3rem] flex-shrink-0 rounded-full"
                                             /> :
@@ -69,13 +69,13 @@ function MessageListNotification({ item, setMessengerComponent, setArrivalMessag
                                                 />}
                                         </section>
                                         <section className="text_message894 flex flex-[10] flex-col w-full  pl-2">
-                                            <p className='text-[1.4rem] font-medium tracking-wider font-serif  w-full truncate'>{item.name}</p>
+                                            <p className='text-[1.4rem] font-medium tracking-wider font-serif  w-full truncate'>{item?.name}</p>
                                             <div className="wrapper589 flex  w-full py-1 items-center justify-between">
                                                 <p className='text-[1.1rem]  tracking-wider font-sans'>
                                                     send a new message
                                                 </p>
                                                 <section className="notification_number rounded-full w-[2.1rem] h-[2.1rem] bg-[#f00e0e] flex-shrink-0 mr-1 flex items-center justify-center">
-                                                    <span className='font-mono text-[1.2rem] text-[#fff]'>{item.messageLength}
+                                                    <span className='font-mono text-[1.2rem] text-[#fff]'>{item?.messageLength}
                                                     </span>                                            </section>
                                             </div>
                                         </section>

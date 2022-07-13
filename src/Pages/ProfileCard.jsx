@@ -54,11 +54,13 @@ function ProfileCard(props) {
         }
     })
     const { fname, lname, googleId, url, friends } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "", url: "", senderrequest: [] }
+
     const { path } = useRouteMatch()
     useEffect(() => {
         params.set("id", Query)
     }, [Query, params])
     useEffect(() => {
+        let isMount = true
         async function loadUserProfileData() {
             try {
                 setLoadUSerProfileInfo(true)
@@ -71,16 +73,20 @@ function ProfileCard(props) {
                     }
                 })
                 const ResponseData = await getUserResponse.json()
+
                 if (getUserResponse.status === 200) {
-                    setUserInfo(ResponseData)
-                    setLoadUSerProfileInfo(false)
+                    if (isMount) {
+                        setUserInfo(ResponseData)
+                        setLoadUSerProfileInfo(false)
+                    }
                 }
                 else if (getUserResponse !== 200) {
-                    setLoadUSerProfileInfo(false)
+                    if (isMount) {
+                        setLoadUSerProfileInfo(false)
+                    }
                 }
             }
             catch (err) {
-                console.warn(err)
             }
         }
         loadUserProfileData()
@@ -113,17 +119,31 @@ function ProfileCard(props) {
             }
         }
         catch (err) {
-            console.warn(err)
         }
     }
     //when user load the page or refresh the page and check jis user ki profile dekh rha hai wo user send request array mai wxit krta bhi hai or nhi 
     useEffect(() => {
-        const value = UserInformationLoad.senderrequest !== undefined && UserInformationLoad.senderrequest.some(item => item._id === usernameId)
-        setConnectMessage(value)
+        let isMount = true
+
+        if (isMount) {
+
+            const value = UserInformationLoad.senderrequest !== undefined && UserInformationLoad.senderrequest.some(item => item._id === usernameId)
+            setConnectMessage(value)
+        }
+        return () => {
+            isMount = false
+        }
     }, [usernameId, UserInformationLoad])
     useEffect(() => {
-        setAcceptMessage((friends !== undefined) && (friends.some(item => item._id === usernameId
-        )))
+        let isMount = true
+        if (isMount) {
+
+            setAcceptMessage((friends !== undefined) && (friends.some(item => item._id === usernameId
+            )))
+        }
+        return () => {
+            isMount = false
+        }
     }, [usernameId, friends])
     async function cancleFriendRequest() {
         try {
@@ -143,10 +163,10 @@ function ProfileCard(props) {
             }
         }
         catch (err) {
-            console.warn(err)
         }
     }
     useEffect(() => {
+
         setAcceptorMessage(UserInformationLoad.friends !== undefined && UserInformationLoad.friends.some(item => item._id === usernameId))
     }, [usernameId, UserInformationLoad])
     //sstore the user search hostory
@@ -171,38 +191,55 @@ function ProfileCard(props) {
                 }
             }
             catch (err) {
-                console.warn(err)
             }
         }
         History()
+
     }, [usernameId, googleId])
     useEffect(() => {
+        let isMount = true
         async function f1() {
+
             if (userInfo?.BgURL) {
                 const res = await fetch(userInfo.BgURL)
                 const blob = await res.blob()
                 const bgURL = URL.createObjectURL(blob)
-                setLocalBackgroundURL(bgURL)
+                if (isMount) {
+
+                    setLocalBackgroundURL(bgURL)
+                }
             }
             else {
-                setLocalBackgroundURL("")
+                if (isMount) {
+                    setLocalBackgroundURL("")
+                }
             }
         }
         f1()
+        return () => {
+            isMount = false
+        }
     }, [usernameId, setLocalProfileURL, userInfo?.BgURL])
     useEffect(() => {
+        let isMount = true
         async function f1() {
-            if (userInfo?.ProfileURL) {
-                const res1 = await fetch(userInfo.ProfileURL)
-                const blobP = await res1.blob()
-                const PURL = URL.createObjectURL(blobP)
-                setLocalProfileURL(PURL)
-            }
-            else {
-                setLocalProfileURL("")
+            if (isMount) {
+                if (userInfo?.ProfileURL) {
+                    const res1 = await fetch(userInfo.ProfileURL)
+                    const blobP = await res1.blob()
+                    const PURL = URL.createObjectURL(blobP)
+
+                    setLocalProfileURL(PURL)
+                }
+                else {
+                    setLocalProfileURL("")
+                }
             }
         }
         f1()
+        return () => {
+            isMount = false
+        }
     }, [usernameId, setLocalProfileURL, userInfo?.ProfileURL])
 
     useEffect(() => {
@@ -236,20 +273,21 @@ function ProfileCard(props) {
                 else {
                     setAssests([])
                     //send file to zero
+
                 }
+
             }
             else if (res.status !== 200) {
                 setAssests([])
                 //something error occured
             }
         })()
-
     }, [usernameId])
     return (
         <>
             {/* <div className='con'> */}
             {/* <AdminNavbar /> */}
-            <InternetDetection/>
+            <InternetDetection />
             <div className={`make_two_section md:flex md:justify-between relative ${theme ? "bg-[#000000]" : ""}`}>
                 <div className="profile_card-container  w-full ">
                     <div className="profile_wrapper flex  flex-col items-center">
