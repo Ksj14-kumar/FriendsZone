@@ -69,7 +69,6 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
         let loadingPostIsMount = true
         async function loadPosts() {
             try {
-                console.log("loading post start")
                 setPostLoader(true)
                 const loadPostResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/load/all/post/${initialPage}/${increament}`, {
                     method: "GET",
@@ -80,7 +79,6 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                 })
                 const loadPostData = await loadPostResponse.json()
                 if (loadPostResponse.status === 200) {
-                    console.log({loadPostData})
 
                     const Arrange = loadPostData.data.sort((a, b) => {
                         return b.time - a.time
@@ -109,7 +107,6 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
         }
     }, [increament])
     useEffect(() => {
-        console.log("Comments")
         let TotalCommentIsMount = true
         async function totalComment() {
             try {
@@ -139,7 +136,6 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
     }, [])
     //load the all notification 
     useEffect(() => {
-        console.log("notification")
         let loadNotificationIsMount = true
         async function loadNotification() {
             try {
@@ -171,7 +167,6 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
 
     //=====================LOAD THE BACKGROUND IMAGE from the cloudinaryS=============
     useEffect(() => {
-        console.log("background")
         let backgroundImageIsMount = true
         async function BackgroundImage() {
             try {
@@ -210,7 +205,6 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                     return
                 }
             } catch (err) {
-                // console.warn(err)
             }
         }
         UserInformationLoad&& BackgroundImage()
@@ -220,7 +214,6 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
     }, [])
     //====================LOAD PROFILE IMAGES fromc cloudinary=============
     useEffect(() => {
-        console.log("profileImage")
         let profileImageisMount = true
         async function ProfileImages() {
             let url;
@@ -270,7 +263,6 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
         }
     }, [])
     useEffect(() => {
-        console.log("postLength")
         let postLengthisMount = true
         async function getAllPostDataLength() {
             try {
