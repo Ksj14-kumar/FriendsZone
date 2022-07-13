@@ -69,6 +69,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
         let loadingPostIsMount = true
         async function loadPosts() {
             try {
+                console.log("loading post start")
                 setPostLoader(true)
                 const loadPostResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/load/all/post/${initialPage}/${increament}`, {
                     method: "GET",
@@ -79,6 +80,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                 })
                 const loadPostData = await loadPostResponse.json()
                 if (loadPostResponse.status === 200) {
+                    console.log({loadPostData})
 
                     const Arrange = loadPostData.data.sort((a, b) => {
                         return b.time - a.time

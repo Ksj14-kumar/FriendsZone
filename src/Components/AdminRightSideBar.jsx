@@ -9,7 +9,7 @@ import AllLinks from '../Pages/AdminRightSideBarPages/AllLinks'
 import { useSelector } from 'react-redux'
 import { NavLink } from "react-router-dom"
 
-function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout, setShowModalCode, setShowModalCodeBackground }) {
+function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout, setShowModalCode, setShowModalCodeBackground, id }) {
     const adminRightSideBar = useRef(null)
     const { UserInformationLoad, theme } = useSelector((state) => {
         return {
@@ -40,6 +40,7 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout, setS
                     ease: "easeInOut",
                 }}
                 exit={{ opacity: 0, x: 200 }}
+                key={id}
                 className={`fixed ${theme ? "bg-[#010101] border border-solid border-[#343434]" : "bg-[#fffefe]"} top-[3.4rem] drop-shadow-lg right-[0rem] z-[17] pt-4 w-[25rem] mds-editor28:w-[16rem] h-screen px-4`} id="adminRightSideBar"
                 ref={adminRightSideBar}
             >
@@ -87,7 +88,7 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout, setS
                                     key={index}
                                 >
                                     <NavLink to={`${i.id === 1 ? (`/blog/${fullName}/settings`) : (i.id === 2 ? (`/blog/${fullName}/themeMode`) : (i.id === 3 ? (`/blog/${fullName}/songs-accessbility`) : (i.id === 4 ? (`/blog/${fullName}/news`) : (i.id === 5 && `/blog/${fullName}/bookmark`))))}`}
-                                    activeClassName={`bg-gradient-to-r from-red-800 via-yellow-600 to-yellow-500`}
+                                        activeClassName={`bg-gradient-to-r from-red-800 via-yellow-600 to-yellow-500`}
                                     >
                                         <AllLinks
                                             icon={i.icon}
@@ -126,7 +127,7 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout, setS
                             arrow: <MdArrowForwardIos className="text-[1.8rem] mds-editor28:text-[1.3rem]" />,
                             icon: <AiOutlineLogout className="text-[2rem] mds-editor28:text-[1.5rem]" />
                         }
-                    ].map((item,index) => {
+                    ].map((item, index) => {
                         return (
                             <>
                                 <div className={`music ${theme ? "hover:bg-[#222222]" : "hover:bg-[#e7e7e7]"} bg-[#e7e7e747] flex py-3 items-center cursor-pointer rounded-lg mb-2`}

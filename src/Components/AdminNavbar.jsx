@@ -772,7 +772,7 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             </nav >
             {
                 UserInformationLoad !== null &&
-                <AnimatePresence>
+                <AnimatePresence exitBeforeEnter>
                     {
                         showRightSideBar &&
                         <AdminRightSideBar showRightSideBar={showRightSideBar}
@@ -780,6 +780,7 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                             setShowModalCode={setShowModalCode}
                             setShowModalCodeBackground={setShowModalCodeBackground}
                             theme={theme}
+                            id={UserInformationLoad._id}
 
                         />
                     }

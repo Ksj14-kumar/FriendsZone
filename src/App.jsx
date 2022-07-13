@@ -28,6 +28,7 @@ import ThemeMode from "./Pages/AdminRightSideBarPages/ThemeMode"
 import Music from "./Pages/AdminRightSideBarPages/Music"
 import UserSinglePost from './Pages/UserSinglePost';
 import { AnimatePresence } from "framer-motion"
+
 // const Feed = React.lazy(() => require("./Pages/Feed"))
 
 
@@ -119,7 +120,7 @@ function App() {
                 </div>
                 <>
                     <div className={`bg-cover app_class min-h-screen ${theme ? "bg-[#000000]" : "bg-[#e4e4e4]"}`}>
-                        <AnimatePresence>
+                        <AnimatePresence exitBeforeEnter initial={false}>
                             <Switch location={location} key={location.key}>
                                 <Route exact path="/"
                                 >
