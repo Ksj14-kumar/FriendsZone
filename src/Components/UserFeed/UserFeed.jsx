@@ -12,8 +12,6 @@ import { Plane, InfinitySpin } from "react-loader-spinner"
 
 
 
-
-
 function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser, FilterUser, setShowLikeUserModal, showLikeUserModal, theme }) {
     const params = useParams()
     const [Users, setAllUser] = useState([])
@@ -61,7 +59,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
     }, [AllUser, UserInformationLoad?.friend])
 
 
-    
+
 
     //==============================================public post card side effect===============================
     //LOAD ALL THE posts for users
@@ -129,7 +127,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
             } catch (error) {
             }
         }
-        UserInformationLoad&&  totalComment()
+        UserInformationLoad && totalComment()
         return () => {
             TotalCommentIsMount = false
         }
@@ -158,7 +156,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
             } catch (err) {
             }
         }
-        UserInformationLoad&&loadNotification()
+        UserInformationLoad && loadNotification()
         return () => {
             loadNotificationIsMount = false
         }
@@ -207,7 +205,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
             } catch (err) {
             }
         }
-        UserInformationLoad&& BackgroundImage()
+        UserInformationLoad && BackgroundImage()
         return () => {
             backgroundImageIsMount = false
         }
@@ -257,7 +255,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
             } catch (err) {
             }
         }
-        UserInformationLoad&& ProfileImages()
+        UserInformationLoad && ProfileImages()
         return () => {
             profileImageisMount = false
         }
@@ -287,7 +285,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
             catch (err) {
             }
         }
-        UserInformationLoad&&  getAllPostDataLength()
+        UserInformationLoad && getAllPostDataLength()
         return () => {
             postLengthisMount = false
         }
@@ -318,7 +316,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
             catch (err) {
             }
         }
-        UserInformationLoad&&  getUnreadMessages()
+        UserInformationLoad && getUnreadMessages()
         return () => {
             UnReadMessageIsMount = false
         }
@@ -341,7 +339,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                             <div className="top_section  p-4 w-full mds-editor28:p-0 mds-editor28:my-[15px]">
                                 {
                                     UserInformationLoad !== null ?
-                                        Object.keys(params).length === 0 ? <AddPost socket={socket} setAllPosts={setAllPosts} theme={theme} allPosts={allPosts} UserInformationLoad={UserInformationLoad}/> : <></> : ""
+                                        Object.keys(params).length === 0 ? <AddPost socket={socket} setAllPosts={setAllPosts} theme={theme} allPosts={allPosts} UserInformationLoad={UserInformationLoad} /> : <></> : ""
                                 }
                             </div>
                             <div className="center_section  p-2 pr-4  w-full overflow-hidden mds-editor28:p-0 mb-2">
@@ -403,7 +401,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                                     >
                                         <p className={`all cursor-pointer text-[1.2rem] tracking-wider py-1 ${theme ? "text-[#fff]" : "text-[#000]"}`}>
                                             All
-                                            <span className={`ml-[5px] ${theme ? "text-[#ffff]" : "text-[#0a0a0a]"}`}>99+</span>
+                                            <span className={`ml-[5px] ${theme ? "text-[#ffff]" : "text-[#0a0a0a]"}`}>{showLikeUserModal.reactUser.length}</span>
                                         </p>
                                     </NavLink>
                                 </div>
@@ -415,7 +413,8 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                                     showLikeUserModal.reactUser.length > 0 && showLikeUserModal.reactUser.map((item, index) => {
                                         return (
                                             <>
-                                                <ReactUserList key={index} reactUser={item} theme=
+                                                <ReactUserList key={index} reactUser={item}
+                                                    theme=
                                                     {theme} />
                                             </>
                                         )

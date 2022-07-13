@@ -9,7 +9,7 @@ import { NavLink } from "react-router-dom"
 import {TailSpin } from "react-loader-spinner"
 import { useSelector } from 'react-redux'
 
-function ReactUserList({ reactUser,theme }) {
+function ReactUserList({ reactUser,theme,setReactUserLength }) {
     const [userInfo, setUserInfo] = useState({ name: "", image: "", isFriends: "" })
     const [loader, setLoader] = useState(false)
     const [connectMessage, setConnectMessage] = useState(false)
