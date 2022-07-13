@@ -102,7 +102,7 @@ export default function Sidebar(props) {
                                             exact
                                             key={index}
                                         >
-                                            <div className={`list_wraper rounded-md mb-2 ${routerId === item.id && "bg-gradient-to-r from-rose-100 to-teal-100"} cursor-pointer ${item.id === 4 ? "bg-[#920303] hover:bg-[#da0404]" : "bg-[#e7e7e7] hover:bg-[#c7c7c7]"} transition-all delay-100 `} key={index}
+                                            <div className={`list_wraper rounded-md mb-2 ${routerId === item.id && "bg-gradient-to-r from-red-800 via-yellow-600 to-yellow-500"} cursor-pointer ${item.id === 4 ? "bg-[#920303] hover:bg-[#da0404]" : `${props.theme?"bg-[#414141] hover:bg-[#7e7e7e]":"bg-[#e7e7e7] hover:bg-[#c7c7c7]"}`}} transition-all delay-100 `} key={index}
                                                 onClick={() => {
                                                     setRouterId(item.id)
                                                     if (item.id === 4) {
@@ -111,8 +111,8 @@ export default function Sidebar(props) {
                                                 }}
                                             >
                                                 <section className="lists flex items-center justify-center  py-2 rounded-md">
-                                                    <p className={`flex flex-[2] justify-center ${item.id === 4 ? "text-[#fff]" : ""}`}>{item.icon}</p>
-                                                    <p className={`text-[1.4rem] truncate  font-serif tracking-wider  mds-editor28:text-[1rem] flex-[6] ${item.id === 4 ? "text-[#fff]" : ""}`}>{item.name}</p>
+                                                    <p className={`flex flex-[2] justify-center ${item.id === 4 ? "text-[#fff]" : `${props.theme?"text-[#ededed]":""}`}`}>{item.icon}</p>
+                                                    <p className={`text-[1.4rem] truncate  font-serif tracking-wider  mds-editor28:text-[1rem] flex-[6] ${item.id === 4 ? "text-[#fff] " : `${props.theme?"text-[#ededed]":""}`}`}>{item.name}</p>
                                                 </section>
 
                                             </div>

@@ -755,7 +755,7 @@ function ChatSection({ user, socket }) {
                   blockUser={blockUser}
                   BlockUser={BlockUser}
                 />
-                <div className="center_message mds-editor28:flex-[6]  flex-[8] overflow-y-auto w-full overflow-x-hidden bg-[#f5f5f5]" id="center_message" >
+                <div className="center_message mds-editor28:h-auto  flex-[8] overflow-y-auto w-full overflow-x-hidden bg-[#f5f5f5]" id="center_message" >
                   {
                     messageLoader ? <MessageLoader /> :
                       (q?.length === 24 && currentChat.length ?
