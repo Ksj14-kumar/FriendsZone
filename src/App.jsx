@@ -82,6 +82,7 @@ function App() {
                 })
                 const status = response.status
                 const data = await response.json()
+                console.log({data})
                 if (status === 200) {
                     setUserData(data.user)
                 }
@@ -116,7 +117,7 @@ function App() {
             <Context.Provider value={{ users, dispatch }}>
                 <div className="left_section" >
                     {
-                        (getUserData && user) && <Sidebar socket={socket} theme={theme} />
+                        (getUserData && user)||userData && <Sidebar socket={socket} theme={theme} />
                     }
                 </div>
                 <>
@@ -126,14 +127,14 @@ function App() {
                                 <Route exact path="/"
                                 >
                                     {
-                                        (getUserData && user) ?
+                                        (getUserData && user) ||userData ?
                                             <Feed socket={socket} setShowLikeUserModal={setShowLikeUserModal} showLikeUserModal={showLikeUserModal} />
                                             : <Header />
                                     }
                                 </Route>
                                 <Route exact path="/register">
                                     {
-                                        (getUserData && user)
+                                        (getUserData && user)||userData
                                             ?
                                             <Redirect to={"/"} /> :
                                             <Register />
@@ -141,7 +142,7 @@ function App() {
                                 </Route>
                                 <Route exact path="/login">
                                     {
-                                        (getUserData && user)
+                                        (getUserData && user)||userData
                                             //  &&
                                             ? <Redirect to={"/"} /> :
                                             <Login socket={socket} />
@@ -150,7 +151,7 @@ function App() {
                                 <Route exact path="/forget" component={Email} />
                                 <Route exact path="/dashboard">
                                     {
-                                        (getUserData && user) &&
+                                        (getUserData && user)||userData &&
                                         <Dashboard users={getUserData} socket={socket} />
                                         // : <Redirect to="/" />
                                     }
