@@ -56,6 +56,8 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     const [userData, setUserData] = useState([])
     const [popOver, setPopOverEffect] = useState(false)
     const [url, setUrl] = useState("")
+    const adminRightSideBar = useRef(null)
+
     const [BgUrl, setBackgroundImageUrl] = useState("")
     const [showSearch, setShowSearch] = useState(false)
     const [friendsRequest, setFriendsRequest] = useState([])
@@ -587,6 +589,20 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [AllTypeNitification])
+    //hide admin right sidebar
+    useEffect(() => {
+        // postPopupModal.current.contains(event.target)
+        async function handleHide(e) {
+            if (adminRightSideBar.current && !adminRightSideBar.current.contains(e.target)) {
+                setShowRightSideBar(false)
+            }
+        }
+        document.addEventListener("mousedown", handleHide)
+        return () => {
+            document.removeEventListener("mousedown", handleHide)
+        }
+    }, [])
+
     return (
         <>
             <nav className={`${theme ? "bg-[#000000fc] drop-shadow-xl border-b border-b-solid border-b-[#212121]" : " bg-light-blue-500"}  py-2 px-3 fixed w-full z-[18] drop-shadow-lg`}>
@@ -627,7 +643,7 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                             <div className="left_side_search flex  flex-[8] md:justify-end justify-start items-center relative md:mr-[3rem]">
                                 <motion.div className={`wrap_inout_search w-[38rem] mds-editor31:w-[25rem] mds-editor32:w-[3rem] rounded-full transition-all duration-300 ${expandSearch ? "mds-editor32:w-full" : "mds-editor32:w-[3rem]"}`}
                                 >
-                                    
+
                                     <SearchBarTable showSearch={showSearch} setShowSearch={setShowSearch} setQuery={setQuery} setPopOverEffect={setPopOverEffect} query={query} data={userData} userSearchHistory1={userSearchHistory} deleteHistory={deleteHistory} setExpandSearch={setExpandSearch} expandSearch={expandSearch} theme={theme} UserInformationLoad={UserInformationLoad} />
                                 </motion.div>
                             </div>
@@ -707,9 +723,9 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                                 <div className=" flex  justify-center items-center  relative w-[4rem] h-[3rem] ">
                                     <div className={`img cursor-pointer flex-shrink-0 w-[3rem] h-full  md:mr-0 bg-[#d5d5d5]  border-solid border-[#f1f0f0] rounded-full ml-3 ${LoaderRedux && "animate-pulse"}`}
                                         onClick={() => {
-                                            if (UserInformationLoad) {
+                                            // if (UserInformationLoad) {
                                                 setShowRightSideBar(!showRightSideBar)
-                                            }
+                                            // }
                                         }}
                                         ref={ImageRef}
                                     >
@@ -771,20 +787,25 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
                 </div>
             </nav >
             {
-                UserInformationLoad !== null &&
-                <AnimatePresence exitBeforeEnter>
-                    {
-                        showRightSideBar &&
-                        <AdminRightSideBar showRightSideBar={showRightSideBar}
-                            setShowRightSideBar={setShowRightSideBar} logout={logout}
-                            setShowModalCode={setShowModalCode}
-                            setShowModalCodeBackground={setShowModalCodeBackground}
-                            theme={theme}
-                            id={UserInformationLoad._id}
+                <div className="_rightAdminSideBar"
+                    ref={adminRightSideBar}
+                >
+                    <AnimatePresence>
+                        {
+                            UserInformationLoad !== null &&
+                            showRightSideBar &&
+                            <AdminRightSideBar showRightSideBar={showRightSideBar}
+                                setShowRightSideBar={setShowRightSideBar} logout={logout}
+                                setShowModalCode={setShowModalCode}
+                                setShowModalCodeBackground={setShowModalCodeBackground}
+                                theme={theme}
+                                id={UserInformationLoad._id}
+                                
 
-                        />
-                    }
-                </AnimatePresence>
+                            />
+                        }
+                    </AnimatePresence>
+                </div>
             }
             {/* //  MAIN BODY OF DASHBOARD */}
             {/* ==============================profile image=================handler */}

@@ -10,6 +10,7 @@ import Icon from "@material-tailwind/react/Icon";
 
 
 import { ImGooglePlus3 } from 'react-icons/im';
+import { BsEyeFill, BsEyeSlashFill } from 'react-icons/bs';
 
 import { FaFacebook } from 'react-icons/fa';
 import { FiHome } from 'react-icons/fi';
@@ -24,6 +25,7 @@ import { Error } from "./Toastify";
 export default function Login({ socket }) {
   const { users, dispatch } = useContext(Context)
   const [loader, setLoader] = useState(false)
+  const [togglePassword, setShowPassword] = useState(false)
   const history = useHistory()
   const [data, setData] = React.useState({
     email: "",
@@ -116,17 +118,24 @@ export default function Login({ socket }) {
                 className="border-0 text-[1.5rem] font-serif tracking-wider bg-red-600"
               />
             </div>
-            <div className="mb-4 px-4">
+            <div className="mb-4 px-4  flex items-center relative">
               <InputIcon
-                type="password"
+                type={togglePassword ? "text" : "password"}
                 color="lightBlue"
                 name="password"
                 placeholder="Password"
-                iconName="lock"
                 value={data.password}
                 onChange={handle}
                 outline={false}
               />
+              <div className="shoe_hide_password flex absolute right-[1rem]"
+                onClick={() => {
+                  setShowPassword(!togglePassword)
+                }}
+              >
+                {togglePassword ? <BsEyeFill className="text-[1.6rem] font-serif" /> :
+                  <BsEyeSlashFill className="text-[1.6rem] font-serif" />}
+              </div>
             </div>
           </CardBody>
           <CardFooter>
@@ -221,6 +230,7 @@ export default function Login({ socket }) {
                 <NavLink exact to="/forget" className="text-lg
                             text-blue-800  font-semibold mb-4 underline decoration-blue-800 decoration-2 ">
                   Click here</NavLink>
+
               </div>
             </div>
           </CardFooter>

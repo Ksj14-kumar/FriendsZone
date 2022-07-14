@@ -28,6 +28,7 @@ import ThemeMode from "./Pages/AdminRightSideBarPages/ThemeMode"
 import Music from "./Pages/AdminRightSideBarPages/Music"
 import UserSinglePost from './Pages/UserSinglePost';
 import { AnimatePresence } from "framer-motion"
+import VerifyEmail from './Pages/Verify';
 
 // const Feed = React.lazy(() => require("./Pages/Feed"))
 
@@ -97,7 +98,7 @@ function App() {
     // //trigger when user login your account
     useEffect(() => {
         const isHttps = process.env.REACT_APP_API_BACKENDURL
-        setSocket(io(isHttps, object))
+        getUserData&& setSocket(io(isHttps, object))
         socket?.on("connect_error", (err) => {
         })
     }, [])
@@ -105,7 +106,7 @@ function App() {
     useEffect(() => {
         socket?.emit("newUser", getUserData)
     }, [getUserData])
-    
+
 
 
 
@@ -119,7 +120,7 @@ function App() {
                     }
                 </div>
                 <>
-                    <div className={`bg-cover app_class min-h-screen ${theme ? "bg-[#000000]" : "bg-[#e4e4e4]"}`}>
+                    <div className={`bg-cover app_class min-h-screen  ${theme ? "bg-[#000000]" : `${getUserData ? "bg-[#e4e4e4]" : " homepage_se"}`}`}>
                         <AnimatePresence exitBeforeEnter initial={false}>
                             <Switch location={location} key={location.key}>
                                 <Route exact path="/"
@@ -232,6 +233,12 @@ function App() {
                                 <Route exact path="/blog/:name/news">
                                     {
                                         <News socket={socket} theme={theme} />
+                                    }
+                                </Route>
+                                <Route exact path="/verify/:token">
+                                    {
+                                        // getUserData &&
+                                        <VerifyEmail socket={socket} theme={theme} />
                                     }
                                 </Route>
                             </Switch>

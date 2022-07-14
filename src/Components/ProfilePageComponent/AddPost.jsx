@@ -377,7 +377,7 @@ function AddPost({ setAllPosts, socket, theme, allPosts }) {
                                             setShowModalCode(true)
                                         }
                                         else {
-                                            error({ message: "Kindly, Create Profile" })
+                                            error({ message: "Kindly, Create Profile and enable full features" })
                                         }
                                     }
                                     }

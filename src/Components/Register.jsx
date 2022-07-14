@@ -10,15 +10,18 @@ import ClosingAlert from "@material-tailwind/react/ClosingAlert";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LoginLoader from '../Loader/LoginLoader';
+import { BsEyeFill, BsEyeSlashFill } from 'react-icons/bs';
+
 
 
 
 
 import { NavLink } from 'react-router-dom'
-import Icon from "@material-tailwind/react/Icon";
 export default function Register() {
     const [info, setinfo] = React.useState({ name: "", email: "", password: "", confirmPassword: "" })
     const [loader, setLoader] = useState(false)
+    const [togglePassword, setShowPassword] = useState({ password: false, cPassword: false })
+
     let name, value
     function handleInput(e) {
         name = e.target.name
@@ -65,7 +68,7 @@ export default function Register() {
                     setinfo({ name: "", email: "", password: "", confirmPassword: "" })
                     return
                 }
-                else {
+                else if (status !== 200) {
                     error({ message: data.message })
                     setLoader(false)
                     return
@@ -104,27 +107,41 @@ export default function Register() {
                                     onChange={handleInput}
                                 />
                             </div>
-                            <div className="mb-4 px-4">
+                            <div className="mb-4 px-4 flex items-center relative">
                                 <InputIcon
-                                    type="password"
+                                    type={togglePassword.password ? "text" : "password"}
                                     color="lightBlue"
                                     placeholder="password"
-                                    iconName="lock"
                                     name="password"
                                     value={info.password}
                                     onChange={handleInput}
                                 />
+                                <div className="shoe_hide_password flex absolute right-[1rem]"
+                                    onClick={() => {
+                                        setShowPassword({ password: !togglePassword.password, cPassword: togglePassword.cPassword })
+                                    }}
+                                >
+                                    {togglePassword.password ? <BsEyeFill className="text-[1.6rem] font-serif" /> :
+                                        <BsEyeSlashFill className="text-[1.6rem] font-serif" />}
+                                </div>
                             </div>
-                            <div className="mb-4 px-4">
+                            <div className="mb-4 px-4 flex items-center relative">
                                 <InputIcon
-                                    type="password"
+                                    type={togglePassword.cPassword ? "text" : "password"}
                                     color="lightBlue"
                                     placeholder="Confirm password"
-                                    iconName="lock"
                                     name="confirmPassword"
                                     value={info.confirmPassword}
                                     onChange={handleInput}
                                 />
+                                <div className="shoe_hide_password flex absolute right-[1rem]"
+                                    onClick={() => {
+                                        setShowPassword({ password: togglePassword.password, cPassword: !togglePassword.cPassword })
+                                    }}
+                                >
+                                    {togglePassword.cPassword ? <BsEyeFill className="text-[1.6rem] font-serif" /> :
+                                        <BsEyeSlashFill className="text-[1.6rem] font-serif" />}
+                                </div>
                             </div>
                         </CardBody>
                         <CardFooter>
@@ -145,9 +162,9 @@ export default function Register() {
                                 </Button>
                             </div>
                             <div className="footer-section flex justify-between ">
-                                <p className="pt-[1px] ">Already have an Account</p>
+                                <p className="pt-[1px] text-[1.2rem] font-serif tracking-wider ">Already have an Account</p>
                                 <NavLink exact to="/login" className="text-lg
-                            text-blue-800  font-semibold mb-3 underline decoration-blue-800 decoration-2  "> Click here</NavLink>
+                            text-blue-800  font-semibold mb-3 underline decoration-blue-800 decoration-2  "> Click</NavLink>
                             </div>
                         </CardFooter>
                     </Card>

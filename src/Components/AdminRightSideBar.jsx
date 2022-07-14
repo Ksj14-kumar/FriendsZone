@@ -10,7 +10,6 @@ import { useSelector } from 'react-redux'
 import { NavLink } from "react-router-dom"
 
 function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout, setShowModalCode, setShowModalCodeBackground, id }) {
-    const adminRightSideBar = useRef(null)
     const { UserInformationLoad, theme } = useSelector((state) => {
         return {
             UserInformationLoad: state.UserInformationLoad.value,
@@ -18,20 +17,9 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout, setS
         }
     })
     const fullName = UserInformationLoad?.fname + " " + UserInformationLoad?.lname
-    useEffect(() => {
-        // postPopupModal.current.contains(event.target)
-        async function handleHide(e) {
-            if (adminRightSideBar.current && !adminRightSideBar.current.contains(e.target)) {
-                setShowRightSideBar(false)
-            }
-        }
-        document.addEventListener("mousedown", handleHide)
-        return () => {
-            document.removeEventListener("mousedown", handleHide)
-        }
-    }, [])
     return (
         <>
+
             <motion.div
                 initial={{ opacity: 0, x: 200 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -42,8 +30,9 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout, setS
                 exit={{ opacity: 0, x: 200 }}
                 key={id}
                 className={`fixed ${theme ? "bg-[#010101] border border-solid border-[#343434]" : "bg-[#fffefe]"} top-[3.4rem] drop-shadow-lg right-[0rem] z-[17] pt-4 w-[25rem] mds-editor28:w-[16rem] h-screen px-4`} id="adminRightSideBar"
-                ref={adminRightSideBar}
             >
+
+
                 <div className={`Con hidden ${theme ? "text-[#fff]" : "text-[#000]"}`}>
                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Facere, accusantium!
                 </div>
@@ -53,6 +42,7 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout, setS
                         //     icon: <MdSettings className="text-[2rem] mds-editor28:text-[1.5rem] " />,
                         //     name: "Setting",
                         //     arrow: <MdArrowForwardIos className="text-[1.8rem] mds-editor28:text-[1.3rem]" />,
+                        //     path:`/blog/${fullName}/settings
                         //     id: 1
 
                         // },
@@ -60,34 +50,39 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout, setS
                             icon: <FaMoon className="text-[2rem] mds-editor28:text-[1.5rem]" />,
                             name: "Theme Mode",
                             arrow: <MdArrowForwardIos className="text-[1.8rem] mds-editor28:text-[1.3rem]" />,
-                            id: 2
+                            id: 2,
+                            path: `/blog/${fullName}/themeMode`
                         },
                         // {
                         //     icon: <MdMusicNote className="text-[2rem] mds-editor28:text-[1.5rem]" />,
                         //     name: "Songs Accessbility",
                         //     arrow: <MdArrowForwardIos className="text-[1.8rem] mds-editor28:text-[1.3rem]" />,
-                        //     id: 3
+                        //     id: 3,
+                        //     path:`/blog/${fullName}/songs-accessbility`
 
                         // },
                         {
                             icon: <GiNewspaper className="text-[2rem] mds-editor28:text-[1.5rem]" />,
                             name: "News",
                             arrow: <MdArrowForwardIos className="text-[1.8rem] mds-editor28:text-[1.3rem]" />,
-                            id: 4
+                            id: 4,
+                            path: `/blog/${fullName}/news`
                         },
                         {
                             icon: <BsFillBookmarkFill className="text-[2rem] mds-editor28:text-[1.5rem]" />,
                             name: "BookMark",
                             arrow: <MdArrowForwardIos className="text-[1.8rem] mds-editor28:text-[1.3rem]" />,
-                            id: 5
+                            id: 5,
+                            path: `/blog/${fullName}/bookmark`
                         }
                     ].map((i, index) => {
                         return (
                             <>
-                                <div className="linkes_containe"
+                                <div className={`linkes_containe ${UserInformationLoad ? "" : "hidden"}`}
                                     key={index}
                                 >
-                                    <NavLink to={`${i.id === 1 ? (`/blog/${fullName}/settings`) : (i.id === 2 ? (`/blog/${fullName}/themeMode`) : (i.id === 3 ? (`/blog/${fullName}/songs-accessbility`) : (i.id === 4 ? (`/blog/${fullName}/news`) : (i.id === 5 && `/blog/${fullName}/bookmark`))))}`}
+                                    {/* `${i.id === 1 ? (`/blog/${fullName}/settings`) : (i.id === 2 ? (`/blog/${fullName}/themeMode`) : (i.id === 3 ? (`/blog/${fullName}/songs-accessbility`) : (i.id === 4 ? (`/blog/${fullName}/news`) : (i.id === 5 && `/blog/${fullName}/bookmark`))))} */}
+                                    <NavLink to={i.path}
                                         activeClassName={`bg-gradient-to-r from-red-800 via-yellow-600 to-yellow-500`}
                                     >
                                         <AllLinks
@@ -130,7 +125,7 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout, setS
                     ].map((item, index) => {
                         return (
                             <>
-                                <div className={`music ${theme ? "hover:bg-[#222222]" : "hover:bg-[#e7e7e7]"} bg-[#e7e7e747] flex py-3 items-center cursor-pointer rounded-lg mb-2`}
+                                <div className={`music ${UserInformationLoad ? "" : `${item.id !== 3 ? "hidden" : ""}`} ${theme ? "hover:bg-[#222222]" : "hover:bg-[#e7e7e7]"} bg-[#e7e7e747] flex py-3 items-center cursor-pointer rounded-lg mb-2`}
                                     onClick={() => {
                                         if (item.id === 1) {
                                             setShowModalCode(true)
@@ -168,7 +163,8 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout, setS
                 }
 
 
-            </motion.div>
+            </motion.div >
+
         </>
     )
 }
