@@ -33,7 +33,7 @@ export default function Header(props) {
                         navigationToggle && <motion.div className="right absolute bg-gradient-to-l from-gray-200 via-gray-400 to-gray-600 w-[15rem] top-[4.6rem] right-0 drop-shadow-lg px-2 pt-1 min-h-[calc(100vh-0rem)]  z-[2]"
                             initial={{ opacity: 0, x: 100 }}
                             animate={{ opacity: 1, x: 0 }}
-                            transition={{ "ease": "easeInOut", duration: .5 }}
+                            transition={{ "ease": "easeInOut", duration: .1 }}
                             exit={{ opacity: 0, x: 100 }}>
                             {Navigations.map((item, index) => {
                                 return (
