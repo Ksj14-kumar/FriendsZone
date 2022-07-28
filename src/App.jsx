@@ -82,7 +82,7 @@ function App() {
                 })
                 const status = response.status
                 const data = await response.json()
-                console.log({ data })
+                // console.log({ data })
                 if (status === 200) {
                     setUserData(data.user)
                 }
