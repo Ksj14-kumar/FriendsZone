@@ -2,9 +2,7 @@ import React from 'react'
 
 import UpdateProfile from './UpdateProfile';
 
-function Dashboard(props) {
-    
-    const _id = JSON.parse(localStorage.getItem("user_login"))
+function Dashboard(props) {    
     return (
         <div className='text-white'>
             <UpdateProfile />

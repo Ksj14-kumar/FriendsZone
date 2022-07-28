@@ -54,7 +54,6 @@ function BeforeLoadData() {
         <>
             <div className="inner  flex justify-evenly items-center py-1 cursor-pointer hover:bg-[#d2d0d0] rounded-md mx-[.6rem] transition-all delay-100 mb-[.7rem]  bg-[#a7a6a6] animate-pulse" >
                 <div className="image w-[2.7rem] h-[2.7rem] flex-shrink-0 bg-[#908f8fe8]">
-                   
                 </div>
                 <div className="name text-[1.3rem] text-[#7d7c7c] -ml-[4px]">
                 </div>

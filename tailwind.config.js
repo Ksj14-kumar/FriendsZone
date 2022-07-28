@@ -44,7 +44,6 @@ module.exports = {
         "mds-editor32": { "max": "561px" },
         "mds-editor33": { "max": "345px" },
         "mds-editor34": { "max": "315px" },
-
         "mds-editor35": { "min": "480px", "max": "768px" },
         "mds-editor36": { "max": "385px" },
 

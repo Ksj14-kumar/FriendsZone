@@ -55,9 +55,7 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
             OriginalProfileURL: state.OriginalProfileURL
         }
     })
-
     // console.log({item})
-
     const { _id, fname, lname, googleId } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "" }
     function SetCommentSection(e, id) {
         if (id) {
@@ -82,7 +80,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
                 setAllPosts(prev => {
                     return prev.filter(item => item.post_id !== post_id)
                 })
-
                 success({ message: message })
                 setDeleteLoader(false)
             }
@@ -100,7 +97,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
         })
         if (value) {
             if (isMount) {
-
                 steBookMarkColor(value)
             }
         }
@@ -143,7 +139,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^>>>> SEND THE REACTION TO Specific I  ID<<<<<<<<<<^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     useEffect(() => {
         //load the like when user refresh the page and show user which post already liked
-
         let isMount = true
         if (isMount) {
             item.postType !== "news" && setLike(item.liked.includes(googleId))
@@ -158,7 +153,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
         if (isMount) {
             item.postType !== "news" && setLikeCount(item.liked.length === 0 ? 0 : item.liked.length)
         }
-
         return () => {
             isMount = false
         }
@@ -166,7 +160,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
     //function which excute when current user liked it any post
     async function callLikeHnadler(userId, post_id, bgImageUrl, profileImage) {
         try {
-
             if (socket.connected) {
                 if (like) {
                     socket.emit("likePost", { post_id, likedBy: googleId, likeTo: userId, OriginalProfileURL })
@@ -251,7 +244,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
         let isMount = true
         if (item.image === "") {
             if (isMount) {
-
                 setLoadingPostSecond(false)
                 setLoadingPost(false)
             }
@@ -260,7 +252,6 @@ function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserMo
             isMount = false
         }
     }, [item.image])
-
     //redirect user to another url
     function RedirectToAnotherUrl(value) {
         window.location.assign(value)
@@ -1058,7 +1049,6 @@ function LoadPostContentVideo({ url, setLoadingPostSecond }) {
                 const blob = await res.blob()
                 if (res.status === 200) {
                     // if (isMount.current) {
-
                     setPostBlobUrl(URL.createObjectURL(blob))
                     setLoad(false)
                     setLoadingPostSecond(false)
@@ -1074,7 +1064,6 @@ function LoadPostContentVideo({ url, setLoadingPostSecond }) {
         loadFiles()
         // return () => {
         //     isMount.current = false
-
         // }
     }, [url])
     return (
@@ -1102,7 +1091,6 @@ function LoadPostContentImage({ url, setLoadingPostSecond }) {
     const [load, setLoad] = useState(false)
     useEffect(() => {
         let isMount = true
-
         async function loadFiles() {
             try {
                 setLoadingPostSecond(true)
@@ -1131,7 +1119,6 @@ function LoadPostContentImage({ url, setLoadingPostSecond }) {
         loadFiles()
         return () => {
             isMount = false
-
         }
     }, [url])
     return (

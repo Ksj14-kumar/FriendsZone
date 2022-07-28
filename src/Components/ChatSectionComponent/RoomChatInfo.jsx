@@ -27,7 +27,6 @@ function RoomChatInfo({ setRoomChatHeader, RoomData, setRoomData, setModalForFri
             const reader = new FileReader()
             setBase64Url(Url)
             reader.onloadend = () => {
-
             }
         }
         else {
@@ -55,7 +54,6 @@ function RoomChatInfo({ setRoomChatHeader, RoomData, setRoomData, setModalForFri
                 if (response.status === 200) {
                     setRoomImage(data.room)
                     setImageLoader(false)
-
                 }
                 else if (response.status === 500) {
                     setImageLoader(false)
@@ -166,7 +164,6 @@ function Loader() {
     return (
         <>
             <div className="loader_sp w-full h-full flex justify-center items-center">
-
                 <TailSpin color="#F2EBE9" height={80} width={80} />
             </div>
         </>

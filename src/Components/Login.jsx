@@ -7,20 +7,15 @@ import InputIcon from "@material-tailwind/react/InputIcon";
 import Button from "@material-tailwind/react/Button";
 import H5 from "@material-tailwind/react/Heading5";
 import Icon from "@material-tailwind/react/Icon";
-
-
 import { ImGooglePlus3 } from 'react-icons/im';
 import { BsEyeFill, BsEyeSlashFill } from 'react-icons/bs';
-
 import { FaFacebook } from 'react-icons/fa';
 import { FiHome } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import { NavLink, useHistory } from 'react-router-dom'
 import { Context } from '../App';
 import LoginLoader from "../Loader/LoginLoader";
-
 import { Error } from "./Toastify";
-
 
 export default function Login({ socket }) {
   const { users, dispatch } = useContext(Context)
@@ -230,7 +225,6 @@ export default function Login({ socket }) {
                 <NavLink exact to="/forget" className="text-lg
                             text-blue-800  font-semibold mb-4 underline decoration-blue-800 decoration-2 ">
                   Click here</NavLink>
-
               </div>
             </div>
           </CardFooter>

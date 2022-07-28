@@ -124,9 +124,7 @@ function ProfileCard(props) {
     //when user load the page or refresh the page and check jis user ki profile dekh rha hai wo user send request array mai wxit krta bhi hai or nhi 
     useEffect(() => {
         let isMount = true
-
         if (isMount) {
-
             const value = UserInformationLoad.senderrequest !== undefined && UserInformationLoad.senderrequest.some(item => item._id === usernameId)
             setConnectMessage(value)
         }
@@ -137,7 +135,6 @@ function ProfileCard(props) {
     useEffect(() => {
         let isMount = true
         if (isMount) {
-
             setAcceptMessage((friends !== undefined) && (friends.some(item => item._id === usernameId
             )))
         }
@@ -166,7 +163,6 @@ function ProfileCard(props) {
         }
     }
     useEffect(() => {
-
         setAcceptorMessage(UserInformationLoad.friends !== undefined && UserInformationLoad.friends.some(item => item._id === usernameId))
     }, [usernameId, UserInformationLoad])
     //sstore the user search hostory
@@ -194,12 +190,10 @@ function ProfileCard(props) {
             }
         }
         History()
-
     }, [usernameId, googleId])
     useEffect(() => {
         let isMount = true
         async function f1() {
-
             if (userInfo?.BgURL) {
                 const res = await fetch(userInfo.BgURL)
                 const blob = await res.blob()
@@ -273,9 +267,7 @@ function ProfileCard(props) {
                 else {
                     setAssests([])
                     //send file to zero
-
                 }
-
             }
             else if (res.status !== 200) {
                 setAssests([])

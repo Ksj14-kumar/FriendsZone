@@ -6,7 +6,6 @@ export default () => {
     <Swiper
       spaceBetween={50}
       slidesPerView={3}
-      
     >
       <SwiperSlide>Slide 1</SwiperSlide>
       <SwiperSlide>Slide 2</SwiperSlide>

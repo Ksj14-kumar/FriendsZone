@@ -16,7 +16,6 @@ export default function Sidebar(props) {
             UserInformationLoad: state.UserInformationLoad.value,
             Name: state.Name
         }
-
     })
     const { googleId } = UserInformationLoad !== null || UserInformationLoad !== undefined ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "" }
     const _id = localStorage.getItem("uuid")
@@ -71,7 +70,6 @@ export default function Sidebar(props) {
                     </NavLink>
                     <div className="flex flex-col  w-full">
                         <hr className="my-4 min-w-full " />
-
                         {
                             [
                                 {
@@ -87,7 +85,6 @@ export default function Sidebar(props) {
                                 // {
                                 //     id: 3,
                                 //     name: `Posts`,
-
                                 //     icon: <BsViewList className='text-[2rem] mds-editor28:text-[1.5rem' />
                                 // },
                                 {
@@ -102,7 +99,7 @@ export default function Sidebar(props) {
                                             exact
                                             key={index}
                                         >
-                                            <div className={`list_wraper rounded-md mb-2 ${routerId === item.id && "bg-gradient-to-r from-red-800 via-yellow-600 to-yellow-500"} cursor-pointer ${item.id === 4 ? "bg-[#920303] hover:bg-[#da0404]" : `${props.theme?"bg-[#414141] hover:bg-[#7e7e7e]":"bg-[#e7e7e7] hover:bg-[#c7c7c7]"}`}} transition-all delay-100 `} key={index}
+                                            <div className={`list_wraper bg-red-500 rounded-md mb-2 ${routerId === item.id && "bg-gradient-to-r from-red-800 via-yellow-600 to-yellow-500"} cursor-pointer ${item.id === 4 ? "bg-[#920303] hover:bg-[#da0404]" : `${props.theme?"bg-[#414141] hover:bg-[#7e7e7e]":"bg-[#e7e7e7] hover:bg-[#c7c7c7]"}`}} transition-all delay-100 `} key={index}
                                                 onClick={() => {
                                                     setRouterId(item.id)
                                                     if (item.id === 4) {
@@ -114,17 +111,12 @@ export default function Sidebar(props) {
                                                     <p className={`flex flex-[2] justify-center ${item.id === 4 ? "text-[#fff]" : `${props.theme?"text-[#ededed]":""}`}`}>{item.icon}</p>
                                                     <p className={`text-[1.4rem] truncate  font-serif tracking-wider  mds-editor28:text-[1rem] flex-[6] ${item.id === 4 ? "text-[#fff] " : `${props.theme?"text-[#ededed]":""}`}`}>{item.name}</p>
                                                 </section>
-
                                             </div>
                                         </NavLink>
-
                                     </>
                                 )
                             })
                         }
-
-
-
                         {/* <ul className="flex-col min-w-full flex list-none text-white">
                             <li className={`rounded-lg mb-4 ${props.theme ? "bg-[#262626] hover:bg-[#565656]" : " hover:bg-[#2a97bb]"} transition duration-2000
                             hover:shadow-lg

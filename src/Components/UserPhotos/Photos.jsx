@@ -26,9 +26,7 @@ function Photos({ assests }) {
             const newUrl = assests[0];
             setClickedImg(newUrl);
             return;
-
         }
-
     };
     const handelRotationLeft = () => {
         const totalLength = assests.length;
@@ -38,7 +36,6 @@ function Photos({ assests }) {
             setClickedImg(newUrl);
             return;
         }
-        
     };
     return (
         <>

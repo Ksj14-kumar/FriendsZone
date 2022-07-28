@@ -3,7 +3,6 @@ import Image from '@material-tailwind/react/Image'
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 function FriendsNoti({ SenderRequestId, name, AcceptFriendRequest, DeleteFriendRequest, url, messageAftetAcceptRequest, acceptRequest, setAcceptRequest }) {
-
     return (
         <section className={`flex flex-col hover:bg-[#cfcfcf71]  rounded-md py-[.5rem] transition-all duration-100 `}>
             {

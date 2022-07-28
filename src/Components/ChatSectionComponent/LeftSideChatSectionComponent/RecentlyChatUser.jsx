@@ -119,7 +119,6 @@ function ChangeURL({ url }) {
     useEffect(() => {
         async function loadImage() {
             try {
-
                 setLoader(true)
                 const res = await fetch(url)
                 const blobData = await res.blob()
@@ -127,7 +126,6 @@ function ChangeURL({ url }) {
                 setLoader(false)
             }
             catch (err) {
-
             }
         }
         loadImage()

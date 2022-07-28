@@ -436,7 +436,6 @@ function AddPost({ setAllPosts, socket, theme, allPosts }) {
                                 ripple="light"
                                 onClick={(e) => {
                                     if (UserInformationLoad) {
-
                                         setShowModalCodeText(true)
                                     }
                                 }}
@@ -938,7 +937,6 @@ function AddPost({ setAllPosts, socket, theme, allPosts }) {
                 </footer>
             </Modal>
             {/* =========================ADD SOME TEXT================== */}
-
             <Modal size="lg" className={`${theme ? "bg-[#0c0c0c]" : "bg-[#0c0c0c] border border-solid border-[#3c3c3c]"} text_modal`} active={showModalText} toggler={() => {
                 setShowModalCodeText(false)
             }}>
@@ -1075,7 +1073,6 @@ function AddPost({ setAllPosts, socket, theme, allPosts }) {
                     </ModalFooter>
                 </footer>
             </Modal>
-
             {/* <ToastContainer /> */}
             <Modal size="regular" active={emojiModal} toggler={() => setEmojiModal(false)} className="z-[1000] mt-[22rem]">
                 <div className="con" ref={wrapperref}>

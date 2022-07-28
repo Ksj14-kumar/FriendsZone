@@ -94,7 +94,6 @@ function ShowTextWhenNoUserExit() {
 }
 function Loader() {
     return (
-
         <div className="conta bg-[#bbbabae1] animate-pulse flex justify-center items-center	 transition-all delay-100 w-screen -mt-[4.7rem] content-center " id="friendsLoader">
             <Spinner name="cube-grid" className='text-[2.5rem]' style={{ width: "8rem", height: "8rem" }} />
         </div>

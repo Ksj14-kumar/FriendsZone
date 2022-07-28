@@ -21,7 +21,6 @@ export default function Register() {
     const [info, setinfo] = React.useState({ name: "", email: "", password: "", confirmPassword: "" })
     const [loader, setLoader] = useState(false)
     const [togglePassword, setShowPassword] = useState({ password: false, cPassword: false })
-
     let name, value
     function handleInput(e) {
         name = e.target.name

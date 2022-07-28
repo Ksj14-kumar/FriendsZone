@@ -20,7 +20,6 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
     const [length, setLength] = useState(null)
     let initialPage = 0;
     const [increament, setIncreament] = useState(2)
-
     const [infoLoader, setInfoLoader] = useState(false)
     const [CommentsLoader, setCommentLoader] = useState(false)
     const [notificationLoader, setNotificationLoader] = useState(false)
@@ -57,10 +56,6 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
         }
         areFriends()
     }, [AllUser, UserInformationLoad?.friend])
-
-
-
-
     //==============================================public post card side effect===============================
     //LOAD ALL THE posts for users
     useEffect(() => {
@@ -77,7 +72,6 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                 })
                 const loadPostData = await loadPostResponse.json()
                 if (loadPostResponse.status === 200) {
-
                     const Arrange = loadPostData.data.sort((a, b) => {
                         return b.time - a.time
                     })
@@ -148,7 +142,6 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                 const loadNotificationData = await loadNotificationResponse.json()
                 if (loadNotificationResponse.status === 200) {
                     if (loadNotificationIsMount) {
-
                         dispatch({ type: "Send_Notification", payload: loadNotificationData.data })
                         setNotificationLoader(false)
                     }
@@ -161,8 +154,6 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
             loadNotificationIsMount = false
         }
     }, [])
-
-
     //=====================LOAD THE BACKGROUND IMAGE from the cloudinaryS=============
     useEffect(() => {
         let backgroundImageIsMount = true
@@ -231,7 +222,6 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                 const data = await res.json()
                 if (res.status === 200) {
                     if (profileImageisMount) {
-
                         if (data.url !== false) {
                             const blobRes = await fetch(data.url)
                             const blobData = await blobRes.blob()
@@ -273,7 +263,6 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                 })
                 const response = await res.json()
                 if (postLengthisMount) {
-
                     if (res.status === 200) {
                         setLength(response.l)
                     }
@@ -304,7 +293,6 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                 })
                 const data = await res.json()
                 if (UnReadMessageIsMount) {
-
                     if (res.status === 200) {
                         dispatch({ type: "SET_UNREAD_MESSAGES", payload: data.empty })
                     }
@@ -372,7 +360,6 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                 </div>
                 <RightSide />
             </div>
-
             {
                 showLikeUserModal?.bool &&
                 <div className="friends_like_modal  fixed  w-screen h-screen  z-[20] top-0 right-0 flex justify-center md:items-center ">
@@ -425,7 +412,6 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
                     </div>
                 </div>
             }
-
         </>
     )
 }
@@ -476,7 +462,6 @@ function CoverPage() {
                     <InfinitySpin color="red" />
                 </div>
             </div>
-
         </>
     )
 }

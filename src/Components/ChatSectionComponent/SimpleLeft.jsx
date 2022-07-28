@@ -16,7 +16,6 @@ function SimpleLeft({ converzationList, current, setChatHeader, socket }) {
                 const data = await res.json()
                 if (res.status === 200) {
                     if(isMount){
-
                         setUnreadMessage(data.empty)
                     }
                 }
@@ -29,7 +28,6 @@ function SimpleLeft({ converzationList, current, setChatHeader, socket }) {
         getUnreadMessages()
         return ()=>{
             isMount=false
-
         }
     }, [])
     return (

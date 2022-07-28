@@ -5,12 +5,9 @@ import Spinner from 'react-spinkit'
 import { useParams } from 'react-router-dom';
 function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal, setAllPosts, allPosts, theme, length, setIncreament, increament, UserInformationLoad }) {
   const checkParams = useParams()
-
   function loadMorePost() {
     setIncreament(increament + 2)
   }
-
-
   return (
     <>
       {
@@ -36,7 +33,6 @@ function PublicPostCard({ profilePost, socket, threeDot, setShowLikeUserModal, s
           hasMore={true}
           loader={<Spinner name="three-bounce" />}
           className="md:ml-[8rem] ml-[0rem]"
-
         />
       </div>}
     </>

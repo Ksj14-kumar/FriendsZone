@@ -7,9 +7,6 @@ import { Offline, Online } from "react-detect-offline"
 
 function InternetDetection({ status, setStatus, children }) {
     const [bool, setBool] = useState(false)
-
-
-
     return (
         <>
             <Offline>
@@ -17,7 +14,6 @@ function InternetDetection({ status, setStatus, children }) {
                 initial={{ opacity: 0, x: -100 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ ease: "easeInOut" }}
-
             >
                 <div className="wrapper_internet flex flex-col h-full">
                     {/* <div className="flex justify-end w-full">
@@ -30,17 +26,14 @@ function InternetDetection({ status, setStatus, children }) {
                             <p className='flex items-center justify-center rounded-full h-[3rem] w-[3rem]'>
                                 <BsWifiOff className='text-[2.2rem] text-[#a90909]' />
                             </p>
-
                         </div>
                         <div className="text flex-[9] flex justify-center">
                             <p className='text-[1.5rem] tracking-wider font-serif w-full text-[#cecece]'>
                                 you are offline
                             </p>
                         </div>
-
                     </div>
                 </div>
-
             </motion.div>
             </Offline>
             <Online>
@@ -58,29 +51,23 @@ function InternetDetection({ status, setStatus, children }) {
                             >
                                 <MdClose className="text-[2.2rem] font-serif text-[#686868] hover:text-[#d5d4d4]" />
                             </button>
-
-
                         </div>
                         <div className="inn flex items-center">
                             <div className="icons flex-[2] flex justify-center">
                                 <p className='flex items-center justify-center rounded-full h-[3rem] w-[3rem]'>
                                     <BiWifi className='text-[2.2rem] text-[#0bc329]' />
                                 </p>
-
                             </div>
                             <div className="text flex-[9] flex justify-center">
                                 <p className='text-[1.5rem] tracking-wider font-serif w-full text-[#cecece]'>
                                     now, you are online
                                 </p>
                             </div>
-
                         </div>
                     </div>
-
                 </motion.div>
             </Online>
         </>
-
     )
 }
 

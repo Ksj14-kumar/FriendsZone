@@ -65,7 +65,6 @@ function CommentSection() {
         }
     }
     function replyFocusOnInput(e) {
-       
     }
     function likeCounterHandle(e) {
         if (likeValue) {

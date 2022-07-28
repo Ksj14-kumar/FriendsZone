@@ -37,7 +37,6 @@ export const getComments = async () => {
 };
 
 export const createComment = async (value, parentId = null, UserIdForPostComments, currentUserId, currentUserName, ImageUrl, post_id) => {
-
     return {
         uuid: Math.random().toString(36).substr(2, 9),
         body: value.value,
@@ -61,11 +60,7 @@ export const deleteComment = async () => {
 
 
 function changeTextCase(str) {
-
-
     const value = str.split(' ')?.map(w => {
-
-
         return w[0].toUpperCase() + w.slice(1).toLowerCase();
     })
         .join(' ');

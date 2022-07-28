@@ -218,7 +218,6 @@ function SkeltonLoadingWhileMediaDownload({ text, setBool, setOverlayObject, fri
             isMount=false
         }
     }, [text])
-
     return (
         <>
             {
@@ -320,10 +319,8 @@ function SkeltonAudio({ text, friendId, currentId }) {
                 if (isMount) {
                     setBlob(Url)
                     setLoading(false)
-
                 }
             } catch (err) {
-
                 setLoading(false)
             }
         }

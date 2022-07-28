@@ -24,11 +24,9 @@ export default function Header(props) {
                     </p> :
                         <p className="p-3 drop-shadow-md bg-[#cbcbcb] rounded-full cursor-pointer">
                             <IoMdClose className="text-[2.1rem] font-serif text-[#eb0a0a]" />
-
                         </p>}
                 </div>
                 <AnimatePresence>
-
                     {
                         navigationToggle && <motion.div className="right absolute bg-gradient-to-l from-gray-200 via-gray-400 to-gray-600 w-[15rem] top-[4.6rem] right-0 drop-shadow-lg px-2 pt-1 min-h-[calc(100vh-0rem)]  z-[2]"
                             initial={{ opacity: 0, x: 100 }}
@@ -42,7 +40,6 @@ export default function Header(props) {
                                             <div className="nav flex  items-center bg-gradient-to-r from-indigo-300 to-purple-400 py-2 mb-1 px-2 rounded-md hover:bg-[#6f6f6f] transition-all  delay-100 cursor-pointer">
                                                 <p className="text-[2.4rem] font-serif text-[#fff]">{item.icon}</p>
                                                 <p className="text-[1.8rem] font-serif tracking-wider ml-3 text-[#fff]">{item.name}</p>
-
                                             </div>
                                         </NavLink>
                                     </>
@@ -52,9 +49,7 @@ export default function Header(props) {
                         </motion.div>
                     }
                 </AnimatePresence>
-
             </div>
-
             <div className="share_pic_home flex justify-center">
                 <img src={SVG} className="h-[calc(100vh-5rem)]"/>
             </div>

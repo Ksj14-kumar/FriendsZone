@@ -19,7 +19,6 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout, setS
     const fullName = UserInformationLoad?.fname + " " + UserInformationLoad?.lname
     return (
         <>
-
             <motion.div
                 initial={{ opacity: 0, x: 200 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -31,8 +30,6 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout, setS
                 key={id}
                 className={`fixed ${theme ? "bg-[#010101] border border-solid border-[#343434]" : "bg-[#fffefe]"} top-[3.4rem] drop-shadow-lg right-[0rem] z-[17] pt-4 w-[25rem] mds-editor28:w-[16rem] h-screen px-4`} id="adminRightSideBar"
             >
-
-
                 <div className={`Con hidden ${theme ? "text-[#fff]" : "text-[#000]"}`}>
                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Facere, accusantium!
                 </div>
@@ -44,7 +41,6 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout, setS
                         //     arrow: <MdArrowForwardIos className="text-[1.8rem] mds-editor28:text-[1.3rem]" />,
                         //     path:`/blog/${fullName}/settings
                         //     id: 1
-
                         // },
                         {
                             icon: <FaMoon className="text-[2rem] mds-editor28:text-[1.5rem]" />,
@@ -59,7 +55,6 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout, setS
                         //     arrow: <MdArrowForwardIos className="text-[1.8rem] mds-editor28:text-[1.3rem]" />,
                         //     id: 3,
                         //     path:`/blog/${fullName}/songs-accessbility`
-
                         // },
                         {
                             icon: <GiNewspaper className="text-[2rem] mds-editor28:text-[1.5rem]" />,
@@ -109,7 +104,6 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout, setS
                             arrow: <MdArrowForwardIos className="text-[1.8rem] mds-editor28:text-[1.3rem]" />,
                             icon: <MdAddAPhoto className="text-[2rem] mds-editor28:text-[1.5rem]" />
                         },
-
                         {
                             id: 2,
                             name: "Background Image",
@@ -148,7 +142,6 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout, setS
                                         <p className={`text-[1.5rem]  font-serif tracking-wider ml-[1rem] mds-editor28:text-[1rem] ${theme ? "text-[#ffffff]" : "text-[#1b1a1a]"}`}>
                                             {item.name}
                                         </p>
-
                                     </div>
                                     <div className="arrow flex-[2]">
                                         <p className={`flex justify-end mr-1 ${theme ? "text-[#dedede] hover:text-[#2e2e2e]" : "text-[#555]"}`}>
@@ -156,15 +149,11 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout, setS
                                         </p>
                                     </div>
                                 </div>
-
                             </>
                         )
                     })
                 }
-
-
             </motion.div >
-
         </>
     )
 }

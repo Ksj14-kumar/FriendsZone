@@ -41,7 +41,6 @@ function RightSidebar({ socket, currentUser, currentId }) {
                     })
                     setOnlineFriends(value)
                     setFriendsLength(value.length)
-                    
                 }
                 else if (res.status !== 200) {
                 }

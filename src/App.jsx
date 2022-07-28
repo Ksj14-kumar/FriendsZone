@@ -82,7 +82,7 @@ function App() {
                 })
                 const status = response.status
                 const data = await response.json()
-                console.log({data})
+                console.log({ data })
                 if (status === 200) {
                     setUserData(data.user)
                 }
@@ -99,7 +99,7 @@ function App() {
     // //trigger when user login your account
     useEffect(() => {
         const isHttps = process.env.REACT_APP_API_BACKENDURL
-        getUserData&& setSocket(io(isHttps, object))
+        getUserData && setSocket(io(isHttps, object))
         socket?.on("connect_error", (err) => {
         })
     }, [])
@@ -115,145 +115,148 @@ function App() {
         // w-screen h-screen
         <StrictMode>
             <Context.Provider value={{ users, dispatch }}>
-                <div className="left_section" >
-                    {
-                        (getUserData && user)||userData && <Sidebar socket={socket} theme={theme} />
-                    }
+                <div className="root_wrapper flex">
+                    <div className="left_section" >
+                        {
+                            (getUserData && user) || userData && <Sidebar socket={socket} theme={theme} />
+                        }
+                    </div>
+                        <div className={`bg-cover app_class min-h-screen  ${theme ? "bg-[#000000]" : `${getUserData ? "bg-[#e4e4e4]" : "homepage_se"}`}`}>
+                            <AnimatePresence exitBeforeEnter initial={false}>
+                                <Switch location={location} key={location.key}>
+                                    <Route exact path="/"
+                                    >
+                                        {
+                                            (getUserData && user) || userData ?
+                                                <Feed socket={socket} setShowLikeUserModal={setShowLikeUserModal} showLikeUserModal={showLikeUserModal} />
+                                                : <Header />
+                                        }
+                                    </Route>
+                                    <Route exact path="/register">
+                                        {
+                                            (getUserData && user) || userData
+                                                ?
+                                                <Redirect to={"/"} /> :
+                                                <Register />
+                                        }
+                                    </Route>
+                                    <Route exact path="/login">
+                                        {
+                                            (getUserData && user) || userData
+                                                //  &&
+                                                ? <Redirect to={"/"} /> :
+                                                <Login socket={socket} />
+                                        }
+                                    </Route>
+                                    <Route exact path="/forget" component={Email} />
+                                    <Route exact path="/dashboard">
+                                        {
+                                            (getUserData && user) || userData &&
+                                            <Dashboard users={getUserData} socket={socket} />
+                                            // : <Redirect to="/" />
+                                        }
+                                    </Route>
+                                    <Route exact path='/profile/:username'>
+                                        {
+                                            <ProfileCard
+                                                getUserData={getUserData}
+                                                socket={socket}
+                                                setShowLikeUserModal={setShowLikeUserModal}
+                                                showLikeUserModal={showLikeUserModal} />
+                                        }
+                                    </Route>
+                                    <Route exact path='/unknownuser'>
+                                        {
+                                            <UnknowUser getUserData={getUserData} socket={socket} />
+                                        }
+                                    </Route>
+                                    <Route exact path="/update_profile">
+                                        {
+                                            <UpdateProfile getUserData={getUserData} socket={socket} theme={theme} />
+                                        }
+                                    </Route>
+                                    <Route exact path="/user/posts">
+                                        {
+                                            <UserPosts user={getUserData} socket={socket} />
+                                        }
+                                    </Route>
+                                    <Route exact path="/user/photos">
+                                        {
+                                            <UserPhotos user={getUserData} socket={socket} />
+                                        }
+                                    </Route>
+                                    <Route exact path="/user/links">
+                                        {
+                                            <UserLink user={getUserData} socket={socket} />
+                                        }
+                                    </Route>
+                                    <Route exact path="/load/friends/">
+                                        {
+                                            <AllFriends user={getUserData} socket={socket} />
+                                        }
+                                    </Route>
+                                    <Route exact path="/messages">
+                                        {
+                                            <ChatSection user={UserInformationLoad?.googleId} socket={socket} theme={theme} />
+                                        }
+                                    </Route>
+                                    <Route exact path="/all/notification/:id">
+                                        {
+                                            <AllNotification user={UserInformationLoad?.googleId} socket={socket} theme={theme} />
+                                        }
+                                    </Route>
+                                    <Route exact path={`/user/single/post/`}>
+                                        {
+                                            <UserSinglePost user={UserInformationLoad?.googleId} socket={socket} setShowLikeUserModal={setShowLikeUserModal} showLikeUserModal={showLikeUserModal} />
+                                        }
+                                    </Route>
+                                    {/* ==============================================RIGHTSIDE BAR PAGES===================================== */}
+                                    <Route exact path="/blog/:name/setting">
+                                        {
+                                            <Setting socket={socket} theme={theme} />
+                                        }
+                                    </Route>
+                                    <Route exact path="/blog/:name/bookmark">
+                                        {
+                                            <BookMark socket={socket} setShowLikeUserModal={setShowLikeUserModal} theme={theme} />
+                                        }
+                                    </Route>
+                                    <Route exact path="/blog/:name/songs-accessbility">
+                                        {
+                                            <Music socket={socket} theme={theme} />
+                                        }
+                                    </Route>
+                                    <Route exact path="/blog/:name/themeMode">
+                                        {
+                                            <ThemeMode socket={socket} />
+                                        }
+                                    </Route>
+                                    <Route exact path="/blog/:name/news">
+                                        {
+                                            <News socket={socket} theme={theme} />
+                                        }
+                                    </Route>
+                                    <Route exact path="/verify/:token">
+                                        {
+                                            // getUserData &&
+                                            <VerifyEmail socket={socket} theme={theme} />
+                                        }
+                                    </Route>
+                                </Switch>
+                            </AnimatePresence>
+                        </div >
+
+                        {
+                            (getUserData && user) &&
+                            <abbr title="live User">
+                                <div className="right_section  fixed md:top-[95%] top-[94.6%] right-[.5rem] md:w-[5rem] bg-[#6d369a7a] rounded-sm py-[.5rem] md:px-[1rem] px-[1rem] z-[999]">
+                                    <RightSidebar socket={socket} currentId={UserInformationLoad?.googleId} />
+                                </div>
+                            </abbr>
+                        }
+                    
                 </div>
-                <>
-                    <div className={`bg-cover app_class min-h-screen  ${theme ? "bg-[#000000]" : `${getUserData ? "bg-[#e4e4e4]" : " homepage_se"}`}`}>
-                        <AnimatePresence exitBeforeEnter initial={false}>
-                            <Switch location={location} key={location.key}>
-                                <Route exact path="/"
-                                >
-                                    {
-                                        (getUserData && user) ||userData ?
-                                            <Feed socket={socket} setShowLikeUserModal={setShowLikeUserModal} showLikeUserModal={showLikeUserModal} />
-                                            : <Header />
-                                    }
-                                </Route>
-                                <Route exact path="/register">
-                                    {
-                                        (getUserData && user)||userData
-                                            ?
-                                            <Redirect to={"/"} /> :
-                                            <Register />
-                                    }
-                                </Route>
-                                <Route exact path="/login">
-                                    {
-                                        (getUserData && user)||userData
-                                            //  &&
-                                            ? <Redirect to={"/"} /> :
-                                            <Login socket={socket} />
-                                    }
-                                </Route>
-                                <Route exact path="/forget" component={Email} />
-                                <Route exact path="/dashboard">
-                                    {
-                                        (getUserData && user)||userData &&
-                                        <Dashboard users={getUserData} socket={socket} />
-                                        // : <Redirect to="/" />
-                                    }
-                                </Route>
-                                <Route exact path='/profile/:username'>
-                                    {
-                                        <ProfileCard
-                                            getUserData={getUserData}
-                                            socket={socket}
-                                            setShowLikeUserModal={setShowLikeUserModal}
-                                            showLikeUserModal={showLikeUserModal} />
-                                    }
-                                </Route>
-                                <Route exact path='/unknownuser'>
-                                    {
-                                        <UnknowUser getUserData={getUserData} socket={socket} />
-                                    }
-                                </Route>
-                                <Route exact path="/update_profile">
-                                    {
-                                        <UpdateProfile getUserData={getUserData} socket={socket} theme={theme} />
-                                    }
-                                </Route>
-                                <Route exact path="/user/posts">
-                                    {
-                                        <UserPosts user={getUserData} socket={socket} />
-                                    }
-                                </Route>
-                                <Route exact path="/user/photos">
-                                    {
-                                        <UserPhotos user={getUserData} socket={socket} />
-                                    }
-                                </Route>
-                                <Route exact path="/user/links">
-                                    {
-                                        <UserLink user={getUserData} socket={socket} />
-                                    }
-                                </Route>
-                                <Route exact path="/load/friends/">
-                                    {
-                                        <AllFriends user={getUserData} socket={socket} />
-                                    }
-                                </Route>
-                                <Route exact path="/messages">
-                                    {
-                                        <ChatSection user={UserInformationLoad?.googleId} socket={socket} theme={theme} />
-                                    }
-                                </Route>
-                                <Route exact path="/all/notification/:id">
-                                    {
-                                        <AllNotification user={UserInformationLoad?.googleId} socket={socket} theme={theme} />
-                                    }
-                                </Route>
-                                <Route exact path={`/user/single/post/`}>
-                                    {
-                                        <UserSinglePost user={UserInformationLoad?.googleId} socket={socket} setShowLikeUserModal={setShowLikeUserModal} showLikeUserModal={showLikeUserModal} />
-                                    }
-                                </Route>
-                                {/* ==============================================RIGHTSIDE BAR PAGES===================================== */}
-                                <Route exact path="/blog/:name/setting">
-                                    {
-                                        <Setting socket={socket} theme={theme} />
-                                    }
-                                </Route>
-                                <Route exact path="/blog/:name/bookmark">
-                                    {
-                                        <BookMark socket={socket} setShowLikeUserModal={setShowLikeUserModal} theme={theme} />
-                                    }
-                                </Route>
-                                <Route exact path="/blog/:name/songs-accessbility">
-                                    {
-                                        <Music socket={socket} theme={theme} />
-                                    }
-                                </Route>
-                                <Route exact path="/blog/:name/themeMode">
-                                    {
-                                        <ThemeMode socket={socket} />
-                                    }
-                                </Route>
-                                <Route exact path="/blog/:name/news">
-                                    {
-                                        <News socket={socket} theme={theme} />
-                                    }
-                                </Route>
-                                <Route exact path="/verify/:token">
-                                    {
-                                        // getUserData &&
-                                        <VerifyEmail socket={socket} theme={theme} />
-                                    }
-                                </Route>
-                            </Switch>
-                        </AnimatePresence>
-                    </div >
-                    {
-                        (getUserData && user) &&
-                        <abbr title="live User">
-                            <div className="right_section  fixed md:top-[95%] top-[94.6%] right-[.5rem] md:w-[5rem] bg-[#6d369a7a] rounded-sm py-[.5rem] md:px-[1rem] px-[1rem] z-[999]">
-                                <RightSidebar socket={socket} currentId={UserInformationLoad?.googleId} />
-                            </div>
-                        </abbr>
-                    }
-                </>
+
             </Context.Provider>
         </StrictMode>
     )

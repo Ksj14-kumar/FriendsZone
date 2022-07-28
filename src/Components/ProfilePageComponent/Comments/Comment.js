@@ -23,14 +23,9 @@ const Comment = ({
     currentUserName,
     theme,
 }) => {
-
     const [showReplies, setShowReplies] = useState(false)
     const [image, setImage] = useState(null);
     const [GifURL, setGifURL] = useState(null);
-
-
-
-
     const isEditing =
         activeComment &&
         activeComment.uuid === comment?.uuid &&
@@ -50,13 +45,8 @@ const Comment = ({
     const canEdit = currentUserId === comment?.userId;
     const replyId = parentId ? parentId : comment?.uuid;
     // const createdAt = new Date(comment.createdAt).toLocaleDateString();
-
-
-
-
     useEffect(() => {
         async function HandleAsyncchronous() {
-
             if (comment.ImageUrl) {
                 const bres = await fetch(comment.ImageUrl)
                 const blob = await bres.blob()
@@ -65,17 +55,14 @@ const Comment = ({
             }
         }
         // if (isMount.current) {
-
         // }
         // if (comment.ImageUrl) {
-
         // }
         // return () => {
         //     isMount.current = false
         // }
         HandleAsyncchronous()
     }, [comment?.ImageUrl])
-
     useEffect(() => {
         async function HandleAsyncchronous() {
             if (comment.type === "gif") {
@@ -87,10 +74,6 @@ const Comment = ({
         }
         HandleAsyncchronous()
     }, [comment])
-
-
-
-
     return (
         <motion.div key={comment?.uuid} className="comment flex  md:ml-[3rem]  mt-5   mds-editor6:ml-[0.1rem] mds-editor6:text-[.9rem] flex-wrap relative "
             initial={{ opacity: 0 }}
@@ -135,7 +118,6 @@ const Comment = ({
                                 comment.type === "gif" &&
                                 <div className={`${comment.parentId !== null && "pr-1"} w-full`}>
                                     <Image src={GifURL} className=" w-[15rem] mds-editor28:w-[10rem]"
-
                                     />
                                 </div>
                             )
@@ -146,7 +128,6 @@ const Comment = ({
             </div>
             {/* <div className="like_show relative">
                 like
-
             </div> */}
             <div className="comment-right-part mt-2 w-full mr-2 mds-editor6:text-[.9rem]">
                 {isEditing && (
@@ -162,9 +143,7 @@ const Comment = ({
                             setActiveComment(null);
                         }}
                     />
-
                 )}
-
                 <div className={` flex mt-1  items-center pl-[4rem] mds-editor35:pl-[6rem] ${comment.parentId !== null && "pl-[2rem] mds-editor35:pl-[11rem]"}`}>
                     <div className=" mt-[0px] truncate">{format(comment.createdAt)}</div>
                     {canReply && (
@@ -186,7 +165,6 @@ const Comment = ({
                             >
                                 Reply
                             </Button>
-
                         </div>
                     )}
                     {canEdit && (
@@ -205,9 +183,7 @@ const Comment = ({
                                 iconOnly={false}
                                 ripple="light"
                                 className="lowercase border-0"
-
                             >
-
                                 Edit
                             </Button>
                         </div>
@@ -226,7 +202,6 @@ const Comment = ({
                                 iconOnly={false}
                                 ripple="light"
                                 className="lowercase border-0"
-
                             >
                                 Delete
                             </Button>
@@ -246,7 +221,6 @@ const Comment = ({
                         //         iconOnly={false}
                         //         ripple="light"
                         //         className="lowercase border-0 tracking-wider font-sans"
-
                         //     >
                         //         like
                         //     </Button>
@@ -255,7 +229,6 @@ const Comment = ({
                 </div>
                 {isReplying && (
                     <div className={`${comment.username !== null && "pl-[5.5rem]  mds-editor33:pl-[.5rem] mds-editor33:pr-[0rem] "}`}>
-
                         <CommentForm
                             submitLabel="Reply"
                             commentReplyName={comment.username}
@@ -267,17 +240,13 @@ const Comment = ({
                     </div>
                 )}
                 {
-
                     replies.length > 0 && (
                         (
                             showReplies
                                 ?
-
                                 <div className="replies mt-3">
                                     {replies.map((reply) => {
                                         return (
-
-
                                             <Comment
                                                 comment={reply}
                                                 key={reply.uuid}
@@ -293,11 +262,9 @@ const Comment = ({
                                                 currentUserName={currentUserName}
                                                 theme={theme}
                                             />
-
                                         )
                                     }
                                     )}
-
                                 </div> : (
                                     <Button
                                         color="#570A57"
@@ -316,13 +283,8 @@ const Comment = ({
                                     </Button>
                                 )
                         )
-
-
                     )}
-
             </div>
-
-
         </motion.div >
     );
 };

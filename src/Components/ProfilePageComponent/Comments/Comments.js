@@ -15,8 +15,6 @@ import {
 import { AnimatePresence } from "framer-motion";
 
 const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, currentUserName, UserIdForPostComments, post_id, setCommentLength, socket, setCommentToggle, commentsLength, setLike, setLikeCount, item, theme }) => {
-
-
   const [Length, setLength] = useState(0)
   const [commentLoader, setCommentLoader] = useState(false)
   const isMount = useRef(true)
@@ -39,11 +37,8 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       );
   const addComment = async (value, parentId, replyParentId = "") => {
-
-
     //this is Old Method
     // const comment = await createCommentApi(text, parentId, UserIdForPostComments, currentUserId, currentUserName, ImageUrl, post_id)
-
     // return
     try {
       const comment = await createCommentApi(value, parentId, UserIdForPostComments, currentUserId, currentUserName, ImageUrl, post_id)
@@ -51,13 +46,11 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
         socket.emit("sendNotificationAllType", { comment, commentBy: currentUserId, parentId, replyParentId })
         socket?.emit("sendComment", { comment: [comment, ...backendComments], post_id })
         socket?.emit("commentLength", { post_id, commentLength: [comment, ...backendComments,].length })
-
         socket?.off("getComments").on("getComments", (data) => {
           if (data.post_id === post_id) {
             setBackendComments(data.comment)
           }
         })
-
         await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/post/comment/save/`, {
           method: "POST",
           body: JSON.stringify({ comment, uuid: localStorage.getItem('uuid') }),
@@ -66,7 +59,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
             "Authorization": `Bearer ${localStorage.getItem("uuid")}`,
           }
         })
-
         // api/v1/user/comment/post/:postId
         await Axios({
           method: "PUT",
@@ -106,14 +98,8 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
     catch (err) {
     }
   };
-
-
-
-
-
   //update the comment
   const updateComment = async (text, commentId) => {
-
     try {
       const updateResponse = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/blob/update/comment/${commentId}`, {
         method: "PUT",
@@ -131,7 +117,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
     }
     catch (err) {
     }
-
   };
   const deleteComment = async (commentId) => {
     try {
@@ -155,14 +140,10 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
     catch (err) {
     }
   }
-
-
-
   // ======================GET COMMENT LENGTH===================================
   useEffect(() => {
     let isMount = true
     if (isMount) {
-
       if (socket.connected) {
         socket.on("getCommentLength", (data) => {
           if (data.post_id === post_id) {
@@ -178,8 +159,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
       isMount = false
     }
   }, [socket, backendComments])
-
-
   useEffect(() => {
     //load the all comments from backend
     let isMount = true
@@ -215,9 +194,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
       isMount = false
     })
   }, [post_id, UserIdForPostComments]);
-
-
-
   function loadMoreComment() {
     //load the all comments from backend
     async function loadComment() {
@@ -239,9 +215,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
     }
     loadComment()
   }
-
   useEffect(() => {
-
     let isMount = true
     async function NumberOfComments() {
       try {
@@ -255,7 +229,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
         })
         const data = await response.json()
         if (isMount) {
-
           // if (isMountCommentLength.current) {
           if (response.status === 200) {
             setCommentLength({ length: data.data, post_id: data.post })
@@ -273,16 +246,12 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
       isMount = false
     }
   }, [post_id])
-
-
-
   return (
     <div className="comments">
       <CommentForm submitLabel="Comment" handleSubmit={addComment} commentToggle={commentToggle} backendComments={backendComments} setCommentToggle={setCommentToggle} theme={theme} />
       <div className={`comments-container mb-[1.5rem]   ${commentLoader && "w-full  mb-[2rem]"}`}>
         {/* commentLoader ? <CommentLodaer /> : */}
         <AnimatePresence>
-
           {commentToggle && rootComments.map((rootComment) => (
             < Comment
               key={rootComment.uuid}
@@ -301,13 +270,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
             />
           ))}
         </AnimatePresence >
-
       </div>
-
-
-
-
-
       <AnimatePresence >
         {
           commentToggle &&
@@ -331,10 +294,6 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
           </div>
         }
       </AnimatePresence >
-
-
-
-
     </div >
   );
 };
@@ -347,8 +306,6 @@ function CommentLodaer() {
   return (
     <>
       <BallTriangle color="#827397" height={80} width={80} />
-
-
     </>
   )
 }

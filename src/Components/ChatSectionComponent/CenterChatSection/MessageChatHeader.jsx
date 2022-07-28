@@ -162,18 +162,15 @@ function ChangeURL({ url }) {
         let isMount = true
         async function loadImage() {
             try {
-
                 setLoader(true)
                 const res = await fetch(url)
                 const blobData = await res.blob()
                 if (isMount) {
-
                     setBlob(URL.createObjectURL(blobData))
                     setLoader(false)
                 }
             }
             catch (err) {
-
             }
         }
         loadImage()
