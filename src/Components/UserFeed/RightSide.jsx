@@ -1,7 +1,6 @@
 import React from 'react'
 import NewsSection from '../RightSideBar/NewsSection'
 import RoundedSideBar from '../RightSideBar/RoundedSideBar'
-
 function RightSide() {
     return (
         <>
@@ -20,5 +19,4 @@ function RightSide() {
         </>
     )
 }
-
 export default RightSide;

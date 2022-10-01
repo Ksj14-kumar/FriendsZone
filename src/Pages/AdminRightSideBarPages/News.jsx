@@ -5,7 +5,6 @@ import NewsTypeTitle from "../../Components/News/newsType"
 import { Image } from "@material-tailwind/react"
 import Circler from "../../Loader/CircleLoader"
 import InternetDetection from '../../Components/InternetDetection';
-
 const IdArray = [13, 14, 16, 24, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 15, 17, 18, 19, 20, 21, 22, 23, 25, 26]
 function News({ theme, socket }) {
     const [News, setNews] = useState([])
@@ -14,7 +13,6 @@ function News({ theme, socket }) {
     const [newsName, setNewsName] = useState("")
     const [boolean, setBoolean] = useState(false)
     const [searchValue, setSearchValue] = useState("")
-
     useEffect(() => {
         async function loadNews() {
             setLoading(true)
@@ -27,7 +25,6 @@ function News({ theme, socket }) {
                     "Authorization": "Bearer " + localStorage.getItem("uuid")
                 }
             })
-
             setNews(res.data.data)
             setSearchValue("")
             setLoading(false)
@@ -103,7 +100,6 @@ function News({ theme, socket }) {
     )
 }
 export default News = React.memo(News)
-
 function Loader() {
     return (
         <Circler height={80} width={80} color="#5f0303" />

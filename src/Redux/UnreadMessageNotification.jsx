@@ -1,5 +1,4 @@
 function UnreadMessageNotification(state = [], action = {}) {
-
     switch (action.type) {
         case "SET_UNREAD_MESSAGES":
             // if (action.payload?.length > 0) {
@@ -9,7 +8,4 @@ function UnreadMessageNotification(state = [], action = {}) {
             return state
     }
 }
-
-
-
 export default UnreadMessageNotification;

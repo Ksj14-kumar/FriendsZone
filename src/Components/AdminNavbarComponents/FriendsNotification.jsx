@@ -71,5 +71,4 @@ function FriendsNotification({ receivedRequest, AcceptFriendRequest, DeleteFrien
         </motion.div>
     )
 }
-
 export default FriendsNotification = React.memo(FriendsNotification);

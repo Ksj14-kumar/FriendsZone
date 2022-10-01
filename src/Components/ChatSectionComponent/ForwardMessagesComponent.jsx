@@ -150,9 +150,7 @@ function ForwardMessagesComponent({ setShowForwardComponent, takeWholeMessageFor
         </div >
     )
 }
-
 export default ForwardMessagesComponent;
-
 function FriendList({ item, handleChange, setCheckBox, checkBoxBool }) {
     return (
         <>

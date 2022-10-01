@@ -1,6 +1,3 @@
-
-
-
 function ActiveStatus(state = { status: false, _id: null }, action = {}) {
     switch (action.typ) {
         case "UserActive":
@@ -9,5 +6,4 @@ function ActiveStatus(state = { status: false, _id: null }, action = {}) {
             return state
     }
 }
-
 export default ActiveStatus

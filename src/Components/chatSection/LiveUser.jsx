@@ -4,7 +4,6 @@ import Image from '@material-tailwind/react/Image';
 import Photos from '../../assets/img/download.png';
 import Button from "@material-tailwind/react/Button";
 import { MdLocalPhone } from 'react-icons/md';
-
 function LiveUser({ value,theme }) {
     const buttonRef = useRef(null)
     async function openChatWindow() {
@@ -50,5 +49,4 @@ function LiveUser({ value,theme }) {
         </section>
     )
 }
-
 export default LiveUser

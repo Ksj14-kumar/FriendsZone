@@ -1,7 +1,5 @@
 import React from 'react'
-
 import UpdateProfile from './UpdateProfile';
-
 function Dashboard(props) {    
     return (
         <div className='text-white'>
@@ -9,5 +7,4 @@ function Dashboard(props) {
         </div>
     )
 }
-
 export default Dashboard;

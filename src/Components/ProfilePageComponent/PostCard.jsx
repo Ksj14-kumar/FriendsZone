@@ -29,7 +29,6 @@ import BookMarkApi from "../../AlLFetchApi/__functionApi"
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import axios from "axios"
 import H5 from "@material-tailwind/react/Heading5"
-
 function PostCard({ item, index, filterPost, socket, threeDot, setShowLikeUserModal, single, name, setAllPosts, bookMark, theme }) {
     const [commentToggle, setCommentToggle] = useState(false)
     const [commentsLength, setCommentLength] = useState({ length: 0, post_id: "" })

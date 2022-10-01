@@ -1,4 +1,3 @@
-
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -21,6 +20,4 @@ function ChatUSerSwiper({ conversation, user, active, setInfo, setActive, setCur
         </>
     );
 };
-
-
 export default ChatUSerSwiper

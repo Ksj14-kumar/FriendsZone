@@ -6,8 +6,6 @@ import img3 from '../../assets/img/team-3-800x800.jpg';
 import img4 from '../../assets/img/team-4-470x470.png';
 import img5 from '../../assets/img/team-1-800x800.jpg';
 const imageArray = [img1, img2, img3, img4, img5]
-
-
 function RoundedSideBar() {
     return (
         <>
@@ -32,5 +30,4 @@ function RoundedSideBar() {
         </>
     )
 }
-
 export default RoundedSideBar

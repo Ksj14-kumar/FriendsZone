@@ -5,5 +5,4 @@ function ProfileCreateLoader() {
         <Circles color="#051367" height={25} width={25} style={{ fontSize: "1.5rem" }} />
     )
 }
-
 export default ProfileCreateLoader

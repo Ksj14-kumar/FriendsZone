@@ -157,9 +157,7 @@ function RoomChatInfo({ setRoomChatHeader, RoomData, setRoomData, setModalForFri
         </>
     )
 }
-
 export default RoomChatInfo;
-
 function Loader() {
     return (
         <>

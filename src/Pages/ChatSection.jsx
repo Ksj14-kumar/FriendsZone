@@ -32,13 +32,6 @@ import SimpleLeft from '../Components/ChatSectionComponent/SimpleLeft'
 import { Error } from '../Components/Toastify';
 import Axios from "axios"
 import InternetDetection from '../Components/InternetDetection';
-
-
-
-
-
-
-
 function ChatSection({ user, socket }) {
   const [bool, setBool] = useState(false)
   const [overlayObject, setOverlayObject] = useState({ url: "", type: "", bool: false })
@@ -856,21 +849,12 @@ function ChatSection({ user, socket }) {
     </>
   )
 }
-
 export default ChatSection = React.memo(ChatSection)
-
-
-
-
-
-
 function NoUserLive() {
   return (
     <p className="text-[1.8rem] font-serif mt-[1rem] select-none text-[#adadad]">No, User Live</p>
   )
 }
-
-
 function NoChat() {
   return (
     <>
@@ -878,16 +862,6 @@ function NoChat() {
     </>
   )
 }
-
-
-
-
-
-
-
-
-
-
 function ButtonGroup({ setModal, setStickerDrawer, setButtonGroup }) {
   const docFile = useRef()
   const Stickers = useRef()
@@ -933,8 +907,6 @@ function ButtonGroup({ setModal, setStickerDrawer, setButtonGroup }) {
     </>
   )
 }
-
-
 function SearchFriendsForMessage({ userD, setSearchBool }) {
   return (
     <>
@@ -978,8 +950,6 @@ function SearchFriendsForMessage({ userD, setSearchBool }) {
     </>
   )
 }
-
-
 function NoUserForMessageSend() {
   return (
     <p className="text-[1.8rem] text-[#8e8a8a] font-serif tracking-wider select-none">
@@ -987,9 +957,6 @@ function NoUserForMessageSend() {
     </p>
   )
 }
-
-
-
 function FooterModal({ setFooterModal, setTextMessage, textMessage, SendMessage, ChatMessageFunction, setTyping, timeout, id, typingTimeout, socket }) {
   const [chosenEmoji, setChosenEmoji] = useState(null);
   function selectEmoji(event, emojiObject) {
@@ -1087,8 +1054,6 @@ function FooterModal({ setFooterModal, setTextMessage, textMessage, SendMessage,
     </>
   )
 }
-
-
 function MessageLoader() {
   return (<>
     <p className="w-full h-full  flex justify-center items-center">
@@ -1096,8 +1061,6 @@ function MessageLoader() {
     </p>
   </>)
 }
-
-
 function NoChatHere({ q }) {
   return (
     <>

@@ -7,7 +7,6 @@ import LeadText from '@material-tailwind/react/LeadText';
 import { HiPencil } from 'react-icons/hi'
 import Button from '@material-tailwind/react/Button';
 import { BrowserRouter, NavLink, Redirect, useHistory, Route, Switch } from 'react-router-dom';
-
 function Status({ info, loadUserProfileInfo, theme }) {
     const buttonRef = useRef()
     const history = useHistory()
@@ -85,5 +84,4 @@ function Status({ info, loadUserProfileInfo, theme }) {
         </>
     )
 }
-
 export default Status

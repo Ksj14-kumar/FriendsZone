@@ -59,5 +59,4 @@ function FriendsNoti({ SenderRequestId, name, AcceptFriendRequest, DeleteFriendR
         </section>
     )
 }
-
 export default FriendsNoti

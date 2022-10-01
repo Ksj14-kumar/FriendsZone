@@ -9,13 +9,11 @@ function ThemeMode() {
     const [showMoreBackground, setMoreBackground] = useState(false)
     const [toggle, setToggle] = useState(false)
     const dispatch = useDispatch()
-
     const { UserInformationLoad,theme } = useSelector((state) => {
         return { UserInformationLoad: state.UserInformationLoad.value,
             theme:state.Theme
          }
     })
-
     useEffect(() => {
         (async function () {
             await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/changetheme`, {
@@ -28,7 +26,6 @@ function ThemeMode() {
             })
         }
         )()
-
     }, [toggle])
     return (
         <>
@@ -136,14 +133,9 @@ function ThemeMode() {
                 </div>
             </div>
         </>
-
     )
 }
-
 export default ThemeMode = React.memo(ThemeMode)
-
-
-
 function Color({ name, id }) {
     return (
         <>

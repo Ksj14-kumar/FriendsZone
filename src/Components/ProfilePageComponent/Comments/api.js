@@ -1,4 +1,3 @@
-
 export const getComments = async () => {
     return [
         {
@@ -35,7 +34,6 @@ export const getComments = async () => {
         },
     ];
 };
-
 export const createComment = async (value, parentId = null, UserIdForPostComments, currentUserId, currentUserName, ImageUrl, post_id) => {
     return {
         uuid: Math.random().toString(36).substr(2, 9),
@@ -49,16 +47,12 @@ export const createComment = async (value, parentId = null, UserIdForPostComment
         type: value.type
     };
 };
-
 export const updateComment = async (text) => {
     return { text };
 };
-
 export const deleteComment = async () => {
     return {};
 };
-
-
 function changeTextCase(str) {
     const value = str.split(' ')?.map(w => {
         return w[0].toUpperCase() + w.slice(1).toLowerCase();

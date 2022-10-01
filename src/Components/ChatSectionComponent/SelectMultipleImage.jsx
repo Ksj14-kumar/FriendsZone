@@ -2,7 +2,6 @@ import Image from '@material-tailwind/react/Image'
 import React, { useEffect } from 'react'
 import { MdAdd, MdSend } from "react-icons/md"
 import { error } from "../../toastifyMessage/Toast"
-
 function SelectMultipleImage({ setImageFileSelector, setImageGroupURl, imageGroupURl, senderId, SendMessage, imageSentLoader }) {
     const [imagelocalUrl, setImageLocalUrl] = React.useState([])
     function SelectFiles(e) {
@@ -111,5 +110,4 @@ function SelectMultipleImage({ setImageFileSelector, setImageGroupURl, imageGrou
         </>
     )
 }
-
 export default SelectMultipleImage

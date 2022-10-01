@@ -65,7 +65,6 @@ function AllFriendsAfterSearch({ item, setGroupMembers, RoomData, setFriends }) 
         </>
     )
 }
-
 export default AllFriendsAfterSearch
 function Loader() {
     return (

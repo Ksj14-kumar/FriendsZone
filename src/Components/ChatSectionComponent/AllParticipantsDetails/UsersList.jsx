@@ -129,9 +129,7 @@ function UsersList({ item, setGroupMembers, RoomData, MakeAdmin, setRoomChatHead
         </div >
     )
 }
-
 export default UsersList
-
 function Loader() {
     return (
         <>

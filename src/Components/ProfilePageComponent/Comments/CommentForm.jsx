@@ -1,7 +1,5 @@
 import { useState, useRef, useEffect } from "react";
 import Button from "@material-tailwind/react/Button";
-
-
 import { BsFillEmojiSmileFill } from 'react-icons/bs';
 import Icon from "@material-tailwind/react/Icon";
 import Picker from 'emoji-picker-react';
@@ -10,14 +8,7 @@ import { BiSticker } from "react-icons/bi"
 import { Route, NavLink, Switch, BrowserRouter } from "react-router-dom";
 import { GiphyFetch } from '@giphy/js-fetch-api'
 import Image from "@material-tailwind/react/Image";
-
 const gf = new GiphyFetch(process.env.REACT_APP_GIPHY_KEY)
-
-
-
-
-
-
 const CommentForm = ({
     handleSubmit,
     submitLabel,
@@ -232,9 +223,7 @@ const CommentForm = ({
         </>
     );
 };
-
 export default CommentForm;
-
 function EmojiComponent({ setComponent, onEmojiClick, theme }) {
     useEffect(() => {
         setComponent(true)
@@ -263,7 +252,6 @@ function EmojiComponent({ setComponent, onEmojiClick, theme }) {
         </>
     )
 }
-
 function GifComponent({ setComponent, commentReplyName, setShowEmojicontenor, sendGiF, theme }) {
     const [GifList, setGifList] = useState([])
     const [tranding, setTranding] = useState({ tranding: null, trandingList: [] })
@@ -454,7 +442,6 @@ function GifComponent({ setComponent, commentReplyName, setShowEmojicontenor, se
         </>
     )
 }
-
 function StickerComponent({ setComponent, commentReplyName, setShowEmojicontenor, emojiContainer, sendStickers }) {
     const [Stickers, setStickes] = useState([])
     async function handleChange(value) {
@@ -510,8 +497,6 @@ function StickerComponent({ setComponent, commentReplyName, setShowEmojicontenor
         </>
     )
 }
-
-
 function GifShowComponent({ i }) {
     return (
         <>
@@ -527,8 +512,6 @@ function GifShowComponent({ i }) {
         </>
     )
 }
-
-
 function TrandingGif() {
     const [tranding, setTranding] = useState([])
     useEffect(() => {
@@ -559,8 +542,6 @@ function TrandingGif() {
         </>
     )
 }
-
-
 function LoveGif() {
     const [love, setLove] = useState([])
     useEffect(() => {

@@ -37,5 +37,4 @@ function StickerComponent() {
         </>
     )
 }
-
 export default StickerComponent

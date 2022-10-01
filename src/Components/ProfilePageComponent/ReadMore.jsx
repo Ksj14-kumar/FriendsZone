@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import Linkify from 'react-linkify';
-
-
 const ReadMore = ({ children, theme }) => {
     const text = children;
     const [isReadMore, setIsReadMore] = React.useState(true);
@@ -26,7 +24,4 @@ const ReadMore = ({ children, theme }) => {
         </div >
     );
 };
-
-
-
 export default ReadMore;

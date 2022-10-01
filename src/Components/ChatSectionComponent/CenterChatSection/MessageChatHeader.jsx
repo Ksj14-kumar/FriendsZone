@@ -152,9 +152,7 @@ function MessageChatHeader({ chatHeader, setVideoOverlay, q, RoomData, setRoomCh
         </div >
     )
 }
-
 export default MessageChatHeader = React.memo(MessageChatHeader);
-
 function ChangeURL({ url }) {
     const [blob, setBlob] = useState("")
     const [loader, setLoader] = useState(false)
@@ -197,8 +195,6 @@ function ChangeURL({ url }) {
         </>
     )
 }
-
-
 function ThreeDotsComponents({ setShowHeaderSearchBar, showHeaderSearchBar, setThreeDotsComponent, setBlokedUser, blockUser, BlockUser }) {
     return (
         <>

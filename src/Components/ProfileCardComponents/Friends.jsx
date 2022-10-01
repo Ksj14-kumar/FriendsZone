@@ -1,7 +1,5 @@
-
 import {  Link, useRouteMatch } from "react-router-dom"
 import FriendsCardInProfileCard from "./FriendsCardInProfileCard"
-
 function Friends({ info, loadUserProfileInfo, usernameId, _id, cancleFriendRequest, setAcceptMessage, friends, theme }) {
   const { path } = useRouteMatch()
   return (
@@ -32,10 +30,7 @@ function Friends({ info, loadUserProfileInfo, usernameId, _id, cancleFriendReque
     </div >
   )
 }
-
 export default Friends
-
-
 function NoFriends() {
   return (
     <>

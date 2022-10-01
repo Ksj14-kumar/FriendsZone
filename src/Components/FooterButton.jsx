@@ -85,11 +85,7 @@ function FooterButton({ bool, onlinefriends,theme}) {
         </>
     )
 }
-
 export default FooterButton;
-
-
-
 function NoUserLive({theme}) {
     return (
         <>

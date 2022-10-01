@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux'
 import Button from "@material-tailwind/react/Button";
 import { BallTriangle } from 'react-loader-spinner'
 import Axios from "axios"
-
 import {
   // getComments as getCommentsApi,
   createComment as createCommentApi,
@@ -13,7 +12,6 @@ import {
   // deleteComment as deleteCommentApi,
 } from "./api";
 import { AnimatePresence } from "framer-motion";
-
 const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, currentUserName, UserIdForPostComments, post_id, setCommentLength, socket, setCommentToggle, commentsLength, setLike, setLikeCount, item, theme }) => {
   const [Length, setLength] = useState(0)
   const [commentLoader, setCommentLoader] = useState(false)
@@ -297,11 +295,7 @@ const Comments = ({ commentsUrl, commentToggle, currentUserId, ImageUrl, current
     </div >
   );
 };
-
 export default Comments;
-
-
-
 function CommentLodaer() {
   return (
     <>

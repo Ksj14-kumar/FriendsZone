@@ -42,5 +42,4 @@ function ModalForPostVideoImages(props) {
         </>
     )
 }
-
 export default ModalForPostVideoImages

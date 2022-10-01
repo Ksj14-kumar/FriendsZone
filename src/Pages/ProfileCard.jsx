@@ -5,13 +5,11 @@ import Button from '@material-tailwind/react/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { BiUserX } from 'react-icons/bi'
 import { useEffect, useRef, useState } from 'react';
-
 import Tooltips from "@material-tailwind/react/Tooltips";
 import TooltipsContent from "@material-tailwind/react/TooltipsContent";
 import { BrowserRouter, NavLink, Redirect, Route, Switch, useLocation, useParams, useRouteMatch } from 'react-router-dom';
 import profile from '../assets/img/download.png'
 import { FaUserPlus, FaFacebookMessenger } from 'react-icons/fa'
-
 import Friends from '../Components/ProfileCardComponents/Friends'
 import Photos1 from '../Components/ProfileCardComponents/Photos'
 import Posts from '../Components/ProfileCardComponents/Posts'
@@ -23,11 +21,6 @@ import UserFeed from '../Components/UserFeed/UserFeed';
 import RightSide from '../Components/UserFeed/RightSide';
 import { getListItemSecondaryActionClassesUtilityClass } from '@mui/material';
 import InternetDetection from '../Components/InternetDetection';
-
-
-
-
-
 function ProfileCard(props) {
     const [loadUserProfileInfo, setLoadUSerProfileInfo] = useState(false)
     const buttonRef = useRef()
@@ -42,7 +35,6 @@ function ProfileCard(props) {
     const [localProfileURL, setLocalProfileURL] = useState("")
     const [localBackgroundURL, setLocalBackgroundURL] = useState("")
     const [assests, setAssests] = useState([])
-
     const Query = useSelector((state) => {
         return state.Query
     })
@@ -54,7 +46,6 @@ function ProfileCard(props) {
         }
     })
     const { fname, lname, googleId, url, friends } = UserInformationLoad !== null ? UserInformationLoad : { fname: "", lname: "", college: "", city: "", country: "", position: "", stream: "", aboutMe: "", googleId: "", url: "", senderrequest: [] }
-
     const { path } = useRouteMatch()
     useEffect(() => {
         params.set("id", Query)
@@ -73,7 +64,6 @@ function ProfileCard(props) {
                     }
                 })
                 const ResponseData = await getUserResponse.json()
-
                 if (getUserResponse.status === 200) {
                     if (isMount) {
                         setUserInfo(ResponseData)
@@ -199,7 +189,6 @@ function ProfileCard(props) {
                 const blob = await res.blob()
                 const bgURL = URL.createObjectURL(blob)
                 if (isMount) {
-
                     setLocalBackgroundURL(bgURL)
                 }
             }
@@ -222,7 +211,6 @@ function ProfileCard(props) {
                     const res1 = await fetch(userInfo.ProfileURL)
                     const blobP = await res1.blob()
                     const PURL = URL.createObjectURL(blobP)
-
                     setLocalProfileURL(PURL)
                 }
                 else {
@@ -235,7 +223,6 @@ function ProfileCard(props) {
             isMount = false
         }
     }, [usernameId, setLocalProfileURL, userInfo?.ProfileURL])
-
     useEffect(() => {
         (async function loadPhotos() {
             const res = await fetch(`${process.env.REACT_APP_API_BACKENDURL}/api/v1/get/assests/path/${usernameId}`, {
@@ -516,6 +503,4 @@ function ProfileCard(props) {
         </>
     );
 }
-
-
 export default ProfileCard = React.memo(ProfileCard)

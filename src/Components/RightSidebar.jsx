@@ -3,7 +3,6 @@ import FooterButton from './FooterButton';
 import { BiWifi } from "react-icons/bi"
 import { useSelector, useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from "framer-motion"
-
 function RightSidebar({ socket, currentUser, currentId }) {
     const [online, setOnlineUser] = useState([])
     const [bottomUsers, ShowBottomUsers] = useState(false)
@@ -90,5 +89,4 @@ function RightSidebar({ socket, currentUser, currentId }) {
         </>
     );
 }
-
 export default RightSidebar = React.memo(RightSidebar)

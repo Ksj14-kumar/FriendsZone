@@ -1,5 +1,4 @@
 import React from 'react'
-
 function GeeyMenuButton() {
     return (
         <>
@@ -41,5 +40,4 @@ function GeeyMenuButton() {
         </>
     )
 }
-
 export default GeeyMenuButton

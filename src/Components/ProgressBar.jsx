@@ -1,6 +1,5 @@
 import React from "react";
 import Progress from "@material-tailwind/react/Progress";
-
 export default function ProgressBar(props) {
     return (
         <>

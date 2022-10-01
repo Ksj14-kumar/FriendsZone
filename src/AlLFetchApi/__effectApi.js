@@ -10,5 +10,4 @@ const EffectApi = {
         })
         return response
     },
-    
 }

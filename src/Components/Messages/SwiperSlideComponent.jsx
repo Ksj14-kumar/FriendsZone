@@ -1,5 +1,4 @@
 import React from 'react'
-
 import Image from '@material-tailwind/react/Image';
 import { NavLink } from 'react-router-dom';
 import 'swiper/css';
@@ -29,5 +28,4 @@ function SwiperSlideComponent({ conversation, user, active, setInfo }) {
         </>
     )
 }
-
 export default SwiperSlideComponent

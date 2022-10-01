@@ -1,12 +1,9 @@
-
-
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import RightSide from '../UserFeed/RightSide'
 import FriendsCard from './FriendsCard'
 import Spinner from 'react-spinkit';
 import InternetDetection from '../InternetDetection';
-
 function AllFriends({ user, socket }) {
     const [loadFriends, setLoadFriends] = useState([])
     const [loader, setLoader] = useState(false)
@@ -81,7 +78,6 @@ function AllFriends({ user, socket }) {
         </>
     )
 }
-
 export default AllFriends
 function ShowTextWhenNoUserExit() {
     return (

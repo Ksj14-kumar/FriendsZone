@@ -1,8 +1,4 @@
-
-
 const UserStillLogin = (state = "", action = {}) => {
-
-
     switch (action.type) {
         case "SET_USER":
             return action.payload;
@@ -10,5 +6,4 @@ const UserStillLogin = (state = "", action = {}) => {
             return state;
     }
 }
-
 export default UserStillLogin;

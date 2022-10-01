@@ -12,8 +12,6 @@ import PopoverHeader from "@material-tailwind/react/PopoverHeader";
 import PopoverBody from "@material-tailwind/react/PopoverBody";
 import { success } from "../../toastifyMessage/Toast";
 import { useDispatch } from "react-redux";
-
-
 function ShowPost({ item }) {
     const buttonRef = useRef();
     const [deletLoader, setDeleteLoader] = useState(false);
@@ -97,5 +95,4 @@ function ShowPost({ item }) {
         </div>
     )
 }
-
 export default ShowPost

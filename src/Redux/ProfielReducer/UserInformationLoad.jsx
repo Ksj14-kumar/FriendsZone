@@ -1,7 +1,5 @@
-
 let userInfo = { value: "" }
 function UserInformationLoad(state = { value: "" }, action = {}) {
-
     switch (action.type) {
         case "USERINFO_LOAD":
             userInfo = action.payload
@@ -13,5 +11,4 @@ function UserInformationLoad(state = { value: "" }, action = {}) {
             return state
     }
 }
-
 export default UserInformationLoad

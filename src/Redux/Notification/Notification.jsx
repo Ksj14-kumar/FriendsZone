@@ -4,7 +4,6 @@ function Notification(state = [{}], action = {}) {
         case "Send_Notification":
             if (action.payload) {
                 return [
-                   
                     ...action.payload
                 ]
             }

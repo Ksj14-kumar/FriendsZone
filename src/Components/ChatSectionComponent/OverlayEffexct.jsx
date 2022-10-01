@@ -39,5 +39,4 @@ function OverlayEffexct({ setBool, overlayObject, setOverlayObject, AllImages })
         </>
     )
 }
-
 export default OverlayEffexct

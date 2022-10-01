@@ -1,6 +1,5 @@
 import { HiLogin } from "react-icons/hi"
 import { MdOutlineManageAccounts } from "react-icons/md"
-
 const data = [
     {
         id: 1,
@@ -15,5 +14,4 @@ const data = [
         icon: <MdOutlineManageAccounts />
     },
 ]
-
 export default data;

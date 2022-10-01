@@ -6,7 +6,6 @@ import ModalFooter from "@material-tailwind/react/ModalFooter";
 import Button from "@material-tailwind/react/Button";
 import {  MdVisibilityOff, MdVisibility } from 'react-icons/md';
 import { BsFillCheckCircleFill } from 'react-icons/bs';
-
 function Model({ visible, visibilityHandle, privacy, setPrivacyToServer, post_id, disabled }) {
     const [showModal, setShowModal] = React.useState(visible);
     return (
@@ -82,5 +81,4 @@ function Model({ visible, visibilityHandle, privacy, setPrivacyToServer, post_id
         </>
     )
 }
-
 export default Model

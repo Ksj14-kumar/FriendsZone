@@ -6,7 +6,6 @@ import CardFooter from "@material-tailwind/react/CardFooter";
 import InputIcon from "@material-tailwind/react/InputIcon";
 import Button from "@material-tailwind/react/Button";
 import H5 from "@material-tailwind/react/Heading5";
-
 import { NavLink } from 'react-router-dom'
 export default function Email() {
     return (

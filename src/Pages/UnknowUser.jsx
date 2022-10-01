@@ -1,7 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom';
 import InternetDetection from '../Components/InternetDetection';
-
 function UnknowUser() {
     return (
         <>
@@ -17,5 +16,4 @@ function UnknowUser() {
         </>
     )
 }
-
 export default UnknowUser

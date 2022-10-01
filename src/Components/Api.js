@@ -1,8 +1,4 @@
-
-
-
 const data = [
-
     {
         "id": "1",
         "link": "https://images.pexels.com/photos/15286/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
@@ -34,15 +30,9 @@ const data = [
     {
         "id": "8",
         "link": "https://images.pexels.com/photos/4677567/pexels-photo-4677567.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-
     }, {
         "id": "9",
         "link": "https://images.pexels.com/photos/3264734/pexels-photo-3264734.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
     }
-
-
-
-
 ]
-
 export default data

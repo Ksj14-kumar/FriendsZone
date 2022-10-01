@@ -18,5 +18,4 @@ function NewsSection() {
         </main>
     )
 }
-
 export default NewsSection

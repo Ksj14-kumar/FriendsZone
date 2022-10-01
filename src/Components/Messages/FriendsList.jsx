@@ -45,10 +45,7 @@ function FriendsList({ conversation, user, active, setInfo }) {
         </>
     )
 }
-
 export default FriendsList
-
-
 function BeforeLoadData() {
     return (
         <>

@@ -89,6 +89,4 @@ function MessageListNotification({ item, setMessengerComponent, setArrivalMessag
         </>
     )
 }
-
-
 export default MessageListNotification = React.memo(MessageListNotification)

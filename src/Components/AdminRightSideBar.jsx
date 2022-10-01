@@ -8,7 +8,6 @@ import { BsFillBookmarkFill } from "react-icons/bs"
 import AllLinks from '../Pages/AdminRightSideBarPages/AllLinks'
 import { useSelector } from 'react-redux'
 import { NavLink } from "react-router-dom"
-
 function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout, setShowModalCode, setShowModalCodeBackground, id }) {
     const { UserInformationLoad, theme } = useSelector((state) => {
         return {
@@ -157,5 +156,4 @@ function AdminRightSideBar({ showRightSideBar, setShowRightSideBar, logout, setS
         </>
     )
 }
-
 export default AdminRightSideBar = React.memo(AdminRightSideBar)

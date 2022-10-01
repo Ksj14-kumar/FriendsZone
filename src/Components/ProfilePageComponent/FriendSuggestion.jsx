@@ -2,7 +2,6 @@ import React from "react";
 import img1 from '../../assets/img/team-1-800x800.jpg'
 import FriendInsideSlider from "./FriendInsideSlider";
 import { useSelector } from "react-redux"
-
 export default function FriendSuggestion({ AllUser, FilterUser }) {
   const UserInformationLoad = useSelector((state) => {
     return state.UserInformationLoad.value

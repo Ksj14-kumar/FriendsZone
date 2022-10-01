@@ -81,5 +81,4 @@ function AllNotification() {
         </>
     )
 }
-
 export default AllNotification = React.memo(AllNotification)

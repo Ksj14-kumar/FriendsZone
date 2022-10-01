@@ -9,9 +9,6 @@ import { NavLink, useParams, useRouteMatch } from "react-router-dom"
 import ReactUserList from './ReactUserList'
 import InternetDetection from '../InternetDetection'
 import { Plane, InfinitySpin } from "react-loader-spinner"
-
-
-
 function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser, FilterUser, setShowLikeUserModal, showLikeUserModal, theme }) {
     const params = useParams()
     const [Users, setAllUser] = useState([])
@@ -415,14 +412,7 @@ function UserFeed({ PostWhichUserSelectedImageORVideo, socket, threeDot, AllUser
         </>
     )
 }
-
 export default UserFeed = React.memo(UserFeed);
-
-
-
-
-
-
 function RightSideComponents({ item }) {
     return (
         <>
@@ -433,8 +423,6 @@ function RightSideComponents({ item }) {
         </>
     )
 }
-
-
 function KindlyCreateProfile({ theme }) {
     return (
         <>
@@ -449,8 +437,6 @@ function KindlyCreateProfile({ theme }) {
         </>
     )
 }
-
-
 function CoverPage() {
     return (
         <>

@@ -99,9 +99,7 @@ function SearchFriendsForGroupChat({ setModalForFriends, RoomData, setGroupMembe
         </>
     )
 }
-
 export default SearchFriendsForGroupChat
-
 function Loader() {
     return (
         <>
