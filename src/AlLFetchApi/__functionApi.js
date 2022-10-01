@@ -28,8 +28,4 @@ const fetchApiFunction = {
         }
     }
 }
-
-
-
-
 export default fetchApiFunction

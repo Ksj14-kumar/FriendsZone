@@ -9,5 +9,4 @@ function Photos1({assests}) {
     </>
   )
 }
-
 export default Photos1

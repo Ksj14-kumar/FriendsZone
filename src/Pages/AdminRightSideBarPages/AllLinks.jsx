@@ -1,7 +1,5 @@
 import React from 'react'
-
 import { useSelector } from 'react-redux'
-
 function AllLinks(props) {
     const BookMark = useSelector((state) => {
         return state.BookMark
@@ -31,5 +29,4 @@ function AllLinks(props) {
         </>
     )
 }
-
 export default AllLinks

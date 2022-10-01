@@ -26,7 +26,6 @@ import MessagesNotifications from './AdminNavbarComponents/MessagesNotifications
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 const _id = localStorage.getItem("uuid")
-
 function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
     //ALLS  HOOKS
     const wrapperRef = useRef()
@@ -1035,5 +1034,4 @@ function AdminNavbar({ showSidebar, setShowSidebar, socket }) {
         </>
     );
 }
-
 export default AdminNavbar = React.memo(AdminNavbar)

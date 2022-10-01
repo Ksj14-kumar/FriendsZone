@@ -337,9 +337,6 @@ export default function SettingsForm({ theme }) {
         </Card>
     );
 }
-
-
-
 function error(props) {
     const notify = () => toast.error(props.message, {
         position: "top-center",
@@ -358,9 +355,6 @@ function error(props) {
         </div>
     );
 }
-
-
-
 async function success(props) {
     const notify = () => toast.success(props.message, {
         position: "top-center",
@@ -379,9 +373,6 @@ async function success(props) {
         </div>
     );
 }
-
-
-
 function titleCase(str) {
     str = str.toLowerCase().split(' ');
     for (var i = 0; i < str.length; i++) {

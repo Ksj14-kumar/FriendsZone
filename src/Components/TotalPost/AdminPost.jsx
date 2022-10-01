@@ -20,5 +20,4 @@ function AdminPost({ GetAllPosts }) {
         </div>
     )
 }
-
 export default AdminPost

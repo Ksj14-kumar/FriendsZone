@@ -94,9 +94,7 @@ function GroupMessageBox({ groupMessages, currentId }) {
         </>
     )
 }
-
 export default GroupMessageBox
-
 const convertToLink = (text) => {
     var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
     var text1 = text.replace(exp, "<a href='$1' class='text-blue-500 hover:underline'  target='_blank'>$1</a>");

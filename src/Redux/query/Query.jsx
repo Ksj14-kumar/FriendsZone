@@ -1,10 +1,4 @@
-
-
-
 function Query(state = "", action = []) {
-
-
-
     switch (action.type) {
         case "query":
             return action.payload
@@ -12,6 +6,4 @@ function Query(state = "", action = []) {
             return state
     }
 }
-
-
 export default Query

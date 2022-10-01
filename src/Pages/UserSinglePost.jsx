@@ -9,7 +9,6 @@ import { HiArrowLeft } from "react-icons/hi"
 import { NavLink, useRouteMatch } from "react-router-dom"
 import RightSide from '../Components/UserFeed/RightSide'
 import ReactUserList from "../Components/UserFeed/ReactUserList"
-
 function UserSinglePost({ socket, setShowLikeUserModal, showLikeUserModal }) {
     const [post, setPost] = useState([])
     const [loading, setLoading] = useState(false)
@@ -123,5 +122,4 @@ function UserSinglePost({ socket, setShowLikeUserModal, showLikeUserModal }) {
         </>
     )
 }
-
 export default UserSinglePost=React.memo(UserSinglePost)

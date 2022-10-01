@@ -34,11 +34,7 @@ function RecentlyChatUser({ user, currentUser, setChatHeader, socket, unreadMess
         </>
     )
 }
-
 export default RecentlyChatUser = React.memo(RecentlyChatUser);
-
-
-
 function ChatUserList({ userD, user, setChatHeader, loader, unreadMessage, socket, currentUser }) {
     const params = useParams()
     const dispatch = useDispatch()
@@ -111,8 +107,6 @@ function ChatUserList({ userD, user, setChatHeader, loader, unreadMessage, socke
         </NavLink>
     )
 }
-
-
 function ChangeURL({ url }) {
     const [blob, setBlob] = useState("")
     const [loader, setLoader] = useState(false)

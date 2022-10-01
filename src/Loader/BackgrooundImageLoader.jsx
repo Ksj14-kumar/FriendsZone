@@ -10,5 +10,4 @@ function BackgrooundImageLoader({ text }) {
             </>
     )
 }
-
 export default BackgrooundImageLoader

@@ -17,5 +17,4 @@ function ActiveUser() {
         </div>
     )
 }
-
 export default ActiveUser

@@ -17,5 +17,4 @@ function AdminMessage({ own, message, info }) {
         </div>
     )
 }
-
 export default AdminMessage

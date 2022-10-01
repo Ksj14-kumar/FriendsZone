@@ -7,5 +7,4 @@ function CircleLoader({ color, height, width }) {
         </div>
     )
 }
-
 export default CircleLoader

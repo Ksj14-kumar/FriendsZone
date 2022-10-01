@@ -123,5 +123,4 @@ function FriendInsideSlider({ image, item, FilterUser, sendFriendRequest }) {
         </>
     )
 }
-
 export default FriendInsideSlider

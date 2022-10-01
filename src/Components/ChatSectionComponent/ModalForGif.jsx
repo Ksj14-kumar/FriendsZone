@@ -108,5 +108,4 @@ function ModalForGif({ setSelectedGif, selectedGif, senderId, setModal, sendMess
         </>
     )
 }
-
 export default ModalForGif

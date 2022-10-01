@@ -53,5 +53,4 @@ function PostCardInProfileSection() {
         </main>
     )
 }
-
 export default PostCardInProfileSection

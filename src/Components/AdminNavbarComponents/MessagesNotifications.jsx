@@ -55,9 +55,6 @@ function MessagesNotifications({ messageList, setMessengerComponent, __id__, set
     )
 }
 export default MessagesNotifications
-
-
-
 function NoNotification({theme}) {
     return (
         <>

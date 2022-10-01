@@ -3,8 +3,6 @@ import Image from '@material-tailwind/react/Image';
 import React from 'react'
 import { NavLink } from 'react-router-dom';
 import Photos from "../../assets/img/download.png"
-
-
 function LoadFriendsNoti({ item, AcceptFriendRequest, DeleteFriendRequest, theme }) {
     return (
         <>

@@ -8,7 +8,6 @@ import {  HiThumbUp } from "react-icons/hi"
 import { NavLink } from "react-router-dom"
 import {TailSpin } from "react-loader-spinner"
 import { useSelector } from 'react-redux'
-
 function ReactUserList({ reactUser,theme,setReactUserLength }) {
     const [userInfo, setUserInfo] = useState({ name: "", image: "", isFriends: "" })
     const [loader, setLoader] = useState(false)
@@ -159,10 +158,7 @@ function ReactUserList({ reactUser,theme,setReactUserLength }) {
         </>
     )
 }
-
 export default ReactUserList;
-
-
 function Loader() {
     return (
         <>

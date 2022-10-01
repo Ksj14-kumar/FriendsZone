@@ -1,4 +1,3 @@
-
 import ActiveUser from './ActiveUser';
 import React from 'react'
 function ChatWindow() {
@@ -23,5 +22,4 @@ function ChatWindow() {
         </>
     )
 }
-
 export default ChatWindow

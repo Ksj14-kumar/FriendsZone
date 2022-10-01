@@ -46,10 +46,7 @@ function ChatHeader({ info }) {
         </header>
     )
 }
-
 export default ChatHeader;
-
-
 function LiveVideo() {
     return (
         <div className="liver_video fixed w-full h-full bg-[#4a4949d6]">

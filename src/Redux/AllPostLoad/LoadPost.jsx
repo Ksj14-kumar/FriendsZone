@@ -5,7 +5,6 @@ function GetAllPosts(state = [], action = {}) {
                 return b.time - a.time
             })
             return value
-
         default:
             return state
     }

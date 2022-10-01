@@ -16,7 +16,6 @@ import { NavLink, useHistory } from 'react-router-dom'
 import { Context } from '../App';
 import LoginLoader from "../Loader/LoginLoader";
 import { Error } from "./Toastify";
-
 export default function Login({ socket }) {
   const { users, dispatch } = useContext(Context)
   const [loader, setLoader] = useState(false)
@@ -235,8 +234,6 @@ export default function Login({ socket }) {
   );
 }
 //toastify message
-
-
 async function success(props) {
   const notify = () => toast.success(props.message, {
     position: "top-center",
@@ -255,10 +252,6 @@ async function success(props) {
     </div>
   );
 }
-
-
-
-
 function error(props) {
   const notify = () => toast.error(props.message, {
     position: "top-center",

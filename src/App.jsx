@@ -5,7 +5,6 @@ import Login from './Components/Login';
 import Email from './Components/Email';
 import Header from './Components/Header'
 import RightSidebar from './Components/RightSidebar';
-
 import "@material-tailwind/react/tailwind.css";
 import Dashboard from './Pages/Dashboard';
 import ProfileCard from './Pages/ProfileCard';
@@ -29,11 +28,7 @@ import Music from "./Pages/AdminRightSideBarPages/Music"
 import UserSinglePost from './Pages/UserSinglePost';
 import { AnimatePresence } from "framer-motion"
 import VerifyEmail from './Pages/Verify';
-
 // const Feed = React.lazy(() => require("./Pages/Feed"))
-
-
-
 const object = {
     path: process.env.REACT_APP_PATH,
     withCredentials: true,
@@ -47,7 +42,6 @@ const object = {
     reconnectionDelay: 1000,
 }
 export const Context = createContext()
-
 function App() {
     const [userData, setUserData] = React.useState(null)
     const [socket, setSocket] = useState()
@@ -64,8 +58,6 @@ function App() {
             theme: state.Theme
         }
     })
-
-
     const getUserData = localStorage.getItem("uuid")
     const user = localStorage.getItem("user")
     useEffect(() => {
@@ -107,10 +99,6 @@ function App() {
     useEffect(() => {
         socket?.emit("newUser", getUserData)
     }, [getUserData])
-
-
-
-
     return (
         // w-screen h-screen
         <StrictMode>
@@ -245,7 +233,6 @@ function App() {
                                 </Switch>
                             </AnimatePresence>
                         </div >
-
                         {
                             (getUserData && user) &&
                             <abbr title="live User">
@@ -254,9 +241,7 @@ function App() {
                                 </div>
                             </abbr>
                         }
-                    
                 </div>
-
             </Context.Provider>
         </StrictMode>
     )

@@ -26,6 +26,4 @@ function ImageShow(props) {
         </div>
     )
 }
-
-
 export default ImageShow

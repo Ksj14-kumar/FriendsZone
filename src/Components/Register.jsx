@@ -11,11 +11,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LoginLoader from '../Loader/LoginLoader';
 import { BsEyeFill, BsEyeSlashFill } from 'react-icons/bs';
-
-
-
-
-
 import { NavLink } from 'react-router-dom'
 export default function Register() {
     const [info, setinfo] = React.useState({ name: "", email: "", password: "", confirmPassword: "" })
@@ -174,9 +169,6 @@ export default function Register() {
     );
 }
 //TOASTFY MESSAGES 
-
-
-
 function success(props) {
     const notify = () => toast.success(props.message, {
         position: "top-center",
@@ -195,10 +187,6 @@ function success(props) {
         </div>
     );
 }
-
-
-
-
 function error(props) {
     const notify = () => toast.error(props.message, {
         position: "top-center",

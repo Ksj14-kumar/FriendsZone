@@ -6,9 +6,6 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import { format } from "timeago.js";
 import { useEffect } from "react";
-
-
-
 const Comment = ({
     comment,
     replies,
@@ -288,10 +285,7 @@ const Comment = ({
         </motion.div >
     );
 };
-
 export default Comment;
-
-
 const convertToLink = (text) => {
     var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
     var text1 = text?.replace(exp, "<a href='$1' class='text-blue-500 hover:underline' target='_blank'>$1</a>");

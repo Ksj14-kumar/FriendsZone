@@ -7,5 +7,4 @@ const Error = (props) => {
         <p className='error'>{props.text}</p>
     )
 }
-
 export default Error

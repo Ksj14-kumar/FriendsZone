@@ -6,17 +6,10 @@ import { ToastContainer } from 'react-toastify';
 import 'tippy.js/dist/border.css';
 import "@material-tailwind/react/tailwind.css";
 import { BrowserRouter } from 'react-router-dom'
-
 import 'react-toastify/dist/ReactToastify.min.css';
 import { store } from './Store';
 import 'video.js/dist/video-js.css';
-
-
 import { Provider } from 'react-redux'
-
-
-
-
 ReactDOM.render(
     <>
         <Provider store={store}>

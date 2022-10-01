@@ -44,5 +44,4 @@ function SimpleLeft({ converzationList, current, setChatHeader, socket }) {
         </>
     )
 }
-
 export default SimpleLeft = React.memo(SimpleLeft);

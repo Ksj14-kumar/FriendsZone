@@ -9,7 +9,6 @@ import Nav from "@material-tailwind/react/Nav";
 import NavItem from "@material-tailwind/react/NavItem";
 import NavLink from "@material-tailwind/react/NavLink";
 import Icon from "@material-tailwind/react/Icon";
-
 export default function Header1() {
   const [openNavbar, setOpenNavbar] = useState(false);
   return (

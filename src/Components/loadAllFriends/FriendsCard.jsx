@@ -61,5 +61,4 @@ function FriendsCard({ info, sendFriendRequest, loader,theme }) {
         </>
     )
 }
-
 export default FriendsCard

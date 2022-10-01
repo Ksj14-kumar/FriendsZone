@@ -211,6 +211,4 @@ function AllNoti({ notification,theme }) {
         </>
     )
 }
-
-
 export default AllNoti = React.memo(AllNoti)

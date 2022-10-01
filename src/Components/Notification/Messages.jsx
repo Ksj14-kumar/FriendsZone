@@ -29,5 +29,4 @@ function Messages({ message, socket }) {
         </div>
     )
 }
-
 export default Messages

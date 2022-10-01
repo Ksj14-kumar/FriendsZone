@@ -1,8 +1,3 @@
-
-
-
-
-
 const OnlineUsers = (state = [], action = {}) => {
     switch (action.type) {
         case "onlineUsers":
@@ -11,6 +6,4 @@ const OnlineUsers = (state = [], action = {}) => {
             return state
     }
 }
-
-
 export default OnlineUsers;

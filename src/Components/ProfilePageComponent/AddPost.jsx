@@ -25,8 +25,6 @@ import Tooltips from "@material-tailwind/react/Tooltips";
 import TooltipsContent from "@material-tailwind/react/TooltipsContent";
 import { ThreeDots } from "react-loader-spinner"
 import { IoVideocam } from 'react-icons/io5';
-
-
 function useOutsideAlerter(ref, setTextAreaValue, dispatch, setUrlOfImageUpload, setPostLoader) {
     useEffect(() => {
         function handleClickOutside(event) {
@@ -1090,10 +1088,6 @@ function AddPost({ setAllPosts, socket, theme, allPosts }) {
     )
 }
 export default AddPost
-
-
-
-
 function LoaderForPost() {
     return (
         <>

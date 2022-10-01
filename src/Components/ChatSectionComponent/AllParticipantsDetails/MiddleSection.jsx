@@ -66,5 +66,4 @@ function MiddleSection({ roomData, setModalForFriends }) {
         </>
     )
 }
-
 export default MiddleSection

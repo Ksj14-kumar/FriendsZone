@@ -118,5 +118,4 @@ function LiveVideo({ setVideoOverlay, socket,videoOverlay,anotherUserId }) {
         </motion.div >
     )
 }
-
 export default LiveVideo;

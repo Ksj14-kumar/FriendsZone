@@ -16,5 +16,4 @@ function NoPost() {
         </div>
     )
 }
-
 export default NoPost

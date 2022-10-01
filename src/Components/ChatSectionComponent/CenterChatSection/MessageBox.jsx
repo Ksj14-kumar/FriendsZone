@@ -18,7 +18,6 @@ const defaultProps = {
     autoplay: true,
     animationData: TypingIndicator
 }
-
 function MessageBox({ message, own, friendId, upload, socket, setBool, setOverlayObject, isTyping, sendMessageLoader, textMessage, messageId, docID, deleteMessage }) {
     const scrollRef = useRef(null)
     const query1 = query.parse(window.location.search)
@@ -151,11 +150,7 @@ function MessageBox({ message, own, friendId, upload, socket, setBool, setOverla
         </>
     )
 }
-
 export default MessageBox;
-
-
-
 function NoConversation() {
     return (
         <>
@@ -165,8 +160,6 @@ function NoConversation() {
         </>
     )
 }
-
-
 function NotUpload() {
     const uploadFile = useRef(null)
     return (
@@ -180,8 +173,6 @@ function NotUpload() {
         </>
     )
 }
-
-
 function SkeltonLoadingWhileMediaDownload({ text, setBool, setOverlayObject, friendId, currentId }) {
     const [loading, setLoading] = useState(false)
     const [blob, setBlob] = useState("")
@@ -239,7 +230,6 @@ function SkeltonLoadingWhileMediaDownload({ text, setBool, setOverlayObject, fri
         </>
     )
 }
-
 function SkeltonVideoLoading({ text, friendId, currentId }) {
     const [loading, setLoading] = useState(false)
     const [blob, setBlob] = useState("")
@@ -291,8 +281,6 @@ function SkeltonVideoLoading({ text, friendId, currentId }) {
         </>
     )
 }
-
-
 function SkeltonAudio({ text, friendId, currentId }) {
     const [loading, setLoading] = useState(false)
     const [blob, setBlob] = useState("")

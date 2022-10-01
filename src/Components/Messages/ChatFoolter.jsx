@@ -46,5 +46,4 @@ function ChatFoolter({ textMessage, setTextMessage, SentMessage, setTyping, sock
         </div>
     )
 }
-
 export default ChatFoolter

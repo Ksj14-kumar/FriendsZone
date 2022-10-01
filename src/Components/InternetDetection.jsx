@@ -4,7 +4,6 @@ import { MdClose } from "react-icons/md"
 import { BsWifiOff } from "react-icons/bs"
 import { motion } from "framer-motion"
 import { Offline, Online } from "react-detect-offline"
-
 function InternetDetection({ status, setStatus, children }) {
     const [bool, setBool] = useState(false)
     return (
@@ -70,5 +69,4 @@ function InternetDetection({ status, setStatus, children }) {
         </>
     )
 }
-
 export default InternetDetection

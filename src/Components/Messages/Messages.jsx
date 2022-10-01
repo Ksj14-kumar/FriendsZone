@@ -1,4 +1,3 @@
-
 import RightSide from '../UserFeed/RightSide';
 import FriendsList from './FriendsList';
 import { useRouteMatch, useParams } from 'react-router-dom'
@@ -10,8 +9,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import CardHeader from "@material-tailwind/react/CardHeader";
 import H5 from "@material-tailwind/react/Heading5";
-
-
 function Messages({ user }) {
     const [textMessage, setTextMessage] = useState('');
     const [message, setMessage] = useState('');
@@ -209,12 +206,7 @@ function Messages({ user }) {
         </>
     )
 }
-
 export default Messages
-
-
-
-
 function NoConversation() {
     return (
         <>

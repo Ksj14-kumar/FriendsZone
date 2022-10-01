@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import UserFeed from '../Components/UserFeed/UserFeed'
 import { motion } from "framer-motion"
-
 function Feed({ socket, setShowLikeUserModal, showLikeUserModal }) {
     const dispatch = useDispatch()
     const [AllUser, setAllUser] = useState([])
@@ -33,7 +32,6 @@ function Feed({ socket, setShowLikeUserModal, showLikeUserModal }) {
                 if (res.status === 200) {
                     if (mount) {
                         setAllUser(data)
-
                     }
                 }
                 else if (res.status !== 200) {
@@ -75,7 +73,6 @@ function Feed({ socket, setShowLikeUserModal, showLikeUserModal }) {
             }
         }
         UserInformationLoad?.googleId && isFriends()
-
         return () => {
             isMount = false
         }
@@ -126,5 +123,4 @@ function Feed({ socket, setShowLikeUserModal, showLikeUserModal }) {
         </>
     )
 }
-
 export default Feed = React.memo(Feed)

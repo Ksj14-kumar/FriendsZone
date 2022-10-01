@@ -40,5 +40,4 @@ function SelectedImageShowWithURL(props) {
         </div>
     )
 }
-
 export default SelectedImageShowWithURL

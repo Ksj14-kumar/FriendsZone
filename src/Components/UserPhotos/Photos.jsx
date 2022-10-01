@@ -4,7 +4,6 @@ import Modal from './Modal';
 import Popover from "@material-tailwind/react/Popover";
 import PopoverContainer from "@material-tailwind/react/PopoverContainer";
 import PopoverBody from "@material-tailwind/react/PopoverBody";
-
 function Photos({ assests }) {
     const [clickedImg, setClickedImg] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(null);
@@ -104,5 +103,4 @@ function Photos({ assests }) {
         </>
     )
 }
-
 export default Photos

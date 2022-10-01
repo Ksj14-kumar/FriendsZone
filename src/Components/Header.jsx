@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Navigations from "./HomePageNavigation";
 import { IoMdClose } from "react-icons/io"

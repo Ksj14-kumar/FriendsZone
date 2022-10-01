@@ -29,15 +29,12 @@ function BookMark({ socket, setShowLikeUserModal }) {
     )
 }
 export default BookMark = React.memo(BookMark)
-
-
 function NoBookMark() {
     return (
         <>
             <p className='text-[1.2rem] font-serif select-none'>No, Book Mark
                 Selected
             </p>
-
         </>
     )
 }
