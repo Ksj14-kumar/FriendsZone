@@ -109,7 +109,7 @@ function App() {
                             (getUserData && user) || userData && <Sidebar socket={socket} theme={theme} />
                         }
                     </div>
-                        <div className={`bg-cover app_class min-h-screen  ${theme ? "bg-[#000000]" : `${getUserData ? "bg-[#e4e4e4]" : "homepage_se"}`}`}>
+                        <div className={`bg-cover app_class min-h-screen w-full  ${theme ? "bg-[#000000]" : `${getUserData ? "bg-[#e4e4e4]" : "homepage_se"}`}`}>
                             <AnimatePresence exitBeforeEnter initial={false}>
                                 <Switch location={location} key={location.key}>
                                     <Route exact path="/"
